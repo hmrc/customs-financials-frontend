@@ -1,0 +1,23 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukPhaseBanner
+@import uk.gov.hmrc.customs.financials.config.AppConfig
+@import uk.gov.hmrc.govukfrontend.views.Aliases._
+
+@this(govukPhaseBanner: GovukPhaseBanner, appConfig: AppConfig)
+
+@(phase: String)(implicit request: Request[_], messages: Messages)
+
+@feedbackBanner = {
+@messages("feedback.before")
+    <a class='govuk-link' href='/contact/beta-feedback-unauthenticated?service=CDS-FIN'>@messages("feedback.link")</a>
+@messages("feedback.after")
+}
+
+@govukPhaseBanner(PhaseBanner(
+    tag = Some(Tag(content = Text(phase))),
+    content = HtmlContent(feedbackBanner)
+))

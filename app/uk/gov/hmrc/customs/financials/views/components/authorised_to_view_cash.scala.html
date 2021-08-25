@@ -1,0 +1,29 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.views.helpers.Formatters
+
+@(account:CashAccount, index: Int)(implicit messages: Messages)
+    <div class="govuk-panel govuk-panel--details result" id="cash-account-@{index}">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-3" id="eori-@{index}"><span class="govuk-panel__heading--span">@messages("cf.eori") </span>@account.owner</h2>
+        <dl class="results search-results">
+            <div class="cash-account-number search-results__item" id="account-@{index}">
+                <dt class="search-results__term">@messages("cf.account.authorized-to-view.account-number")</dt>
+                <dd class="search-results__description">@account.number</dd>
+            </div>
+            <div class="cash-account-type search-results__item" id="account-type-@{index}">
+                <dt class="search-results__term">@messages("cf.account.authorized-to-view.account-type")</dt>
+                <dd class="search-results__description">@messages("cf.account.authorized-to-view.cash.account-type")</dd>
+            </div>
+            @account.balances.AvailableAccountBalance.map { balance =>
+                    <div class="availableAccountBalance search-results__item limit-remaining">
+                        <dt class="search-results__term">@messages("cf.account.authorized-to-view.available-account-balance")</dt>
+                        <dd class="search-results__description">@{Formatters.formatCurrencyAmount(balance)}</dd>
+                    </div>
+            }
+
+        </dl>
+    </div>
+

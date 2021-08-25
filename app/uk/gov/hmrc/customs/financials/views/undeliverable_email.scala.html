@@ -1,0 +1,34 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.config.AppConfig
+
+@this(
+        p: components.p,
+        h1: components.h1,
+        ul: components.unordered_list,
+        button: components.button,
+        mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
+)
+@(nextPage: String, email: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@mainTemplate(title = Some(messages("cf.undeliverable.email.title")), helpAndSupport = true) {
+
+    @h1(msg = "cf.undeliverable.email.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
+
+    @p(email, bold = true)
+
+    @p("cf.undeliverable.email.p1")
+    @p("cf.undeliverable.email.p2")
+    @p("cf.undeliverable.email.p3")
+
+    @ul(
+        "cf.undeliverable.email.list.1",
+        "cf.undeliverable.email.list.2",
+        "cf.undeliverable.email.list.3"
+    )
+
+    @button("cf.undeliverable.email.link-text", Some(nextPage))
+}

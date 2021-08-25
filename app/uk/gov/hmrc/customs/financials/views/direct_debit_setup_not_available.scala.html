@@ -1,0 +1,20 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.views.html.components._
+
+@this(
+  mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
+)
+
+@()( implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+
+@mainTemplate(title = Some(messages("service.name")), beforeContentBlock = Some(link_to_home_page()), helpAndSupport = false) {
+
+  <h1 class="govuk-heading-l govuk-!-margin-bottom-6">@messages("cf.duty-deferment.dd.setup.unavailable.heading")</h1>
+
+    <p class="govuk-body">@messages("cf.duty-deferment.dd.setup.unavailable.message")</p>
+
+}

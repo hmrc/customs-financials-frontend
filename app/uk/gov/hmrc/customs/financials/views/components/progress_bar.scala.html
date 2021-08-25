@@ -1,0 +1,15 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@(usedPercentage: BigDecimal)
+
+<div class="progress-bar" aria-hidden="true">
+    <span class="progress-bar__graph"
+    style="width: @{usedPercentage}%;
+        @if(usedPercentage > 80) { background-color: #f47738}">
+    </span>
+</div>

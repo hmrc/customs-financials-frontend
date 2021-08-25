@@ -1,0 +1,27 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.Header
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.Cy
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.En
+@import uk.gov.hmrc.customs.financials.config.AppConfig
+
+@this(hmrcHeader: HmrcHeader, appConfig: AppConfig)
+
+@(showSignOut: Boolean = true)(implicit messages: Messages)
+
+@hmrcHeader(Header(
+    homepageUrl = appConfig.govukHome,
+    serviceName = Some(messages("service.name")),
+    serviceUrl = uk.gov.hmrc.customs.financials.controllers.routes.CustomsFinancialsHomeController.index().url,
+    containerClasses = "govuk-width-container",
+    signOutHref = Some(uk.gov.hmrc.customs.financials.controllers.routes.LogoutController.logout().url),
+    language = messages.lang.language match {
+        case "cy" => Cy
+        case _    => En
+    }
+))
+

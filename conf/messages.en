@@ -1,0 +1,429 @@
+language.cymraeg = Cymraeg
+language.english = English
+language.change.cymraeg=Newid yr iaith ir Gymraeg
+
+# Overall service name for GOV.UK header
+service.name=View your customs financial accounts
+cf.service-name=Your customs statements
+cf.eori=EORI number:
+cf.account-number=Account:
+cf.warning=Warning
+cf.back=Back
+cf.sign-out=Sign out
+cf.pdf=PDF
+cf.csv=CSV
+cf.header.eori=EORI:
+cf.account=Account:
+cf.available=available
+cf.pending.available=will be available
+cf.unavailable=Unavailable
+cf.language.switcher=Language switcher
+
+# govuk template footer links
+cf.footer.link.cookies=Cookies
+cf.footer.link.accessibility-statement=Accessibility statement
+cf.footer.link.privacy-policy=Privacy policy
+cf.footer.link.terms-and-conditions=Terms and conditions
+cf.footer.link.help=Help using GOV.UK
+
+# Standard Error
+cf.error.standard-error.title=Sorry, there is a problem with the service
+cf.error.standard-error.heading=Sorry, there is a problem with the service
+cf.error.standard-error.message=Try again later
+
+# Standard Error SDDS
+cf.error.standard-error-sdds.title=Sorry, setting up a direct debit is unavailable at the moment
+cf.error.standard-error-sdds.heading=Sorry, setting up a direct debit is unavailable at the moment
+cf.error.standard-error-sdds.message=Please try again later
+
+# Standard Error Contact Details
+cf.error.standard-error-contact-details.title=Sorry, account details is unavailable at the moment
+cf.error.standard-error-contact-details.heading=Sorry, account details is unavailable at the moment
+cf.error.standard-error-contact-details.message=Please try again later
+
+# Page Not Found Error
+cf.error.not-found.title=Page not found
+cf.error.not-found.heading=Page not found
+cf.error.not-found.message.address-typed-wrong=If you typed the web address, check it is correct.
+cf.error.not-found.message.address-pasted-wrong=If you pasted the web address, check you copied the entire address.
+cf.error.not-found.message.go-to-home-page-text1=Or go to the
+cf.error.not-found.message.go-to-home-page-text2=home page.
+
+# Unauthorised Error
+cf.error.unauthorized.title=You are not authorised to view this page
+cf.error.unauthorized.heading=Unauthorised
+cf.error.unauthorized.message=You are not authorised to view this page
+
+# Page errors
+error.summary.title=There is a problem
+
+# Pager
+cf.pager.prev=Prev
+cf.pager.next=Next
+cf.pager.summary=Showing {0} – {1} of {2} {3}
+
+# Help and Support
+cf.help-and-support.title=Help and support
+cf.account.help-support.message=If you are having issues, phone
+cf.account.help-support.numbers=0300 200 3701
+cf.account.help-support.office-hours=Open 8am to 6pm, Monday to Friday (closed bank holidays).
+cf.account.help-support.duty-deferment.numbers=0300 059 4243
+cf.account.help-support.duty-deferment.office-hours=Open 9am to 12pm, and 2pm to 4pm Monday to Friday (closed bank holidays).
+
+# Accounts List
+cf.accounts.title=Your customs financial accounts
+cf.accounts.label.dan=View statements for duty deferment {0}
+cf.accounts.label.youAreCurrentlyUsing=You are currently using
+cf.accounts.label.usingLimit={0} of {1}
+cf.accounts.label.limit=limit
+cf.accounts.detail.customs-financials-home=Your customs statements
+cf.accounts.viewStatements=View statements
+cf.accounts.topUp=Top up
+cf.accounts.label.topUp=Top up duty deferment {0}
+cf.accounts.contact.details=Account details
+cf.accounts.label.contact.details=Account details for duty deferment {0}
+cf.accounts.view-customs-account=View your customs financial accounts
+cf.accounts.back-customs-account=Back to your customs financial accounts
+cf.account.status.AccountStatusClosed = Closed
+cf.account.status.AccountStatusSuspended = Suspended
+cf.account.status.AccountStatusPending = Pending
+cf.account.status.aria.AccountStatusClosed = This account is currently closed
+cf.account.status.aria.AccountStatusSuspended = This account is currently suspended
+cf.duty-deferment.status.AccountStatusSuspended = Suspended On CDS
+cf.duty-deferment.status.AccountStatusPending = Pending Opening On CDS
+
+# Duty Deferment inaccurate balances message
+cf.duty-deferment.inaccurateBalance.heading = Inaccurate duty deferment balances
+cf.duty-deferment.inaccurateBalance.hiddenText = Warning of inaccurate duty deferment balances
+cf.duty-deferment.inaccurateBalance.chiefText = If you still make some import declarations through CHIEF, the duty deferment balances shown below may not be up to date.
+cf.duty-deferment.inaccurateBalance.getLatestBalance = To get your latest accurate balance you should
+cf.duty-deferment.inaccurateBalance.contactLink = phone or email the duty deferment office.
+
+cf.duty-deferment.pending.info = You cannot use this account on CDS yet
+cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
+
+# Duty Deferment Account Detail view
+cf.account.detail.title=Duty deferment statements
+
+cf.account.detail.deferment-account-heading=Duty deferment statements
+cf.account.detail.deferment-account-secondary-heading=Deferment account:
+cf.account.detail.account-summary=Account summary
+cf.account.detail.your-account-limit-remaining=Your account limit remaining:
+cf.account.details.your-guarantee-limit-remaining=Your guarantee limit remaining:
+cf.account.details.overall-account-limit=Overall account limit:
+cf.account.details.including-your=including your
+cf.account.details.guarantee=guarantee
+cf.account.details.period=Period
+cf.account.details.previous-eori=EORI: {0}
+cf.account.detail.direct-debit.duty-vat-and-excise=HMRC will charge your bank each month for Duty and VAT on or after the 15th, and Excise on or after the 29th.
+cf.account.detail.period-group={0} to {1} {2}
+cf.account.detail.row.supplementary.info=Supplementary end of month
+cf.account.details.row.excise.info=Excise summary
+cf.account.detail.supplementary-period-group={0} to {1} supplementary
+cf.account.detail.download-link=Download {1} to {2} {0} ({3})
+cf.account.detail.supplementary-download-link=Download supplementary end of month for {1} {0} ({2})
+cf.account.detail.excise-download-link=Download excise summary for {1} {0} ({2})
+cf.account.detail.missing-file-type-supplementary=Supplementary end of month {0} for {1} unavailable
+cf.account.detail.missing-file-type-excise=Excise summary {0} for {1} unavailable
+cf.account.detail.missing-file-type={0} for {1} to {2} unavailable
+cf.account.detail.unavailable=Unavailable
+cf.account.detail.no-statements=No statements available for deferment account {0}
+cf.duty-deferment-account.historic.description=We only show statements for the last 6 months. If required, you can
+cf.duty-deferment-account.historic.request=request older statements.
+cf.duty-deferment-account.problem-with-service.text=Sorry, your statements are not available at the moment. Please try again later.
+cf.account.detail.account-not-available=We are unable to show your account at the moment. Please try again later.
+
+#  Duty Deferment requested statements view
+cf.account.detail.requested.title=Requested duty deferment statements
+cf.account.detail.requested-certificates-available-text.pre=Your
+cf.account.detail.requested-certificates-available-link-text=requested statements
+cf.account.detail.requested-certificates-available-text.post=are now available
+cf.account.detail.requested.deferment-account-secondary-heading=Account:
+cf.account.detail.requested.deferment-account-heading=Requested duty deferment statements
+cf.account.detail.requested.deferment-account-statements-available.text=Requested statements are available to view for 10 days. We can only provide these in PDF format.
+
+# Guarantee Account Detail View
+cf.guarantee-account.detail.title=General guarantee account
+cf.guarantee-account.detail.balance-available={0} available
+cf.guarantee-account.detail.account-number=Account: {0}
+cf.guarantee-account.detail.account-usage=Using {0} of {1}
+cf.guarantee-account.detail.transactions-heading=Your live guarantees
+cf.guarantee-account.detail.download=Download live guarantees as
+cf.guarantee-account.detail.date=Date
+cf.guarantee-account.detail.movement-reference-number=MRN
+cf.guarantee-account.detail.balance=Balance
+cf.guarantee-account.detail.unique-consignment-reference=UCR
+cf.guarantee-account.detail.declarant-eori=Declarant EORI
+cf.guarantee-account.detail.consignee-eori=Consignee EORI
+cf.guarantee-account.detail.original-charge=Original charge
+cf.guarantee-account.detail.discharged-amount=Discharged
+cf.guarantee-account.detail.updated-now=Updated just now
+cf.guarantee-account.detail.updated=Updated {0}
+cf.guarantee-account.detail.no-transactions=You have no live guarantees on your account.
+cf.guarantee-account.detail.transactions-not-available=We are unable to show your live guarantees at the moment. Please try again later.
+cf.guarantee-account.detail.account-not-available=We are unable to show your account at the moment. Please try again later.
+
+# Guarantee Account CSV headings (mapped dynamically from case class fields)
+cf.guarantee-account.csv.movementReferenceNumber=MRN
+cf.guarantee-account.csv.date=Date
+cf.guarantee-account.csv.uniqueConsignmentReference=UCR
+cf.guarantee-account.csv.consigneeEori=Consignee EORI
+cf.guarantee-account.csv.declarantEori=Declarant EORI
+cf.guarantee-account.csv.totalOriginalCharge=Total original charge
+cf.guarantee-account.csv.totalDischargedAmount=Total discharged
+cf.guarantee-account.csv.totalBalance=Total balance
+cf.guarantee-account.csv.interestCharge=Interest charged
+cf.guarantee-account.csv.c18Reference=C18 reference
+cf.guarantee-account.csv.securityReasonBreakdown=Security reason breakdown
+cf.guarantee-account.csv.taxCode=Reason/tax code
+cf.guarantee-account.csv.expiryDate=Security expiry
+cf.guarantee-account.csv.originalCharge=Original charge
+cf.guarantee-account.csv.dischargedAmount=Discharged
+cf.guarantee-account.csv.balance=Balance
+cf.guarantee-account.csv.lastUpdated=Last updated
+
+# Other CSV content
+cf.guarantee-account.csv.unknown=Unknown
+cf.guarantee-account.csv.security-reason=Security reason ({0} of {1})
+cf.guarantee-account.csv.filename=Open_Guarantees_{0}.CSV
+cf.guarantee-account.csv.guidance=Guarantee account guidance, including an explanation of tax codes, can be found at {0}
+
+# Import VAT certificates (C79)
+cf.import-vat.page-heading=This section is the VAT account summary
+cf.import-vat.view-certificates.description=These are certificates of VAT you have paid on your imports to use as evidence on your VAT return.
+cf.import-vat.view-certificates.no-certificates=There are no import VAT certificates.
+cf.import-vat.view-certificates.find-out-more=Find out more about import VAT
+cf.legal-notice.import-vat.partone=You must save copies for your own records.
+cf.legal-notice.import-vat.parttwo=You can only view statements online for 6 months.
+cf.import-vat.requested-certificates-available-link-text=requested certificates
+
+# Securities Statements
+cf.securities.view-statements.description=These are statements of duty charged on an import declaration taken as a security deposit.
+
+# VAT Detail view
+cf.account.vat.title=Import VAT certificates (C79)
+cf.account.vat.help.get-help=Get Help
+cf.account.vat.help.number=Helpline 0300 200 3701
+cf.account.vat.download-link=Download {1} {0} ({2})
+cf.account.vat.missing-file=Unavailable
+cf.account.vat.missing-file-hidden-text={0} for {1} unavailable
+cf.account.vat.no-certificates-available=There are no certificates available to view.
+cf.account.vat.historic.description=We only show certificates for the last 6 months. If required, you can
+cf.account.vat.historic.request=request older certificates.
+cf.account.vat.unavailable=Sorry, your certificates are not available at the moment. Please try again later.
+cf.account.vat.statements.unavailable = There were no certificates in {0}
+
+# Import VAT requested statements view
+cf.import-vat.requested.title=Requested import VAT certificates (C79)
+cf.import-vat.requested.available.text=Requested certificates are available to view for 10 days. We can only provide these in PDF format.
+
+# Postponed VAT view
+cf.postponed-vat.page-heading=This section is the VAT account summary
+cf.postponed-vat.view-certificates.description=These are statements of VAT you have postponed on your imports to use as evidence on your VAT return.
+cf.postponed-vat.view-certificates.no-certificates=There are no postponed import VAT statements.
+cf.account.pvat.title=Postponed import VAT statements
+cf.account.pvat.content=Unless you have delayed your customs declaration, each statement will show the total import VAT postponed for the previous month.
+
+cf.account.pvat.download-link={0} statement - {1} ({2})
+cf.account.pvat.amended-download-link={0} amended statement - {1} ({2})
+cf.account.pvat.original.download-link={0} statement - {1} ({2})
+cf.account.pvat.missing-file-type=No {0} statements available.
+cf.account.pvat.original.missing-file-type=No {0} file available.
+cf.account.pvat.aria.download-link={1} {0} statement - {2} ({3})
+cf.account.pvat.aria.original.download-link={0} statement for {1} - {2} ({3})
+cf.account.pvat.aria.amended.download-link={0} amended statement for {1} - {2} ({3})
+
+cf.account.pvat.no-statements-yet=There are no statements available to view yet.
+cf.account.pvat.holding-message.1=From 1 January 2021 you may be able to account for import VAT on your VAT Return. You can
+cf.account.pvat.holding-message.2=on GOV.UK.
+cf.account.pvat.link-message=check if you can use postponed VAT accounting
+cf.account.pvat.statements.unavailable = There were no statements in {0}
+
+# Security Statements View
+cf.security-statements.title=Notification of adjustment statements
+cf.security-statements.help.get-help=Get Help
+cf.security-statements.help.number=Helpline 0300 200 3701
+cf.security-statements.understanding-your-statement=Understanding your statement
+cf.security-statements.no-statements=There are no statements available to view.
+cf.security-statements.screen-reader.unavailable={0} for {1} to {2} unavailable
+
+cf.security-statements.static-text=Statements cover the last 7 days from Thursday to Wednesday.
+cf.security-statements.historic.description=We only show statements for the last 6 months. If required, you can
+cf.security-statements.historic.request=request older statements.
+cf.security-statements.requested-link=requested statements
+cf.security-statements.unavailable= Sorry, your statements are not available at the moment. Please try again later.
+
+# Security Statements requested view
+cf.security-statements.requested.title=Requested notification of adjustment statements
+cf.security-statements.requested.available.text=Requested statements are available to view for 10 days. We can only provide these in PDF format.
+cf.security-statements.requested.period={0} to {1}
+cf.security-statements.requested.download-link.aria-text=Download {1} to {2} {0} ({3})
+
+# Authorized to View
+cf.account.authorized-to-view.title=Other accounts you can use
+cf.account.authorized-to-view.no-matches-found=No matches found
+cf.account.authorized-to-view.account-number=Account:
+cf.account.authorized-to-view.account-limit-remaining=Account limit remaining:
+cf.account.authorized-to-view.guarantee-limit-remaining=Guarantee limit remaining:
+cf.account.authorized-to-view.account-type=Account type:
+cf.account.authorized-to-view.duty-deferment.account-type=Duty deferment account
+cf.account.authorized-to-view.cash.account-type=Cash account
+cf.account.authorized-to-view.items-description=approved accounts
+cf.account.authorized-to-view.available-account-balance=Available account balance
+cf.account.authorized-to-view.guarantee-account.account-type=General guarantee account
+cf.account.authorized-to-view.guarantee-account.guarantee-limit-remaining=Guarantee limit remaining
+
+# Cash CSV
+cf.cash-account.csv.date=Date (posted)
+cf.cash-account.csv.transactionType=Transaction
+cf.cash-account.csv.movementReferenceNumber=MRN
+cf.cash-account.csv.declarantEori=Declarant EORI
+cf.cash-account.csv.vat=VAT
+cf.cash-account.csv.duty=Duty
+cf.cash-account.csv.excise=Excise
+cf.cash-account.csv.credit=Credit
+cf.cash-account.csv.debit=Debit
+cf.cash-account.csv.balance=Balance
+
+cf.cash-account.csv.closing-balance=Closing balance
+cf.cash-account.csv.opening-balance=Opening balance
+cf.cash-account.csv.declaration=Declaration
+cf.cash-account.csv.transfer-out=Transfer to another account
+cf.cash-account.csv.top-up=Top-up
+cf.cash-account.csv.transfer-in=Transfer from another account
+cf.cash-account.csv.withdrawal=Withdrawal
+cf.cash-account.csv.withdrawal.account-ending=(to account ending {0})
+cf.cash-account.csv.filename=Cash_Account_Transactions_{0}.CSV
+
+# Not subscribed to CDS
+cf.not-subscribed-to-cds.detail.title=Not registered with CDS
+cf.not-subscribed-to-cds.detail.heading=To continue with this you need to get access to Customs Declaration Services (CDS)
+cf.not-subscribed-to-cds.detail.eori-info=You''ll need an
+cf.not-subscribed-to-cds.detail.eori-link=Economic Operator and Registration Identification (EORI) number (opens in a new window or tab)
+cf.not-subscribed-to-cds.detail.get-access-info=If you already have an EORI number, you can
+cf.not-subscribed-to-cds.detail.get-access-link=get access to CDS (opens in a new window or tab)
+cf.not-subscribed-to-cds.detail.how-to-get-access-info=How to get access to CDS
+cf.not-subscribed-to-cds.detail.process-application-info=It can take up to one hour for HMRC to process your application.
+cf.not-subscribed-to-cds.detail.already-applied-info=If you''ve already applied to get access to CDS
+cf.not-subscribed-to-cds.detail.status-info=You can
+cf.not-subscribed-to-cds.detail.status-check-info=check the status of your application (opens in a new window or tab)
+
+#Customs Financials Home Page
+cf.customs-financials-home.title=Your customs financial accounts
+cf.customs-financials-home.duty-deferment.title=Duty deferment account
+cf.customs-financials-home.duty-deferment.title2=Duty deferment accounts
+cf.customs-financials-home.guarantee-account.title=General guarantee account
+cf.customs-financials-home.guarantee-account.link=View general guarantee account
+cf.customs-financials-home.cash-account.title=Cash account
+cf.customs-financials-home.cash-account.link=View cash account
+cf.customs-financials-home.cash-account.top-up.link-label=Top up cash account
+cf.customs-financials-home.import-vat.title=Import VAT certificates (C79)
+cf.customs-financials-home.import-vat.title.link=View import VAT certificates (C79)
+cf.customs-financials-home.pvat.title=Postponed import VAT statements
+cf.customs-financials-home.pvat.link=View postponed import VAT statements
+cf.customs-financials-home.securities.title=Notification of adjustment statements
+cf.customs-financials-home.securities.link=View notification of adjustment statements
+cf.customs-financials-home.partial.heading=Sorry, some parts of the service are unavailable at the moment
+cf.customs-financials-home.partial.text=You can still view some certificates and statements.
+cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
+cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
+cf.customs-financials-home.recruitment-banner.close=Close
+cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
+
+#Notifications for new statements
+cf.customs-financials-home.notification.c79=You have a new Import VAT (C79) certificate
+cf.customs-financials-home.notification.postponed-vat=You have a new Postponed import VAT statement
+cf.customs-financials-home.notification.adjustments=You have a new Import adjustments statement
+cf.customs-financials-home.notification.duty-deferment=You have a new Duty Deferment statement
+cf.customs-financials-home.notification.requested-c79=Your requested import VAT certificates (C79) are available to view
+cf.customs-financials-home.notification.requested-duty-deferment=Your requested Duty Deferment statements are available to view
+cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
+
+#Verify Your Email Address
+cf.verify.your.email.title=Verify your CDS email
+cf.verify.your.email.heading=You need to verify your email address
+cf.verify.your.email.need-to-verify=HMRC need a verified email address to send you:
+cf.verify.your.email.list.1=updates on changes to the Customs Declaration Service (CDS)
+cf.verify.your.email.list.2=import notifications, including VAT and duty statements and Direct Debit notices
+cf.verify.your.email.list.3=export notifications
+cf.verify.your.email.link-text=Verify my email address
+
+#Undeliverable Email Address
+cf.undeliverable.email.title=There''s a problem with your email address
+cf.undeliverable.email.heading=There''s a problem with your email address
+cf.undeliverable.email.p1=We tried to send you an email but it could not be delivered. This could be because the inbox is full, or due to a technical problem with your email provider.
+cf.undeliverable.email.p2=You need to verify your email address again to use this service.
+cf.undeliverable.email.p3=HMRC need a verified email address to send you:
+cf.undeliverable.email.list.1=updates on changes to the Customs Declaration Service (CDS)
+cf.undeliverable.email.list.2=import notifications, including VAT and duty statements and Direct Debit notices
+cf.undeliverable.email.list.3=export notifications
+cf.undeliverable.email.link-text=Verify my email address
+
+# Duty deferment direct debit
+cf.duty-deferment.warning=Warning
+cf.duty-deferment.dd.info=Account is suspended on CDS
+cf.duty-deferment.dd.setup.text1=You must
+cf.duty-deferment.dd.setup.new.account=set up a new Direct Debit
+cf.duty-deferment.dd.setup.text2=to be able to use this deferment account on Customs Declarations Service (CDS)
+cf.duty-deferment.dd.setup.text3=This status only applies to your CDS account.
+
+# Common messages
+cf.common.missing-documents-guidance.statement = statement
+cf.common.missing-documents-guidance.statements = Statements
+
+cf.common.missing-documents-guidance.certificate = certificate
+cf.common.missing-documents-guidance.certificates = Certificates
+
+cf.common.missing-documents-guidance.heading=Can’t find the {0} you’re looking for?
+cf.common.missing-documents-guidance.text1={0} for import declarations made in CHIEF are not available in this service.
+cf.common.missing-documents-guidance.text2={0} are only generated for periods in which you imported goods.
+
+cf.duty-deferment.dd.setup.unavailable.heading = Sorry, you can not set up a new Direct Debit at the moment
+cf.duty-deferment.dd.setup.unavailable.message = If you've recently verified your email address, it could take up to 2 hours for it to be recognised by this service.
+
+# BETA Banner
+# ----------------------------------------------------------
+feedback.before = This is a new service – your
+feedback.link = feedback
+feedback.after = will help us to improve it.
+
+# Date Format
+# ----------------------------------------------------------
+
+month.1 = January
+month.2 = February
+month.3 = March
+month.4 = April
+month.5 = May
+month.6 = June
+month.7 = July
+month.8 = August
+month.9 = September
+month.10 = October
+month.11 = November
+month.12 = December
+
+month.abbr.1 = Jan
+month.abbr.2 = Feb
+month.abbr.3 = Mar
+month.abbr.4 = Apr
+month.abbr.5 = May
+month.abbr.6 = Jun
+month.abbr.7 = Jul
+month.abbr.8 = Aug
+month.abbr.9 = Sep
+month.abbr.10 = Oct
+month.abbr.11 = Nov
+month.abbr.12 = Dec
+
+cf.duty-deferment.account.card.account.limit=Account limit: {0}
+cf.duty-deferment.account.card.guarantee.limit=Guarantee limit: {0}
+cf.duty-deferment.account.card.guarantee.limit.remaining=Guarantee limit remaining: {0}
+cf.duty-deferment.account.card.visually.hidden=Your
+cf.duty-deferment.account.card.not-applicable=Not applicable
+
+cf.customs-financials-home.notification.multiple-duty-deferment = You have new duty deferment statements
+cf.customs-financials-home.notification.multiple-c79 = You have new import VAT certificates (C79)
+cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
+cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
+cf.account.manage-account-authorities.title=Manage your account authorities

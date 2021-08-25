@@ -1,0 +1,21 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@(accountNumber: String, accountLimit: String, guaranteeLimit: String, guaranteeLimitRemaining: String, viewBalances: Boolean, viewAccountLimits: Boolean)(implicit messages: Messages)
+  @if(viewAccountLimits) {
+    <p class="govuk-body govuk-!-margin-bottom-1" id="account-limit-@accountNumber">
+        <span class="govuk-visually-hidden">@messages("cf.duty-deferment.account.card.visually.hidden")</span>
+        @messages("cf.duty-deferment.account.card.account.limit", accountLimit)</p>
+    <p class="govuk-body govuk-!-margin-bottom-1" id="guarantee-limit-@accountNumber">
+        <span class="govuk-visually-hidden">@messages("cf.duty-deferment.account.card.visually.hidden")</span>
+        @messages("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)</p>
+ }
+@if(viewBalances){
+    <p class="govuk-body govuk-!-margin-bottom-1" id="guarantee-limit-remaining-@accountNumber">
+        <span class="govuk-visually-hidden">@messages("cf.duty-deferment.account.card.visually.hidden")</span>
+        @messages("cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining)</p>
+}

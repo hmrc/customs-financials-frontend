@@ -1,0 +1,21 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.domain.CDSAccountStatus
+@import uk.gov.hmrc.customs.financials.views.helpers.Formatters
+@import uk.gov.hmrc.customs.financials.views.helpers.HtmlHelper._
+
+@this()
+
+@(status: CDSAccountStatus, accountAttribute: String, balance: BigDecimal)(implicit messages: Messages)
+
+<p class="@{status.balanceAttribute} @accountAttribute govuk-body custom-card__balance">
+    <span class="custom-card__balance-amount">
+    @{Formatters.formatCurrencyAmount(balance)}
+    </span>
+    <span class="custom-card__balance-text">
+    @messages("cf.available")
+    </span>
+</p>

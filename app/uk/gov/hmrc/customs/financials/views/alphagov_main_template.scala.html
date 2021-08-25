@@ -1,0 +1,72 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
+@import uk.gov.hmrc.customs.financials.views.helpers.PageTitle.fullPageTitle
+@import uk.gov.hmrc.customs.financials.views.html.components._
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(
+        govukLayout: GovukLayout,
+        languageSelection: languageSelection,
+        header_block_financials: header_block_financials,
+        hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+)
+
+@(title: Option[String] = None,
+        beforeContentBlock: Option[Html] = None,
+        maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
+        eori: Option[String] = None,
+        helpAndSupport: Boolean,
+        helpAndSupportContactNumber: String = "cf.account.help-support.numbers",
+        helpAndSupportOfficeHours: String = "cf.account.help-support.office-hours")(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+
+@mainContent = {
+@contentBlock
+@if(appConfig.reportAProblem) {
+    <p class="govuk-body">@hmrcReportTechnicalIssueHelper()</p>
+}
+@if(helpAndSupport) {
+    @help_and_support_message(
+        contactNumber = helpAndSupportContactNumber,
+        officeHours = helpAndSupportOfficeHours
+    )
+}
+}
+
+@theHead = {
+@hmrcTrackingConsentSnippet()
+        <!--[if lte IE 8]><link href='
+@controllers.routes.Assets.at("stylesheets/application-ie-8.css")
+    ' rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if gt IE 8]><!-->
+    <link href='@controllers.routes.Assets.at("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
+}
+
+@beforeContentWrapper = {
+@beforeContentBlock
+@if(appConfig.languageTranslationEnabled) {
+    @languageSelection()
+}
+@timeout_dialog(request.uri, appConfig.sessionTimeout)
+}
+
+@govukLayout(
+    pageTitle = fullPageTitle(title),
+    headBlock = Some(theHead),
+    headerBlock = Some(header_block_financials(eori, maybeMessageBannerPartial)),
+    beforeContentBlock = Some(beforeContentWrapper),
+    footerItems = Seq(
+        FooterItem(href = Some("https://www.gov.uk/help/cookies"), text = Some(messages("cf.footer.link.cookies"))),
+        FooterItem(href = Some("/customs/payment-records/help/accessibility"), text = Some(messages("cf.footer.link.accessibility-statement"))),
+        FooterItem(href = Some("https://www.gov.uk/help/privacy-notice"), text = Some(messages("cf.footer.link.privacy-policy"))),
+        FooterItem(href = Some("https://www.gov.uk/help/terms-conditions"), text = Some(messages("cf.footer.link.terms-and-conditions"))),
+        FooterItem(href = Some("https://www.gov.uk/help"), text = Some(messages("cf.footer.link.help"))),
+        FooterItem(href = Some("https://www.gov.uk/cymraeg"), text = Some("Cymraeg"))
+    ),
+    bodyEndBlock = Some(scripts()))(mainContent)

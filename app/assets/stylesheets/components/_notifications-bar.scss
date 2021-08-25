@@ -1,0 +1,70 @@
+/* ===================================
+  Messages styles
+====================================== */
+.notifications-bar {
+  ul {
+    margin:0 0 0 0;
+    font-size:1rem;
+    li {
+      display:inline;
+    }
+  }
+  a {
+    margin: 0 .5rem;
+  }
+}
+.newmessage-bubble {
+  display:block;
+  margin-top: 5px;
+  margin-right: 5px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid transparent;
+  border-radius: 100%;
+  background-color:#1d70b8;
+  visibility: visible;
+  &.active{
+    visibility: visible;
+  }
+}
+.no-link-colour{
+  color:#0b0c0c !important;
+}
+.message-bubble {
+  margin-top: 5px;
+  margin-right: 10px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background-color: #2472b6;
+  visibility: hidden;
+  &.active{
+    visibility: visible;
+  }
+}
+.message-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  &.unread{
+    font-weight: bold;
+  }
+}
+.message-highlight{
+  background-color: #d23726;
+  color: #fff;
+  width: 20px;
+  border: none;
+  border-radius: 8px;
+  padding: 2px;
+  display: inline-block;
+  text-align: center;
+  margin-left: 3px;
+}
+.message-highlight--off {
+  background-color: transparent;
+  color: transparent;
+  width: 20px;
+  border: none;
+}

@@ -1,0 +1,26 @@
+# microservice specific routes
+
+GET        /                                                     @uk.gov.hmrc.customs.financials.controllers.CustomsFinancialsHomeController.index
+GET        /verify-your-email                                    @uk.gov.hmrc.customs.financials.controllers.EmailController.showUnverified()
+GET        /logout                                               @uk.gov.hmrc.customs.financials.controllers.LogoutController.logout
+GET        /logout-no-survey                                     @uk.gov.hmrc.customs.financials.controllers.LogoutController.logoutNoSurvey
+GET        /help/accessibility                                   @uk.gov.hmrc.customs.financials.controllers.StaticPagesController.accessibility
+GET        /not-subscribed-for-cds                               @uk.gov.hmrc.customs.financials.controllers.UnauthorisedController.onPageLoad
+GET        /authorized-to-view                                   @uk.gov.hmrc.customs.financials.controllers.AuthorizedToViewController.onPageLoad(state: uk.gov.hmrc.customs.financials.domain.AuthorizedToViewPageState)
+
+GET        /duty-deferment/:linkId                               @uk.gov.hmrc.customs.financials.controllers.DutyDefermentAccountController.showAccountDetails(linkId: String)
+GET        /duty-deferment/direct-debit-setup/:linkId            @uk.gov.hmrc.customs.financials.controllers.DutyDefermentDirectDebitSetupController.setup(linkId: String)
+GET        /duty-deferment/contact-details/:linkId               @uk.gov.hmrc.customs.financials.controllers.DutyDefermentContactDetailsController.showContactDetails(linkId: String)
+
+GET        /import-vat                                           @uk.gov.hmrc.customs.financials.controllers.VatController.showVatAccount
+GET        /postponed-vat                                        @uk.gov.hmrc.customs.financials.controllers.PostponedVatController.show
+GET        /adjustments                                          @uk.gov.hmrc.customs.financials.controllers.SecuritiesController.showSecurityStatements
+
+GET        /duty-deferment/:linkId/statements-unavailable        @uk.gov.hmrc.customs.financials.controllers.DutyDefermentAccountController.statementsUnavailablePage(linkId: String)
+GET        /adjustments/statements-unavailable                   @uk.gov.hmrc.customs.financials.controllers.SecuritiesController.statementsUnavailablePage()
+GET        /import-vat/certificates-unavailable                  @uk.gov.hmrc.customs.financials.controllers.VatController.certificatesUnavailablePage()
+GET        /parts-of-service-unavailable                         @uk.gov.hmrc.customs.financials.controllers.CustomsFinancialsHomeController.pageWithoutAccounts
+
+GET        /assets/*file                                         @controllers.Assets.at(path="/public", file)
+GET        /language/:lang                                       @uk.gov.hmrc.customs.financials.controllers.LanguageSwitchController.switchToLanguage(lang: uk.gov.hmrc.customs.financials.domain.Language)
+GET        /account-unavailable                                  @uk.gov.hmrc.customs.financials.controllers.CustomsFinancialsHomeController.showAccountUnavailable

@@ -1,0 +1,18 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(govukWarningText : GovukWarningText)
+
+@(warnings: String*)(implicit messages: Messages)
+
+
+@govukWarningText(WarningText(
+iconFallbackText = messages("cf.warning"),
+content = HtmlContent(HtmlFormat.fill(warnings.map(w => Html(messages(w))).to[scala.collection.immutable.Seq])))
+))
+
+

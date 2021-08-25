@@ -1,0 +1,74 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.views.html.components._
+@import uk.gov.hmrc.customs.financials.domain.EORI
+
+@this(
+        mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
+)
+
+@(eori: EORI, notificationMessageKeys: Seq[String])(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+
+@mainTemplate(title = Some(messages("cf.customs-financials-home.partial.heading")), eori = Some(eori), helpAndSupport = true) {
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
+    @messages("cf.customs-financials-home.partial.heading")
+    </h1>
+
+    <p class="govuk-body">
+    @messages("cf.customs-financials-home.partial.text")
+    </p>
+
+    @notification_panel(notificationMessageKeys)
+
+
+    <section id="import-vat" class="govuk-!-margin-bottom-9">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-9">
+        @messages("cf.customs-financials-home.import-vat.title")
+        </h2>
+        <div class="import-vat-certificates govuk-!-margin-bottom-7">
+            <p class="govuk-body">@messages("cf.import-vat.view-certificates.description")</p>
+            <p class="govuk-body">
+                <a class="view vat-link govuk-link" href="@{
+                    uk.gov.hmrc.customs.financials.controllers.routes.VatController.showVatAccount()
+                }">
+                @messages("cf.customs-financials-home.import-vat.title.link")
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <section id="postponed-vat" class="govuk-!-margin-bottom-9">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-9">
+        @messages("cf.customs-financials-home.pvat.title")
+        </h2>
+        <div class="postponed-vat-statements govuk-!-margin-bottom-7">
+            <p class="govuk-body">@messages("cf.postponed-vat.view-certificates.description")</p>
+            <p class="govuk-body">
+                <a class="view pvat-link govuk-link" href="@{
+                    uk.gov.hmrc.customs.financials.controllers.routes.PostponedVatController.show
+                }">
+                @messages("cf.customs-financials-home.pvat.link")
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <section id="import-adjustments" class="govuk-!-margin-bottom-9">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-1 govuk-!-margin-top-9">
+        @messages("cf.customs-financials-home.securities.title")
+        </h2>
+        <div class="securities-statements govuk-!-margin-bottom-7">
+            <p class="govuk-body">@messages("cf.securities.view-statements.description")</p>
+            <p class="govuk-body">
+                <a class="govuk-link securities-link" href="@{
+                    uk.gov.hmrc.customs.financials.controllers.routes.SecuritiesController.showSecurityStatements()
+                }">
+                @messages("cf.customs-financials-home.securities.link")
+                </a>
+            </p>
+        </div>
+    </section>
+}

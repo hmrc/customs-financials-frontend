@@ -1,0 +1,16 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@(keepAliveUrl: String, timeout: String)
+
+<div id="timeout-dialog"
+     class="govuk-visually-hidden"
+     style="display: none;"
+     data-timeout="@{timeout}"
+     data-countdown="120"
+     data-keep-alive-url="@{keepAliveUrl}"
+     data-sign-out-url="/customs/payment-records/logout"
+     data-timeout-url="/customs/payment-records/logout-no-survey">
+</div>

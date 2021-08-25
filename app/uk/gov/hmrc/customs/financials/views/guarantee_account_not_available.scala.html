@@ -1,0 +1,29 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.config.AppConfig
+@import uk.gov.hmrc.customs.financials.views.html.components._
+
+@this(
+    mainTemplate: uk.gov.hmrc.customs.financials.views.html.full_width_template
+)
+
+
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@mainTemplate(pageTitle = Some(messages("cf.guarantee-account.detail.title")), beforeContentBlock = Some(link_to_home_page()), helpAndSupport = true) {
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            @messages("cf.guarantee-account.detail.title")
+        </h1>
+
+        <div class="govuk-inset-text govuk-!-margin-bottom-9" id="account-not-available">
+            @messages("cf.guarantee-account.detail.account-not-available")
+        </div>
+    </div>
+</div>
+}

@@ -1,0 +1,17 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@(classStyle:String = "govuk-heading-m", help:String = "cf.account.help-support.message", contactNumber:String = "cf.account.help-support.numbers", officeHours:String = "cf.account.help-support.office-hours")(implicit messages: Messages)
+
+<div id="help_and_support" class="govuk-!-padding-top-4">
+    <h2 class=@classStyle>@messages("cf.help-and-support.title")</h2>
+    <div id="help-message">
+        <p class="govuk-body govuk-!-margin-bottom-5" id="contact-number">
+            @messages(help)
+            @messages(contactNumber).
+        </p>
+        <p class="govuk-body govuk-!-margin-bottom-5" id="office-hours">@messages(officeHours)</p>
+    </div>
+</div>

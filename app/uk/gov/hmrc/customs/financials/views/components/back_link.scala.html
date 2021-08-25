@@ -1,0 +1,19 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.govukfrontend.views.html.components._
+
+@this(
+    back_link: govukBackLink
+)
+
+@(link: String)(implicit messages: Messages)
+
+@back_link(BackLink(
+    href = link,
+    content = Text(messages("cf.back")),
+    classes = "link-back",
+    attributes = Map("id" -> "back-link")
+))

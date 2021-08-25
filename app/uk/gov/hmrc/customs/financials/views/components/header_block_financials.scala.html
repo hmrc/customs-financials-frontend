@@ -1,0 +1,20 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+@import uk.gov.hmrc.customs.financials.views.html.components.phaseBanner
+
+@this(
+        phaseBanner: phaseBanner,
+        eoriBanner: uk.gov.hmrc.customs.financials.views.html.components.eori_banner,
+        siteHeader: uk.gov.hmrc.customs.financials.views.html.components.site_header,
+)
+@(eori: Option[String] = None, maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None)(implicit request: Request[_], messages: Messages)
+
+@siteHeader()
+
+<div class="govuk-width-container">
+    @phaseBanner("beta")
+    @maybeMessageBannerPartial
+    @eoriBanner(eori)
+</div>

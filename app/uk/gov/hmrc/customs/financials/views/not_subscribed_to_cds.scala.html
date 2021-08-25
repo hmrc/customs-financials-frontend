@@ -1,0 +1,36 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this(
+        mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
+)
+
+@()(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+
+@mainTemplate(title = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
+    <h1 class="govuk-heading-l">@messages("cf.not-subscribed-to-cds.detail.heading")</h1>
+    <h2 class="govuk-heading-m">@messages("cf.not-subscribed-to-cds.detail.how-to-get-access-info")</h2>
+
+    <p class="govuk-body">
+        @messages("cf.not-subscribed-to-cds.detail.eori-info")
+        <a class="govuk-link" target="_blank" href="@(appConfig.registerCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.eori-link")</a>.
+    </p>
+
+    <p class="govuk-body">
+        @messages("cf.not-subscribed-to-cds.detail.get-access-info")
+        <a class="govuk-link" target="_blank" href="@(appConfig.subscribeCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.get-access-link")</a>.
+    </p>
+
+    <p class="govuk-body">
+    @messages("cf.not-subscribed-to-cds.detail.process-application-info")
+    </p>
+
+    <h2 class="govuk-heading-m">@messages("cf.not-subscribed-to-cds.detail.already-applied-info")</h2>
+
+    <p class="govuk-body">
+        @messages("cf.not-subscribed-to-cds.detail.status-info")
+        <a class="govuk-link" target="_blank" href="@(appConfig.applicationStatusCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.status-check-info")</a>.
+    </p>
+}

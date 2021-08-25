@@ -1,0 +1,38 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.customs.financials.config.AppConfig
+
+@this(
+        accountStatus: uk.gov.hmrc.customs.financials.views.html.components.account_status,
+        balanceAvailable: uk.gov.hmrc.customs.financials.views.html.components.balance_available
+)
+
+
+@(cashAccount: CashAccount)(implicit messages: Messages, appConfig: AppConfig)
+
+<div class="custom-card cash-account govuk-!-margin-bottom-7">
+  <header class="card-header">
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="cans-@{cashAccount.number}">
+        @messages("cf.account") @cashAccount.number
+      </h3>
+      @accountStatus(cashAccount.status, "cash-account")
+  </header>
+  @balanceAvailable(cashAccount.status, "available-account-balance", cashAccount.balances.AvailableAccountBalance.getOrElse(0.0))
+
+  <p class="govuk-body custom-card__footer">
+    <a id="cash-account-@{s"${cashAccount.number}"}" class="govuk-link govuk-!-margin-right-2"
+       href="@{appConfig.cashAccountUrl}">
+      @messages("cf.customs-financials-home.cash-account.link")
+    </a>
+   <a class="govuk-link"
+     href="@{appConfig.cashAccountTopUpGuidanceUrl}"
+   >
+   <span aria-hidden="true">@messages("cf.accounts.topUp")</span><span class="govuk-visually-hidden">
+   @messages("cf.customs-financials-home.cash-account.top-up.link-label")</span>
+  </a>
+  </p>
+
+</div>

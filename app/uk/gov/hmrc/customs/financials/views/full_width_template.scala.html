@@ -1,0 +1,96 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+
+@import uk.gov.hmrc.customs.financials.views.helpers.PageTitle.fullPageTitle
+@import uk.gov.hmrc.govukfrontend.views.Aliases._
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukHeader
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukFooter
+@import uk.gov.hmrc.govukfrontend.views.html.layouts.govukTemplate
+@import uk.gov.hmrc.customs.financials.views.html.components._
+
+@this(
+        govukHeader: GovukHeader,
+        govukFooter: GovukFooter,
+        govUkTemplate: govukTemplate,
+        header_block_financials: header_block_financials,
+        languageSelection: languageSelection
+)
+@(
+        pageTitle: Option[String] = None,
+        maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
+        headBlock: Option[Html] = None,
+        headerBlock: Option[Html] = None,
+        beforeContentBlock: Option[Html] = None,
+        footerBlock: Option[Html] = None,
+        footerItems: Seq[FooterItem] = Seq.empty,
+        bodyEndBlock: Option[Html] = None,
+        scriptsBlock: Option[Html] = None,
+        helpAndSupport: Boolean
+
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+
+@headerDefault = {
+@headerBlock.getOrElse {
+    @govukHeader(Header(
+        homepageUrl = Some(messages("service.homePageUrl")),
+        serviceName = Some(messages("service.name")),
+        serviceUrl = Some(messages("service.homePageUrl")),
+        containerClasses = Some("govuk-width-container")))
+}
+}
+
+@footerDefault = {
+@footerBlock.getOrElse {
+    @govukFooter(new Footer(meta = Some(Meta(items = Some(footerItems)))))
+}
+}
+
+
+@mainContentDefault = {
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+        @contentBlock
+        </div>
+    </div>
+
+    @if(helpAndSupport){
+        @help_and_support_message()
+    }
+}
+
+@head = {
+        <!--[if lte IE 8]><link href='
+
+
+@controllers.routes.Assets.at("stylesheets/application-ie-8.css")
+    ' rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if gt IE 8]><!-->
+    <link href='@controllers.routes.Assets.at("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
+}
+
+@beforeContentWrapper = {
+@beforeContentBlock
+@if(appConfig.languageTranslationEnabled) {
+    @languageSelection()
+}
+@timeout_dialog(request.uri, appConfig.sessionTimeout)
+}
+
+@bodyEndDefault = {
+@bodyEndBlock
+@scripts()
+}
+
+@govUkTemplate(
+    htmlLang = Some("en"),
+    pageTitle = fullPageTitle(pageTitle),
+    headBlock = Some(head),
+    headerBlock = header_block_financials(maybeMessageBannerPartial = maybeMessageBannerPartial),
+    beforeContentBlock = Some(beforeContentWrapper),
+    footerBlock = footerDefault,
+    bodyEndBlock = Some(bodyEndDefault)
+)(mainContentDefault)

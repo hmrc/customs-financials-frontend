@@ -1,0 +1,16 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@()(implicit messages: Messages)
+
+<div class="custom-card postponed-vat-statements govuk-!-margin-bottom-7">
+    <p class="govuk-body">@messages("cf.postponed-vat.view-certificates.description")</p>
+    <p class="govuk-body custom-card__footer">
+        <a class="view pvat-link govuk-link"
+           href="@{uk.gov.hmrc.customs.financials.controllers.routes.PostponedVatController.show}">
+           @messages("cf.customs-financials-home.pvat.link")
+        </a>
+    </p>
+</div>

@@ -1,0 +1,14 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@(notificationMessageKeys: Seq[String])(implicit messages: Messages)
+
+@if(notificationMessageKeys.nonEmpty) {
+    <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
+        <ul class="govuk-list">
+        @for(notificationMessageKey <- notificationMessageKeys) {<li>@messages(s"cf.customs-financials-home.notification.$notificationMessageKey")</li>}
+        </ul>
+    </div>
+}
