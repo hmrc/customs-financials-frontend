@@ -51,14 +51,12 @@ val compileDependencies = Seq(
   "uk.gov.hmrc" %% "govuk-template" % "5.68.0-play-28",
   "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28",
   "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.76.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-govuk" % "0.77.0-play-28",
   ws,
   "uk.gov.hmrc" %% "auth-client" % "5.6.0-play-28",
   "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
   "org.typelevel" %% "cats-core" % "2.3.0",
   "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-28",
   "uk.gov.hmrc" %% "tax-year" % "1.3.0",
-  "org.webjars.npm" % "hmrc-frontend" % "1.19.1",
   "org.webjars.npm" % "moment" % "2.29.0",
   "com.typesafe.play" %% "play-json-joda" % "2.9.2"
 )
