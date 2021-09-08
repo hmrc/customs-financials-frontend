@@ -50,7 +50,7 @@ val compileDependencies = Seq(
   "uk.gov.hmrc" %% "play-partials" % "8.1.0-play-28",
   "uk.gov.hmrc" %% "govuk-template" % "5.68.0-play-28",
   "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "0.76.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "1.4.0-play-28",
   ws,
   "uk.gov.hmrc" %% "auth-client" % "5.6.0-play-28",
   "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
