@@ -23,4 +23,6 @@ GET        /parts-of-service-unavailable                         @uk.gov.hmrc.cu
 
 GET        /assets/*file                                         @controllers.Assets.at(path="/public", file)
 GET        /language/:lang                                       @uk.gov.hmrc.customs.financials.controllers.LanguageSwitchController.switchToLanguage(lang: uk.gov.hmrc.customs.financials.domain.Language)
+->         /hmrc-frontend                                        hmrcfrontend.Routes
+
 GET        /account-unavailable                                  @uk.gov.hmrc.customs.financials.controllers.CustomsFinancialsHomeController.showAccountUnavailable
