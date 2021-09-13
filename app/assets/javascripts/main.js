@@ -1,4 +1,4 @@
-window.GOVUKFrontend.initAll()
+window.HMRCFrontend.initAll()
 
 const timeoutDialog = document.querySelector("#timeout-dialog");
 
