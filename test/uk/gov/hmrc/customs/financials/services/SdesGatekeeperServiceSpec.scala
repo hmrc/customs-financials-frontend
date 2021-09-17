@@ -225,45 +225,6 @@ class SdesGatekeeperServiceSpec extends SpecBase {
       }
     }
 
-    "convertToDutyDeferment StatementFile" should {
-
-      "create DutyDefermentStatementFile from FileInformation" in  {
-        val sdesGatekeeperService = new SdesGatekeeperService()
-
-        val dutyDefermentStatementMetadata = List(
-          MetadataItem("PeriodStartYear", "2018"),
-          MetadataItem("PeriodStartMonth", "6"),
-          MetadataItem("PeriodStartDay", "1"),
-          MetadataItem("PeriodEndYear", "2018"),
-          MetadataItem("PeriodEndMonth", "6"),
-          MetadataItem("PeriodEndDay", "8"),
-          MetadataItem("FileType", "CSV"),
-          MetadataItem("FileRole", "DutyDefermentStatement"),
-          MetadataItem("DefermentStatementType", "Weekly"),
-          MetadataItem("DutyOverLimit", "Y"),
-          MetadataItem("DutyPaymentType", "BACS"),
-          MetadataItem("DAN", "123456")
-        )
-
-        val fileInformation = domain.FileInformation(
-          "dd-2018-06.csv",
-          "https://some.sdes.domain?token=abc123",
-          1234L,
-          Metadata(dutyDefermentStatementMetadata)
-        )
-        val expectedDutyDefermentStatementFile = DutyDefermentStatementFile(
-          "dd-2018-06.csv",
-          "https://some.sdes.domain?token=abc123",
-          1234L,
-          DutyDefermentStatementFileMetadata(2018, 6, 1, 2018, 6, 8, Csv, DutyDefermentStatement, Weekly, Some(true), Some("BACS"), "123456", None)
-        )
-
-        val dutyDefermentStatementFile = sdesGatekeeperService.convertToDutyDefermentStatementFile(fileInformation)
-
-        dutyDefermentStatementFile must be(expectedDutyDefermentStatementFile)
-      }
-    }
-
     "convertTo[T]" should {
 
       "convert FileInformation to a given SDES File type as 'T'" in {

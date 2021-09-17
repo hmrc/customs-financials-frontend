@@ -32,40 +32,19 @@ import scala.concurrent.Future
 
 class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase with ScalaFutures with FutureAwaits with DefaultAwaitTimeout {
 
-  "retrieve session" should {
-    "return a Account Link when a valid link id is provided" in new Setup {
-      when[Future[SessionCacheAccountLink]](mockHttpClient.GET(eqTo(url + s"/account-link/${sessionId.value}/link1"), any, any)(any, any, any)).thenReturn(Future.successful(sessionAccountCacheLink))
-      running(app) {
-        val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val result: AccountLink = await(connector.retrieveSession(sessionId.value, "link1")).get
-        result.eori mustBe accountLink.eori
-        result.accountNumber mustBe accountLink.accountNumber
-        result.linkId mustBe accountLink.linkId
-      }
-    }
 
-    "returns None when retrieve link fails" in new Setup {
-      when[Future[SessionCacheAccountLink]](mockHttpClient.GET(eqTo(url + s"/account-link/${sessionId.value}/link1"), any, any)(any, any, any)).thenReturn(Future.failed(new InternalServerException("Boom")))
+  "store session" should {
+    "save  all account links for a session" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val result = await(connector.retrieveSession(sessionId.value, "link1"))
-        result mustBe None
+        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
+        when[Future[HttpResponse]](mockHttpClient.POST(eqTo(cacheUrl), eqTo(accountLinkRequest), any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(Status.OK, "")))
+        val result = await(connector.storeSession(sessionId.value, someLinks))
+        result.status mustBe OK
       }
     }
   }
-
-    "store session" should {
-      "save  all account links for a session" in new Setup {
-        running(app) {
-          val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-          val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
-          when[Future[HttpResponse]](mockHttpClient.POST(eqTo(cacheUrl), eqTo(accountLinkRequest), any)(any, any, any, any))
-            .thenReturn(Future.successful(HttpResponse.apply(Status.OK, "")))
-          val result = await(connector.storeSession(sessionId.value, someLinks))
-          result.status mustBe OK
-        }
-      }
-    }
 
   "remove session" should {
     "should remove the session from the cache" in new Setup {
@@ -80,32 +59,32 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase with ScalaFutu
     }
   }
 
-    trait Setup {
-      val sessionId = SessionId(UUID.randomUUID().toString)
-      val url = "/some-url"
-      val sessionCacheLinks = Seq(
-        SessionCacheAccountLink("eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1"),
-        SessionCacheAccountLink("eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1")
-      )
+  trait Setup {
+    val sessionId = SessionId(UUID.randomUUID().toString)
+    val url = "/some-url"
+    val sessionCacheLinks = Seq(
+      SessionCacheAccountLink("eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1"),
+      SessionCacheAccountLink("eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1")
+    )
 
-      val someLinks = Seq(
-        AccountLink(sessionId.value, "eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now),
-        AccountLink(sessionId.value, "eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1", DateTime.now)
-      )
-      val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
-      val mockAppConfig = mock[AppConfig]
-      val mockHttpClient = mock[HttpClient]
+    val someLinks = Seq(
+      AccountLink(sessionId.value, "eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now),
+      AccountLink(sessionId.value, "eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1", DateTime.now)
+    )
+    val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
+    val mockAppConfig = mock[AppConfig]
+    val mockHttpClient = mock[HttpClient]
 
-      implicit val hc: HeaderCarrier = HeaderCarrier()
-      val accountLink = AccountLink(sessionId.value, "eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now)
-      val sessionAccountCacheLink = SessionCacheAccountLink("eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    val accountLink = AccountLink(sessionId.value, "eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now)
+    val sessionAccountCacheLink = SessionCacheAccountLink("eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
 
-      when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
-      val app = application().overrides(
-        bind[AppConfig].toInstance(mockAppConfig),
-        bind[HttpClient].toInstance(mockHttpClient)
-      ).build()
+    when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
+    val app = application().overrides(
+      bind[AppConfig].toInstance(mockAppConfig),
+      bind[HttpClient].toInstance(mockHttpClient)
+    ).build()
 
-    }
   }
+}
 

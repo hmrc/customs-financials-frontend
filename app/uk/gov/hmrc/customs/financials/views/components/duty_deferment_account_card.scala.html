@@ -97,7 +97,7 @@
                     }"
                     class="govuk-link govuk-!-margin-right-2"
                     href="@{
-                        model.dutyDefermentAccountDetailsLinks((dutyDefermentAccount.owner, dutyDefermentAccount.number))
+                        model.dutyDefermentAccountDetailsLinks()(appConfig)(dutyDefermentAccount.owner, dutyDefermentAccount.number)
                     }">
                         <span aria-hidden="true">@messages("cf.accounts.viewStatements")</span> <span class="govuk-visually-hidden">@messages("cf.accounts.label.dan", dutyDefermentAccount.number)</span>
                     </a>
@@ -115,7 +115,7 @@
                 @if(!List(AccountStatusPending, AccountStatusClosed).contains(dutyDefermentAccount.status)) {
                     <a class="govuk-link"
                     href="@{
-                        model.dutyDefermentContactDetailsLinks((dutyDefermentAccount.owner, dutyDefermentAccount.number))
+                        model.dutyDefermentContactDetailsLinks()(appConfig)(dutyDefermentAccount.owner, dutyDefermentAccount.number)
                     }">
                         <span aria-hidden="true">@messages("cf.accounts.contact.details")</span> <span class="govuk-visually-hidden">
                     @messages("cf.accounts.label.contact.details", dutyDefermentAccount.number)</span>

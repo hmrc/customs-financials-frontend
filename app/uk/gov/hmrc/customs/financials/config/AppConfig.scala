@@ -26,53 +26,66 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class AppConfig @Inject()(val config: Configuration, val environment: Environment, servicesConfig: ServicesConfig) {
 
-  private def loadConfig(key: String) = config.get[String](key)
+  lazy val appName: String = config.get[String]("appName")
+  lazy val sessionTimeout: String = config.get[String]("timeout-time")
+  lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
+  lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
+  lazy val reportAProblem: Boolean = config.get[Boolean]("features.report-a-problem")
+  lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
+  lazy val numberOfItemsPerPage: Int = config.get[Int]("microservice.services.customs-financials-frontend.numberOfItemsPerPage")
+  lazy val sessionCacheExpiryInSeconds: Int = config.get[Int]("microservice.services.customs-financials-frontend.sessionCache.expirySeconds")
+  lazy val serviceNameSdes: String = config.get[String]("microservice.services.sdes.circuit-breaker.serviceName")
+  lazy val numberOfCallsToSwitchCircuitBreakerSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.numberOfCallsToTriggerStateChange")
+  lazy val unavailablePeriodDurationSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.unavailablePeriodDuration")
+  lazy val unstablePeriodDurationSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.unstablePeriodDuration")
 
-  lazy val appName = loadConfig("appName")
-  lazy val registerCdsUrl = loadConfig("microservice.services.customs-financials-frontend.cdsRegisterUrl")
   lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
-  lazy val applicationStatusCdsUrl: String =config.get[String]("external-urls.applicationStatusUrl")
-  lazy val feedbackService = config.getOptional[String]("microservice.services.feedback.url").getOrElse("/feedback") + config.getOptional[String]("feedback.source").getOrElse("/CDS-FIN")
-  lazy val accessibilityLinkUrl = config.get[String]("external-urls.accessibility-statement")
-  lazy val sessionTimeout = loadConfig("timeout-time")
-  lazy val cashAccountTopUpGuidanceUrl = loadConfig("external-urls.cashAccountTopUpGuidanceUrl")
-  lazy val cashAccountUrl = loadConfig("microservice.services.customs-cash-account-frontend.url")
-  lazy val manageAuthoritiesFrontendUrl = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
-  lazy val guaranteeAccountUrl = config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
-  lazy val dutyDefermentSchemeContactLink = loadConfig("external-urls.dutyDefermentSchemeContactLink")
-  lazy val dutyDefermentTopUpLink = loadConfig("external-urls.dutyDefermentTopUpLink")
-
-  lazy val sddsUri: String = servicesConfig.baseUrl("sdds") + config.getOptional[String]("microservice.services.sdds.context").getOrElse("/direct-debit-backend") + "/cds-homepage/cds/journey/start"
-  lazy val contactDetailsUri = config.get[String]("microservice.services.customs-financials-account-contact-frontend.url") + "/duty-deferment/"
-  lazy val contactDetailsCryptoBaseConfigKey = config.getOptional[String]("microservice.services.customs-financials-account-contact-frontend.crypto.baseConfigKey").getOrElse("cookie.encryption")
-  lazy val contactDetailsCryptoEncryptionKey = config.getOptional[String]("microservice.services.customs-financials-account-contact-frontend.crypto.encryptionKey").getOrElse("gvBoGdgzqG1AarzF1LY0zQ==")
-
+  lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
+  lazy val applicationStatusCdsUrl: String = config.get[String]("external-urls.applicationStatusUrl")
+  lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
+  lazy val dutyDefermentSchemeContactLink: String = config.get[String]("external-urls.dutyDefermentSchemeContactLink")
+  lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
   lazy val loginUrl: String = config.get[String]("external-urls.login")
   lazy val loginContinueUrl: String = config.get[String]("external-urls.loginContinue")
   lazy val pvatLoginContinueUrl: String = config.get[String]("external-urls.pvatLoginContinue")
   lazy val signOutUrl: String = config.get[String]("external-urls.signOut")
+  lazy val helpMakeGovUkBetterUrl: String = config.get[String]("external-urls.helpMakeGovUkBetterUrl")
+  lazy val govukHome: String = config.get[String]("external-urls.govUkHome")
 
-  lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
+  lazy val registerCdsUrl: String = config.get[String]("microservice.services.customs-financials-frontend.cdsRegisterUrl")
+  lazy val feedbackService: String = config.get[String]("microservice.services.feedback.url") + config.get[String]("microservice.services.feedback.source")
+  lazy val financialsFrontendUrl: String = config.get[String]("microservice.services.customs-financials-frontend.url")
+  lazy val cashAccountUrl: String = config.get[String]("microservice.services.customs-cash-account-frontend.url")
+  lazy val manageAuthoritiesFrontendUrl: String = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
+  lazy val guaranteeAccountUrl: String = config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
+  lazy val emailFrontendUrl: String = config.get[String]("microservice.services.customs-email-frontend.url")
 
-  lazy val xClientIdHeader = loadConfig("microservice.services.sdes.x-client-id")
+  lazy val customsFinancialsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
+    config.get[String]("microservice.services.customs-financials-session-cache.context")
+
+  def contactDetailsUrl(linkId: String): String =
+    s"${config.get[String]("microservice.services.customs-duty-deferment-frontend.url")}/$linkId/contact-details"
+
+  def accountUrl(linkId: String): String =
+    s"${config.get[String]("microservice.services.customs-duty-deferment-frontend.url")}/$linkId/account"
+
+  def directDebitUrl(linkId: String): String =
+    s"${config.get[String]("microservice.services.customs-duty-deferment-frontend.url")}/$linkId/direct-debit"
 
 
-  lazy val customsFinancialsApi = servicesConfig.baseUrl("customs-financials-api") + config.getOptional[String]("microservice.services.customs-financials-api.context").getOrElse("/customs-financials-api")
-  lazy val customsDataStore = servicesConfig.baseUrl("customs-data-store") + config.getOptional[String]("microservice.services.customs-data-store.context").getOrElse("/customs-data-store")
-  lazy val customsFinancialsSessionCacheUrl = servicesConfig.baseUrl("customs-financials-session-cache") + config.getOptional[String]("microservice.services.customs-financials-session-cache.context").getOrElse("/customs/session-cache")
+  lazy val customsSecureMessagingBannerEndpoint: String =
+    config.get[Service]("microservice.services.customs-financials-secure-messaging-frontend").baseUrl +
+      config.get[String]("microservice.services.customs-financials-secure-messaging-frontend.context") +
+      config.get[String]("microservice.services.customs-financials-secure-messaging-frontend.banner-endpoint")
 
-  lazy val sdesApi = servicesConfig.baseUrl("sdes") + config.getOptional[String]("microservice.services.sdes.context").getOrElse("/")
-  lazy val customsFinancialFrontend = config.getOptional[String]("microservice.services.customs-financials-frontend.url").getOrElse("/customs-financials-frontend")
+  lazy val customsFinancialsApi: String = servicesConfig.baseUrl("customs-financials-api") +
+    config.get[String]("microservice.services.customs-financials-api.context")
 
-  lazy val customsEmailFrontend = config.getOptional[String]("microservice.services.customs-email-frontend.url").getOrElse("/customs-email-frontend")
+  lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
+    config.get[String]("microservice.services.customs-data-store.context")
 
-  lazy val numberOfItemsPerPage = config.getOptional[Int]("microservice.services.customs-financials-frontend.numberOfItemsPerPage").getOrElse(1)
-  lazy val sessionCacheExpiryInSeconds = config.getOptional[Int]("microservice.services.customs-financials-frontend.sessionCache.expirySeconds").getOrElse(0)
-
-  lazy val serviceNameSdes = loadConfig("microservice.services.sdes.circuit-breaker.serviceName")
-  lazy val numberOfCallsToSwitchCircuitBreakerSdes = loadConfig("microservice.services.sdes.circuit-breaker.numberOfCallsToTriggerStateChange").toInt
-  lazy val unavailablePeriodDurationSdes = loadConfig("microservice.services.sdes.circuit-breaker.unavailablePeriodDuration").toInt
-  lazy val unstablePeriodDurationSdes = loadConfig("microservice.services.sdes.circuit-breaker.unstablePeriodDuration").toInt
+  lazy val sdesApi: String = servicesConfig.baseUrl("sdes") +
+    config.get[String]("microservice.services.sdes.context")
 
   private lazy val historicRequest = config.get[String]("external-urls.historicRequest")
   private lazy val requestedStatements = config.get[String]("external-urls.requestedStatements")
@@ -111,18 +124,4 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
-
-  lazy val helpMakeGovUkBetterUrl = loadConfig("external-urls.helpMakeGovUkBetterUrl")
-  lazy val govukHome: String = config.get[String]("external-urls.govUkHome")
-  lazy val reportAProblem = config.getOptional[Boolean]("features.report-a-problem").getOrElse(false)
-  lazy val fixedDateTime = config.get[Boolean]("features.fixed-system-time")
-
-  //for secure message banner
-  private val customsSecureMessagingBaseUrl: String = config.get[Service]("microservice.services.customs-financials-secure-messaging-frontend").baseUrl
-  private val customsSecureMessagingContext: String = config.get[String]("microservice.services.customs-financials-secure-messaging-frontend.context")
-  lazy val customsSecureMessagingBannerEndpoint: String = {
-    customsSecureMessagingBaseUrl +
-      customsSecureMessagingContext +
-      config.get[String]("microservice.services.customs-financials-secure-messaging-frontend.banner-endpoint")
-  }
 }

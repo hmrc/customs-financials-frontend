@@ -53,12 +53,6 @@ class SdesService @Inject()(http: HttpClient,
 
   import sdesGatekeeperService._
 
-  def getDutyDefermentStatements(eori: String, dan: String)(implicit hc: HeaderCarrier): Future[Seq[DutyDefermentStatementFile]] = {
-    val transform = convertTo[DutyDefermentStatementFile] andThen filterFileFormats(SdesFileFormats)
-    auditingService.audit(AuditModel(AUDIT_TYPE, AUDIT_DUTY_DEFERMENT_TRANSACTION, Json.toJson(AuditEori(eori, false))))
-    getSdesFiles(sdesDutyDefermentStatementListUrl, s"$eori-$dan", "sdes.get.duty-deferment-statements", transform)
-  }
-
   def getVatCertificates(eori: String)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[VatCertificateFile]] = {
     val transform = convertTo[VatCertificateFile] andThen filterFileFormats(SdesFileFormats)
     auditingService.audit(AuditModel(AUDIT_VAT_CERTIFICATES, AUDIT_VAT_CERTIFICATES_TRANSACTION, Json.toJson(AuditEori(eori, false))))
