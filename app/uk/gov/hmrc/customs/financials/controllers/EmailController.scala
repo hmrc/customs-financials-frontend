@@ -34,6 +34,6 @@ class EmailController @Inject()(authenticate: IdentifierAction,
   val log: LoggerLike = Logger(this.getClass)
 
   def showUnverified():Action[AnyContent] = authenticate { implicit request =>
-    Ok(verifyEmailView(appConfig.customsEmailFrontend))
+    Ok(verifyEmailView(appConfig.emailFrontendUrl))
   }
 }

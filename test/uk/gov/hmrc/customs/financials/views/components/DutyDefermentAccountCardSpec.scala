@@ -58,7 +58,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include a link to the duty deferment account page" in new Setup {
       running(app) {
-        val expectedUrl = "/customs/payment-records/duty-deferment/0123456789"
+        val expectedUrl = "http://localhost:9397/customs/duty-deferment/0123456789/account"
         content().containsLink(expectedUrl) mustBe true
       }
     }
@@ -370,9 +370,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val dan = "123456"
     val topUpLink1 = "/topup-link/0123456789"
     val topUpLink2 = "/topup-link/1111111111"
-    val ddSetupLink = "/customs/payment-records/duty-deferment/direct-debit-setup/0123456789"
-    val contactDetailsLink1 = "/customs/payment-records/duty-deferment/contact-details/0123456789"
-    val contactDetailsLink2 = "/contact-details-link/1111111111"
+    val ddSetupLink = "http://localhost:9397/customs/duty-deferment/0123456789/direct-debit"
+    val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
 //    val accountLinks = Map[(String, String), String]((eori, dan) -> link)
     val dutyDefermentAccount = DutyDefermentAccount(dan, eori, AccountStatusOpen, DefermentAccountAvailable,

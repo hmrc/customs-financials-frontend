@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.customs.financials.config
 
-import javax.inject.{Inject, Singleton}
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
-import uk.gov.hmrc.customs.financials.views.html.{error_template, internal_server_template, not_found_template}
+import uk.gov.hmrc.customs.financials.views.html.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              implicit val appConfig: AppConfig,
                              notFoundView: not_found_template,
-                             errorTemplate: error_template,
-                             interalServerError: internal_server_template
+                             errorTemplate: error_template
                             ) extends FrontendErrorHandler {
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     errorTemplate(Messages("cf.error.standard-error.title"), Messages("cf.error.standard-error.heading"),
@@ -41,14 +41,4 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
     errorTemplate(Messages("cf.error.unauthorized.title"), Messages("cf.error.unauthorized.heading"),
       Messages("cf.error.unauthorized.message"))
   }
-
-  def sddsErrorTemplate()(implicit request: Request[_]): Html =
-    interalServerError(Messages("cf.error.standard-error-sdds.title"), Messages("cf.error.standard-error-sdds.heading"),
-      Messages("cf.error.standard-error-sdds.message"), "", "")
-
-
-  def contactDetailsErrorTemplate()(implicit request: Request[_]): Html =
-    interalServerError(Messages("cf.error.standard-error-contact-details.title"), Messages("cf.error.standard-error-contact-details.heading"),
-      Messages("cf.error.standard-error-contact-details.message"), "", "")
-
 }

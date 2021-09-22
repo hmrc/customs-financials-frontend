@@ -23,6 +23,7 @@ import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
+import uk.gov.hmrc.customs.financials.config.AppConfig
 import uk.gov.hmrc.customs.financials.connectors.CustomsFinancialsSessionCacheConnector
 import uk.gov.hmrc.customs.financials.domain.FileRole._
 import uk.gov.hmrc.customs.financials.domain.{DefermentAccountAvailable, _}
@@ -57,14 +58,15 @@ class HomeControllerSpec extends SpecBase {
       )
 
       val newApp = application().build()
+      val appConfig = newApp.injector.instanceOf[AppConfig]
 
       running(newApp) {
         val controller = newApp.injector.instanceOf[CustomsFinancialsHomeController]
         val accountLinks = controller.createAccountLinks(sessionId, cdsAccounts)
         val model = FinancialsHomeModel(eoriNumber, cdsAccounts, notificationMessageKeys = List(), accountLinks)
 
-        model.dutyDefermentAccountDetailsLinks((eori1, dan1))
-        model.dutyDefermentAccountDetailsLinks((eori2, dan2))
+        model.dutyDefermentAccountDetailsLinks()(appConfig)(eori1, dan1)
+        model.dutyDefermentAccountDetailsLinks()(appConfig)(eori2, dan2)
       }
     }
   }

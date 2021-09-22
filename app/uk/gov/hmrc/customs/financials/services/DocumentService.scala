@@ -35,10 +35,6 @@ class DocumentService @Inject()(sdesService: SdesService,
     sdesService.getSecurityStatements(eori).map(auditFiles(_, eori))
   }
 
-  def getDutyDefermentStatements(eori: EORI, dan: String)(implicit hc: HeaderCarrier): Future[Seq[DutyDefermentStatementFile]] = {
-    sdesService.getDutyDefermentStatements(eori, dan).map(auditFiles(_, eori))
-  }
-
   def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatCertificateFile]] = {
     sdesService.getPostponedVatStatements(eori).map(auditFiles(_, eori))
   }

@@ -55,7 +55,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
 
   def index: Action[AnyContent] = (authenticate andThen checkEmailIsVerified).async {
     implicit request =>
-      val returnToUrl = appConfig.customsFinancialFrontend + routes.CustomsFinancialsHomeController.index().url
+      val returnToUrl = appConfig.financialsFrontendUrl + routes.CustomsFinancialsHomeController.index().url
       val eori = request.user.eori
       val result = for {
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)

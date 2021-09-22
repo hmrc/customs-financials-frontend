@@ -38,15 +38,6 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
                                                        appConfig: AppConfig,
                                                        metricsReporter: MetricsReporterService)(implicit executionContext: ExecutionContext) {
 
-  def retrieveSession(id: String, linkId: String)(implicit hc: HeaderCarrier): Future[Option[AccountLink]] = {
-    val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + s"/account-link/$id/$linkId"
-    metricsReporter.withResponseTimeLogging("customs-financials-session-cache.account-link") {
-      httpClient.GET[SessionCacheAccountLink](sessionCacheUrl).map(response => Some(new AccountLink(id, response)))
-    }.recover{
-      case _ => None
-    }
-  }
-
   def storeSession(id: String, accountLinks: Seq[AccountLink])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/update-links"
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.update-links") {
