@@ -3,9 +3,14 @@
  *
  *@
 
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
+
 @this(
-        mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
+    mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template,
+    hmrcNewTabLink: HmrcNewTabLink
 )
+
 
 @()(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
 
@@ -15,12 +20,28 @@
 
     <p class="govuk-body">
         @messages("cf.not-subscribed-to-cds.detail.eori-info")
-        <a class="govuk-link" target="_blank" href="@(appConfig.registerCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.eori-link")</a>.
+        @hmrcNewTabLink(
+            NewTabLink(
+                language = Some(messages.lang.toString),
+                classList = Some("govuk-link"),
+                href=Some(appConfig.registerCdsUrl),
+                text=messages("cf.not-subscribed-to-cds.detail.eori-link")
+            )
+        )
+        .
     </p>
 
     <p class="govuk-body">
         @messages("cf.not-subscribed-to-cds.detail.get-access-info")
-        <a class="govuk-link" target="_blank" href="@(appConfig.subscribeCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.get-access-link")</a>.
+        @hmrcNewTabLink(
+            NewTabLink(
+                language = Some(messages.lang.toString),
+                classList = Some("govuk-link"),
+                href=Some(appConfig.subscribeCdsUrl),
+                text=messages("cf.not-subscribed-to-cds.detail.get-access-link")
+            )
+        )
+        .
     </p>
 
     <p class="govuk-body">
@@ -31,6 +52,15 @@
 
     <p class="govuk-body">
         @messages("cf.not-subscribed-to-cds.detail.status-info")
-        <a class="govuk-link" target="_blank" href="@(appConfig.applicationStatusCdsUrl)">@messages("cf.not-subscribed-to-cds.detail.status-check-info")</a>.
+
+        @hmrcNewTabLink(
+            NewTabLink(
+                language = Some(messages.lang.toString),
+                classList = Some("govuk-link"),
+                href=Some(appConfig.applicationStatusCdsUrl),
+                text=messages("cf.not-subscribed-to-cds.detail.status-check-info")
+            )
+        )
+        .
     </p>
 }
