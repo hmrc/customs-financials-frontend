@@ -9,7 +9,7 @@ GET        /not-subscribed-for-cds                               @uk.gov.hmrc.cu
 GET        /authorized-to-view                                   @uk.gov.hmrc.customs.financials.controllers.AuthorizedToViewController.onPageLoad(state: uk.gov.hmrc.customs.financials.domain.AuthorizedToViewPageState)
 
 GET        /import-vat                                           @uk.gov.hmrc.customs.financials.controllers.VatController.showVatAccount
-GET        /postponed-vat                                        @uk.gov.hmrc.customs.financials.controllers.PostponedVatController.show
+GET        /postponed-vat                                        @uk.gov.hmrc.customs.financials.controllers.PostponedVatController.show(location: Option[String])
 GET        /adjustments                                          @uk.gov.hmrc.customs.financials.controllers.SecuritiesController.showSecurityStatements
 
 GET        /adjustments/statements-unavailable                   @uk.gov.hmrc.customs.financials.controllers.SecuritiesController.statementsUnavailablePage()

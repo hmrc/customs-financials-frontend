@@ -48,7 +48,7 @@
             <p class="govuk-body">@messages("cf.postponed-vat.view-certificates.description")</p>
             <p class="govuk-body">
                 <a class="view pvat-link govuk-link" href="@{
-                    uk.gov.hmrc.customs.financials.controllers.routes.PostponedVatController.show
+                    uk.gov.hmrc.customs.financials.controllers.routes.PostponedVatController.show(location = Some("CDS"))
                 }">
                 @messages("cf.customs-financials-home.pvat.link")
                 </a>
