@@ -12,9 +12,9 @@
     mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
 )
 
-@(eori: String, statementGroups: Seq[PostponedVatStatementGroup], cdsOnly: Boolean)(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+@(eori: String, statementGroups: Seq[PostponedVatStatementGroup], cdsOnly: Boolean, location: Option[String])(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
 
-@mainTemplate(title = Some(messages("cf.account.pvat.title")), beforeContentBlock = None, helpAndSupport = true) {
+@mainTemplate(title = Some(messages("cf.account.pvat.title")), beforeContentBlock = location.map(_ => link_to_home_page()), helpAndSupport = true) {
 
     @recruitment_banner()
 

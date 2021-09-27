@@ -41,7 +41,7 @@ class PostponedVatControllerSpec extends SpecBase {
     "return OK" in new Setup {
 
       running(app) {
-        val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+        val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
         val result = route(app, request).value
         status(result) mustBe OK
       }
@@ -50,7 +50,7 @@ class PostponedVatControllerSpec extends SpecBase {
     "inform API to remove Postponed VAT Statement notifications" in new Setup {
 
       running(app) {
-        val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+        val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
         val result = route(app, request).value
         status(result) mustBe OK
         verify(mockApiService).deleteNotification(eqTo(newUser().eori), eqTo(PostponedVATStatement))(any)
@@ -62,7 +62,7 @@ class PostponedVatControllerSpec extends SpecBase {
       "display the EORI" in new Setup {
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -73,7 +73,7 @@ class PostponedVatControllerSpec extends SpecBase {
       "have heading 'Your postponed import VAT statements'" in new Setup {
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -95,7 +95,7 @@ class PostponedVatControllerSpec extends SpecBase {
           .thenReturn(Future.successful(pvatStatementFilesWithMissingCsv))
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -128,7 +128,7 @@ class PostponedVatControllerSpec extends SpecBase {
         ).build()
         running(appWithEoriHistory) {
 
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(appWithEoriHistory, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -154,7 +154,7 @@ class PostponedVatControllerSpec extends SpecBase {
       "display amended postponed VAT statements before originals" in new Setup {
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -179,7 +179,7 @@ class PostponedVatControllerSpec extends SpecBase {
 
       "display Help and support heading and message" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -191,7 +191,7 @@ class PostponedVatControllerSpec extends SpecBase {
 
       "shows files for all available monthsthat contain a valid Pvat file format" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -214,7 +214,7 @@ class PostponedVatControllerSpec extends SpecBase {
 
       "have legal notice text" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -229,7 +229,7 @@ class PostponedVatControllerSpec extends SpecBase {
         "session id is missing from the request" in {
           val app = application().overrides(api.inject.bind[PvatIdentifierAction].to[FakePvatIdentifierAction]).build()
           running(app) {
-            val request = fakeRequest(GET, routes.PostponedVatController.show().url)
+            val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url)
             val result = route(app, request).value
             status(result) mustBe UNAUTHORIZED
           }
@@ -249,7 +249,7 @@ class PostponedVatControllerSpec extends SpecBase {
 
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           await(route(app, request).value)
           verify(mockDataStoreService, never)
             .getAllEoriHistory(ArgumentMatchers.anyString)(any[HeaderCarrier])
@@ -263,7 +263,7 @@ class PostponedVatControllerSpec extends SpecBase {
           .thenReturn(Future.successful(List.empty))
 
         running(app) {
-          val request = fakeRequest(GET, routes.PostponedVatController.show().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           contentAsString(result) must include regex "There were no statements in June"
