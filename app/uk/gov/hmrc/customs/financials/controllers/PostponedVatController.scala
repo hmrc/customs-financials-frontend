@@ -45,7 +45,7 @@ class PostponedVatController @Inject()
 
   val log: LoggerLike = Logger(this.getClass)
 
-  def show: Action[AnyContent] = (authenticate andThen resolveSessionId) async { implicit req =>
+  def show(location: Option[String]): Action[AnyContent] = (authenticate andThen resolveSessionId) async { implicit req =>
 
     val currentEori = req.user.eori
     val filteredHistoricEoris = req.user.allEoriHistory.filterNot(_.eori == currentEori)
@@ -79,7 +79,7 @@ class PostponedVatController @Inject()
       val cdsCount: Int = allPVatStatements.count(_.metadata.source != CHIEF)
       val cdsOnly: Boolean = cdsCount == allPvatStatementsCount
       log.info(s"postponed vat statements displayed TOTAL: ${allPvatStatementsCount} CDS: $cdsCount CHIEF: ${allPvatStatementsCount - cdsCount}")
-      Ok(postponedImportVatView(currentEori, PostponedVatViewModel(allPVatStatements), cdsOnly))
+      Ok(postponedImportVatView(currentEori, PostponedVatViewModel(allPVatStatements), cdsOnly, location))
     }
   }
 
