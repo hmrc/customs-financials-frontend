@@ -212,16 +212,21 @@ class PostponedVatControllerSpec extends SpecBase {
         }
       }
 
-      "have legal notice text" in new Setup {
+      "has statements period text" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
-          val hasLegalNoticeText = html.getAllElements.asScala.map(_.text()).find {
-            _ == "You can only view statements online for 6 months."
+          val hasgeneratedPeriodText = html.getAllElements.asScala.map(_.text()).find {
+            _ == "Statements are only generated for periods in which you imported goods."
           }
-          hasLegalNoticeText.isDefined mustBe true
+          val hasOnlyShowText = html.getAllElements.asScala.map(_.text()).find {
+            _ == "We only show statements for the last 6 months. If required, you can request older statements."
+          }
+
+          hasgeneratedPeriodText.isDefined mustBe true
+          hasOnlyShowText.isDefined mustBe true
         }
       }
 
