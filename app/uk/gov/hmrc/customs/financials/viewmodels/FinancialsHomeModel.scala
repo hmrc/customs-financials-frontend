@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.financials.viewmodels
 
+import uk.gov.hmrc.customs.financials.config.AppConfig
 import uk.gov.hmrc.customs.financials.controllers.routes
 import uk.gov.hmrc.customs.financials.domain
 import uk.gov.hmrc.customs.financials.domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
@@ -34,12 +35,12 @@ case class FinancialsHomeModel(eori: EORI,
   val hasDutyDefermentAccounts: Boolean = dutyDefermentAccounts.nonEmpty
   val hasGuaranteeAccounts: Boolean = guaranteeAccountViewModels.nonEmpty
 
-  val dutyDefermentAccountDetailsLinks: Map[(String, String), String] = accountLinks.map { accountLink =>
-    (accountLink.eori, accountLink.accountNumber) -> routes.DutyDefermentAccountController.showAccountDetails(accountLink.linkId).toString
+  def dutyDefermentAccountDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = accountLinks.map { accountLink =>
+    (accountLink.eori, accountLink.accountNumber) -> appConfig.accountUrl(accountLink.linkId)
   }.toMap
 
-  val dutyDefermentAccountDDSetupLinks: Map[(String, String), String] = accountLinks.map { accountLink =>
-    (accountLink.eori, accountLink.accountNumber) -> routes.DutyDefermentDirectDebitSetupController.setup(accountLink.linkId).toString
+  def dutyDefermentAccountDDSetupLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = accountLinks.map { accountLink =>
+    (accountLink.eori, accountLink.accountNumber) -> appConfig.directDebitUrl(accountLink.linkId)
   }.toMap
 
   def accountStatus(accountNumber: String): String = {
@@ -49,9 +50,9 @@ case class FinancialsHomeModel(eori: EORI,
       .getOrElse("")
   }
 
-  val dutyDefermentContactDetailsLinks: Map[(String, String), String] = {
+  def dutyDefermentContactDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = {
     accountLinks.map { accountLink =>
-      (accountLink.eori, accountLink.accountNumber) -> routes.DutyDefermentContactDetailsController.showContactDetails(accountLink.linkId).toString
+      (accountLink.eori, accountLink.accountNumber) -> appConfig.contactDetailsUrl(accountLink.linkId)
     }.toMap
   }
 }

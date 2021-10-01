@@ -84,30 +84,6 @@ class SdesGatekeeperService() {
     )
   }
 
-  implicit def convertToDutyDefermentStatementFile(sdesResponseFile: FileInformation): DutyDefermentStatementFile = {
-    val metadata = sdesResponseFile.metadata.asMap
-
-    DutyDefermentStatementFile(
-      sdesResponseFile.filename,
-      sdesResponseFile.downloadURL,
-      sdesResponseFile.fileSize,
-      DutyDefermentStatementFileMetadata(
-        metadata("PeriodStartYear").toInt,
-        metadata("PeriodStartMonth").toInt,
-        metadata("PeriodStartDay").toInt,
-        metadata("PeriodEndYear").toInt,
-        metadata("PeriodEndMonth").toInt,
-        metadata("PeriodEndDay").toInt,
-        FileFormat(metadata("FileType")),
-        FileRole(metadata("FileRole")),
-        DDStatementType(metadata("DefermentStatementType")),
-        Some(mapDutyOverLimit(metadata.getOrElse("DutyOverLimit", "false"))),
-        Some(metadata.getOrElse("DutyPaymentType", "Unknown")),
-        metadata.getOrElse("DAN", "Unknown"),
-        metadata.get("statementRequestID"))
-    )
-  }
-
   def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] = _.map(converter)
 
   private def mapDutyPaymentMethod(dutyPaymentMethod: String): String = {
@@ -116,12 +92,4 @@ class SdesGatekeeperService() {
       case _ => CDS
     }
   }
-
-  private def mapDutyOverLimit(MDGDutyOverLimitResponse: String): Boolean = {
-    MDGDutyOverLimitResponse match {
-      case "Y" => true
-      case _   => false
-    }
-  }
-
 }
