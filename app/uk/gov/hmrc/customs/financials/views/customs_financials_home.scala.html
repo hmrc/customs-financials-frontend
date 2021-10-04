@@ -18,6 +18,8 @@
 
 @mainTemplate(title = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial, eori = Some(model.eori), helpAndSupport = true) {
 
+    @recruitment_banner()
+
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
     @messages("cf.customs-financials-home.title")
     </h1>
