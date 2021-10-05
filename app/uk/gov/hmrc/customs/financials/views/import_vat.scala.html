@@ -16,6 +16,8 @@
 
 @mainTemplate(title = Some(messages("cf.account.vat.title")), beforeContentBlock = Some(link_to_home_page()), helpAndSupport = true) {
 
+    @recruitment_banner()
+
     <h1 id="import-vat-certificates-heading" class="govuk-heading-xl">@messages("cf.account.vat.title")</h1>
 
     @if(model.hasRequestedCertificates) {

@@ -243,6 +243,9 @@ cf.account.pvat.holding-message.2=ar GOV.UK.
 cf.account.pvat.link-message=wirio os gallwch ddefnyddio cyfrifyddu TAW gohiriedig
 cf.account.pvat.statements.unavailable = Nid oedd unrhyw ddatganiadau i mewn {0}
 
+cf.account.pvat.historic.description=Dim ond ar gyfer y 6 mis diwethaf y gallwn ddangos datganiadau. Os oes angen, gallwch
+cf.account.pvat.historic.request=ofyn am ddatganiadau hŷn.
+
 # Security Statements View
 cf.security-statements.title=Hysbysiad o ddatganiadau addasu
 cf.security-statements.help.get-help=Help
@@ -316,10 +319,8 @@ cf.not-subscribed-to-cds.detail.eori-link=Rhif Cofrestru ac Adnabod Gweithredwyr
 cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, gallwch
 cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ffenestr neu dab newydd)
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
-cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at awr i CThEM brosesu’ch cais.
+cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at ddwy awr i CThEM brosesu’ch cais.
 cf.not-subscribed-to-cds.detail.already-applied-info=Os ydych eisoes wedi gwneud cais am fynediad at CDS
-cf.not-subscribed-to-cds.detail.status-info=Gallwch
-cf.not-subscribed-to-cds.detail.status-check-info=wirio statws eich cais (yn agor ffenestr neu dab newydd)
 
 #Customs Financials Home Page
 cf.customs-financials-home.title=Eich cyfrifon ariannol ar gyfer y tollau
