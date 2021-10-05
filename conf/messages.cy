@@ -243,6 +243,9 @@ cf.account.pvat.holding-message.2=ar GOV.UK.
 cf.account.pvat.link-message=wirio os gallwch ddefnyddio cyfrifyddu TAW gohiriedig
 cf.account.pvat.statements.unavailable = Nid oedd unrhyw ddatganiadau i mewn {0}
 
+cf.account.pvat.historic.description=Dim ond ar gyfer y 6 mis diwethaf y gallwn ddangos datganiadau. Os oes angen, gallwch
+cf.account.pvat.historic.request=ofyn am ddatganiadau hŷn.
+
 # Security Statements View
 cf.security-statements.title=Hysbysiad o ddatganiadau addasu
 cf.security-statements.help.get-help=Help

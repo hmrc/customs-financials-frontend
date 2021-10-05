@@ -239,6 +239,9 @@ cf.account.pvat.holding-message.2=on GOV.UK.
 cf.account.pvat.link-message=check if you can use postponed VAT accounting
 cf.account.pvat.statements.unavailable = There were no statements in {0}
 
+cf.account.pvat.historic.description=We only show statements for the last 6 months. If required, you can
+cf.account.pvat.historic.request=request older statements.
+
 # Security Statements View
 cf.security-statements.title=Notification of adjustment statements
 cf.security-statements.help.get-help=Get Help

@@ -99,8 +99,8 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
 
   def historicRequestUrl(fileRole: FileRole): String = {
     fileRole match {
-      case FileRole.C79Certificate => historicRequest + fileRole.featureName
       case FileRole.SecurityStatement => historicRequest + "adjustments"
+      case FileRole.C79Certificate | FileRole.PostponedVATStatement => historicRequest + fileRole.featureName
       case _ => ""
     }
   }

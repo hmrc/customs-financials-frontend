@@ -7,6 +7,7 @@
 @import uk.gov.hmrc.customs.financials.domain.PostponedVatCertificateFile
 @import uk.gov.hmrc.customs.financials.domain.FileFormat._
 @import uk.gov.hmrc.customs.financials.views.helpers.Formatters
+@import uk.gov.hmrc.customs.financials.domain.FileRole.PostponedVATStatement
 
 @this(
     mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
@@ -84,10 +85,20 @@
         @messages("cf.account.pvat.no-statements-yet")
         </div>
     } else {
-        <div class="govuk-inset-text govuk-!-margin-bottom-9 govuk-!-margin-top-8">
-        @messages("cf.legal-notice.import-vat.parttwo")
+        <div id="missing-documents-guidance" class="govuk-!-padding-top-2">
+            <h2 id="missing-documents-guidance-heading" class="govuk-heading-m govuk-!-margin-top-6">
+                @messages("cf.common.missing-documents-guidance.heading", messages(s"cf.common.missing-documents-guidance.statement"))
+            </h2>
+
+            <p id="missing-documents-guidance-text2" class="govuk-body" >@messages("cf.common.missing-documents-guidance.text2",
+                messages(s"cf.common.missing-documents-guidance.statements"))</p>
         </div>
+        <p id="historic-statement-request" class="govuk-body govuk-!-padding-bottom-7">
+            @messages("cf.account.pvat.historic.description")<a href="@{appConfig.historicRequestUrl(PostponedVATStatement)}" class="govuk-link">
+            @messages("cf.account.pvat.historic.request")</a>
+        </p>
     }
+
 }
 
 @collapsibleStatementGroup(certificateFiles: Seq[PostponedVatCertificateFile], downloadLinkMessage: String, downloadAriaLabel: String, missingFileMessage: Option[String], source: String, period: String) = {
