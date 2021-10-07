@@ -29,7 +29,7 @@ class SdesGatekeeperService() {
   implicit def convertToVatCertificateFile(sdesResponseFile: FileInformation)(implicit messages: Messages): VatCertificateFile = {
     val metadata = sdesResponseFile.metadata.asMap
 
-    val vcf = VatCertificateFile(
+    VatCertificateFile(
       sdesResponseFile.filename,
       sdesResponseFile.downloadURL,
       sdesResponseFile.fileSize,
@@ -41,7 +41,6 @@ class SdesGatekeeperService() {
         metadata.get("statementRequestID")),
       ""
     )
-    vcf
   }
 
   implicit def convertToPostponedVatCertificateFile(sdesResponseFile: FileInformation): PostponedVatStatementFile = {

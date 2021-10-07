@@ -22,7 +22,7 @@ import play.api
 import play.api.inject
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.financials.actionbuilders.{FakePvatIdentifierAction, FakePvatWithHistoricIdentifierAction, PvatIdentifierAction}
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
+import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod._
 import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
 import uk.gov.hmrc.customs.financials.domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import uk.gov.hmrc.customs.financials.domain._
@@ -189,7 +189,7 @@ class PostponedVatControllerSpec extends SpecBase {
       }
 
 
-      "shows files for all available monthsthat contain a valid Pvat file format" in new Setup {
+      "shows files for all available months that contain a valid Pvat file format" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
