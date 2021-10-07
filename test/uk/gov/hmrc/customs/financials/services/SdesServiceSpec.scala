@@ -64,12 +64,12 @@ class SdesServiceSpec extends SpecBase {
     )
 
     val postponedVatCertificateFiles = List(
-      PostponedVatCertificateFile("name_04", "download_url_06", 111L, PostponedVatCertificateFileMetadata(2018, 3, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_04", "download_url_05", 111L, PostponedVatCertificateFileMetadata(2018, 4, Csv, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_04", "download_url_04", 111L, PostponedVatCertificateFileMetadata(2018, 4, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_03", "download_url_03", 111L, PostponedVatCertificateFileMetadata(2018, 5, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_02", "download_url_02", 111L, PostponedVatCertificateFileMetadata(2018, 6, Csv, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_01", "download_url_01", 1300000L, PostponedVatCertificateFileMetadata(2018, 6, Pdf, PostponedVATStatement, CDS), "")
+      PostponedVatStatementFile("name_04", "download_url_06", 111L, PostponedVatStatementFileMetadata(2018, 3, Pdf, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_04", "download_url_05", 111L, PostponedVatStatementFileMetadata(2018, 4, Csv, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_04", "download_url_04", 111L, PostponedVatStatementFileMetadata(2018, 4, Pdf, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_03", "download_url_03", 111L, PostponedVatStatementFileMetadata(2018, 5, Pdf, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_02", "download_url_02", 111L, PostponedVatStatementFileMetadata(2018, 6, Csv, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_01", "download_url_01", 1300000L, PostponedVatStatementFileMetadata(2018, 6, Pdf, PostponedVATStatement, CDS, None), "")
     )
 
     val vatCertificateFilesSdesResponse = List(

@@ -19,10 +19,9 @@ package uk.gov.hmrc.customs.financials.services
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.domain.DDStatementType.Weekly
 import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
 import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
-import uk.gov.hmrc.customs.financials.domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
+import uk.gov.hmrc.customs.financials.domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement}
 import uk.gov.hmrc.customs.financials.domain.{MetadataItem, _}
 import uk.gov.hmrc.customs.financials.utils.SpecBase
 
@@ -107,11 +106,11 @@ class SdesGatekeeperServiceSpec extends SpecBase {
           1234,
           Metadata(metadata)
         )
-        val expectedPostponedVatCertificateFile = PostponedVatCertificateFile(
+        val expectedPostponedVatCertificateFile = PostponedVatStatementFile(
           "PostponedVATStatement_100000000323_pdf.pdf",
           "https://some.sdes.domain?token=abc123",
           1234L,
-          PostponedVatCertificateFileMetadata(2018, 6, Pdf, PostponedVATStatement, CDS),
+          PostponedVatStatementFileMetadata(2018, 6, Pdf, PostponedVATStatement, CDS, None),
           ""
         )
 
