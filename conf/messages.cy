@@ -225,6 +225,7 @@ error.number=Disgwylir gwerth rhifol
 cf.postponed-vat.page-heading=Dyma’r adran ynghylch crynodeb o'r cyfrif TAW
 cf.postponed-vat.view-certificates.description=Datganiadau TAW yw’r rhain rydych wedi’u gohirio ar eich mewnforion i’w defnyddio fel tystiolaeth ar eich Ffurflen TAW.
 cf.postponed-vat.view-certificates.no-certificates=Nid oes unrhyw ddatganiadau TAW mewnforio gohiriedig.
+cf.postponed-vat.requested-statements-available-link-text=datganiadau y gofynnwyd amdanynt
 cf.account.pvat.title=Datganiadau TAW mewnforio gohiriedig
 cf.account.pvat.content=Bydd pob datganiad yn dangos cyfanswm y TAW mewnforio a ohiriwyd ar gyfer y mis blaenorol, oni bai eich bod wedi gohirio’ch datganiad tollau.
 
@@ -242,7 +243,6 @@ cf.account.pvat.holding-message.1=O 1 Ionawr 2021 ymlaen, mae’n bosibl y gallw
 cf.account.pvat.holding-message.2=ar GOV.UK.
 cf.account.pvat.link-message=wirio os gallwch ddefnyddio cyfrifyddu TAW gohiriedig
 cf.account.pvat.statements.unavailable = Nid oedd unrhyw ddatganiadau i mewn {0}
-
 cf.account.pvat.historic.description=Dim ond ar gyfer y 6 mis diwethaf y gallwn ddangos datganiadau. Os oes angen, gallwch
 cf.account.pvat.historic.request=ofyn am ddatganiadau hŷn.
 
