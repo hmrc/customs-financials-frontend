@@ -4,7 +4,7 @@
  *@
 
 @import uk.gov.hmrc.customs.financials.views.html.components._
-@import uk.gov.hmrc.customs.financials.domain.PostponedVatCertificateFile
+@import uk.gov.hmrc.customs.financials.domain.PostponedVatStatementFile
 @import uk.gov.hmrc.customs.financials.domain.FileFormat._
 @import uk.gov.hmrc.customs.financials.views.helpers.Formatters
 @import uk.gov.hmrc.customs.financials.domain.FileRole.PostponedVATStatement
@@ -13,7 +13,7 @@
     mainTemplate: uk.gov.hmrc.customs.financials.views.html.alphagov_main_template
 )
 
-@(eori: String, statementGroups: Seq[PostponedVatStatementGroup], cdsOnly: Boolean, location: Option[String])(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
+@(eori: String, statementGroups: Seq[PostponedVatStatementGroup], hasRequestedStatements: Boolean, cdsOnly: Boolean, location: Option[String])(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
 
 @mainTemplate(title = Some(messages("cf.account.pvat.title")), beforeContentBlock = location.map(_ => link_to_home_page()), helpAndSupport = true) {
 
@@ -40,6 +40,16 @@
     <p class="govuk-body govuk-!-margin-bottom-6" id="postponed-vat-content">
     @messages("cf.account.pvat.content")
     </p>
+
+    @if(hasRequestedStatements) {
+        <div id="notification-panel" class="notifications-panel">
+            <ul class="govuk-list govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                <li>@messages("cf.account.detail.requested-certificates-available-text.pre") <a href="@{
+                    appConfig.requestedStatements(PostponedVATStatement)
+                }" class="govuk-link">@messages("cf.postponed-vat.requested-statements-available-link-text")</a> @messages("cf.account.detail.requested-certificates-available-text.post")</li>
+            </ul>
+        </div>
+    }
 
     @for(statementGroup <- statementGroups) {
         <div id=@{
@@ -101,7 +111,7 @@
 
 }
 
-@collapsibleStatementGroup(certificateFiles: Seq[PostponedVatCertificateFile], downloadLinkMessage: String, downloadAriaLabel: String, missingFileMessage: Option[String], source: String, period: String) = {
+@collapsibleStatementGroup(certificateFiles: Seq[PostponedVatStatementFile], downloadLinkMessage: String, downloadAriaLabel: String, missingFileMessage: Option[String], source: String, period: String) = {
 @if(certificateFiles.nonEmpty) {
     @for(certificates <- certificateFiles.groupBy(_.eori).values) {
         @for(fileFormat <- PvatFileFormats) {
@@ -113,7 +123,7 @@
 }
 }
 
-@downloadLink(fileFormat: FileFormat, certificateFiles: Seq[PostponedVatCertificateFile], downloadLinkMessage: String, downloadAriaLabel: String, period: String) = {
+@downloadLink(fileFormat: FileFormat, certificateFiles: Seq[PostponedVatStatementFile], downloadLinkMessage: String, downloadAriaLabel: String, period: String) = {
 @for(certificateFile <- certificateFiles) {
     <li>
         <a

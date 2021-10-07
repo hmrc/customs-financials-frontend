@@ -114,8 +114,8 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
 
   def requestedStatements(fileRole: FileRole): String = {
     fileRole match {
-      case FileRole.C79Certificate => requestedStatements + fileRole.featureName
       case FileRole.SecurityStatement => requestedStatements + "adjustments"
+      case FileRole.C79Certificate | FileRole.PostponedVATStatement => requestedStatements + fileRole.featureName
       case _ => ""
     }
   }

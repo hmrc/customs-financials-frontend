@@ -148,6 +148,7 @@ object FileRole {
     override def bind(key: String, value: String): Either[String, FileRole] = {
       value match {
         case "import-vat" => Right(C79Certificate)
+        case "postponed-vat" => Right(PostponedVATStatement)
         case "duty-deferment" => Right(DutyDefermentStatement)
         case "adjustments" => Right(SecurityStatement)
         case fileRole => Left(s"unknown file role: ${fileRole}")
@@ -157,6 +158,7 @@ object FileRole {
     override def unbind(key: String, fileRole: FileRole): String = {
       fileRole match {
         case C79Certificate => "import-vat"
+        case PostponedVATStatement => "postponed-vat"
         case DutyDefermentStatement => "duty-deferment"
         case SecurityStatement => "adjustments"
         case _ => "unsupported-file-role"
@@ -264,10 +266,10 @@ case class VatCertificateFile(filename: String, downloadURL: String, size: Long,
 
 case class SdesFileWithId[A <: SdesFile](sdesFile: A, id: String)
 
-case class PostponedVatCertificateFile(filename: String, downloadURL: String, size: Long, metadata: PostponedVatCertificateFileMetadata, eori: String)
-  extends Ordered[PostponedVatCertificateFile] with SdesFile {
+case class PostponedVatStatementFile(filename: String, downloadURL: String, size: Long, metadata: PostponedVatStatementFileMetadata, eori: String)
+  extends Ordered[PostponedVatStatementFile] with SdesFile {
 
-  def compare(that: PostponedVatCertificateFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
+  def compare(that: PostponedVatStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
 
 case class VatCertificateFileMetadata(periodStartYear: Int,
@@ -277,9 +279,10 @@ case class VatCertificateFileMetadata(periodStartYear: Int,
                                       statementRequestId: Option[String]) extends SdesFileMetadata {
 }
 
-case class PostponedVatCertificateFileMetadata(periodStartYear: Int,
+case class PostponedVatStatementFileMetadata(periodStartYear: Int,
                                                periodStartMonth: Int,
                                                fileFormat: FileFormat,
                                                fileRole: FileRole,
-                                               source: String) extends SdesFileMetadata {
+                                               source: String,
+                                               statementRequestId: Option[String]) extends SdesFileMetadata {
 }

@@ -17,11 +17,11 @@
 package uk.gov.hmrc.customs.financials.viewmodels
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.customs.financials.domain.{PostponedVatCertificateFile, PostponedVatStatementGroup}
+import uk.gov.hmrc.customs.financials.domain.{PostponedVatStatementFile, PostponedVatStatementGroup}
 import uk.gov.hmrc.customs.financials.services.DateTimeService
 
 object PostponedVatViewModel {
-  def apply(files: Seq[PostponedVatCertificateFile])(implicit messages: Messages, dateTimeService: DateTimeService): Seq[PostponedVatStatementGroup] = {
+  def apply(files: Seq[PostponedVatStatementFile])(implicit messages: Messages, dateTimeService: DateTimeService): Seq[PostponedVatStatementGroup] = {
     val response = files.groupBy(_.monthAndYear).map { case (month, filesForMonth) => PostponedVatStatementGroup(month, filesForMonth) }.toList
     val monthList = (1 to 6).map(n => dateTimeService.systemDateTime().toLocalDate.minusMonths(n))
     monthList.map{
