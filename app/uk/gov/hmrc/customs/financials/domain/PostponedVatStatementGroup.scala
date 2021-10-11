@@ -22,14 +22,14 @@ import uk.gov.hmrc.customs.financials.views.helpers.Formatters
 
 import java.time.LocalDate
 
-case class PostponedVatStatementGroup(startDate: LocalDate, files: Seq[PostponedVatCertificateFile])(implicit messages: Messages) extends Ordered[PostponedVatStatementGroup] {
+case class PostponedVatStatementGroup(startDate: LocalDate, files: Seq[PostponedVatStatementFile])(implicit messages: Messages) extends Ordered[PostponedVatStatementGroup] {
 
   private val periodName = Formatters.dateAsMonthAndYear(startDate).replace(" ", "-").toLowerCase
   val periodId: String = s"""period-$periodName"""
   val noStatements: Boolean = PostponedVat.sources.flatMap(source => collectFiles(amended = false,source)).isEmpty
 
-  def collectFiles(amended: Boolean, source: String): Seq[PostponedVatCertificateFile] = {
-    val amendedPred: PostponedVatCertificateFileMetadata => Boolean = if (amended) {
+  def collectFiles(amended: Boolean, source: String): Seq[PostponedVatStatementFile] = {
+    val amendedPred: PostponedVatStatementFileMetadata => Boolean = if (amended) {
       _.fileRole == PostponedVATAmendedStatement
     } else {
       _.fileRole == PostponedVATStatement

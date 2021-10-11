@@ -23,7 +23,7 @@ import uk.gov.hmrc.customs.financials.actionbuilders.{PvatIdentifierAction, Sess
 import uk.gov.hmrc.customs.financials.config.{AppConfig, ErrorHandler}
 import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CHIEF
 import uk.gov.hmrc.customs.financials.domain.FileRole.PostponedVATStatement
-import uk.gov.hmrc.customs.financials.domain.{FileFormat, PostponedVatCertificateFile}
+import uk.gov.hmrc.customs.financials.domain.{FileFormat, PostponedVatStatementFile}
 import uk.gov.hmrc.customs.financials.services._
 import uk.gov.hmrc.customs.financials.viewmodels.PostponedVatViewModel
 import uk.gov.hmrc.customs.financials.views.html.postponed_import_vat
@@ -51,18 +51,18 @@ class PostponedVatController @Inject()
     val filteredHistoricEoris = req.user.allEoriHistory.filterNot(_.eori == currentEori)
     apiService.deleteNotification(currentEori, PostponedVATStatement)
 
-    def filterOnlyPvatFiles(files: Seq[PostponedVatCertificateFile]): Seq[PostponedVatCertificateFile] = {
+    def filterOnlyPvatFiles(files: Seq[PostponedVatStatementFile]): Seq[PostponedVatStatementFile] = {
       files.filter { p => FileFormat.PvatFileFormats.contains(p.metadata.fileFormat) }
     }
 
-    def eventualPvatStatements: Future[Seq[PostponedVatCertificateFile]] = {
+    def eventualPvatStatements: Future[Seq[PostponedVatStatementFile]] = {
       documentService.getPostponedVatStatements(currentEori).map { a =>
         log.info("POSTPONEDVATSTATEMENTS" + a.toString())
         filterOnlyPvatFiles(a)
       }
     }
 
-    def eventualHistoricPvatStatements: Future[Seq[PostponedVatCertificateFile]] = {
+    def eventualHistoricPvatStatements: Future[Seq[PostponedVatStatementFile]] = {
       Future.sequence(filteredHistoricEoris.map { eoriHistory =>
         documentService.getPostponedVatStatements(eoriHistory.eori).map { response =>
           filterOnlyPvatFiles(response)
@@ -76,10 +76,11 @@ class PostponedVatController @Inject()
     } yield {
       val allPVatStatements = pVatStatements ++ historicPVatStatements
       val allPvatStatementsCount = allPVatStatements.size
-      val cdsCount: Int = allPVatStatements.count(_.metadata.source != CHIEF)
-      val cdsOnly: Boolean = cdsCount == allPvatStatementsCount
-      log.info(s"postponed vat statements displayed TOTAL: ${allPvatStatementsCount} CDS: $cdsCount CHIEF: ${allPvatStatementsCount - cdsCount}")
-      Ok(postponedImportVatView(currentEori, PostponedVatViewModel(allPVatStatements), cdsOnly, location))
+      val cdsCount= allPVatStatements.count(_.metadata.source != CHIEF)
+      val cdsOnly = cdsCount == allPvatStatementsCount
+      val hasRequestedStatements = !(allPVatStatements.filter(statement => statement.metadata.statementRequestId != None)).isEmpty
+      log.info(s"postponed vat statements displayed TOTAL: ${allPvatStatementsCount}, hasRequestedStatements: $hasRequestedStatements, CDS: $cdsCount CHIEF: ${allPvatStatementsCount - cdsCount}")
+      Ok(postponedImportVatView(currentEori, PostponedVatViewModel(allPVatStatements), hasRequestedStatements, cdsOnly, location))
     }
   }
 

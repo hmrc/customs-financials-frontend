@@ -17,7 +17,7 @@
 package uk.gov.hmrc.customs.financials.services
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.customs.financials.domain.{DutyDefermentStatementFile, EORI, PostponedVatCertificateFile, SdesFile, SecurityStatementFile, VatCertificateFile}
+import uk.gov.hmrc.customs.financials.domain.{EORI, PostponedVatStatementFile, SdesFile, SecurityStatementFile, VatCertificateFile}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +35,7 @@ class DocumentService @Inject()(sdesService: SdesService,
     sdesService.getSecurityStatements(eori).map(auditFiles(_, eori))
   }
 
-  def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatCertificateFile]] = {
+  def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatStatementFile]] = {
     sdesService.getPostponedVatStatements(eori).map(auditFiles(_, eori))
   }
 

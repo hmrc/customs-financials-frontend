@@ -22,7 +22,7 @@ import play.api
 import play.api.inject
 import play.api.test.Helpers._
 import uk.gov.hmrc.customs.financials.actionbuilders.{FakePvatIdentifierAction, FakePvatWithHistoricIdentifierAction, PvatIdentifierAction}
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
+import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod._
 import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
 import uk.gov.hmrc.customs.financials.domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import uk.gov.hmrc.customs.financials.domain._
@@ -83,10 +83,10 @@ class PostponedVatControllerSpec extends SpecBase {
 
       "display postponed VAT statements" in new Setup {
         val pvatStatementFilesWithMissingCsv = List(
-          PostponedVatCertificateFile(
+          PostponedVatStatementFile(
             "pdf_file", "download_url_pdf",
             1024L,
-            PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS),
+            PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS, None),
             ""
           )
         )
@@ -112,7 +112,7 @@ class PostponedVatControllerSpec extends SpecBase {
       "display historic and current postponed VAT statements" in new Setup {
         val historicEori = "GB12345"
         val historicEoriPvatFiles = List(
-          PostponedVatCertificateFile("2027_11_pdf", "download_url_2021_11_pdf", 9999999999L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS), ""))
+          PostponedVatStatementFile("2027_11_pdf", "download_url_2021_11_pdf", 9999999999L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS, None), ""))
         when(mockDocumentService.getPostponedVatStatements(eqTo(newUser(Seq(EoriHistory(historicEori, None, None))).eori))(any))
           .thenReturn(Future.successful(postponedVatStatementFiles))
         when(mockDocumentService.getPostponedVatStatements(eqTo(historicEori))(any))
@@ -189,7 +189,7 @@ class PostponedVatControllerSpec extends SpecBase {
       }
 
 
-      "shows files for all available monthsthat contain a valid Pvat file format" in new Setup {
+      "shows files for all available months that contain a valid Pvat file format" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.PostponedVatController.show(location = Some("CDS")).url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
@@ -284,18 +284,18 @@ class PostponedVatControllerSpec extends SpecBase {
     def month(date: LocalDate): String = DateTimeFormatter.ofPattern("MMMM").format(date)
 
     val postponedVatStatementFiles = List(
-      PostponedVatCertificateFile("name_04", "/some-url", 111L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(7).getMonthValue, Csv, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_04", "/some-url", 111L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(7).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_03", "/some-url", 111L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(4).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_02", "/some-url", 111L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(5).getMonthValue, Csv, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_01", "/some-url", 1300000L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(5).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_04", "/some-url", 8192L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Pdf, PostponedVATAmendedStatement, CDS), ""),
-      PostponedVatCertificateFile("name_02", "/some-url", 8192L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Csv, PostponedVATAmendedStatement, CDS), ""),
-      PostponedVatCertificateFile("name_04", "/some-url", 4096L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(3).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_03", "/some-url", 4096L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_03", "/some-url", 4096L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Csv, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_03", "/some-url", 4096L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS), ""),
-      PostponedVatCertificateFile("name_02", "/some-url", 4096L, PostponedVatCertificateFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Csv, PostponedVATStatement, CDS), "")
+      PostponedVatStatementFile("name_04", "/some-url", 111L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(7).getMonthValue, Csv, PostponedVATStatement, CDS, None), ""),
+      PostponedVatStatementFile("name_04", "/some-url", 111L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(7).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_03", "/some-url", 111L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(4).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_02", "/some-url", 111L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(5).getMonthValue, Csv, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_01", "/some-url", 1300000L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(5).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_04", "/some-url", 8192L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Pdf, PostponedVATAmendedStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_02", "/some-url", 8192L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Csv, PostponedVATAmendedStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_04", "/some-url", 4096L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(3).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_03", "/some-url", 4096L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_03", "/some-url", 4096L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Csv, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_03", "/some-url", 4096L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(1).getMonthValue, Pdf, PostponedVATStatement, CDS,None), ""),
+      PostponedVatStatementFile("name_02", "/some-url", 4096L, PostponedVatStatementFileMetadata(date.getYear, date.minusMonths(2).getMonthValue, Csv, PostponedVATStatement, CDS,None), "")
 
     )
 

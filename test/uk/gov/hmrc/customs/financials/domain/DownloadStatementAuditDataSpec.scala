@@ -66,8 +66,8 @@ class DownloadStatementAuditDataSpec extends SpecBase {
     }
 
     "correctly map PostponedVatCertificateFileMetadata and include the eori" in {
-      val postponedVatCertificateFileMetadata = PostponedVatCertificateFileMetadata(
-        2010, 2, FileFormat.Pdf, FileRole.PostponedVATStatement, "some HoDs"
+      val postponedVatCertificateFileMetadata = PostponedVatStatementFileMetadata(
+        2010, 2, FileFormat.Pdf, FileRole.PostponedVATStatement, "some HoDs", Some("some request Id")
       )
 
       val sut = DownloadStatementAuditData(postponedVatCertificateFileMetadata, "12345")
@@ -77,7 +77,8 @@ class DownloadStatementAuditDataSpec extends SpecBase {
         "periodStartMonth" -> "2",
         "fileFormat" -> "PDF",
         "fileRole" -> "PostponedVATStatement",
-        "source" -> "some HoDs"
+        "source" -> "some HoDs",
+        "statementRequestId" -> "Some(some request Id)"
       )
     }
 

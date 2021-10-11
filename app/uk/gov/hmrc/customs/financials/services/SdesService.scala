@@ -59,10 +59,10 @@ class SdesService @Inject()(http: HttpClient,
     getSdesFiles[FileInformation, VatCertificateFile](sdesImportVatCertificateListUrl, eori, "sdes.get.import-vat-certificates", transform)
   }
 
-  def getPostponedVatStatements(eori: String)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatCertificateFile]] = {
-    val transform = convertTo[PostponedVatCertificateFile] andThen filterFileFormats(SdesFileFormats)
+  def getPostponedVatStatements(eori: String)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatStatementFile]] = {
+    val transform = convertTo[PostponedVatStatementFile] andThen filterFileFormats(SdesFileFormats)
     auditingService.audit(AuditModel(AUDIT_POSTPONED_VAT_STATEMENTS, AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false))))
-    getSdesFiles[FileInformation, PostponedVatCertificateFile](sdesImportPVatCertificateListUrl, eori, "sdes.get.postponed-vat-statements", transform)
+    getSdesFiles[FileInformation, PostponedVatStatementFile](sdesImportPVatCertificateListUrl, eori, "sdes.get.postponed-vat-statements", transform)
   }
 
   def getSecurityStatements(eori: String)(implicit hc: HeaderCarrier): Future[Seq[SecurityStatementFile]] = {

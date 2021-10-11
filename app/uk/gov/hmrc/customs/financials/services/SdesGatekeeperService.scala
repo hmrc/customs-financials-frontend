@@ -43,19 +43,20 @@ class SdesGatekeeperService() {
     )
   }
 
-  implicit def convertToPostponedVatCertificateFile(sdesResponseFile: FileInformation): PostponedVatCertificateFile = {
+  implicit def convertToPostponedVatCertificateFile(sdesResponseFile: FileInformation): PostponedVatStatementFile = {
     val metadata = sdesResponseFile.metadata.asMap
 
-    PostponedVatCertificateFile(
+    PostponedVatStatementFile(
       sdesResponseFile.filename,
       sdesResponseFile.downloadURL,
       sdesResponseFile.fileSize,
-      PostponedVatCertificateFileMetadata(
+      PostponedVatStatementFileMetadata(
         metadata("PeriodStartYear").toInt,
         metadata("PeriodStartMonth").toInt,
         FileFormat(metadata("FileType")),
         FileRole(metadata("FileRole")),
-        mapDutyPaymentMethod(metadata("DutyPaymentMethod"))
+        mapDutyPaymentMethod(metadata("DutyPaymentMethod")),
+        metadata.get("statementRequestID")
       ),
       ""
     )
