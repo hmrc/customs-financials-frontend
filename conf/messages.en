@@ -341,8 +341,9 @@ cf.customs-financials-home.notification.postponed-vat=You have a new Postponed i
 cf.customs-financials-home.notification.adjustments=You have a new Import adjustments statement
 cf.customs-financials-home.notification.duty-deferment=You have a new Duty Deferment statement
 cf.customs-financials-home.notification.requested-c79=Your requested import VAT certificates (C79) are available to view
+cf.customs-financials-home.notification.requested-postponed-vat=Your requested Postponed VAT statements are available to view
 cf.customs-financials-home.notification.requested-duty-deferment=Your requested Duty Deferment statements are available to view
-cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
+cf.customs-financials-home.q.requested-adjustments=Your requested import adjustments statements are available to view
 
 #Verify Your Email Address
 cf.verify.your.email.title=Verify your CDS email
