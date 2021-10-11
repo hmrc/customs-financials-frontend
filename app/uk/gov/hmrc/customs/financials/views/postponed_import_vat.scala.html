@@ -59,12 +59,13 @@
                 Formatters.dateAsMonthAndYear(statementGroup.startDate)
             }</h2>
             @if(statementGroup.noStatements) {
-                <ul class="govuk-list">
+                <ul id="no-statements-@{statementGroup.periodId}" class="govuk-list">
                     <li>@messages("cf.account.pvat.statements.unavailable",Formatters.dateAsMonth(statementGroup.startDate))</li>
                 </ul>
 
             } else {
                 <ul class="govuk-list">
+                    <div id="cds-chief-statements-@{statementGroup.periodId}">
                 @for(source <- PostponedVat.sources) {
                     @collapsibleStatementGroup(
                         statementGroup.collectFiles(amended = true, source),
@@ -85,6 +86,7 @@
                         )
                     }
                 }
+            </div>
                 </ul>
             }
         </div>
