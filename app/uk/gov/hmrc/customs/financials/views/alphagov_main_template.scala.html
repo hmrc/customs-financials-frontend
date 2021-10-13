@@ -8,13 +8,15 @@
 @import uk.gov.hmrc.customs.financials.views.helpers.PageTitle.fullPageTitle
 @import uk.gov.hmrc.customs.financials.views.html.components._
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import views.html.helper.CSPNonce
 
 @this(
         govukLayout: GovukLayout,
         languageSelection: languageSelection,
         header_block_financials: header_block_financials,
         hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper
+        hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+        timeout_dialog: timeout_dialog
 )
 
 @(title: Option[String] = None,
@@ -39,7 +41,7 @@
 }
 
 @theHead = {
-@hmrcTrackingConsentSnippet()
+@hmrcTrackingConsentSnippet(CSPNonce.get)
         <!--[if lte IE 8]><link href='
 @controllers.routes.Assets.at("stylesheets/application-ie-8.css")
     ' rel="stylesheet" type="text/css" /><![endif]-->
@@ -53,7 +55,7 @@
 @if(appConfig.languageTranslationEnabled) {
     @languageSelection()
 }
-@timeout_dialog(request.uri, appConfig.sessionTimeout)
+@timeout_dialog(request.uri)
 }
 
 @govukLayout(
