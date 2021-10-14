@@ -8,5 +8,5 @@
 @(usedPercentage: BigDecimal)
 
 <div class="progress-bar" aria-hidden="true">
-    <span class="progress-bar graph-@{(Math.floor(usedPercentage.intValue()/10)*10).toInt}"></span>
+    <span class="progress-bar graph-@{Math.round(usedPercentage.intValue()/10) * 10}"></span>
 </div>
