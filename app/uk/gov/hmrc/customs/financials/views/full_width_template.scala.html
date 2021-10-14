@@ -16,7 +16,8 @@
     govukFooter: GovukFooter,
     govUkTemplate: GovukTemplate,
     header_block_financials: header_block_financials,
-    languageSelection: languageSelection
+    languageSelection: languageSelection,
+    timeout_dialog: timeout_dialog
 )
 @(
         pageTitle: Option[String] = None,
@@ -77,7 +78,7 @@
 @if(appConfig.languageTranslationEnabled) {
     @languageSelection()
 }
-@timeout_dialog(request.uri, appConfig.sessionTimeout)
+@timeout_dialog(request.uri)
 }
 
 @bodyEndDefault = {

@@ -8,8 +8,5 @@
 @(usedPercentage: BigDecimal)
 
 <div class="progress-bar" aria-hidden="true">
-    <span class="progress-bar__graph"
-    style="width: @{usedPercentage}%;
-        @if(usedPercentage > 80) { background-color: #f47738}">
-    </span>
+    <span class="progress-bar graph-@{Math.round(usedPercentage.intValue()/10) * 10}"></span>
 </div>

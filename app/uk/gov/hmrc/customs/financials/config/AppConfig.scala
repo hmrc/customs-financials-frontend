@@ -27,7 +27,10 @@ import javax.inject.{Inject, Singleton}
 class AppConfig @Inject()(val config: Configuration, val environment: Environment, servicesConfig: ServicesConfig) {
 
   lazy val appName: String = config.get[String]("appName")
-  lazy val sessionTimeout: String = config.get[String]("timeout-time")
+
+  lazy val timeout: Int = config.get[Int]("timeout.timeout")
+  lazy val countdown: Int = config.get[Int]("timeout.countdown")
+
   lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
   lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
   lazy val reportAProblem: Boolean = config.get[Boolean]("features.report-a-problem")

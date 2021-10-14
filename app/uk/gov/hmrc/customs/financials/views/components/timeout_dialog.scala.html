@@ -2,15 +2,20 @@
  * Copyright 2021 HM Revenue & Customs
  *
  *@
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.TimeoutDialog
+@import uk.gov.hmrc.customs.financials.config.AppConfig
 
-@(keepAliveUrl: String, timeout: String)
+@this(hmrcTimeoutDialog: HmrcTimeoutDialog)
 
-<div id="timeout-dialog"
-     class="govuk-visually-hidden"
-     style="display: none;"
-     data-timeout="@{timeout}"
-     data-countdown="120"
-     data-keep-alive-url="@{keepAliveUrl}"
-     data-sign-out-url="/customs/payment-records/logout"
-     data-timeout-url="/customs/payment-records/logout-no-survey">
-</div>
+@(keepAliveUrl: String)(implicit messages: Messages, appConfig: AppConfig)
+
+@hmrcTimeoutDialog(TimeoutDialog(
+    title = Some(messages("timeout.title")),
+    timeout = Some(appConfig.timeout),
+    countdown = Some(appConfig.countdown),
+    keepAliveUrl = Some(keepAliveUrl),
+    signOutUrl = Some("/customs/payment-records/logout"),
+    timeoutUrl = Some("/customs/payment-records/logout-no-survey")
+))
+
