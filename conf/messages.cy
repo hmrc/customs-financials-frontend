@@ -320,9 +320,6 @@ cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, 
 cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ffenestr neu dab newydd)
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
 cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at awr i CThEM brosesu’ch cais.
-cf.not-subscribed-to-cds.detail.already-applied-info=Os ydych eisoes wedi gwneud cais am fynediad at CDS
-cf.not-subscribed-to-cds.detail.status-info=Gallwch
-cf.not-subscribed-to-cds.detail.status-check-info=wirio statws eich cais (yn agor ffenestr neu dab newydd)
 
 #Customs Financials Home Page
 cf.customs-financials-home.title=Eich cyfrifon ariannol ar gyfer y tollau
