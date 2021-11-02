@@ -368,6 +368,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
   trait Setup extends I18nSupport {
     val eori = "owner"
     val dan = "123456"
+    val companyName = Some("Company Name 1")
     val topUpLink1 = "/topup-link/0123456789"
     val topUpLink2 = "/topup-link/1111111111"
     val ddSetupLink = "http://localhost:9397/customs/duty-deferment/0123456789/direct-debit"
@@ -415,7 +416,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       AccountLink(sessionId = "sessionId", eori, accountNumber = dan, linkId = "0123456789", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now)
     )
 
-    val model = FinancialsHomeModel(eori,accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty)
+    val model = FinancialsHomeModel(eori, companyName, accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty)
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(app.injector.instanceOf[duty_deferment_account_card]
       .apply(dutyDefermentAccount, model).body)

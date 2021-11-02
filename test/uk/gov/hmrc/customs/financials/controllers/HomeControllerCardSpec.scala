@@ -169,6 +169,7 @@ class HomeControllerCardSpec extends SpecBase {
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
       when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+      when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
       val app = application().overrides(
         inject.bind[CDSAccounts].toInstance(mockAccounts),
@@ -254,6 +255,7 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockAccounts.accounts).thenReturn(someAccounts)
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
 
     val app = application().overrides(

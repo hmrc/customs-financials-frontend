@@ -28,7 +28,6 @@ import uk.gov.hmrc.customs.financials.domain.{DefermentAccountAvailable, _}
 import uk.gov.hmrc.customs.financials.services._
 import uk.gov.hmrc.customs.financials.utils.SpecBase
 import uk.gov.hmrc.http.HttpResponse
-
 import scala.concurrent.Future
 
 class CashAccountCardSpec extends SpecBase {
@@ -80,11 +79,12 @@ class CashAccountCardSpec extends SpecBase {
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(mockAccounts))
-
     when(mockNotificationService.fetchNotifications(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(List()))
-    when(mockDataStoreService.getEmail(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getEmail(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
   }
 }

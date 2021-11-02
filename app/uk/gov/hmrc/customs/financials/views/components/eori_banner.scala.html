@@ -5,12 +5,16 @@
 
 @this()
 
-@(eori: Option[String] = None, companyName: String)(implicit messages: Messages)
+@(eori: Option[String] = None, companyName: Option[String] = None)(implicit messages: Messages)
 
 @eori.map { eoriNumber =>
     <div class="govuk-phase-banner">
         <p class="govuk-phase-banner__content">
-            <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber @companyName</span>
+            @if(companyName eq None) {
+            <span id="eori" class="govuk-phase-banner__text">@eoriNumber</span>
+            }else{
+            <span id="eoriWithCompanyName" class="govuk-phase-banner__text">@companyName @messages("cf.header.eori.dash") @eoriNumber</span>
+            }
         </p>
     </div>
 }

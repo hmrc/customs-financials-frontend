@@ -85,6 +85,7 @@ class HomeViewSpec extends SpecBase {
 
     implicit val appConfig = app.injector.instanceOf[AppConfig]
 
+    val companyName = Some("Company Name 1")
     val eori = "EORI0123"
     val eori1 = "EORI01234"
     val dan1 = "DAN01234"
@@ -106,7 +107,7 @@ class HomeViewSpec extends SpecBase {
 
     val accountLinks = Seq(AccountLink(sessionId = "sessionId", eori, accountNumber = dan1, linkId = "linkId", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now()))
 
-    val modelWithAgentAccess = FinancialsHomeModel(eori, accounts, Nil, accountLinks)
+    val modelWithAgentAccess = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
 
     def page(viewModel: FinancialsHomeModel, maybeBannerPartial: Option[HtmlFormat.Appendable]) = Jsoup.parse(app.injector.instanceOf[customs_financials_home].apply(viewModel, maybeBannerPartial).body)
 
