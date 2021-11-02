@@ -76,6 +76,19 @@ class HomeViewSpec extends SpecBase {
         page(modelWithAgentAccess, Some(bannerHtmlPartial.content)).containsElementById("banner-html")
       }
     }
+
+    "display the EORI and company name in the banner" in new Setup {
+      running(app) {
+        page(modelWithAgentAccess, None).containsElementById("eoriWithCompanyName")
+      }
+    }
+
+    "display only EORI in banner when none returned for company name" in new Setup {
+      override val modelWithAgentAccess = FinancialsHomeModel(eori, None, accounts, Nil, accountLinks)
+      running(app) {
+        page(modelWithAgentAccess, None).containsElementById("eori")
+      }
+    }
   }
 
   trait Setup extends I18nSupport {
