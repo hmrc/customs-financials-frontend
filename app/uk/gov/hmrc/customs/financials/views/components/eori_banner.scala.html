@@ -5,12 +5,12 @@
 
 @this()
 
-@(eori: Option[String] = None)(implicit messages: Messages)
+@(eori: Option[String] = None, companyName: String)(implicit messages: Messages)
 
 @eori.map { eoriNumber =>
     <div class="govuk-phase-banner">
         <p class="govuk-phase-banner__content">
-            <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span>
+            <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber @companyName</span>
         </p>
     </div>
 }

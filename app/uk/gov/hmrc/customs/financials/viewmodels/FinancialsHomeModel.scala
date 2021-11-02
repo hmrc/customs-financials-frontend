@@ -23,6 +23,7 @@ import uk.gov.hmrc.customs.financials.domain.CDSAccounts.{filterCashAccounts, fi
 import uk.gov.hmrc.customs.financials.domain._
 
 case class FinancialsHomeModel(eori: EORI,
+                               companyName: String,
                                accounts: Seq[CDSAccounts],
                                notificationMessageKeys: Seq[String],
                                accountLinks: Seq[AccountLink]) {
