@@ -11,7 +11,7 @@
     <div class="govuk-phase-banner">
         <p class="govuk-phase-banner__content">
             @if(companyName eq None) {
-            <span id="eori" class="govuk-phase-banner__text">@eoriNumber</span>
+            <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span>
             }else{
             <span id="eoriWithCompanyName" class="govuk-phase-banner__text">@companyName @messages("cf.header.eori.dash") @eoriNumber</span>
             }
