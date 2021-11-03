@@ -25,7 +25,6 @@ import uk.gov.hmrc.customs.financials.domain.{CompanyAddress, EORI, EmailRespons
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 import javax.inject.{Inject, Singleton}
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

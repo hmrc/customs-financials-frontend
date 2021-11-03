@@ -79,11 +79,9 @@ class HomeControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByTag("h1").text mustBe "Your customs financial accounts"
-        //Does this check EORI?
       }
     }
   }
-
 
   "have the Import VAT section heading" in new Setup {
     running(app) {
