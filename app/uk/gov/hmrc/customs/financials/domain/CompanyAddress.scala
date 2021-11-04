@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.customs.financials.domain
 
-import play.api.libs.json.{Json, OFormat, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class CompanyAddress(streetAndNumber: String,
                           city: String,
