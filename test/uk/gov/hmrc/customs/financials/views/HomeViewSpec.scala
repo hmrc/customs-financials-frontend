@@ -79,8 +79,6 @@ class HomeViewSpec extends SpecBase {
 
     "display the EORI and company name in the banner" in new Setup {
       running(app) {
-        println(page(modelWithAgentAccess, None))
-
         page(modelWithAgentAccess, None).containsElementById("eori-company")
       }
     }
