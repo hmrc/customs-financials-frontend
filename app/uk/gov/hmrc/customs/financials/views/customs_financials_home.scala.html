@@ -16,7 +16,7 @@
 
 @(model: FinancialsHomeModel, maybeMessageBannerPartial: Option[HtmlFormat.Appendable])(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
 
-@mainTemplate(title = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial, eori = Some(model.eori), helpAndSupport = true) {
+@mainTemplate(title = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial, eori = Some(model.eori), companyName = model.companyName, helpAndSupport = true) {
 
     @recruitment_banner()
 

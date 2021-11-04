@@ -21,10 +21,9 @@ import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{EORI, EmailResponses, EoriHistory, UndeliverableEmail, UndeliverableInformation, UnverifiedEmail}
+import uk.gov.hmrc.customs.financials.domain.{CompanyAddress, EORI, EmailResponses, EoriHistory, UndeliverableEmail, UndeliverableInformation, UnverifiedEmail}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -57,6 +56,16 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
       }
     }
   }
+
+  def getCompanyName(eori: String)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+    metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
+      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
+    }.recover { case e =>
+      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+      None
+    }
+  }
 }
 
 case class EmailResponse(address: Option[String], timestamp: Option[String], undeliverable: Option[UndeliverableInformation])
@@ -65,9 +74,14 @@ object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]
 }
 
-
 case class EoriHistoryResponse(eoriHistory: Seq[EoriHistory])
 
 object EoriHistoryResponse {
   implicit val format: OFormat[EoriHistoryResponse] = Json.format[EoriHistoryResponse]
+}
+
+case class CompanyInformationResponse(name: String, address: CompanyAddress)
+
+object CompanyInformationResponse {
+  implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]
 }

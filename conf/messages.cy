@@ -13,6 +13,7 @@ cf.sign-out=Allgofnodi
 cf.pdf=PDF
 cf.csv=CSV
 cf.header.eori=EORI:
+cf.header.eori.dash= -
 cf.account=Cyfrif:
 cf.available=ar gael
 cf.pending.available.pre=Bydd

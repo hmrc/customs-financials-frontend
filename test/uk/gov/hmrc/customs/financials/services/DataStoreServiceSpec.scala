@@ -22,12 +22,12 @@ import play.api.inject
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.customs.financials.domain.{EoriHistory, UnverifiedEmail}
+import uk.gov.hmrc.customs.financials.domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
 import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, ServiceUnavailableException, UpstreamErrorResponse}
-
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 import scala.concurrent.Future
 
 class DataStoreServiceSpec extends SpecBase {
@@ -134,6 +134,32 @@ class DataStoreServiceSpec extends SpecBase {
         val eori = "ETMP500ERROR"
         when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
         assertThrows[ServiceUnavailableException](await(service.getEmail(eori)))
+      }
+    }
+
+    "return company name" in new Setup {
+      val eori = "GB11111"
+      val companyName = "Company name"
+      val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+      val companyInformationResponse = CompanyInformationResponse(companyName, address)
+      when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+        .thenReturn(Future.successful(companyInformationResponse))
+
+      running(app) {
+        val response = service.getCompanyName(eori)
+        val result = await(response)
+        result must be(Some(companyName))
+      }
+    }
+
+    "return None when no company information is found" in new Setup {
+      val eori = "GB11111"
+      when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+        .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+
+      running(app) {
+        val response = await(service.getCompanyName(eori))
+        response mustBe None
       }
     }
   }

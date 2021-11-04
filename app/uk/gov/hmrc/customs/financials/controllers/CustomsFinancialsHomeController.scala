@@ -41,6 +41,7 @@ import scala.util.control.NonFatal
 class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 checkEmailIsVerified: EmailAction,
                                                 apiService: ApiService,
+                                                dataStoreService: DataStoreService,
                                                 notificationService: NotificationService,
                                                 customsHomeView: customs_financials_home,
                                                 customsHomePartialView: customs_financials_partial_home,
@@ -95,11 +96,12 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                               )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
+      companyName <- dataStoreService.getCompanyName(eori)
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
       accountLinks = createAccountLinks(sessionId,cdsAccountsList)
       _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
-      val model = FinancialsHomeModel(eori, cdsAccountsList, notificationMessageKeys, accountLinks)
+      val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks)
       Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
     }
   }

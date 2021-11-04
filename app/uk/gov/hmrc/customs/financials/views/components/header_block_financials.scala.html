@@ -9,12 +9,12 @@
         eoriBanner: uk.gov.hmrc.customs.financials.views.html.components.eori_banner,
         siteHeader: uk.gov.hmrc.customs.financials.views.html.components.site_header,
 )
-@(eori: Option[String] = None, maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None)(implicit request: Request[_], messages: Messages)
+@(eori: Option[String] = None, companyName: Option[String] = None, maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None)(implicit request: Request[_], messages: Messages)
 
 @siteHeader()
 
 <div class="govuk-width-container">
     @phaseBanner("beta")
     @maybeMessageBannerPartial
-    @eoriBanner(eori)
+    @eoriBanner(eori, companyName)
 </div>

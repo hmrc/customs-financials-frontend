@@ -23,6 +23,7 @@
         beforeContentBlock: Option[Html] = None,
         maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
         eori: Option[String] = None,
+        companyName: Option[String] = None,
         helpAndSupport: Boolean,
         helpAndSupportContactNumber: String = "cf.account.help-support.numbers",
         helpAndSupportOfficeHours: String = "cf.account.help-support.office-hours")(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: uk.gov.hmrc.customs.financials.config.AppConfig)
@@ -61,7 +62,7 @@
 @govukLayout(
     pageTitle = fullPageTitle(title),
     headBlock = Some(theHead),
-    headerBlock = Some(header_block_financials(eori, maybeMessageBannerPartial)),
+    headerBlock = Some(header_block_financials(eori, companyName, maybeMessageBannerPartial)),
     beforeContentBlock = Some(beforeContentWrapper),
     footerItems = Seq(
         FooterItem(href = Some("https://www.gov.uk/help/cookies"), text = Some(messages("cf.footer.link.cookies"))),

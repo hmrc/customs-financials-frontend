@@ -52,6 +52,7 @@ class HomeControllerSpec extends SpecBase {
 
       val sessionId = SessionId("session")
       val eoriNumber = newUser(Seq.empty).eori
+      val companyName = Some("Company Name 1")
       val cdsAccounts = Seq(
         CDSAccounts(eoriNumber, Seq(DutyDefermentAccount(dan1, eori1, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false))),
         CDSAccounts(eoriNumber, Seq(DutyDefermentAccount(dan2, eori2, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
@@ -63,7 +64,7 @@ class HomeControllerSpec extends SpecBase {
       running(newApp) {
         val controller = newApp.injector.instanceOf[CustomsFinancialsHomeController]
         val accountLinks = controller.createAccountLinks(sessionId, cdsAccounts)
-        val model = FinancialsHomeModel(eoriNumber, cdsAccounts, notificationMessageKeys = List(), accountLinks)
+        val model = FinancialsHomeModel(eoriNumber, companyName, cdsAccounts, notificationMessageKeys = List(), accountLinks)
 
         model.dutyDefermentAccountDetailsLinks()(appConfig)(eori1, dan1)
         model.dutyDefermentAccountDetailsLinks()(appConfig)(eori2, dan2)
@@ -81,7 +82,6 @@ class HomeControllerSpec extends SpecBase {
       }
     }
   }
-
 
   "have the Import VAT section heading" in new Setup {
     running(app) {
@@ -421,15 +421,12 @@ class HomeControllerSpec extends SpecBase {
     val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
-
-
-    when(mockApiService.getAccounts(any)(any))
-      .thenReturn(Future.successful(mockAccounts))
-
+    when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(mockAccounts))
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
 
     val app = application().overrides(
