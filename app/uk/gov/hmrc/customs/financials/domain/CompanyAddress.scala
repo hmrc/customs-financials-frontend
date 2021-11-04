@@ -24,7 +24,5 @@ case class CompanyAddress(streetAndNumber: String,
                           countryCode: String)
 
 object CompanyAddress {
-  implicit val reads: Reads[CompanyAddress] = Json.reads[CompanyAddress]
   implicit val format: OFormat[CompanyAddress] = Json.format[CompanyAddress]
-
 }
