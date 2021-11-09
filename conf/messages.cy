@@ -14,6 +14,7 @@ cf.pdf=PDF
 cf.csv=CSV
 cf.header.eori=EORI:
 cf.header.eori.dash= -
+cf.header.companyName = {0} -
 cf.account=Cyfrif:
 cf.available=ar gael
 cf.pending.available.pre=Bydd
