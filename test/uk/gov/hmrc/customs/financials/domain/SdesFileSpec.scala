@@ -18,10 +18,10 @@ package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.should.Matchers._
-import uk.gov.hmrc.customs.financials.domain.DDStatementType.Weekly
-import uk.gov.hmrc.customs.financials.domain.FileFormat._
-import uk.gov.hmrc.customs.financials.domain.FileRole.DutyDefermentStatement
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.DDStatementType.Weekly
+domain.FileFormat._
+domain.FileRole.DutyDefermentStatement
+utils.SpecBase
 
 import scala.util.Random
 

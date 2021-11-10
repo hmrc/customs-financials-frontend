@@ -20,8 +20,8 @@ package uk.gov.hmrc.customs.financials.controllers
 import play.api.inject
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.customs.financials.connectors.CustomsFinancialsSessionCacheConnector
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+connectors.CustomsFinancialsSessionCacheConnector
+utils.SpecBase
 import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future

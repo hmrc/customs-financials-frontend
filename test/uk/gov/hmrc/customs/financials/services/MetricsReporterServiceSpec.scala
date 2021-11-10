@@ -23,7 +23,7 @@ import play.api.{Application, inject}
 import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 import uk.gov.hmrc.http._
 
 import java.time.OffsetDateTime

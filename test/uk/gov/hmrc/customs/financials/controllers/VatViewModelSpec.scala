@@ -18,11 +18,11 @@ package uk.gov.hmrc.customs.financials.controllers
 
 import play.api.i18n.Messages
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.domain.FileFormat._
-import uk.gov.hmrc.customs.financials.domain.FileRole._
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.VatViewModel
+domain.FileFormat._
+domain.FileRole._
+domain._
+utils.SpecBase
+viewmodels.VatViewModel
 
 import java.time.LocalDate
 

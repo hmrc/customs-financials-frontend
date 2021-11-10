@@ -17,9 +17,9 @@
 package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.matchers.should.Matchers._
-import uk.gov.hmrc.customs.financials.domain.FileRole.C79Certificate
-import uk.gov.hmrc.customs.financials.services.DocumentAttributes
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.FileRole.C79Certificate
+services.DocumentAttributes
+utils.SpecBase
 
 class DocumentAttributesSpec extends SpecBase {
 

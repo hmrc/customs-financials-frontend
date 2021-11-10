@@ -18,7 +18,7 @@ package uk.gov.hmrc.customs.financials.views.helpers
 
 import play.api.i18n.Messages
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 
 import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale

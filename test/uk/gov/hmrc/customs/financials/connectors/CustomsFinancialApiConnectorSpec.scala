@@ -20,8 +20,8 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.inject.bind
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.customs.financials.domain.EmailVerifiedResponse
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.EmailVerifiedResponse
+utils.SpecBase
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import scala.concurrent.Future

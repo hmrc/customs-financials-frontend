@@ -20,9 +20,9 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.Paginated
-import uk.gov.hmrc.customs.financials.views
+utils.SpecBase
+viewmodels.Paginated
+views
 
 import scala.collection.JavaConverters._
 

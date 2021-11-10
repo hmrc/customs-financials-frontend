@@ -1,0 +1,20 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+@import domain.CDSAccountStatus
+@import views.helpers.HtmlHelper._
+@this()
+
+@(status: CDSAccountStatus, accountType: String)(implicit messages: Messages)
+
+@if(!status.isOpen) {
+    <h4 class="govuk-tag @{status.statusAttribute} card-header__status @accountType-status">
+        <span class="govuk-visually-hidden">@messages(s"cf.account.status.aria.$status")</span>
+        @if((accountType eq "duty-deferment") && (status.isSuspended || status.isPending )) {
+            <span aria-hidden="true">@messages(s"cf.duty-deferment.status.$status")</span>
+        }else{
+            <span aria-hidden="true">@messages(s"cf.account.status.$status")</span>
+        }
+    </h4>
+}

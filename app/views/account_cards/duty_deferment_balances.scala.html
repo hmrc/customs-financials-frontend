@@ -1,0 +1,25 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import viewmodels.FinancialsHomeModel
+@import domain.DutyDefermentAccount
+
+@this(balanceDetail: views.html.account_cards.duty_deferment_balance_details)
+
+@(account: DutyDefermentAccount, model: FinancialsHomeModel)(implicit messages: Messages)
+<div class="govuk-!-margin-top-6 govuk-!-margin-bottom-2">
+    @{
+        account.displayBalances(account.balances.periodAccountLimit, account.balances.periodGuaranteeLimit, account.balances.periodAvailableGuaranteeBalance) map { balances =>
+                balanceDetail(
+                    account.number,
+                    balances.accountLimit,
+                    balances.guaranteeLimit,
+                    balances.guaranteeLimitRemaining,
+                    account.viewBalanceIsGranted,
+                    account.displayAccountLimit(model.eori)
+                )
+            }
+    }
+</div>

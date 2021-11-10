@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.customs.financials.controllers
 
-import uk.gov.hmrc.customs.financials.domain.FileFormat._
-import uk.gov.hmrc.customs.financials.domain.FileRole._
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.SecurityStatementsViewModel
+domain.FileFormat._
+domain.FileRole._
+domain._
+utils.SpecBase
+viewmodels.SecurityStatementsViewModel
 
 import java.time.LocalDate
 

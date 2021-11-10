@@ -22,9 +22,9 @@ import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, DefermentAccountAvailable, SessionCacheAccountLink}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+config.AppConfig
+domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, DefermentAccountAvailable, SessionCacheAccountLink}
+utils.SpecBase
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, InternalServerException, SessionId}
 
 import java.util.UUID

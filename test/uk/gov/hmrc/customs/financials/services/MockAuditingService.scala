@@ -17,8 +17,8 @@
 package uk.gov.hmrc.customs.financials.services
 
 import org.mockito.ArgumentMatchers
-import uk.gov.hmrc.customs.financials.domain.AuditModel
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.AuditModel
+utils.SpecBase
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext

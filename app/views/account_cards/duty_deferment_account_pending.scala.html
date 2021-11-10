@@ -1,0 +1,23 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@this()
+
+@()(implicit messages: Messages)
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-3">
+<div class="govuk-warning-text govuk-!-margin-top-3 govuk-!-margin-bottom-0">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">@messages("cf.duty-deferment.warning")</span>
+            @messages("cf.duty-deferment.pending.info")
+    </strong>
+<p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-0">
+    @messages("cf.duty-deferment.pending.text")
+</p>
+</div>
+
+
+

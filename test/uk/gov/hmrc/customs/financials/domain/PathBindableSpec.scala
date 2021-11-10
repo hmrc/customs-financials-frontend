@@ -18,7 +18,7 @@ package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.should.Matchers._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 
 class PathBindableSpec extends SpecBase with Matchers {
 

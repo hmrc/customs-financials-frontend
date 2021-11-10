@@ -23,10 +23,10 @@ import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.customs.financials.connectors.CustomsFinancialsSessionCacheConnector
-import uk.gov.hmrc.customs.financials.domain.{DefermentAccountAvailable, _}
-import uk.gov.hmrc.customs.financials.services._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+connectors.CustomsFinancialsSessionCacheConnector
+domain.{DefermentAccountAvailable, _}
+services._
+utils.SpecBase
 import uk.gov.hmrc.http.HttpResponse
 
 import scala.collection.JavaConverters._

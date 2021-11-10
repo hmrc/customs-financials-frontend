@@ -24,8 +24,8 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.domain.Language
-import uk.gov.hmrc.customs.financials.utils.FakeMetrics
+domain.Language
+utils.FakeMetrics
 
 class LanguageSwitchControllerSpec extends AnyFreeSpec with Matchers with OptionValues with ScalaFutures {
 

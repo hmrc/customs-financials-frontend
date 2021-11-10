@@ -18,8 +18,8 @@ package uk.gov.hmrc.customs.financials.views.components
 
 import org.jsoup.Jsoup
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views
+utils.SpecBase
+views
 
 class SecuritiesCardSpec extends SpecBase {
 

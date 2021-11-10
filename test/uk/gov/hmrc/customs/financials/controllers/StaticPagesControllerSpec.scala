@@ -17,7 +17,7 @@
 package uk.gov.hmrc.customs.financials.controllers
 
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 
 class StaticPagesControllerSpec extends SpecBase {
 

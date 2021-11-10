@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.customs.financials.domain
 
-import uk.gov.hmrc.customs.financials.domain.{GeneralGuaranteeAccount => domainGGA, GeneralGuaranteeAccountResponse => onwireGGA}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.{GeneralGuaranteeAccount => domainGGA, GeneralGuaranteeAccountResponse => onwireGGA}
+utils.SpecBase
 
 class GeneralGuaranteeAccountDomainModelSpec extends SpecBase    {
 

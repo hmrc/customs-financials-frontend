@@ -19,8 +19,8 @@ package uk.gov.hmrc.customs.financials.views.components
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views
+utils.SpecBase
+views
 
 import scala.collection.JavaConverters._
 

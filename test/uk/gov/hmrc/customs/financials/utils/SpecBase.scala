@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.financials.utils
 
+import actionbuilders.IdentifierAction
 import akka.stream.testkit.NoMaterializer
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
@@ -33,8 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.stubPlayBodyParsers
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
-import uk.gov.hmrc.customs.financials.actionbuilders.{FakeIdentifierAction, IdentifierAction}
-import uk.gov.hmrc.customs.financials.domain.{EoriHistory, SignedInUser}
+domain.{EoriHistory, SignedInUser}
 
 import scala.collection.JavaConverters.asScalaBufferConverter
 

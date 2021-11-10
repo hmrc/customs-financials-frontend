@@ -20,12 +20,12 @@ import org.jsoup.Jsoup
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.Helpers.running
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.FileFormat.Pdf
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.VatViewModel
-import uk.gov.hmrc.customs.financials.views.html.import_vat
+config.AppConfig
+domain.FileFormat.Pdf
+domain._
+utils.SpecBase
+viewmodels.VatViewModel
+views.html.import_vat
 
 import java.time.LocalDate
 

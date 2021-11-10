@@ -16,18 +16,18 @@
 
 package uk.gov.hmrc.customs.financials.controllers
 
+import actionbuilders.PvatIdentifierAction
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import play.api
 import play.api.inject
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.actionbuilders.{FakePvatIdentifierAction, FakePvatWithHistoricIdentifierAction, PvatIdentifierAction}
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod._
-import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
-import uk.gov.hmrc.customs.financials.domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.services.{ApiService, DataStoreService, DocumentService}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.DutyPaymentMethod._
+domain.FileFormat.{Csv, Pdf}
+domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
+domain._
+services.{ApiService, DataStoreService, DocumentService}
+utils.SpecBase
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.LocalDate

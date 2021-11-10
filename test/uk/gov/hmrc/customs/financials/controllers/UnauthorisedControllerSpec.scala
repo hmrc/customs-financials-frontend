@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthProviders, SessionRecordNotFound}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

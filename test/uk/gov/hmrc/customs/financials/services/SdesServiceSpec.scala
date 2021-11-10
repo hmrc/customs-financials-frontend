@@ -22,14 +22,14 @@ import play.api.inject.bind
 import play.api.libs.json._
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.domain.DDStatementType.Weekly
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
-import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
-import uk.gov.hmrc.customs.financials.domain.FileRole._
-import uk.gov.hmrc.customs.financials.domain.{MetadataItem, _}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+config.AppConfig
+domain
+domain.DDStatementType.Weekly
+domain.DutyPaymentMethod.CDS
+domain.FileFormat.{Csv, Pdf}
+domain.FileRole._
+domain.{MetadataItem, _}
+utils.SpecBase
 import uk.gov.hmrc.http.{HttpClient, _}
 
 import scala.concurrent.Future

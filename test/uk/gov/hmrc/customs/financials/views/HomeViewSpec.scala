@@ -22,11 +22,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.FinancialsHomeModel
-import uk.gov.hmrc.customs.financials.views.html.customs_financials_home
+config.AppConfig
+domain.{AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
+utils.SpecBase
+viewmodels.FinancialsHomeModel
+views.html.customs_financials_home
 import uk.gov.hmrc.play.partials.HtmlPartial
 
 import scala.util.Random

@@ -21,9 +21,9 @@ import org.mockito.ArgumentMatchers
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.inject
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.domain.{AccountStatusOpen, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
-import uk.gov.hmrc.customs.financials.services.ApiService
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.{AccountStatusOpen, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+services.ApiService
+utils.SpecBase
 import uk.gov.hmrc.http.GatewayTimeoutException
 
 import scala.concurrent.Future

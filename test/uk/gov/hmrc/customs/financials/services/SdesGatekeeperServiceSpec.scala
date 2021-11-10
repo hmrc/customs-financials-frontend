@@ -18,12 +18,12 @@ package uk.gov.hmrc.customs.financials.services
 
 import play.api.i18n.Messages
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
-import uk.gov.hmrc.customs.financials.domain.FileFormat.{Csv, Pdf}
-import uk.gov.hmrc.customs.financials.domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement}
-import uk.gov.hmrc.customs.financials.domain.{MetadataItem, _}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain
+domain.DutyPaymentMethod.CDS
+domain.FileFormat.{Csv, Pdf}
+domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement}
+domain.{MetadataItem, _}
+utils.SpecBase
 
 //scalastyle:off magic.number
 class SdesGatekeeperServiceSpec extends SpecBase {

@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.customs.financials.domain
 
-import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain
+domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
+utils.SpecBase
 
 class DutyDefermentDomainModelSpec extends SpecBase    {
 

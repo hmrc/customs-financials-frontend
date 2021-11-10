@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.customs.financials.actionbuilders
 
+import actionbuilders.{AuthAction, AuthActionHelper, IdentifierAction}
 import com.google.inject.Inject
 import play.api.inject
 import play.api.libs.json.Json
@@ -24,10 +25,10 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.{~, _}
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AuditModel, EoriHistory}
-import uk.gov.hmrc.customs.financials.services.{AuditingService, DataStoreService}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+config.AppConfig
+domain.{AuditModel, EoriHistory}
+services.{AuditingService, DataStoreService}
+utils.SpecBase
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 

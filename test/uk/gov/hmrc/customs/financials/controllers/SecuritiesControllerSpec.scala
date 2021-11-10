@@ -19,11 +19,11 @@ package uk.gov.hmrc.customs.financials.controllers
 import org.jsoup.Jsoup
 import play.api.inject
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.domain.FileFormat.Pdf
-import uk.gov.hmrc.customs.financials.domain.FileRole.SecurityStatement
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.services._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.FileFormat.Pdf
+domain.FileRole.SecurityStatement
+domain._
+services._
+utils.SpecBase
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

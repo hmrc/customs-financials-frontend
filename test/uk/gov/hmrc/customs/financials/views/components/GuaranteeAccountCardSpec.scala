@@ -21,11 +21,11 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, DefermentAccountAvailable, DirectDebitMandateCancelled, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.GeneralGuaranteeAccountViewModel
-import uk.gov.hmrc.customs.financials.views.html.components.guarantee_account_card
+config.AppConfig
+domain.{AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, DefermentAccountAvailable, DirectDebitMandateCancelled, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+utils.SpecBase
+viewmodels.GeneralGuaranteeAccountViewModel
+views.html.components.guarantee_account_card
 
 class GuaranteeAccountCardSpec extends SpecBase  {
 

@@ -20,10 +20,10 @@ import org.jsoup.Jsoup
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views.html.components.cash_account_card
+config.AppConfig
+domain._
+utils.SpecBase
+views.html.components.cash_account_card
 
 class CashAccountCardSpec extends SpecBase {
 

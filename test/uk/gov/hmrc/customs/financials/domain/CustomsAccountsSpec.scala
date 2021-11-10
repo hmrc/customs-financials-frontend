@@ -18,7 +18,7 @@ package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.prop.TableDrivenPropertyChecks._
 import org.scalatest.prop.Tables.Table
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 // scalastyle:off magic.number
 class CustomsAccountsSpec extends SpecBase {
 

@@ -22,8 +22,8 @@ import play.api.inject
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.customs.financials.domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
+utils.SpecBase
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

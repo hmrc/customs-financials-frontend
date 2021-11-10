@@ -18,7 +18,7 @@ package uk.gov.hmrc.customs.financials.controllers
 
 import org.jsoup.Jsoup
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 
 class EmailControllerSpec extends SpecBase {
 

@@ -23,13 +23,13 @@ import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.connectors.CustomsFinancialsSessionCacheConnector
-import uk.gov.hmrc.customs.financials.domain.FileRole._
-import uk.gov.hmrc.customs.financials.domain.{DefermentAccountAvailable, _}
-import uk.gov.hmrc.customs.financials.services._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.FinancialsHomeModel
+config.AppConfig
+connectors.CustomsFinancialsSessionCacheConnector
+domain.FileRole._
+domain.{DefermentAccountAvailable, _}
+services._
+utils.SpecBase
+viewmodels.FinancialsHomeModel
 import uk.gov.hmrc.http.{GatewayTimeoutException, HttpResponse, InternalServerException, SessionId}
 
 import scala.collection.JavaConverters._

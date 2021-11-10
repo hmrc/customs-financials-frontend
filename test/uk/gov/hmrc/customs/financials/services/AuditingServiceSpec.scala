@@ -20,9 +20,9 @@ import org.mockito.captor.ArgCaptor
 import org.scalatest.matchers.should.Matchers._
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AuditEori, AuditModel}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+config.AppConfig
+domain.{AuditEori, AuditModel}
+utils.SpecBase
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector._
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent

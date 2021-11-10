@@ -18,8 +18,8 @@ package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.matchers.should.Matchers._
 import play.api.libs.json.Json
-import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain
+utils.SpecBase
 
 class FileInformationSpec extends SpecBase{
 

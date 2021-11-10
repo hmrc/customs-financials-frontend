@@ -20,9 +20,9 @@ import org.jsoup.Jsoup
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views.html.components.back_link
+config.AppConfig
+utils.SpecBase
+views.html.components.back_link
 
 class BackLinkSpec extends SpecBase  {
 

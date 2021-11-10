@@ -17,8 +17,8 @@
 package uk.gov.hmrc.customs.financials.viewmodels
 
 import org.scalatest.matchers.should.Matchers._
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain._
+utils.SpecBase
 
 class GeneralGuaranteeAccountViewModelSpec extends SpecBase    {
 

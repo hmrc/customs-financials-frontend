@@ -20,8 +20,8 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.test.Helpers._
 import play.twirl.api.Html
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+config.AppConfig
+utils.SpecBase
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.partials.HtmlPartial
 

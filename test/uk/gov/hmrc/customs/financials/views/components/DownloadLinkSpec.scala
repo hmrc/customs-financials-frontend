@@ -19,11 +19,11 @@ package uk.gov.hmrc.customs.financials.views.components
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import play.api.test.Helpers
-import uk.gov.hmrc.customs.financials.domain.FileFormat.Pdf
-import uk.gov.hmrc.customs.financials.domain.FileRole.C79Certificate
-import uk.gov.hmrc.customs.financials.domain.{VatCertificateFile, VatCertificateFileMetadata}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views
+domain.FileFormat.Pdf
+domain.FileRole.C79Certificate
+domain.{VatCertificateFile, VatCertificateFileMetadata}
+utils.SpecBase
+views
 
 class DownloadLinkSpec extends SpecBase {
 

@@ -19,9 +19,9 @@ package uk.gov.hmrc.customs.financials.views.components
 import org.jsoup.Jsoup
 import play.api.test.Helpers
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views.html.components.duty_deferment_inaccurate_balances_message
+config.AppConfig
+utils.SpecBase
+views.html.components.duty_deferment_inaccurate_balances_message
 
 class DutyDefermentInaccurateBalancesSpec extends SpecBase {
 

@@ -21,11 +21,11 @@ import play.api.http.Status
 import play.api.inject.bind
 import play.api.test.Helpers.running
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.customs.financials.domain
-import uk.gov.hmrc.customs.financials.domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain
+domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
+domain._
+domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA}
+utils.SpecBase
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, _}
 
 import scala.concurrent.Future

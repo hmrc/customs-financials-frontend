@@ -21,9 +21,9 @@ import org.scalatest.matchers.should.Matchers._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.views.html.not_found_template
+config.AppConfig
+utils.SpecBase
+views.html.not_found_template
 
 import scala.collection.JavaConverters._
 

@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.customs.financials.actionbuilders
 
+import actionbuilders.{AuthenticatedRequest, PvatIdentifierAction}
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name}
 import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
-import uk.gov.hmrc.customs.financials.domain.{EoriHistory, SignedInUser}
+domain.{EoriHistory, SignedInUser}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

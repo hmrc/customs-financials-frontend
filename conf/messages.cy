@@ -443,3 +443,16 @@ cf.customs-financials-home.notification.multiple-postponed-vat = Mae gennych dda
 cf.customs-financials-home.notification.multiple-adjustments = 	Mae gennych ddatganiadau addasiadau mewnforio newydd
 
 cf.account.manage-account-authorities.title=Rheoli awdurdodau eich cyfrif
+
+cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
+cf.customs-financials-home.recruitment-banner-link-text=Cofrestrwch er mwyn cymryd rhan bosibl yn ein hymchwil defnyddiwr
+cf.customs-financials-home.recruitment-banner.close=Cau
+cf.customs-financials-home.recruitment-banner.hidden-text.close=Y faner ‘Helpu ni i wella’r gwasanaeth hwn’
+
+# Timeout Messages
+# ----------------------------------------------------------
+timeout.title=Rydych ar fin cael eich allgofnodi
+timeout.message="Am resymau diogelwch, cewch eich allgofnodi o’r gwasanaeth hwn ymhen"
+timeout.keepAlive=Parhau i fod wedi’ch mewngofnodi
+timeout.signOut=Allgofnodi
+# ----------------------------------------------------------

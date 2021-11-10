@@ -20,11 +20,11 @@ import play.api.i18n.Messages
 import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import uk.gov.hmrc.customs.financials.domain.FileFormat.Pdf
-import uk.gov.hmrc.customs.financials.domain.FileRole._
-import uk.gov.hmrc.customs.financials.domain._
-import uk.gov.hmrc.customs.financials.services.{ApiService, DataStoreService, DocumentService}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.FileFormat.Pdf
+domain.FileRole._
+domain._
+services.{ApiService, DataStoreService, DocumentService}
+utils.SpecBase
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

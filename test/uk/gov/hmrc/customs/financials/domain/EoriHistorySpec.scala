@@ -17,7 +17,7 @@
 package uk.gov.hmrc.customs.financials.domain
 
 import org.scalatest.matchers.should.Matchers._
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+utils.SpecBase
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}

@@ -21,13 +21,13 @@ import org.scalatest.matchers.should.Matchers._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.FileFormat.Pdf
-import uk.gov.hmrc.customs.financials.domain.FileRole.SecurityStatement
-import uk.gov.hmrc.customs.financials.domain.{EoriHistory, SecurityStatementFile, SecurityStatementFileMetadata, SecurityStatementsByPeriod, SecurityStatementsForEori}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.SecurityStatementsViewModel
-import uk.gov.hmrc.customs.financials.views.html.security_statements
+config.AppConfig
+domain.FileFormat.Pdf
+domain.FileRole.SecurityStatement
+domain.{EoriHistory, SecurityStatementFile, SecurityStatementFileMetadata, SecurityStatementsByPeriod, SecurityStatementsForEori}
+utils.SpecBase
+viewmodels.SecurityStatementsViewModel
+views.html.security_statements
 
 import java.time.LocalDate
 

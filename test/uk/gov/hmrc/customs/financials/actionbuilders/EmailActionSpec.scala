@@ -16,15 +16,16 @@
 
 package uk.gov.hmrc.customs.financials.actionbuilders
 
+import actionbuilders.{AuthenticatedRequest, EmailAction}
 import org.jsoup.Jsoup
 import play.api.http.Status
 import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.customs.financials.domain.{UndeliverableEmail, UnverifiedEmail}
-import uk.gov.hmrc.customs.financials.services.DataStoreService
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.{UndeliverableEmail, UnverifiedEmail}
+services.DataStoreService
+utils.SpecBase
 import uk.gov.hmrc.http.ServiceUnavailableException
 
 import scala.concurrent.Future

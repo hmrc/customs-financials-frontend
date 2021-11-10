@@ -21,11 +21,11 @@ import org.jsoup.Jsoup
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import uk.gov.hmrc.customs.financials.config.AppConfig
-import uk.gov.hmrc.customs.financials.domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
-import uk.gov.hmrc.customs.financials.utils.SpecBase
-import uk.gov.hmrc.customs.financials.viewmodels.FinancialsHomeModel
-import uk.gov.hmrc.customs.financials.views.html.components.duty_deferment_account_card
+config.AppConfig
+domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
+utils.SpecBase
+viewmodels.FinancialsHomeModel
+views.html.components.duty_deferment_account_card
 
 class DutyDefermentAccountCardSpec extends SpecBase {
 

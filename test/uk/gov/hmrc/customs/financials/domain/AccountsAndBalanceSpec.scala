@@ -17,8 +17,8 @@
 package uk.gov.hmrc.customs.financials.domain
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.customs.financials.domain.DutyPaymentMethod.CDS
-import uk.gov.hmrc.customs.financials.utils.SpecBase
+domain.DutyPaymentMethod.CDS
+utils.SpecBase
 
 class AccountsAndBalanceSpec extends SpecBase  {
 
