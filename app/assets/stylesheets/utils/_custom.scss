@@ -97,7 +97,7 @@
 }
 
 .govuk-panel--details {
-    text-align: left;
+    text-align: left !important;
     padding: 0.78947em;
     border: 0 none;
     background-color: $alabaster;

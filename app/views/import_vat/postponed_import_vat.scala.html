@@ -19,7 +19,7 @@
 
 @(eori: String, statementGroups: Seq[PostponedVatStatementGroup], hasRequestedStatements: Boolean, cdsOnly: Boolean, location: Option[String])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.account.pvat.title"))) {
+@layout(pageTitle = Some(messages("cf.account.pvat.title")) , backLink = location.map(_ => routes.CustomsFinancialsHomeController.index().url)) {
     <span class="govuk-caption-xl" id="eori-heading">
         @messages("cf.eori")
         <span id="eori">@{

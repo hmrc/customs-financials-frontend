@@ -18,7 +18,7 @@
 )
 @(model: FinancialsHomeModel, maybeMessageBannerPartial: Option[HtmlFormat.Appendable])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial) {
+@layout(pageTitle = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial, eori = Some(model.eori), companyName = model.companyName) {
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
     @messages("cf.customs-financials-home.title")
     </h1>

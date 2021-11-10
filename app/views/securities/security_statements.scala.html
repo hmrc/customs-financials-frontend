@@ -19,7 +19,7 @@
 
 @histories = @{model.statementsForAllEoris.indices}
 
-@layout(pageTitle = Some(messages("cf.security-statements.title"))) {
+@layout(pageTitle = Some(messages("cf.security-statements.title")), backLink = Some(routes.CustomsFinancialsHomeController.index().url)) {
 
     <h1 class="govuk-heading-xl">
         @messages("cf.security-statements.title")

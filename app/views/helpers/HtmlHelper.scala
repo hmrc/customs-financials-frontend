@@ -17,17 +17,16 @@
 package views.helpers
 
 import domain.{AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccountStatus}
-import domain.{AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccountStatus}
 
 object HtmlHelper {
 
   implicit class Attribute(val status: CDSAccountStatus) {
 
     val statusAttribute: String = status match {
-      case AccountStatusOpen => "account-status-open"
-      case AccountStatusSuspended => "account-status-suspended"
-      case AccountStatusClosed => "account-status-closed"
-      case AccountStatusPending => "account-status-pending"
+      case AccountStatusOpen => "govuk-tag"
+      case AccountStatusSuspended => "govuk-tag govuk-tag--yellow"
+      case AccountStatusClosed => "govuk-tag govuk-tag--grey"
+      case AccountStatusPending => "govuk-tag govuk-tag--blue"
     }
 
     val isOpen: Boolean = status == AccountStatusOpen

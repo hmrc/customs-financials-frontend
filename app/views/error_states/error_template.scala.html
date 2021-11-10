@@ -13,7 +13,7 @@
 
 @(pageTitle: String, heading: String, details: String*)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(pageTitle)) {
+@layout(pageTitle = Some(pageTitle), helpAndSupport = false) {
 
     <h1 class="govuk-heading-xl">@heading</h1>
 

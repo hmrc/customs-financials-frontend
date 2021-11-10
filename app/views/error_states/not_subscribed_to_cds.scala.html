@@ -16,7 +16,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title"))) {
+@layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
     <h1 class="govuk-heading-l">@messages("cf.not-subscribed-to-cds.detail.heading")</h1>
     <h2 class="govuk-heading-m">@messages("cf.not-subscribed-to-cds.detail.how-to-get-access-info")</h2>
 

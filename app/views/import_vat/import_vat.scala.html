@@ -15,7 +15,7 @@
 
 @(model: VatViewModel)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.account.vat.title"))) {
+@layout(pageTitle = Some(messages("cf.account.vat.title")), backLink = Some(routes.CustomsFinancialsHomeController.index().url)) {
     <h1 id="import-vat-certificates-heading" class="govuk-heading-xl">@messages("cf.account.vat.title")</h1>
 
     @if(model.hasRequestedCertificates) {

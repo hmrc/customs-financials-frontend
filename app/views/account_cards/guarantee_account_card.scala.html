@@ -30,9 +30,8 @@
     @if(viewModel.status.isOpen) {
         @progressBar(viewModel.balances.fold(0.0)(_.usedPercentage.toFloat))
     }
-    <p class="govuk-body card-footer">
-
-        <a id="guarantee-account-@{s"${viewModel.gan}"}" class="govuk-link" id="guarantee-view-account-link"
+    <p class="govuk-body">
+        <a id="guarantee-account-@{s"${viewModel.gan}"}" class="govuk-link card-footer__links" id="guarantee-view-account-link"
            href="@appConfig.guaranteeAccountUrl">
            @messages("cf.customs-financials-home.guarantee-account.link")
         </a>

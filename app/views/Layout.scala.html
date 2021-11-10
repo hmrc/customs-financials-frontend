@@ -4,13 +4,13 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
-@import views.html.components.help_and_support_message
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Tag
 @import uk.gov.hmrc.govukfrontend.views.Aliases.PhaseBanner
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 @import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 @import views.html.helper.CSPNonce
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
+@import views.html.components.help_and_support_message
 
 @this(appConfig: AppConfig,
         hmrcLayout: HmrcLayout,
@@ -29,11 +29,11 @@
         welshToggle: Boolean = true,
         userResearchBanner: Boolean = true,
         maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
-        eoriBannerEnabled: Boolean = true
-
+        eori: Option[String] = None,
+        companyName: Option[String] = None
 )(contentBlock: Html)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-<link href='@controllers.routes.Assets.at("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
+<link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
 
 @phaseBannerContent = {
     @messages("feedback.before")
@@ -50,7 +50,7 @@
 
 @beforeContent = {
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eoriBannerEnabled){ @eoriBanner(Some("eori"), Some("companyName"))}
+    @if(eori.isDefined){ @eoriBanner(eori, companyName)}
     @hmrcLanguageSelectHelper()
 }
 
@@ -68,23 +68,23 @@
 
 @mainContent = {
     @contentBlock
-    @if(deskpro) {
-        @hmrcReportTechnicalIssueHelper()
-    }
-
     @if(helpAndSupport) {
         @help_and_support_message()
+    }
+
+    @if(deskpro) {
+        @hmrcReportTechnicalIssueHelper()
     }
 }
 
 @hmrcLayout(
     userResearchBannerUrl = if (userResearchBanner) Some(appConfig.helpMakeGovUkBetterUrl) else None,
     pageTitle = fullPageTitle,
-    serviceUrl = Some("CHANGE ME"),
+    serviceUrl = Some(controllers.routes.CustomsFinancialsHomeController.index().url),
     signOutUrl = Some(controllers.routes.LogoutController.logout().url),
     nonce = CSPNonce.get,
     backLinkUrl = backLink,
-    beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eoriBannerEnabled) Some(beforeContent) else None,
+    beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None,
     additionalHeadBlock = Some(additionalHead),
     phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),
     isWelshTranslationAvailable = welshToggle,

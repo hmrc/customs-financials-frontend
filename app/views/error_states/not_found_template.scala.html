@@ -10,7 +10,7 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.error.not-found.title"))) {
+@layout(pageTitle = Some(messages("cf.error.not-found.title")), helpAndSupport = false) {
 
     <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
     @messages("cf.error.not-found.heading")
