@@ -16,6 +16,8 @@
 
  <h1 class="govuk-heading-xl">@messages("cf.verify.your.email.heading")</h1>
 
+ <p class="govuk-body">@messages("cf.verify.your.email.p1")</p>
+
  <p class="govuk-body">
   @messages("cf.verify.your.email.need-to-verify")
    <ul class="govuk-list govuk-list--bullet">
@@ -24,8 +26,9 @@
     <li>@messages("cf.verify.your.email.list.3")</li>
    </ul>
  </p>
+
  <p class="govuk-body">
-   <a href="@nextPage" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+   <a href="@nextPage" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
     @messages("cf.verify.your.email.link-text")
    </a>
  </p>
