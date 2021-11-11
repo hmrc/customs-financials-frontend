@@ -361,7 +361,7 @@ cf.undeliverable.email.p2=This is the email address your organisation has regist
 cf.undeliverable.email.p3=This will be the only email address we use for:
 cf.undeliverable.email.list.1=updates on changes to the Customs Declaration Service
 cf.undeliverable.email.list.2=urgent updates about goods in customs
-cf.undeliverable.email.list.3=financial notifications, including Direct Debit notices, VAT and duty deferment statements
+cf.undeliverable.email.list.3=some financial notifications, including Direct Debit notices and VAT
 cf.undeliverable.email.link-text=Verify or change email address
 
 # Duty deferment direct debit

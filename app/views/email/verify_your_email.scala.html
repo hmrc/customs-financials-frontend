@@ -7,30 +7,27 @@
 @import views.html.Layout
 
 @this(
-        layout: Layout
+        layout: Layout,
+        h1: components.h1,
+        p: components.p,
+        ul: components.unordered_list,
+        button: components.button
 )
 
 @(nextPage:String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("cf.verify.your.email.title"))) {
 
- <h1 class="govuk-heading-xl">@messages("cf.verify.your.email.heading")</h1>
+ @h1(msg = "cf.verify.your.email.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
- <p class="govuk-body">@messages("cf.verify.your.email.p1")</p>
+ @p(messages("cf.verify.your.email.p1"))
+ @p(messages("cf.verify.your.email.need-to-verify"))
 
- <p class="govuk-body">
-  @messages("cf.verify.your.email.need-to-verify")
-   <ul class="govuk-list govuk-list--bullet">
-    <li>@messages("cf.verify.your.email.list.1")</li>
-    <li>@messages("cf.verify.your.email.list.2")</li>
-    <li>@messages("cf.verify.your.email.list.3")</li>
-   </ul>
- </p>
+ @ul(
+  "cf.verify.your.email.list.1",
+  "cf.verify.your.email.list.2",
+  "cf.verify.your.email.list.3"
+ )
 
- <p class="govuk-body">
-   <a href="@nextPage" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
-    @messages("cf.verify.your.email.link-text")
-   </a>
- </p>
-
+ @button("cf.undeliverable.email.link-text", Some(nextPage))
 }

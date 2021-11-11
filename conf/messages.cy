@@ -373,7 +373,7 @@ cf.undeliverable.email.p2=Dyma’r cyfeiriad e-bost y mae’ch sefydliad wedi’
 cf.undeliverable.email.p3=Dyma fydd yr unig gyfeiriad e-bost a ddefnyddiwn ar gyfer:
 cf.undeliverable.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datganiadau Tollau
 cf.undeliverable.email.list.2=diweddariadau brys am nwyddau yn y tollau
-cf.undeliverable.email.list.3=hysbysiadau ariannol, gan gynnwys hysbysiadau Debyd Uniongyrchol, TAW a datganiadau gohirio tollau
+cf.undeliverable.email.list.3=rhai hysbysiadau ariannol, gan gynnwys hysbysiadau Debyd Uniongyrchol a TAW
 cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 # Duty deferment direct debit
