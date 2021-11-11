@@ -1,0 +1,48 @@
+/*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package services
+
+import play.api.i18n.Messages
+import domain.{EORI, PostponedVatStatementFile, SdesFile, SecurityStatementFile, VatCertificateFile}
+import uk.gov.hmrc.http.HeaderCarrier
+
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
+
+@Singleton
+class DocumentService @Inject()(sdesService: SdesService,
+                                auditingService: AuditingService)(implicit ec: ExecutionContext) {
+
+  def getVatCertificates(eori: EORI)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[VatCertificateFile]] = {
+    sdesService.getVatCertificates(eori).map(auditFiles(_, eori))
+  }
+
+  def getSecurityStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[SecurityStatementFile]] = {
+    sdesService.getSecurityStatements(eori).map(auditFiles(_, eori))
+  }
+
+  def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatStatementFile]] = {
+    sdesService.getPostponedVatStatements(eori).map(auditFiles(_, eori))
+  }
+
+  private def auditFiles[T <: SdesFile](files: Seq[T], eori: EORI)(implicit hc: HeaderCarrier): Seq[T] = {
+    files.map { file =>
+      auditingService.audit(file.auditModelFor(eori))
+      file
+    }
+  }
+}

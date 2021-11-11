@@ -1,19 +1,17 @@
 $govuk-assets-path: "/customs/payment-records/assets/lib/govuk-frontend/govuk/assets/";
 $hmrc-assets-path: "/customs/payment-records/assets/lib/hmrc-frontend/hmrc/";
 
-@import "lib/govuk-frontend/govuk/all";
-@import "lib/hmrc-frontend/hmrc/all";
+@import "lib/govuk-frontend/govuk/base";
 
 @import "utils/colours";
 @import "utils/custom";
 @import "utils/shims";
-@import "language-selection";
-
-@import "components/progress-bar";
-@import "components/custom-card";
-@import "components/timeout-dialog";
-@import "components/search-form";
-@import "components/pager";
-@import "components/recruitment_banner";
 @import "components/govuk-summary-list";
+@import "components/progress-bar";
+@import "components/pager";
 @import "components/notifications-bar";
+@import "components/custom-card";
+
+
+
+

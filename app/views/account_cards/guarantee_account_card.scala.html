@@ -1,0 +1,45 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import config.AppConfig
+@import viewmodels.GeneralGuaranteeAccountViewModel
+@import views.helpers.Formatters
+@import views.helpers.HtmlHelper.Attribute
+
+@this(
+        accountStatus: views.html.components.account_status,
+        balanceAvailable: views.html.components.balance_available,
+        progressBar: views.html.components.progress_bar
+)
+
+@(viewModel: GeneralGuaranteeAccountViewModel)(implicit messages: Messages, appConfig: AppConfig)
+
+<div class="custom-card guarantee-account govuk-!-margin-bottom-7">
+    <header class="card-header">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="gan-@{
+            viewModel.gan
+        }">
+            @messages("cf.account") @viewModel.gan
+        </h3>
+        @accountStatus(viewModel.status, "guarantee-account")
+    </header>
+    @balanceAvailable(viewModel.status, "guarantee-account-limit-remaining", viewModel.balances.fold(BigDecimal(0.0))(_.AvailableGuaranteeBalance))
+
+    @if(viewModel.status.isOpen) {
+        @progressBar(viewModel.balances.fold(0.0)(_.usedPercentage.toFloat))
+    }
+    <p class="govuk-body">
+        <a id="guarantee-account-@{s"${viewModel.gan}"}" class="govuk-link card-footer__links" id="guarantee-view-account-link"
+           href="@appConfig.guaranteeAccountUrl">
+           @messages("cf.customs-financials-home.guarantee-account.link")
+        </a>
+
+        <span class="overall-guarantee-limit card-footer__limit">
+        @messages("cf.accounts.label.usingLimit",
+            Formatters.formatCurrencyAmount(viewModel.balances.fold(BigDecimal(0.0))(_.usedFunds)),
+            Formatters.formatCurrencyAmount(viewModel.balances.fold(BigDecimal(0.0))(_.GuaranteeLimit)))
+        </span>
+    </p>
+</div>

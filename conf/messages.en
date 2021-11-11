@@ -431,3 +431,16 @@ cf.customs-financials-home.notification.multiple-c79 = You have new import VAT c
 cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
 cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
 cf.account.manage-account-authorities.title=Manage your account authorities
+
+cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
+cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
+cf.customs-financials-home.recruitment-banner.close=Close
+cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
+
+# Timeout Messages
+# ----------------------------------------------------------
+timeout.title = You’re about to be signed out
+timeout.message = For security reasons, you will be signed out of this service in
+timeout.keepAlive = Stay signed in
+timeout.signOut = Sign out
+# ----------------------------------------------------------

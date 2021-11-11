@@ -1,0 +1,28 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+@import views.html.Layout
+
+@this(
+        layout: Layout
+)
+
+@()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+
+@layout(pageTitle = Some(messages("cf.error.not-found.title")), helpAndSupport = false) {
+
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
+    @messages("cf.error.not-found.heading")
+    </h1>
+
+    <p class="govuk-body">@messages("cf.error.not-found.message.address-typed-wrong")</p>
+    <p class="govuk-body">@messages("cf.error.not-found.message.address-pasted-wrong")</p>
+    <p class="govuk-body">@messages("cf.error.not-found.message.go-to-home-page-text1")
+        <a href="@{
+            controllers.routes.CustomsFinancialsHomeController.index
+        }" class="govuk-link govuk-link--no-visited-state">
+        @messages("cf.accounts.view-customs-account")</a>
+        @messages("cf.error.not-found.message.go-to-home-page-text2")
+    </p>
+}

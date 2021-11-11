@@ -1,0 +1,43 @@
+@*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ *@
+
+@import config.AppConfig
+@import domain.{DutyDefermentAccount, GeneralGuaranteeAccount}
+@import viewmodels.AuthorizedToViewViewModel
+@import views.html.components._
+@import views.html.Layout
+@import domain.CashAccount
+@import views.html.authorised_to_view._
+
+@this(
+    layout: Layout
+)
+
+@(model: AuthorizedToViewViewModel)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+
+@layout(pageTitle = Some(messages("cf.account.authorized-to-view.title")), helpAndSupport = false, backLink = Some(routes.CustomsFinancialsHomeController.index().url)) {
+
+    <h1 class="govuk-heading-xl">
+        @messages("cf.account.authorized-to-view.title")
+    </h1>
+
+    @pager(model)
+        <div id="results">
+            @if(model.allItems.isEmpty){
+              <h2 class="error-message govuk-heading-l">@messages("cf.account.authorized-to-view.no-matches-found")</h2>
+            }else{
+                @for((account, index) <- model.visibleItems.zipWithIndex) {
+                    @{
+                        account match {
+                            case dutyDefermentAccount: DutyDefermentAccount => authorised_to_view_duty_deferment(dutyDefermentAccount, index)
+                            case cashAccount: CashAccount => authorised_to_view_cash(cashAccount, index)
+                            case generalGuaranteeAccount: GeneralGuaranteeAccount => authorised_to_view_guarantee(generalGuaranteeAccount, index)
+                        }
+                    }
+                }
+            }
+        </div>
+    @pager(model)
+}

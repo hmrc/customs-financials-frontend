@@ -26,10 +26,10 @@ lazy val microservice = Project(appName, file("."))
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",
-      "uk.gov.hmrc.customs.financials.controllers._",
-      "uk.gov.hmrc.customs.financials.domain._"
+      "controllers._",
+      "domain._"
     ),
-    routesImport ++= Seq("uk.gov.hmrc.customs.financials.domain._"),
+    routesImport ++= Seq("domain._"),
     // ***************
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
     scalacOptions += "-P:silencer:pathFilters=views;routes",
