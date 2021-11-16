@@ -32,7 +32,7 @@ class EmailControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) mustBe OK
-        html.containsLinkWithText("/manage-email-cds/service/customs-finance", "Verify my email address") mustBe true
+        html.containsLinkWithText("/manage-email-cds/service/customs-finance", "Verify or change email address") mustBe true
       }
     }
   }

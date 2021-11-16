@@ -356,24 +356,25 @@ cf.customs-financials-home.notification.requested-adjustments=Mae’r datganiada
 cf.customs-financials-home.notification.requested-postponed-vat= Mae’r datganiadau TAW mewnforio ohiriedig y gofynnwyd amdanynt gennych ar gael i’w gweld
 
 #Verify Your Email Address
-cf.verify.your.email.title=Dilysu’ch e-bost ar gyfer y Gwasanaeth Datgan Tollau
-cf.verify.your.email.heading=Mae angen i chi ddilysu’ch cyfeiriad e-bost.
-cf.verify.your.email.need-to-verify=Mae angen cyfeiriad e-bost sydd wedi’i ddilysu ar CThEM er mwyn anfon y canlynol atoch:
-cf.verify.your.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datgan Tollau (CDS)
-cf.verify.your.email.list.2=hysbysiadau mewnforio, gan gynnwys datganiadau TAW a thollau a hysbysiadau debyd uniongyrchol
-cf.verify.your.email.list.3=hysbysiadau allforio
-cf.verify.your.email.link-text=Dilysu fy nghyfeiriad e-bost
+cf.verify.your.email.title=Mae angen i chi ddilysu’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
+cf.verify.your.email.heading=Mae angen i chi ddilysu’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
+cv.verify.your.email.p1=Dyma’r cyfeiriad e-bost y mae’ch sefydliad wedi’i gofrestru ar gyfer y Gwasanaeth Datganiadau Tollau (CDS). Mae angen i chi ddilysu’r cyfeiriad e-bost hwn neu ei newid. Gallwch ddilysu’r cyfeiriad e-bost ar unwaith os oes gennych fynediad at y cyfrif e-bost.
+cf.verify.your.email.need-to-verify=Dyma fydd yr unig gyfeiriad e-bost a ddefnyddiwn ar gyfer:
+cf.verify.your.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datganiadau Tollau
+cf.verify.your.email.list.2=diweddariadau brys am nwyddau yn y tollau
+cf.verify.your.email.list.3=rhai hysbysiadau ariannol, gan gynnwys hysbysiadau Debyd Uniongyrchol a TAW
+cf.verify.your.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 #Undeliverable Email Address
-cf.undeliverable.email.title=Dilysu’ch e-bost ar gyfer y Gwasanaeth Datgan Tollau
-cf.undeliverable.email.heading=Mae angen i chi ddilysu’ch cyfeiriad e-bost.
-cf.undeliverable.email.p1=Gwnaethom geisio anfon e-bost atoch ond nid oedd modd ei ddosbarthu. Gallai hyn fod oherwydd bod y mewnflwch yn llawn, neu oherwydd bod problem dechnegol gyda darparwr eich e-byst.
-cf.undeliverable.email.p2=Mae angen i chi ddilysu’ch cyfeiriad e-bost eto er mwyn defnyddio’r gwasanaeth hwn.
-cf.undeliverable.email.p3=Mae angen cyfeiriad e-bost wedi’i ddilysu ar CThEM er mwyn anfon y canlynol atoch:
-cf.undeliverable.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datgan Tollau (CDS)
-cf.undeliverable.email.list.2=hysbysiadau mewnforion, gan gynnwys datganiadau TAW a thollau a hysbysiadau Debyd Uniongyrchol
-cf.undeliverable.email.list.3=hysbysiadau allforion
-cf.undeliverable.email.link-text=Dilysu fy nghyfeiriad e-bost
+cf.undeliverable.email.title=Mae problem gyda’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
+cf.undeliverable.email.heading=Mae problem gyda’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
+cf.undeliverable.email.p1=Gwnaethom geisio anfon e-bost atoch ond nid oedd modd ei ddosbarthu. Gallai hyn fod oherwydd bod y mewnflwch yn llawn, neu oherwydd bod problem dechnegol gyda’ch darparwr e-bost.
+cf.undeliverable.email.p2=Dyma’r cyfeiriad e-bost y mae’ch sefydliad wedi’i gofrestru ar gyfer y Gwasanaeth Datganiadau Tollau (CDS). Mae angen i chi ddilysu’r cyfeiriad e-bost hwn neu ei newid. Gallwch ddilysu’r cyfeiriad e-bost ar unwaith os oes gennych fynediad at y cyfrif e-bost.
+cf.undeliverable.email.p3=Dyma fydd yr unig gyfeiriad e-bost a ddefnyddiwn ar gyfer:
+cf.undeliverable.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datganiadau Tollau
+cf.undeliverable.email.list.2=diweddariadau brys am nwyddau yn y tollau
+cf.undeliverable.email.list.3=rhai hysbysiadau ariannol, gan gynnwys hysbysiadau Debyd Uniongyrchol a TAW
+cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Rhybudd
