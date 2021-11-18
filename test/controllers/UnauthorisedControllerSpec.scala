@@ -37,7 +37,7 @@ class UnauthorisedControllerSpec extends SpecBase {
         .thenReturn(Future.successful({}))
 
       running(app){
-        val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad().url).withHeaders("X-Session-Id" -> "someSession")
+        val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
         val result = route(app, request).value
         status(result) mustBe OK
         val html = Jsoup.parse(contentAsString(result))
@@ -51,7 +51,7 @@ class UnauthorisedControllerSpec extends SpecBase {
           .thenReturn(Future.failed(SessionRecordNotFound()))
 
         running(app){
-          val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad().url).withHeaders("X-Session-Id" -> "someSession")
+          val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"

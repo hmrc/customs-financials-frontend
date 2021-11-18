@@ -30,7 +30,7 @@ class NotSubscribedToCdsViewSpec extends SpecBase {
   "Not subscribed to cds view" should {
     "display header as non-link text" in new Setup{
       running(app) {
-        view.getElementsByClass("govuk-header__link--service-name").text mustBe "View your customs financial accounts"
+        view.getElementsByClass("hmrc-header__service-name--linked").text mustBe "View your customs financial accounts"
       }
     }
 

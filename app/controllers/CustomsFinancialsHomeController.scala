@@ -57,7 +57,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
 
   def index: Action[AnyContent] = (authenticate andThen checkEmailIsVerified).async {
     implicit request =>
-      val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index().url
+      val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
       val eori = request.user.eori
       val result = for {
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
@@ -66,7 +66,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       } yield page
       result.recover{
         case TimeoutResponse  =>
-          Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable())
+          Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
   }
 
@@ -88,7 +88,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   private def redirectToPageWithoutAccounts(): Future[Result] = {
-    Future.successful(Redirect(routes.CustomsFinancialsHomeController.pageWithoutAccounts()))
+    Future.successful(Redirect(routes.CustomsFinancialsHomeController.pageWithoutAccounts))
   }
 
   private def pageWithAccounts(eori: EORI,

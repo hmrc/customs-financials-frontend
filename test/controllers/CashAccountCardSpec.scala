@@ -38,7 +38,7 @@ class CashAccountCardSpec extends SpecBase {
   "the landing page" should {
     "show cash account card details" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url).withHeaders("X-Session-Id" -> "session-1234")
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 

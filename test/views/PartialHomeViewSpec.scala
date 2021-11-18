@@ -29,7 +29,7 @@ class PartialHomeViewSpec extends SpecBase {
   "Customs Financials Partial Home View" should {
     "display header as a link text" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK View your customs financial accounts"
+        view.getElementsByClass("hmrc-header__service-name--linked").text mustBe "View your customs financial accounts"
       }
     }
 

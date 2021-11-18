@@ -78,7 +78,7 @@ class HomeControllerSpec extends SpecBase {
   "the landing page" should {
     "display 'Your customs financial accounts' and EORI" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByTag("h1").text mustBe "Your customs financial accounts"
@@ -88,7 +88,7 @@ class HomeControllerSpec extends SpecBase {
 
   "have the Import VAT section heading" in new Setup {
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.getElementsContainingText("Import VAT certificates (C79)").isEmpty mustBe false
@@ -100,7 +100,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.getElementsByClass("notification-panel").isEmpty mustBe true
@@ -113,7 +113,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.containsElementById("notification-panel")
@@ -123,7 +123,7 @@ class HomeControllerSpec extends SpecBase {
   "with security statements available" should {
     "show the Import adjustments section heading" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByTag("h2").asScala.exists(_.text == "Notification of adjustment statements") mustBe true
@@ -138,7 +138,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.containsElementById("notification-panel")
@@ -148,7 +148,7 @@ class HomeControllerSpec extends SpecBase {
   "with no security statements available" should {
     "omit the Import adjustments section heading" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByTag("h2").asScala.exists(_.text.contains("Import adjustments")) mustBe false
@@ -159,7 +159,7 @@ class HomeControllerSpec extends SpecBase {
 
   "show the Import VAT section heading" in new Setup {
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.getElementsByTag("h2").asScala.exists(_.text.contains("Postponed import VAT statements")) mustBe true
@@ -171,7 +171,7 @@ class HomeControllerSpec extends SpecBase {
     val notifications = List(Notification(PostponedVATStatement, isRequested = false))
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
     running(app) {
-      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
       html.containsElementById("notification-panel")
@@ -195,7 +195,7 @@ class HomeControllerSpec extends SpecBase {
       when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByClass("govuk-heading-xl").text mustBe "Sorry, some parts of the service are unavailable at the moment"
@@ -224,7 +224,7 @@ class HomeControllerSpec extends SpecBase {
       when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         val notificationsText = html.select("#notification-panel li").asScala.map(_.text()).toList
@@ -263,7 +263,7 @@ class HomeControllerSpec extends SpecBase {
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(notifications))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         val notificationsText = html.select("#notification-panel li").asScala.map(_.text()).toList
@@ -297,10 +297,10 @@ class HomeControllerSpec extends SpecBase {
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new InternalServerException("SPS is Down")))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts().url
+        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts.url
       }
     }
   }
@@ -348,10 +348,10 @@ class HomeControllerSpec extends SpecBase {
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable().url
+        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable.url
       }
     }
   }

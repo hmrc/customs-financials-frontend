@@ -16,7 +16,6 @@
 
 package viewmodels
 
-import config.AppConfig
 import domain.{AccountLink, CDSAccount, CDSAccounts, CashAccount}
 import config.AppConfig
 import controllers.routes
