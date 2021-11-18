@@ -45,7 +45,7 @@ class HomeControllerCardSpec extends SpecBase {
 
       "show the duty deferment account cards" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.getElementsByClass("duty-deferment-account").isEmpty mustBe false
@@ -53,7 +53,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "show the cash account card" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.getElementsByClass("cash-account").isEmpty mustBe false
@@ -61,7 +61,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "show the guarantee account card" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.getElementsByClass("guarantee-account").isEmpty mustBe false
@@ -69,7 +69,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "show the import vat card" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/import-vat", "View certificates")
@@ -77,7 +77,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "show the securities card" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/adjustments", "View notification of adjustment statements") mustBe true
@@ -85,7 +85,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "show the postponed vat card" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
@@ -95,7 +95,7 @@ class HomeControllerCardSpec extends SpecBase {
     "display vat card" should {
       "work with only actual eori statements and no historic Eoris in the eori store" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
 
@@ -104,7 +104,7 @@ class HomeControllerCardSpec extends SpecBase {
       }
       "work with actual and historic eori statements" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.getElementsByClass("import-vat-certificates").isEmpty mustBe false
@@ -115,7 +115,7 @@ class HomeControllerCardSpec extends SpecBase {
     "display securities card" should {
       "work with only actual eori statements and no historic Eoris in the eori store" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/adjustments", "View notification of adjustment statements") mustBe true
@@ -124,7 +124,7 @@ class HomeControllerCardSpec extends SpecBase {
 
       "work with only actual eori statements and historic Eoris in the eori store, but no historic statements" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/adjustments", "View notification of adjustment statements") mustBe true
@@ -135,7 +135,7 @@ class HomeControllerCardSpec extends SpecBase {
     "display postponed vat card" should {
       "work with only actual eori statements and no historic Eoris in the eori store" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
@@ -144,7 +144,7 @@ class HomeControllerCardSpec extends SpecBase {
 
       "work with only actual eori statements and historic Eoris in the eori store, but no historic statements" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+          val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
           html.containsLinkWithText("/customs/payment-records/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
@@ -183,7 +183,7 @@ class HomeControllerCardSpec extends SpecBase {
       ).build()
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index().url)
+        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.getElementsByClass("duty-deferment-account").tagName("h3").asScala.exists(_.text.contains("Account: 678910")) mustBe true

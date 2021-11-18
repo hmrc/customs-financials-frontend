@@ -56,3 +56,4 @@ class AuthActionHelper @Inject()(dataStoreService: DataStoreService,
     } yield AuthenticatedRequest(request, cdsLoggedInUser)
 
 }
+

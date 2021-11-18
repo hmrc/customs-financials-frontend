@@ -46,29 +46,29 @@ lazy val microservice = Project(appName, file("."))
   )
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.4.0",
-  "uk.gov.hmrc" %% "play-partials" % "8.1.0-play-28",
-  "uk.gov.hmrc" %% "govuk-template" % "5.68.0-play-28",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.16.0",
+  "uk.gov.hmrc" %% "play-partials" % "8.2.0-play-28",
+  "uk.gov.hmrc" %% "govuk-template" % "5.72.0-play-28",
   "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "1.4.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "1.26.0-play-28",
   ws,
-  "uk.gov.hmrc" %% "auth-client" % "5.6.0-play-28",
+  "uk.gov.hmrc" %% "auth-client" % "5.7.0-play-28",
   "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
   "org.typelevel" %% "cats-core" % "2.3.0",
   "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-28",
-  "uk.gov.hmrc" %% "tax-year" % "1.3.0",
+  "uk.gov.hmrc" %% "tax-year" % "1.6.0",
   "org.webjars.npm" % "moment" % "2.29.0",
   "com.typesafe.play" %% "play-json-joda" % "2.9.2"
 )
 
 val testDependencies = Seq(
- "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.4.0" % Test,
+ "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.16.0" % Test,
 "org.scalatest" %% "scalatest" % "3.2.9" % Test,
 "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
 "org.jsoup" % "jsoup" % "1.10.2" % Test,
 "com.typesafe.play" %% "play-test" % current % Test,
 "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % "test, it",
-"org.mockito" %% "mockito-scala-scalatest" % "1.16.37" % "test, it"
+"org.mockito" %% "mockito-scala-scalatest" % "1.16.46" % "test, it"
 )
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")

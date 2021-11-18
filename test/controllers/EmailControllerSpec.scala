@@ -28,7 +28,7 @@ class EmailControllerSpec extends SpecBase {
   "The Verify Your Email page" should {
     "return OK if signed in and have a link to verify email address" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.EmailController.showUnverified().url)
+        val request = fakeRequest(GET, routes.EmailController.showUnverified.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) mustBe OK

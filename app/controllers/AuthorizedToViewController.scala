@@ -50,7 +50,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     result.recover {
       case _: GatewayTimeoutException =>
         log.warn(s"Request Timeout while fetching accounts")
-        Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable())
+        Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
     }
   }
 }

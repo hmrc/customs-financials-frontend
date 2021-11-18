@@ -40,7 +40,7 @@ class SecuritiesControllerSpec extends SpecBase {
       when(mockApiService.deleteNotification(any, any)(any))
         .thenReturn(Future.successful(true))
       running(app) {
-        val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+        val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
         val result = route(app, request).value
         status(result) mustBe OK
       }
@@ -51,7 +51,7 @@ class SecuritiesControllerSpec extends SpecBase {
         .thenReturn(Future.successful(true))
 
       running(app) {
-        val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+        val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
         val result = route(app, request).value
         status(result) mustBe OK
         verify(mockApiService).deleteNotification(eqTo(newUser().eori), eqTo(SecurityStatement))(any)
@@ -64,7 +64,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -87,7 +87,7 @@ class SecuritiesControllerSpec extends SpecBase {
           inject.bind[DataStoreService].toInstance(mockDataStoreService)
         ).build()
         running(appWithEoriHistory) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(appWithEoriHistory, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -110,7 +110,7 @@ class SecuritiesControllerSpec extends SpecBase {
           inject.bind[DataStoreService].toInstance(mockDataStoreService)
         ).build()
         running(appWithEoriHistory) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(appWithEoriHistory, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -124,7 +124,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -138,7 +138,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -151,7 +151,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -178,7 +178,7 @@ class SecuritiesControllerSpec extends SpecBase {
           inject.bind[DataStoreService].toInstance(mockDataStoreService)
         ).build()
         running(appWithEoriHistory) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(appWithEoriHistory, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -194,7 +194,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -211,7 +211,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -226,7 +226,7 @@ class SecuritiesControllerSpec extends SpecBase {
           .thenReturn(Future.successful(true))
 
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(app, request).value
           status(result) mustBe OK
           val html = Jsoup.parse(contentAsString(result))
@@ -252,7 +252,7 @@ class SecuritiesControllerSpec extends SpecBase {
           inject.bind[DataStoreService].toInstance(mockDataStoreService)
         ).build()
         running(appWithEoriHistory) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url).withHeaders("X-Session-Id" -> "someSessionId")
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url).withHeaders("X-Session-Id" -> "someSessionId")
           val result = route(appWithEoriHistory, request).value
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value mustBe "/customs/payment-records/adjustments/statements-unavailable"
@@ -261,7 +261,7 @@ class SecuritiesControllerSpec extends SpecBase {
 
       "show unauthorized page when session id is missing from the request" in new Setup {
         running(app) {
-          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements().url)
+          val request = fakeRequest(GET, routes.SecuritiesController.showSecurityStatements.url)
           val result = route(app, request).value
           status(result) mustBe UNAUTHORIZED
         }

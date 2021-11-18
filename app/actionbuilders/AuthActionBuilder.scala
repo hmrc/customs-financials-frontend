@@ -52,16 +52,16 @@ trait AuthActionBuilder extends ActionBuilder[AuthenticatedRequest, AnyContent] 
               internalId,
               allEnrolments
             )(request).map(Right(_))
-          case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad())))
+          case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad)))
         }
     }
   } recover {
     case _: NoActiveSession =>
       Left(Redirect(appConfig.loginUrl, Map("continue_url" -> Seq(continueUrl))))
     case _: InsufficientEnrolments =>
-      Left(Redirect(routes.UnauthorisedController.onPageLoad()))
+      Left(Redirect(routes.UnauthorisedController.onPageLoad))
     case _ =>
-      Left(Redirect(routes.UnauthorisedController.onPageLoad()))
+      Left(Redirect(routes.UnauthorisedController.onPageLoad))
   }
 }
 

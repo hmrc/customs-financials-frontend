@@ -52,7 +52,7 @@ class NotFoundTemplateSpec extends SpecBase {
 
     "display link to landing page" in new Setup {
       running(app) {
-        view.containsLink(controllers.routes.CustomsFinancialsHomeController.index().url) mustBe true
+        view.containsLink(controllers.routes.CustomsFinancialsHomeController.index.url) mustBe true
       }
     }
   }

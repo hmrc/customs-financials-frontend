@@ -28,7 +28,7 @@ class StaticPagesControllerSpec extends SpecBase {
       val app = application().build()
 
       running(app) {
-        val request = fakeRequest(GET, routes.StaticPagesController.accessibility().url)
+        val request = fakeRequest(GET, routes.StaticPagesController.accessibility.url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
       }

@@ -164,7 +164,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable().url
+        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable.url
       }
     }
   }

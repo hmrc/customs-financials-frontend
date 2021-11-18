@@ -32,7 +32,7 @@ class LogoutControllerSpec extends SpecBase {
 
   "LogoutController logout" should {
     "redirect to feedback survey page" in new Setup {
-      val request = fakeRequest(GET, routes.LogoutController.logout().url).withHeaders("X-Session-Id" -> "someSession")
+      val request = fakeRequest(GET, routes.LogoutController.logout.url).withHeaders("X-Session-Id" -> "someSession")
 
       when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
@@ -48,7 +48,7 @@ class LogoutControllerSpec extends SpecBase {
       when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
       running(app) {
-        val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey().url).withHeaders("X-Session-Id" -> "someSession")
+        val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url).withHeaders("X-Session-Id" -> "someSession")
         val result = route(app, request).value
         redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
       }

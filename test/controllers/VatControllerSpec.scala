@@ -38,7 +38,7 @@ class VatControllerSpec extends SpecBase {
 
     "return OK for 'import vat page'" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.VatController.showVatAccount().url).withHeaders("X-Session-Id" -> "someSession")
+        val request = fakeRequest(GET, routes.VatController.showVatAccount.url).withHeaders("X-Session-Id" -> "someSession")
         val result = route(app, request).value
         status(result) mustBe OK
         verify(mockApiService).deleteNotification(eqTo(newUser().eori), eqTo(C79Certificate))(any)
@@ -52,7 +52,7 @@ class VatControllerSpec extends SpecBase {
           .thenReturn(Future.failed(new RuntimeException("boom")))
 
         running(app) {
-          val request = fakeRequest(GET, routes.VatController.showVatAccount().url).withHeaders("X-Session-Id" -> "someSession")
+          val request = fakeRequest(GET, routes.VatController.showVatAccount.url).withHeaders("X-Session-Id" -> "someSession")
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER
           redirectLocation(result).value mustBe "/customs/payment-records/import-vat/certificates-unavailable"
@@ -62,7 +62,7 @@ class VatControllerSpec extends SpecBase {
 
     "display message when no certificates available" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.VatController.showVatAccount().url).withHeaders("X-Session-Id" -> "someSession")
+        val request = fakeRequest(GET, routes.VatController.showVatAccount.url).withHeaders("X-Session-Id" -> "someSession")
         val result = route(app, request).value
         status(result) mustBe OK
         contentAsString(result) must include regex "There were no certificates in June"
