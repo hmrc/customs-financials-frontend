@@ -6,6 +6,13 @@
 A frontend component for the CDS Financials project which aims to provide financial services for customs 
 transactions.
 
+| Path                                                                   | Description                                                                                       |
+| ---------------------------------------------------------------------  | ------------------------------------------------------------------------------------------------- |
+| GET  /import-vat                                                       | Retrieve all import vat certificates                                                           |                
+| GET  /postponed-vat                                                    | Retrieve all postponed vat statements                                                          |                
+| GET  /adjustments                                                      | Retrieve all securities statements                                                           |                
+
+
 This applications lives in the "public" zone. It integrates with:
 
 * Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
