@@ -48,7 +48,7 @@ class ImportVatNotAvailableViewSpec extends SpecBase {
 
     "contain a historic certificate request section" in new Setup {
       running(app) {
-        view.getElementById("historic-certificate-request").text mustBe "We only show certificates for the last 6 months. If required, you can request older certificates."
+        view.getElementById("historic-certificate-request").text mustBe "We only show certificates for the last 6 months. If required, you can request older certificates"
       }
     }
 
