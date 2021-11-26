@@ -132,7 +132,6 @@ cf.account.detail.missing-file-type=Nid yw {0} ar gyfer {1} i {2} ar gael
 cf.account.detail.unavailable=Nid yw ar gael
 cf.account.detail.no-statements=Nid oes datganiadau ar gael ar gyfer cyfrif gohirio tollau {0}
 cf.duty-deferment-account.historic.description=Rydym ond yn dangos datganiadau ar gyfer y 6 mis diwethaf. Os oes angen, gallwch
-cf.duty-deferment-account.historic.request=ofyn am ddatganiadau hŷn.
 cf.duty-deferment-account.problem-with-service.text=Mae’n ddrwg gennym, nid yw’ch datganiadau ar gael ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
 cf.account.detail.account-not-available=Ni allwn ddangos eich cyfrif ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
 
@@ -143,7 +142,6 @@ cf.account.detail.requested-certificates-available-link-text=datganiadau y gofyn
 cf.account.detail.requested-certificates-available-text.post=nawr ar gael
 cf.account.detail.requested.deferment-account-secondary-heading=Cyfrif:
 cf.account.detail.requested.deferment-account-heading=Datganiadau gohirio tollau y gofynnwyd amdanynt
-cf.account.detail.requested.deferment-account-statements-available.text=Mae datganiadau y gofynnwyd amdanynt ar gael i’w gweld am 10 diwrnod. Gallwn ond darparu’r rhain ar ffurf PDF.
 
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=Cyfrif gwarant cyffredinol
@@ -218,8 +216,6 @@ cf.account.vat.statements.unavailable = Nid oedd unrhyw dystysgrifau i mewn {0}
 
 # Import VAT requested statements view
 cf.import-vat.requested.title=Tystysgrifau TAW mewnforio (C79) y gofynnwyd amdanynt
-cf.import-vat.requested.available.text=Mae tystysgrifau y gofynnwyd amdanynt ar gael i’w gweld am 10 diwrnod. Gallwn ddarparu’r rhain ar ffurf PDF yn unig.
-
 #Internal Predefined play errors
 error.number=Disgwylir gwerth rhifol
 
@@ -264,7 +260,6 @@ cf.security-statements.unavailable=Mae’n ddrwg gennym – nid yw’ch datgania
 
 # Security Statements requested view
 cf.security-statements.requested.title=Hysbysiad o ddatganiadau addasu y gofynnwyd amdanynt
-cf.security-statements.requested.available.text=Mae datganiadau y gofynnwyd amdanynt ar gael i’w gweld am 10 diwrnod. Gallwn ddarparu’r rhain ar ffurf PDF yn unig.
 cf.security-statements.requested.period={0} i {1}
 cf.security-statements.requested.download-link.aria-text=Lawrlwytho {0} ar gyfer {1} i {2} ({3})
 

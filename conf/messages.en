@@ -98,7 +98,7 @@ cf.duty-deferment.inaccurateBalance.heading = Inaccurate duty deferment balances
 cf.duty-deferment.inaccurateBalance.hiddenText = Warning of inaccurate duty deferment balances
 cf.duty-deferment.inaccurateBalance.chiefText = If you still make some import declarations through CHIEF, the duty deferment balances shown below may not be up to date.
 cf.duty-deferment.inaccurateBalance.getLatestBalance = To get your latest accurate balance you should
-cf.duty-deferment.inaccurateBalance.contactLink = phone or email the duty deferment office.
+cf.duty-deferment.inaccurateBalance.contactLink = phone or email the duty deferment office
 
 cf.duty-deferment.pending.info = You cannot use this account on CDS yet
 cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
@@ -130,7 +130,6 @@ cf.account.detail.missing-file-type={0} for {1} to {2} unavailable
 cf.account.detail.unavailable=Unavailable
 cf.account.detail.no-statements=No statements available for deferment account {0}
 cf.duty-deferment-account.historic.description=We only show statements for the last 6 months. If required, you can
-cf.duty-deferment-account.historic.request=request older statements.
 cf.duty-deferment-account.problem-with-service.text=Sorry, your statements are not available at the moment. Please try again later.
 cf.account.detail.account-not-available=We are unable to show your account at the moment. Please try again later.
 
@@ -141,7 +140,6 @@ cf.account.detail.requested-certificates-available-link-text=requested statement
 cf.account.detail.requested-certificates-available-text.post=are now available
 cf.account.detail.requested.deferment-account-secondary-heading=Account:
 cf.account.detail.requested.deferment-account-heading=Requested duty deferment statements
-cf.account.detail.requested.deferment-account-statements-available.text=Requested statements are available to view for 10 days. We can only provide these in PDF format.
 
 # Guarantee Account Detail View
 cf.guarantee-account.detail.title=General guarantee account
@@ -210,13 +208,12 @@ cf.account.vat.missing-file=Unavailable
 cf.account.vat.missing-file-hidden-text={0} for {1} unavailable
 cf.account.vat.no-certificates-available=There are no certificates available to view.
 cf.account.vat.historic.description=We only show certificates for the last 6 months. If required, you can
-cf.account.vat.historic.request=request older certificates.
+cf.account.vat.historic.request=request older certificates
 cf.account.vat.unavailable=Sorry, your certificates are not available at the moment. Please try again later.
 cf.account.vat.statements.unavailable = There were no certificates in {0}
 
 # Import VAT requested statements view
 cf.import-vat.requested.title=Requested import VAT certificates (C79)
-cf.import-vat.requested.available.text=Requested certificates are available to view for 10 days. We can only provide these in PDF format.
 
 # Postponed VAT view
 cf.postponed-vat.page-heading=This section is the VAT account summary
@@ -241,7 +238,7 @@ cf.account.pvat.link-message=check if you can use postponed VAT accounting
 cf.account.pvat.statements.unavailable = There were no statements in {0}
 
 cf.account.pvat.historic.description=We only show statements for the last 6 months. If required, you can
-cf.account.pvat.historic.request=request older statements.
+cf.account.pvat.historic.request=request older statements
 
 cf.postponed-vat.requested-statements-available-link-text=requested statements
 
@@ -255,13 +252,12 @@ cf.security-statements.screen-reader.unavailable={0} for {1} to {2} unavailable
 
 cf.security-statements.static-text=Statements cover the last 7 days from Thursday to Wednesday.
 cf.security-statements.historic.description=We only show statements for the last 6 months. If required, you can
-cf.security-statements.historic.request=request older statements.
+cf.security-statements.historic.request=request older statements
 cf.security-statements.requested-link=requested statements
 cf.security-statements.unavailable= Sorry, your statements are not available at the moment. Please try again later.
 
 # Security Statements requested view
 cf.security-statements.requested.title=Requested notification of adjustment statements
-cf.security-statements.requested.available.text=Requested statements are available to view for 10 days. We can only provide these in PDF format.
 cf.security-statements.requested.period={0} to {1}
 cf.security-statements.requested.download-link.aria-text=Download {1} to {2} {0} ({3})
 

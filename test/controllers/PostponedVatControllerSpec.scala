@@ -225,7 +225,7 @@ class PostponedVatControllerSpec extends SpecBase {
             _ == "Statements are only generated for periods in which you imported goods."
           }
           val hasOnlyShowText = html.getAllElements.asScala.map(_.text()).find {
-            _ == "We only show statements for the last 6 months. If required, you can request older statements."
+            _ == "We only show statements for the last 6 months. If required, you can request older statements"
           }
 
           hasgeneratedPeriodText.isDefined mustBe true
