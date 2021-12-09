@@ -44,7 +44,7 @@
             <p class="govuk-body">@messages("cf.import-vat.view-certificates.description")</p>
             <p class="govuk-body">
                 <a class="view vat-link govuk-link" href="@{
-                    controllers.routes.VatController.showVatAccount
+                    appConfig.importVATAccountUrl
                 }">
                 @messages("cf.customs-financials-home.import-vat.title.link")
                 </a>
@@ -60,7 +60,7 @@
             <p class="govuk-body">@messages("cf.postponed-vat.view-certificates.description")</p>
             <p class="govuk-body">
                 <a class="view pvat-link govuk-link" href="@{
-                    controllers.routes.PostponedVatController.show(location = Some("CDS"))
+                    appConfig.postponedVATAccountUrl
                 }">
                 @messages("cf.customs-financials-home.pvat.link")
                 </a>
@@ -76,7 +76,7 @@
             <p class="govuk-body">@messages("cf.securities.view-statements.description")</p>
             <p class="govuk-body">
                 <a class="govuk-link securities-link" href="@{
-                    controllers.routes.SecuritiesController.showSecurityStatements
+                    appConfig.securitiesAccountUrl
                 }">
                 @messages("cf.customs-financials-home.securities.link")
                 </a>
