@@ -16,9 +16,8 @@
 
 package viewmodels
 
-import domain.{AccountLink, CDSAccount, CDSAccounts, CashAccount}
 import config.AppConfig
-import controllers.routes
+import domain.{AccountLink, CDSAccount, CDSAccounts, CashAccount}
 import domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
 import domain._
 
