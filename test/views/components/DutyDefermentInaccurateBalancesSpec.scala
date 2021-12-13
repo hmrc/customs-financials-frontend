@@ -41,7 +41,7 @@ class DutyDefermentInaccurateBalancesSpec extends SpecBase {
 
     "include link to duty deferment scheme contact" in new Setup {
       running(app) {
-        view.getElementById("duty-deferment-balances-warning").getElementsByTag("a").text mustBe "cf.duty-deferment.inaccurateBalance.contactLink"
+        view.getElementById("duty-deferment-balances-warning").getElementsByTag("a").text mustBe "cf.duty-deferment.outOfDateBalance.contactLink"
         view.getElementById("duty-deferment-balances-warning").getElementsByTag("a").attr("href") mustBe appConfig.dutyDefermentSchemeContactLink
       }
     }

@@ -93,12 +93,12 @@ cf.account.status.aria.AccountStatusSuspended = This account is currently suspen
 cf.duty-deferment.status.AccountStatusSuspended = Suspended On CDS
 cf.duty-deferment.status.AccountStatusPending = Pending Opening On CDS
 
-# Duty Deferment inaccurate balances message
-cf.duty-deferment.inaccurateBalance.heading = Inaccurate duty deferment balances
-cf.duty-deferment.inaccurateBalance.hiddenText = Warning of inaccurate duty deferment balances
-cf.duty-deferment.inaccurateBalance.chiefText = If you still make some import declarations through CHIEF, the duty deferment balances shown below may not be up to date.
-cf.duty-deferment.inaccurateBalance.getLatestBalance = To get your latest accurate balance you should
-cf.duty-deferment.inaccurateBalance.contactLink = phone or email the duty deferment office
+# Duty Deferment Out of date balances message
+cf.duty-deferment.outOfDateBalance.heading = Out of date duty deferment balances
+cf.duty-deferment.outOfDateBalance.hiddenText = Warning of inaccurate duty deferment balances
+cf.duty-deferment.outOfDateBalance.chiefText = If you make any import declarations through Customs Handling of Import and Export Freight (CHIEF), the duty deferment balances shown may not be up to date.
+cf.duty-deferment.outOfDateBalance.getLatestBalance = To get an up to date balance,
+cf.duty-deferment.outOfDateBalance.contactLink = contact the duty deferment office (opens in a new tab)
 
 cf.duty-deferment.pending.info = You cannot use this account on CDS yet
 cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
