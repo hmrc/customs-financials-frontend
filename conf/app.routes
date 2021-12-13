@@ -9,13 +9,6 @@ GET        /logout-no-survey                                     controllers.Log
 GET        /help/accessibility                                   controllers.StaticPagesController.accessibility
 GET        /not-subscribed-for-cds                               controllers.UnauthorisedController.onPageLoad
 GET        /authorized-to-view                                   controllers.AuthorizedToViewController.onPageLoad(state: domain.AuthorizedToViewPageState)
-
-GET        /import-vat                                           controllers.VatController.showVatAccount
-GET        /postponed-vat                                        controllers.PostponedVatController.show(location: Option[String])
-GET        /adjustments                                          controllers.SecuritiesController.showSecurityStatements
-
-GET        /adjustments/statements-unavailable                   controllers.SecuritiesController.statementsUnavailablePage()
-GET        /import-vat/certificates-unavailable                  controllers.VatController.certificatesUnavailablePage()
 GET        /parts-of-service-unavailable                         controllers.CustomsFinancialsHomeController.pageWithoutAccounts
 
 GET        /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)

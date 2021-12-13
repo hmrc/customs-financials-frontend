@@ -62,6 +62,10 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val manageAuthoritiesFrontendUrl: String = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
   lazy val guaranteeAccountUrl: String = config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
   lazy val emailFrontendUrl: String = config.get[String]("microservice.services.customs-email-frontend.url")
+  lazy val documentsUrl: String = config.get[String]("microservice.services.customs-financials-documents-frontend.url")
+  lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
+  lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
+  lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
 
   lazy val customsFinancialsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
     config.get[String]("microservice.services.customs-financials-session-cache.context")

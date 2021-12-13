@@ -96,14 +96,14 @@
             id = "import-vat-certificates",
             title = "cf.customs-financials-home.import-vat.title",
             p1 = Some("cf.import-vat.view-certificates.description"),
-            linkUrl = controllers.routes.VatController.showVatAccount.url,
+            linkUrl =  appConfig.importVATAccountUrl,
             linkMessage = "cf.customs-financials-home.import-vat.title.link"
         )
         @card(
             id = "postponed-vat-statements",
             title = "cf.customs-financials-home.pvat.title",
             p1 = Some("cf.postponed-vat.view-certificates.description"),
-            linkUrl = controllers.routes.PostponedVatController.show(location = Some("CDS")).url,
+            linkUrl = appConfig.postponedVATAccountUrl,
             linkMessage = "cf.customs-financials-home.pvat.link"
         )
     </section>
@@ -113,7 +113,7 @@
             id = "securities-statements",
             title = "cf.customs-financials-home.securities.title",
             p1 = Some("cf.securities.view-statements.description"),
-            linkUrl = controllers.routes.SecuritiesController.showSecurityStatements.url,
+            linkUrl =  appConfig.securitiesAccountUrl,
             linkMessage = "cf.customs-financials-home.securities.link"
         )
     </section>
