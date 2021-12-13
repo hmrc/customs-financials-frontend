@@ -37,7 +37,6 @@ The application has the following runtime dependencies:
 * `CUSTOMS_FINANCIALS_SDES_STUB`
 * `CONTACT_FRONTEND`
  
-
 You can use the `CUSTOMS_FINANCIALS_FRONTEND_DEPS` profile in service manager to start up these services without this
 project, to help run locally.
 
