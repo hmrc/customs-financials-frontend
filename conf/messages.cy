@@ -102,6 +102,7 @@ cf.duty-deferment.outOfDateBalance.hiddenText = Rhybudd o falansau gohirio tolla
 cf.duty-deferment.outOfDateBalance.chiefText = Os gwnewch unrhyw ddatganiadau mewnforio drwy System y Tollau ar gyfer Trin Nwyddau a Gaiff eu Mewnforio a’u Hallforio (CHIEF), mae’n bosibl nad yw’r balansau a ddangosir wedi’u diweddaru.
 cf.duty-deferment.outOfDateBalance.getLatestBalance = I gael balans wedi’i ddiweddaru, 
 cf.duty-deferment.outOfDateBalance.contactLink = cysylltwch â’r swyddfa gohirio tollau (yn agor tab newydd)
+cf.duty-deferement.fullstop =.
 
 cf.duty-deferment.pending.info = Ni allwch ddefnyddio’r cyfrif hwn ar y Gwasanaeth Datgan Tollau (CDS) eto
 cf.duty-deferment.pending.text = Byddwch yn gallu defnyddio’r cyfrif gohirio hwn o’r dyddiad dechrau y rhoesoch i ni yn eich cais.
