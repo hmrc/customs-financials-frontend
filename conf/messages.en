@@ -99,7 +99,7 @@ cf.duty-deferment.outOfDateBalance.hiddenText = Warning of inaccurate duty defer
 cf.duty-deferment.outOfDateBalance.chiefText = If you make any import declarations through Customs Handling of Import and Export Freight (CHIEF), the duty deferment balances shown may not be up to date.
 cf.duty-deferment.outOfDateBalance.getLatestBalance = To get an up to date balance,
 cf.duty-deferment.outOfDateBalance.contactLink = contact the duty deferment office (opens in a new tab)
-cf.duty-deferment.outOfDateBalance.getLatestBalanceFullStop = .
+cf.duty-deferement.fullstop =.
 
 cf.duty-deferment.pending.info = You cannot use this account on CDS yet
 cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
