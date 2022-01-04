@@ -43,10 +43,6 @@ project, to help run locally.
 Once these services are running, you should be able to do `sbt "run 9876"` to start in `DEV` mode or 
 `sbt "start -Dhttp.port=9876"` to run in `PROD` mode.
 
-## Running project with all features enabled
-
-```sbt "run 9876 -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes -Dfeatures.welsh-translation=true -Dfeatures.report-a-problem=true"```
-
 ## Running tests
 
 There is just one test source tree in the `test` folder. Use `sbt test` to run them.

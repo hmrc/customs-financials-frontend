@@ -32,8 +32,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
   lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
-  lazy val languageTranslationEnabled: Boolean = config.get[Boolean]("features.welsh-translation")
-  lazy val reportAProblem: Boolean = config.get[Boolean]("features.report-a-problem")
   lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
   lazy val numberOfItemsPerPage: Int = config.get[Int]("microservice.services.customs-financials-frontend.numberOfItemsPerPage")
   lazy val sessionCacheExpiryInSeconds: Int = config.get[Int]("microservice.services.customs-financials-frontend.sessionCache.expirySeconds")
