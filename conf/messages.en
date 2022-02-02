@@ -90,7 +90,7 @@ cf.account.status.AccountStatusSuspended = Suspended
 cf.account.status.AccountStatusPending = Pending
 cf.account.status.aria.AccountStatusClosed = This account is currently closed
 cf.account.status.aria.AccountStatusSuspended = This account is currently suspended
-cf.duty-deferment.status.AccountStatusSuspended = Suspended On CDS
+cf.duty-deferment.status.AccountStatusSuspended = Action Required
 cf.duty-deferment.status.AccountStatusPending = Pending Opening On CDS
 
 # Duty Deferment Out of date balances message
