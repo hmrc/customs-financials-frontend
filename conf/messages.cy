@@ -374,7 +374,7 @@ cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Rhybudd
-cf.duty-deferment.dd.info=Cyfrif wedi’i ohirio ar y Gwasanaeth Datgan Tollau
+cf.duty-deferment.dd.info=Ddim yn gallu defnyddio’r cyfrif hwn ar CDS
 cf.duty-deferment.dd.setup.text1=Mae’n rhaid i chi
 cf.duty-deferment.dd.setup.new.account=sefydlu debyd uniongyrchol newydd.
 cf.duty-deferment.dd.setup.text2=allu defnyddio’r cyfrif gohirio hwn ar y Gwasanaeth Datgan Tollau (CDS).

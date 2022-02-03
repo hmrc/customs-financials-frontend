@@ -363,7 +363,7 @@ cf.undeliverable.email.link-text=Verify or change email address
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Warning
-cf.duty-deferment.dd.info=Account is suspended on CDS
+cf.duty-deferment.dd.info=Unable to use this account on CDS
 cf.duty-deferment.dd.setup.text1=You must
 cf.duty-deferment.dd.setup.new.account=set up a new Direct Debit
 cf.duty-deferment.dd.setup.text2=to be able to use this deferment account on Customs Declarations Service (CDS).
