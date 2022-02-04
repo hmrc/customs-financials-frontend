@@ -93,7 +93,7 @@ cf.account.status.AccountStatusPending=Ar y gweill
 cf.account.status.aria.AccountStatusClosed=Mae’r cyfrif hwn ar gau ar hyn o bryd
 cf.account.status.aria.AccountStatusInhibited=Mae’r cyfrif hwn wedi’i wahardd ar hyn o bryd
 cf.account.status.aria.AccountStatusSuspended=Mae’r cyfrif hwn wedi’i ohirio ar hyn o bryd
-cf.duty-deferment.status.AccountStatusSuspended=Wedi’i ohirio ar y Gwasanaeth Datgan Tollau
+cf.duty-deferment.status.AccountStatusSuspended=Camau i’w cymryd
 cf.duty-deferment.status.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanaeth Datgan Tollau
 
 # Duty Deferment Out of date balances message
@@ -374,7 +374,7 @@ cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Rhybudd
-cf.duty-deferment.dd.info=Cyfrif wedi’i ohirio ar y Gwasanaeth Datgan Tollau
+cf.duty-deferment.dd.info=Ddim yn gallu defnyddio’r cyfrif hwn ar CDS
 cf.duty-deferment.dd.setup.text1=Mae’n rhaid i chi
 cf.duty-deferment.dd.setup.new.account=sefydlu debyd uniongyrchol newydd.
 cf.duty-deferment.dd.setup.text2=allu defnyddio’r cyfrif gohirio hwn ar y Gwasanaeth Datgan Tollau (CDS).
