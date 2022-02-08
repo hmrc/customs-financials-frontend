@@ -48,8 +48,8 @@ cf.error.not-found.title=Heb ddod o hyd i’r dudalen
 cf.error.not-found.heading=Heb ddod o hyd i’r dudalen
 cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
-cf.error.not-found.message.go-to-home-page-text1=Neu, ewch i’r
-cf.error.not-found.message.go-to-home-page-text2=hafan.
+cf.error.not-found.message.go-to-home-page-text1=Neu gallwch
+cf.error.not-found.message.go-to-home-page-text2=.
 
 # Unauthorised Error
 cf.error.unauthorized.title=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y dudalen hon
@@ -84,7 +84,7 @@ cf.accounts.topUp=Ychwanegu
 cf.accounts.label.topUp=Ychwanegu at ohirio tollau {0}
 cf.accounts.contact.details=Manylion y cyfrif
 cf.accounts.label.contact.details=Manylion ar gyfer {0} y cyfrif gohirio tollau
-cf.accounts.view-customs-account=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+cf.accounts.view-customs-account=fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
 cf.accounts.back-customs-account=Yn ôl i’ch cyfrifon ariannol ar gyfer y tollau
 cf.account.status.AccountStatusClosed=Ar gau
 cf.account.status.AccountStatusInhibited=Wedi’i wahardd

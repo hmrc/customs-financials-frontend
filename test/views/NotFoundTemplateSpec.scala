@@ -40,19 +40,22 @@ class NotFoundTemplateSpec extends SpecBase {
 
     "display body text" in new Setup {
       running(app) {
-        val expected = List("If you typed the web address, check it is correct.",
+        val expected = List(
+          "If you typed the web address, check it is correct.",
           "If you pasted the web address, check you copied the entire address.",
-          "Or go to the View your customs financial accounts home page.")
-
-        val actual = view.getElementsByClass("govuk-body").asScala.map(_.text()).toList
-
+          "Or you can view your customs financial accounts."
+        )
+        val actual =
+          view.getElementsByClass("govuk-body").asScala.map(_.text()).toList
         actual should be(expected)
       }
     }
 
     "display link to landing page" in new Setup {
       running(app) {
-        view.containsLink(controllers.routes.CustomsFinancialsHomeController.index.url) mustBe true
+        view.containsLink(
+          controllers.routes.CustomsFinancialsHomeController.index.url
+        ) mustBe true
       }
     }
   }
@@ -62,7 +65,8 @@ class NotFoundTemplateSpec extends SpecBase {
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
 
-    val view = Jsoup.parse(app.injector.instanceOf[not_found_template].apply().body)
+    val view =
+      Jsoup.parse(app.injector.instanceOf[not_found_template].apply().body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }
