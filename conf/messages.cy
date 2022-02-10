@@ -21,13 +21,6 @@ cf.pending.available.pre=Bydd
 cf.pending.available.post=ar gael
 cf.unavailable=Nid yw ar gael
 
-# govuk template footer links
-cf.footer.link.cookies=Cwcis
-cf.footer.link.accessibility-statement=Datganiad hygyrchedd
-cf.footer.link.privacy-policy=Polisi preifatrwydd
-cf.footer.link.terms-and-conditions=Telerau ac amodau
-cf.footer.link.help=Help wrth ddefnyddio GOV.UK
-
 # Standard Error
 cf.error.standard-error.title=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
 cf.error.standard-error.heading=Mae’n ddrwg gennym – mae problem gyda’r gwasanaeth
@@ -69,16 +62,11 @@ cf.help-and-support.title=Help a chymorth
 cf.account.help-support.message=Os ydych yn profi anawsterau, ffoniwch
 cf.account.help-support.numbers=0300 200 3705
 cf.account.help-support.office-hours=Ar agor 08:30 i 17:00, o ddydd Llun i ddydd Gwener (ar gau ar wyliau banc).
-cf.account.help-support.duty-deferment.numbers=0300 059 4243
-cf.account.help-support.duty-deferment.office-hours=Ar agor 09:00 i 12:00, a 14:00 i 16:00, o ddydd Llun i ddydd Gwener (ar gau ar wyliau banc).
 
 # Accounts List
 cf.accounts.title=Eich cyfrifon ariannol ar gyfer y tollau
 cf.accounts.label.dan=Datganiadau ar gyfer gohirio tollau {0}
-cf.accounts.label.youAreCurrentlyUsing=Ar hyn o bryd, rydych yn defnyddio
 cf.accounts.label.usingLimit={0} o {1}
-cf.accounts.label.limit=o'r terfyn
-cf.accounts.detail.customs-financials-home=Eich datganiadau tollau
 cf.accounts.viewStatements=Bwrw golwg dros ddatganiadau
 cf.accounts.topUp=Ychwanegu
 cf.accounts.label.topUp=Ychwanegu at ohirio tollau {0}
@@ -87,11 +75,9 @@ cf.accounts.label.contact.details=Manylion ar gyfer {0} y cyfrif gohirio tollau
 cf.accounts.view-customs-account=fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
 cf.accounts.back-customs-account=Yn ôl i’ch cyfrifon ariannol ar gyfer y tollau
 cf.account.status.AccountStatusClosed=Ar gau
-cf.account.status.AccountStatusInhibited=Wedi’i wahardd
 cf.account.status.AccountStatusSuspended=Wedi’i ohirio
 cf.account.status.AccountStatusPending=Ar y gweill
 cf.account.status.aria.AccountStatusClosed=Mae’r cyfrif hwn ar gau ar hyn o bryd
-cf.account.status.aria.AccountStatusInhibited=Mae’r cyfrif hwn wedi’i wahardd ar hyn o bryd
 cf.account.status.aria.AccountStatusSuspended=Mae’r cyfrif hwn wedi’i ohirio ar hyn o bryd
 cf.duty-deferment.status.AccountStatusSuspended=Camau i’w cymryd
 cf.duty-deferment.status.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanaeth Datgan Tollau
@@ -108,11 +94,6 @@ cf.duty-deferment.pending.info = Ni allwch ddefnyddio’r cyfrif hwn ar y Gwasan
 cf.duty-deferment.pending.text = Byddwch yn gallu defnyddio’r cyfrif gohirio hwn o’r dyddiad dechrau y rhoesoch i ni yn eich cais.
 
 # Duty Deferment Account Detail view
-cf.account.detail.title=Datganiadau gohirio tollau
-cf.account.detail.deferment-account-heading=Datganiadau gohirio tollau
-cf.account.detail.deferment-account-secondary-heading=Y cyfrif gohirio:
-cf.account.detail.account-summary=Crynodeb o’r cyfrif
-cf.account.detail.your-account-limit-remaining=Terfyn eich cyfrif sy’n weddill:
 cf.account.details.your-guarantee-limit-remaining=Terfyn eich gwarant sy’n weddill:
 cf.account.details.overall-account-limit=Terfyn y cyfrif yn gyffredinol:
 cf.account.details.including-your=gan gynnwys eich

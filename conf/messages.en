@@ -20,13 +20,6 @@ cf.pending.available=will be available
 cf.unavailable=Unavailable
 cf.language.switcher=Language switcher
 
-# govuk template footer links
-cf.footer.link.cookies=Cookies
-cf.footer.link.accessibility-statement=Accessibility statement
-cf.footer.link.privacy-policy=Privacy policy
-cf.footer.link.terms-and-conditions=Terms and conditions
-cf.footer.link.help=Help using GOV.UK
-
 # Standard Error
 cf.error.standard-error.title=Sorry, there is a problem with the service
 cf.error.standard-error.heading=Sorry, there is a problem with the service
@@ -68,16 +61,11 @@ cf.help-and-support.title=Help and support
 cf.account.help-support.message=If you are having issues, phone
 cf.account.help-support.numbers=0300 200 3701
 cf.account.help-support.office-hours=Open 8am to 6pm, Monday to Friday (closed bank holidays).
-cf.account.help-support.duty-deferment.numbers=0300 059 4243
-cf.account.help-support.duty-deferment.office-hours=Open 9am to 12pm, and 2pm to 4pm Monday to Friday (closed bank holidays).
 
 # Accounts List
 cf.accounts.title=Your customs financial accounts
 cf.accounts.label.dan=View statements for duty deferment {0}
-cf.accounts.label.youAreCurrentlyUsing=You are currently using
 cf.accounts.label.usingLimit={0} of {1}
-cf.accounts.label.limit=limit
-cf.accounts.detail.customs-financials-home=Your customs statements
 cf.accounts.viewStatements=View statements
 cf.accounts.topUp=Top up
 cf.accounts.label.topUp=Top up duty deferment {0}
@@ -105,12 +93,6 @@ cf.duty-deferment.pending.info = You cannot use this account on CDS yet
 cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
 
 # Duty Deferment Account Detail view
-cf.account.detail.title=Duty deferment statements
-
-cf.account.detail.deferment-account-heading=Duty deferment statements
-cf.account.detail.deferment-account-secondary-heading=Deferment account:
-cf.account.detail.account-summary=Account summary
-cf.account.detail.your-account-limit-remaining=Your account limit remaining:
 cf.account.details.your-guarantee-limit-remaining=Your guarantee limit remaining:
 cf.account.details.overall-account-limit=Overall account limit:
 cf.account.details.including-your=including your
