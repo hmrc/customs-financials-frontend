@@ -100,66 +100,12 @@ cf.import-vat.view-certificates.description=Tystysgrifau TAW yw’r rhain rydych
 cf.securities.view-statements.description=Datganiadau yw’r rhain o’r doll a godir ar ddatganiad mewnforio a gymerir fel blaendal sicrwydd.
 
 # VAT Detail view
-cf.account.vat.title=Tystysgrifau TAW mewnforio (C79)
-cf.account.vat.help.get-help=Help
-cf.account.vat.help.number=Llinell gymorth 0300 200 3705
 cf.account.vat.download-link=Lawrlwytho {0} o {1} ({2})
 cf.account.vat.missing-file=Nid yw ar gael
 cf.account.vat.missing-file-hidden-text=Nid yw {0} ar gyfer {1} ar gael
-cf.account.vat.no-certificates-available=Nid oes tystysgrifau ar gael i’w gweld.
-cf.account.vat.historic.description=Rydym ond yn dangos tystysgrifau ar gyfer y 6 mis diwethaf. Os oes angen, mae modd
-cf.account.vat.historic.request=gofyn am dystysgrifau hŷn.
-cf.account.vat.unavailable=Mae’n ddrwg gennym, nid yw’ch tystysgrifau ar gael ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
-cf.account.vat.statements.unavailable = Nid oedd unrhyw dystysgrifau i mewn {0}.
-
-# Import VAT requested statements view
-cf.import-vat.requested.title=Tystysgrifau TAW mewnforio (C79) y gofynnwyd amdanynt
-#Internal Predefined play errors
-error.number=Disgwylir gwerth rhifol
 
 # Postponed VAT view
-cf.postponed-vat.page-heading=Dyma’r adran ynghylch crynodeb o'r cyfrif TAW
 cf.postponed-vat.view-certificates.description=Datganiadau TAW yw’r rhain rydych wedi’u gohirio ar eich mewnforion i’w defnyddio fel tystiolaeth ar eich Ffurflen TAW.
-cf.postponed-vat.view-certificates.no-certificates=Nid oes unrhyw ddatganiadau TAW mewnforio gohiriedig.
-cf.postponed-vat.requested-statements-available-link-text=datganiadau y gofynnwyd amdanynt
-cf.account.pvat.title=Datganiadau TAW mewnforio gohiriedig
-cf.account.pvat.content=Bydd pob datganiad yn dangos cyfanswm y TAW mewnforio a ohiriwyd ar gyfer y mis blaenorol, oni bai eich bod wedi gohirio’ch datganiad tollau.
-
-cf.account.pvat.download-link=Datganiad {0} – {1} ({2})
-cf.account.pvat.amended-download-link=Datganiad diwygiedig {0} – {1} ({2})
-cf.account.pvat.original.download-link=Datganiad {0} – {1} ({2})
-cf.account.pvat.missing-file-type=Dim datganiadau {0} ar gael.
-cf.account.pvat.original.missing-file-type=Dim ffeil {0} ar gael.
-cf.account.pvat.aria.download-link=Datganiad {0} ar gyfer {1} – {2} ({3})
-cf.account.pvat.aria.original.download-link=Datganiad {0} ar gyfer {1} – {2} ({3})
-cf.account.pvat.aria.amended.download-link=Datganiad diwygiedig {0} ar gyfer {1} – {2} ({3})
-
-cf.account.pvat.no-statements-yet=Nid oes datganiadau ar gael i’w gweld eto.
-cf.account.pvat.holding-message.1=O 1 Ionawr 2021 ymlaen, mae’n bosibl y gallwch roi cyfrif am TAW mewnforio ar eich Ffurflen TAW. Gallwch
-cf.account.pvat.holding-message.2=ar GOV.UK.
-cf.account.pvat.link-message=wirio os gallwch ddefnyddio cyfrifyddu TAW gohiriedig
-cf.account.pvat.statements.unavailable = Nid oedd unrhyw ddatganiadau i mewn {0}
-cf.account.pvat.historic.description=Dim ond ar gyfer y 6 mis diwethaf y gallwn ddangos datganiadau. Os oes angen, gallwch
-cf.account.pvat.historic.request=ofyn am ddatganiadau hŷn.
-
-# Security Statements View
-cf.security-statements.title=Hysbysiad o ddatganiadau addasu
-cf.security-statements.help.get-help=Help
-cf.security-statements.help.number=Llinell gymorth 0300 200 3705
-cf.security-statements.understanding-your-statement=Deall eich datganiad
-cf.security-statements.no-statements=Nid oes datganiadau ar gael i’w gweld.
-cf.security-statements.screen-reader.unavailable=Nid yw {0} ar gyfer {1} i {2} ar gael
-
-cf.security-statements.static-text=Mae’r datganiadau’n cwmpasu’r 7 diwrnod diwethaf o ddydd Iau i ddydd Mercher.
-cf.security-statements.historic.description=Rydym ond yn dangos datganiadau ar gyfer y 6 mis diwethaf. Os oes angen, mae modd
-cf.security-statements.historic.request=gofyn am ddatganiadau hŷn.
-cf.security-statements.requested-link=Datganiadau y gofynnwyd amdanynt
-cf.security-statements.unavailable=Mae’n ddrwg gennym – nid yw’ch datganiadau ar gael ar hyn o bryd. Rhowch gynnig arall arni yn nes ymlaen.
-
-# Security Statements requested view
-cf.security-statements.requested.title=Hysbysiad o ddatganiadau addasu y gofynnwyd amdanynt
-cf.security-statements.requested.period={0} i {1}
-cf.security-statements.requested.download-link.aria-text=Lawrlwytho {0} ar gyfer {1} i {2} ({3})
 
 # Authorized to View
 cf.account.authorized-to-view.title=Cyfrifon eraill y gallwch eu defnyddio
@@ -175,37 +121,6 @@ cf.account.authorized-to-view.available-account-balance=Balans y cyfrif sydd ar 
 cf.account.authorized-to-view.guarantee-account.account-type=Cyfrif gwarant cyffredinol
 cf.account.authorized-to-view.guarantee-account.guarantee-limit-remaining=Terfyn y warant sy’n weddill
 
-#Account Authorities Add Confirmation
-cf.account.add-authorities.confirmation.title=Eich cyfrifon ariannol ar gyfer y tollau
-cf.account.add-authorities.confirmation.panel-text={0} wedi’i ychwanegu’n llwyddiannus
-cf.account.add-authorities.confirmation.multiple-accounts.available-now=Gall ddefnyddio’ch cyfrifon nawr
-cf.account.add-authorities.confirmation.single-account.available-now=Gall ddefnyddio’ch cyfrif nawr
-cf.account.add-authorities.confirmation.available-future=Yn dechrau ar {0}
-cf.account.add-authorities.confirmation.tell-user.access-given=Dylech roi gwybod i’r defnyddiwr eich bod wedi trefnu hyn. Gall gymryd hyd at un awr i'r mynediad ddod i rym.
-cf.account.add-authorities.confirmation.back-link-text=Yn ôl i ‘Rheoli awdurdodau eich cyfrif’
-
-# Cash CSV
-cf.cash-account.csv.date=Dyddiad (postio)
-cf.cash-account.csv.transactionType=Trafodyn
-cf.cash-account.csv.movementReferenceNumber=Cyfeirnod Symund (MRN)
-cf.cash-account.csv.declarantEori=EORI y sawl sy’n datgan nwyddau
-cf.cash-account.csv.vat=TAW
-cf.cash-account.csv.duty=Toll
-cf.cash-account.csv.excise=Ecséis
-cf.cash-account.csv.credit=Credyd
-cf.cash-account.csv.debit=Debyd
-cf.cash-account.csv.balance=Balans
-
-cf.cash-account.csv.closing-balance=Balans Cau
-cf.cash-account.csv.opening-balance=Balans Agor
-cf.cash-account.csv.declaration=Datganiad
-cf.cash-account.csv.transfer-out=Trosglwyddo i gyfrif arall
-cf.cash-account.csv.top-up=Ychwanegu
-cf.cash-account.csv.transfer-in=Trosglwyddo o gyfrif arall
-cf.cash-account.csv.withdrawal=Codiad
-cf.cash-account.csv.withdrawal.account-ending=(i’r cyfrif sydd â {0} ar y diwedd)
-cf.cash-account.csv.filename=Trafodion_Arian_Parod_{0}.CSV
-
 # Not subscribed to CDS
 cf.not-subscribed-to-cds.detail.title=Heb gofrestru â’r Gwasanaeth Datgan Tollau
 cf.not-subscribed-to-cds.detail.heading=Er mwyn mynd yn eich blaen, mae angen i chi gael mynediad at y Gwasanaeth Datgan Tollau (CDS)
@@ -216,7 +131,7 @@ cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ff
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
 cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at awr i CThEM brosesu’ch cais.
 
-#Customs Financials Home Page
+# Customs Financials Home Page
 cf.customs-financials-home.title=Eich cyfrifon ariannol ar gyfer y tollau
 cf.customs-financials-home.duty-deferment.title=Cyfrif gohirio tollau
 cf.customs-financials-home.duty-deferment.title2=Cyfrifon gohirio tollau
@@ -233,12 +148,8 @@ cf.customs-financials-home.securities.title=Hysbysiad o ddatganiadau addasu
 cf.customs-financials-home.securities.link=Bwrw golwg dros hysbysiad o ddatganiadau addasu
 cf.customs-financials-home.partial.heading=Mae’n ddrwg gennym – nid yw rhai rhannau o’r gwasanaeth ar gael ar hyn o bryd
 cf.customs-financials-home.partial.text=Gallwch fwrw golwg dros rai tystysgrifau a datganiadau o hyd.
-cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
-cf.customs-financials-home.recruitment-banner-link-text=Cofrestrwch er mwyn cymryd rhan bosibl yn ein hymchwil defnyddiwr
-cf.customs-financials-home.recruitment-banner.close=Cau
-cf.customs-financials-home.recruitment-banner.hidden-text.close=Y faner ‘Helpu ni i wella’r gwasanaeth hwn’
 
-#Notifications for new statements
+# Notifications for new statements
 cf.customs-financials-home.notification.c79=Mae gennych dystysgrif TAW mewnforio (C79) newydd
 cf.customs-financials-home.notification.postponed-vat=Mae gennych ddatganiad TAW mewnforio gohiriedig newydd
 cf.customs-financials-home.notification.adjustments=Mae gennych ddatganiad addasiadau mewnforio newydd
@@ -246,9 +157,8 @@ cf.customs-financials-home.notification.duty-deferment=Mae gennych ddatganiad go
 cf.customs-financials-home.notification.requested-c79=Mae’r tystysgrifau TAW mewnforio (C79) y gofynnwyd amdanynt gennych ar gael i’w gweld
 cf.customs-financials-home.notification.requested-duty-deferment=Mae’r datganiadau gohirio tollau y gofynnwyd amdanynt gennych ar gael i’w gweld
 cf.customs-financials-home.notification.requested-adjustments=Mae’r datganiadau addasiadau mewnforio y gofynnwyd amdanynt gennych ar gael i’w gweld
-cf.customs-financials-home.notification.requested-postponed-vat= Mae’r datganiadau TAW mewnforio ohiriedig y gofynnwyd amdanynt gennych ar gael i’w gweld
 
-#Verify Your Email Address
+# Verify Your Email Address
 cf.verify.your.email.title=Mae angen i chi ddilysu’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.verify.your.email.heading=Mae angen i chi ddilysu’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
 cv.verify.your.email.p1=Dyma’r cyfeiriad e-bost y mae’ch sefydliad wedi’i gofrestru ar gyfer y Gwasanaeth Datganiadau Tollau (CDS). Mae angen i chi ddilysu’r cyfeiriad e-bost hwn neu ei newid. Gallwch ddilysu’r cyfeiriad e-bost ar unwaith os oes gennych fynediad at y cyfrif e-bost.
@@ -256,9 +166,8 @@ cf.verify.your.email.need-to-verify=Dyma fydd yr unig gyfeiriad e-bost a ddefnyd
 cf.verify.your.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datganiadau Tollau
 cf.verify.your.email.list.2=diweddariadau brys am nwyddau yn y tollau
 cf.verify.your.email.list.3=rhai hysbysiadau ariannol, gan gynnwys hysbysiadau Debyd Uniongyrchol a TAW
-cf.verify.your.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
-#Undeliverable Email Address
+# Undeliverable Email Address
 cf.undeliverable.email.title=Mae problem gyda’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.undeliverable.email.heading=Mae problem gyda’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.undeliverable.email.p1=Gwnaethom geisio anfon e-bost atoch ond nid oedd modd ei ddosbarthu. Gallai hyn fod oherwydd bod y mewnflwch yn llawn, neu oherwydd bod problem dechnegol gyda’ch darparwr e-bost.
@@ -276,6 +185,7 @@ cf.duty-deferment.dd.setup.text1=Mae’n rhaid i chi
 cf.duty-deferment.dd.setup.new.account=sefydlu debyd uniongyrchol newydd.
 cf.duty-deferment.dd.setup.text2=allu defnyddio’r cyfrif gohirio hwn ar y Gwasanaeth Datgan Tollau (CDS).
 cf.duty-deferment.dd.setup.text3=Mae’r statws hwn yn berthnasol i’ch cyfrif Gwasanaeth Datgan Tollau yn unig.
+
 # Common messages
 cf.common.missing-documents-guidance.statement = datganiad
 cf.common.missing-documents-guidance.statements = datganiadau
@@ -286,9 +196,6 @@ cf.common.missing-documents-guidance.certificates = dystysgrifau
 cf.common.missing-documents-guidance.heading=Methu gweld y {0} yr ydych yn edrych amdano?
 cf.common.missing-documents-guidance.text1=Nid yw {0} ar gyfer datganiad mewnforio a wnaed yn CHIEF ar gael yn y gwasanaeth hwn.
 cf.common.missing-documents-guidance.text2=Cynhyrchir {0} dim ond ar gyfer cyfnodau y gwnaethoch fewnforio nwyddau ynddynt.
-
-cf.duty-deferment.dd.setup.unavailable.heading = Mae’n ddrwg gennym, ni allwch sefydlu debyd uniongyrchol newydd ar hyn o bryd
-cf.duty-deferment.dd.setup.unavailable.message = Os ydych wedi dilysu’ch cyfeiriad e-bost yn ddiweddar, gallai gymryd hyd at 2 awr iddo gael ei nodi gan y gwasanaeth hwn.
 
 # BETA Banner
 # ----------------------------------------------------------
@@ -337,11 +244,6 @@ cf.customs-financials-home.notification.multiple-postponed-vat = Mae gennych dda
 cf.customs-financials-home.notification.multiple-adjustments = 	Mae gennych ddatganiadau addasiadau mewnforio newydd
 
 cf.account.manage-account-authorities.title=Rheoli awdurdodau eich cyfrif
-
-cf.customs-financials-home.recruitment-banner-heading=Helpu ni i wella’r gwasanaeth hwn
-cf.customs-financials-home.recruitment-banner-link-text=Cofrestrwch er mwyn cymryd rhan bosibl yn ein hymchwil defnyddiwr
-cf.customs-financials-home.recruitment-banner.close=Cau
-cf.customs-financials-home.recruitment-banner.hidden-text.close=Y faner ‘Helpu ni i wella’r gwasanaeth hwn’
 
 # Timeout Messages
 # ----------------------------------------------------------

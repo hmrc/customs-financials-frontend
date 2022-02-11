@@ -99,66 +99,12 @@ cf.import-vat.view-certificates.description=These are certificates of VAT you ha
 cf.securities.view-statements.description=These are statements of duty charged on an import declaration taken as a security deposit.
 
 # VAT Detail view
-cf.account.vat.title=Import VAT certificates (C79)
-cf.account.vat.help.get-help=Get Help
-cf.account.vat.help.number=Helpline 0300 200 3701
 cf.account.vat.download-link=Download {1} {0} ({2})
 cf.account.vat.missing-file=Unavailable
 cf.account.vat.missing-file-hidden-text={0} for {1} unavailable
-cf.account.vat.no-certificates-available=There are no certificates available to view.
-cf.account.vat.historic.description=We only show certificates for the last 6 months. If required, you can
-cf.account.vat.historic.request=request older certificates
-cf.account.vat.unavailable=Sorry, your certificates are not available at the moment. Please try again later.
-cf.account.vat.statements.unavailable = There were no certificates in {0}.
-
-# Import VAT requested statements view
-cf.import-vat.requested.title=Requested import VAT certificates (C79)
 
 # Postponed VAT view
-cf.postponed-vat.page-heading=This section is the VAT account summary
 cf.postponed-vat.view-certificates.description=These are statements of VAT you have postponed on your imports to use as evidence on your VAT return.
-cf.postponed-vat.view-certificates.no-certificates=There are no postponed import VAT statements.
-cf.account.pvat.title=Postponed import VAT statements
-cf.account.pvat.content=Unless you have delayed your customs declaration, each statement will show the total import VAT postponed for the previous month.
-
-cf.account.pvat.download-link={0} statement - {1} ({2})
-cf.account.pvat.amended-download-link={0} amended statement - {1} ({2})
-cf.account.pvat.original.download-link={0} statement - {1} ({2})
-cf.account.pvat.missing-file-type=No {0} statements available.
-cf.account.pvat.original.missing-file-type=No {0} file available.
-cf.account.pvat.aria.download-link={1} {0} statement - {2} ({3})
-cf.account.pvat.aria.original.download-link={0} statement for {1} - {2} ({3})
-cf.account.pvat.aria.amended.download-link={0} amended statement for {1} - {2} ({3})
-
-cf.account.pvat.no-statements-yet=There are no statements available to view yet.
-cf.account.pvat.holding-message.1=From 1 January 2021 you may be able to account for import VAT on your VAT Return. You can
-cf.account.pvat.holding-message.2=on GOV.UK.
-cf.account.pvat.link-message=check if you can use postponed VAT accounting
-cf.account.pvat.statements.unavailable = There were no statements in {0}
-
-cf.account.pvat.historic.description=We only show statements for the last 6 months. If required, you can
-cf.account.pvat.historic.request=request older statements
-
-cf.postponed-vat.requested-statements-available-link-text=requested statements
-
-# Security Statements View
-cf.security-statements.title=Notification of adjustment statements
-cf.security-statements.help.get-help=Get Help
-cf.security-statements.help.number=Helpline 0300 200 3701
-cf.security-statements.understanding-your-statement=Understanding your statement
-cf.security-statements.no-statements=There are no statements available to view.
-cf.security-statements.screen-reader.unavailable={0} for {1} to {2} unavailable
-
-cf.security-statements.static-text=Statements cover the last 7 days from Thursday to Wednesday.
-cf.security-statements.historic.description=We only show statements for the last 6 months. If required, you can
-cf.security-statements.historic.request=request older statements
-cf.security-statements.requested-link=requested statements
-cf.security-statements.unavailable= Sorry, your statements are not available at the moment. Please try again later.
-
-# Security Statements requested view
-cf.security-statements.requested.title=Requested notification of adjustment statements
-cf.security-statements.requested.period={0} to {1}
-cf.security-statements.requested.download-link.aria-text=Download {1} to {2} {0} ({3})
 
 # Authorized to View
 cf.account.authorized-to-view.title=Other accounts you can use
@@ -174,28 +120,6 @@ cf.account.authorized-to-view.available-account-balance=Available account balanc
 cf.account.authorized-to-view.guarantee-account.account-type=General guarantee account
 cf.account.authorized-to-view.guarantee-account.guarantee-limit-remaining=Guarantee limit remaining
 
-# Cash CSV
-cf.cash-account.csv.date=Date (posted)
-cf.cash-account.csv.transactionType=Transaction
-cf.cash-account.csv.movementReferenceNumber=MRN
-cf.cash-account.csv.declarantEori=Declarant EORI
-cf.cash-account.csv.vat=VAT
-cf.cash-account.csv.duty=Duty
-cf.cash-account.csv.excise=Excise
-cf.cash-account.csv.credit=Credit
-cf.cash-account.csv.debit=Debit
-cf.cash-account.csv.balance=Balance
-
-cf.cash-account.csv.closing-balance=Closing balance
-cf.cash-account.csv.opening-balance=Opening balance
-cf.cash-account.csv.declaration=Declaration
-cf.cash-account.csv.transfer-out=Transfer to another account
-cf.cash-account.csv.top-up=Top-up
-cf.cash-account.csv.transfer-in=Transfer from another account
-cf.cash-account.csv.withdrawal=Withdrawal
-cf.cash-account.csv.withdrawal.account-ending=(to account ending {0})
-cf.cash-account.csv.filename=Cash_Account_Transactions_{0}.CSV
-
 # Not subscribed to CDS
 cf.not-subscribed-to-cds.detail.title=Not registered with CDS
 cf.not-subscribed-to-cds.detail.heading=To continue with this you need to get access to Customs Declaration Services (CDS)
@@ -206,7 +130,7 @@ cf.not-subscribed-to-cds.detail.get-access-link=get access to CDS (opens in a ne
 cf.not-subscribed-to-cds.detail.how-to-get-access-info=How to get access to CDS
 cf.not-subscribed-to-cds.detail.process-application-info=It can take up to two hours for HMRC to process your application.
 
-#Customs Financials Home Page
+# Customs Financials Home Page
 cf.customs-financials-home.title=Your customs financial accounts
 cf.customs-financials-home.duty-deferment.title=Duty deferment account
 cf.customs-financials-home.duty-deferment.title2=Duty deferment accounts
@@ -223,22 +147,17 @@ cf.customs-financials-home.securities.title=Notification of adjustment statement
 cf.customs-financials-home.securities.link=View notification of adjustment statements
 cf.customs-financials-home.partial.heading=Sorry, some parts of the service are unavailable at the moment
 cf.customs-financials-home.partial.text=You can still view some certificates and statements.
-cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
-cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
-cf.customs-financials-home.recruitment-banner.close=Close
-cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
 
-#Notifications for new statements
+# Notifications for new statements
 cf.customs-financials-home.notification.c79=You have a new Import VAT (C79) certificate
 cf.customs-financials-home.notification.postponed-vat=You have a new Postponed import VAT statement
 cf.customs-financials-home.notification.adjustments=You have a new Import adjustments statement
 cf.customs-financials-home.notification.duty-deferment=You have a new Duty Deferment statement
 cf.customs-financials-home.notification.requested-c79=Your requested import VAT certificates (C79) are available to view
-cf.customs-financials-home.notification.requested-postponed-vat=Your requested Postponed VAT statements are available to view
 cf.customs-financials-home.notification.requested-duty-deferment=Your requested Duty Deferment statements are available to view
 cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
 
-#Verify Your Email Address
+# Verify Your Email Address
 cf.verify.your.email.title=You need to verify the registered CDS email address
 cf.verify.your.email.heading=You need to verify the registered CDS email address
 cf.verify.your.email.p1=This is the email address your organisation has registered for the Customs Declaration Service (CDS). You need to verify this email address or change it. You can verify the email instantly provided you have access to the email account.
@@ -246,9 +165,8 @@ cf.verify.your.email.need-to-verify=This will be the only email address we use f
 cf.verify.your.email.list.1=updates on changes to the Customs Declaration Service
 cf.verify.your.email.list.2=urgent updates about goods in customs
 cf.verify.your.email.list.3=some financial notifications, including Direct Debit notices and VAT
-cf.verify.your.email.link-text=Verify or change email address
 
-#Undeliverable Email Address
+# Undeliverable Email Address
 cf.undeliverable.email.title=There''s a problem with the CDS registered email address
 cf.undeliverable.email.heading=There''s a problem with the CDS registered email address
 cf.undeliverable.email.p1=We tried to send you an email but it could not be delivered. This could be because the inbox is full, or due to a technical problem with your email provider.
@@ -277,9 +195,6 @@ cf.common.missing-documents-guidance.certificates = Certificates
 cf.common.missing-documents-guidance.heading=Can’t find the {0} you’re looking for?
 cf.common.missing-documents-guidance.text1={0} for import declarations made in CHIEF are not available in this service.
 cf.common.missing-documents-guidance.text2={0} are only generated for periods in which you imported goods.
-
-cf.duty-deferment.dd.setup.unavailable.heading = Sorry, you can not set up a new Direct Debit at the moment
-cf.duty-deferment.dd.setup.unavailable.message = If you've recently verified your email address, it could take up to 2 hours for it to be recognised by this service.
 
 # BETA Banner
 # ----------------------------------------------------------
@@ -327,11 +242,6 @@ cf.customs-financials-home.notification.multiple-c79 = You have new import VAT c
 cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
 cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
 cf.account.manage-account-authorities.title=Manage your account authorities
-
-cf.customs-financials-home.recruitment-banner-heading=Help us improve this service
-cf.customs-financials-home.recruitment-banner-link-text=Sign up to be a potential user research participant
-cf.customs-financials-home.recruitment-banner.close=Close
-cf.customs-financials-home.recruitment-banner.hidden-text.close=the help us improve this service banner
 
 # Timeout Messages
 # ----------------------------------------------------------
