@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
-import views.html.account_cards.cash_account_card
+import views.html.account_cards.cash_account_cards
 
 class CashAccountCardSpec extends SpecBase {
 
@@ -84,7 +84,7 @@ class CashAccountCardSpec extends SpecBase {
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
     val cashAccount = CashAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999))))
-    def content(cashAccount: CashAccount) = Jsoup.parse(app.injector.instanceOf[cash_account_card].apply(cashAccount).body)
+    def content(cashAccount: CashAccount) = Jsoup.parse(app.injector.instanceOf[cash_account_cards].apply(Seq(cashAccount)).body)
 
 
 

@@ -31,9 +31,6 @@ case class FinancialsHomeModel(eori: EORI,
   val guaranteeAccountViewModels: Seq[GeneralGuaranteeAccountViewModel] = filterGuaranteeAccounts(allMyAccounts).map(GeneralGuaranteeAccountViewModel(_))
   val cashAccounts: Seq[CashAccount] = filterCashAccounts(allMyAccounts)
   val isAgent: Boolean = accounts.exists(_.isAgent)
-  val hasCashAccounts: Boolean = cashAccounts.nonEmpty
-  val hasDutyDefermentAccounts: Boolean = dutyDefermentAccounts.nonEmpty
-  val hasGuaranteeAccounts: Boolean = guaranteeAccountViewModels.nonEmpty
 
   def dutyDefermentAccountDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = accountLinks.map { accountLink =>
     (accountLink.eori, accountLink.accountNumber) -> appConfig.accountUrl(accountLink.linkId)

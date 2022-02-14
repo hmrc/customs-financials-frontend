@@ -26,7 +26,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import viewmodels.GeneralGuaranteeAccountViewModel
-import views.html.account_cards.guarantee_account_card
+import views.html.account_cards.guarantee_account_cards
 
 
 class GuaranteeAccountCardSpec extends SpecBase  {
@@ -146,7 +146,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
     val guaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
 
-    def content(guaranteeAccount: GeneralGuaranteeAccount = guaranteeAccount) = Jsoup.parse(app.injector.instanceOf[guarantee_account_card]
-      .apply(GeneralGuaranteeAccountViewModel(guaranteeAccount)).body)
+    def content(guaranteeAccount: GeneralGuaranteeAccount = guaranteeAccount) = Jsoup.parse(app.injector.instanceOf[guarantee_account_cards]
+      .apply(Seq(GeneralGuaranteeAccountViewModel(guaranteeAccount))).body)
   }
 }
