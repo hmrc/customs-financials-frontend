@@ -33,13 +33,14 @@
 
 @layout(pageTitle = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial, eori = Some(model.eori), companyName = model.companyName) {
     @h1("cf.customs-financials-home.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
-    @link("cf.account.manage-account-authorities.title", appConfig.manageAuthoritiesFrontendUrl, pWrapped = false, linkId = Some("manage-account-authorities-link"))
+    @link("cf.account.manage-account-authorities.title", appConfig.manageAuthoritiesFrontendUrl, pWrapped = false, linkId = Some("manage-account-authorities-link"), linkClass = "govuk-link govuk-!-margin-right-2")
 
     @if(model.isAgent) {
         @link(
             "cf.account.authorized-to-view.title",
             controllers.routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(1)).url,
-            linkId = Some("authorised-to-view-link")
+            linkId = Some("authorised-to-view-link"),
+            pWrapped = false
         )
     }
 
@@ -50,6 +51,7 @@
 
     @card(
         "import-vat",
+        "import-vat-certificates",
         "cf.customs-financials-home.import-vat.title",
         appConfig.importVATAccountUrl,
         "cf.import-vat.view-certificates.description",
@@ -57,6 +59,7 @@
     )
     @card(
         "postponed-vat",
+        "postponed-vat-statements",
         "cf.customs-financials-home.pvat.title",
         appConfig.postponedVATAccountUrl,
         "cf.postponed-vat.view-certificates.description",
@@ -64,6 +67,7 @@
     )
     @card(
         "import-adjustments",
+        "securities-statements",
         "cf.customs-financials-home.securities.title",
         appConfig.securitiesAccountUrl,
         "cf.securities.view-statements.description",
