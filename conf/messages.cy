@@ -85,6 +85,7 @@ cf.accounts.label.topUp=Ychwanegu at ohirio tollau {0}
 cf.accounts.contact.details=Manylion y cyfrif
 cf.accounts.label.contact.details=Manylion ar gyfer {0} y cyfrif gohirio tollau
 cf.accounts.view-customs-account=fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+cf.accounts.view-customs-account-not-found=fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau.
 cf.accounts.back-customs-account=Yn ôl i’ch cyfrifon ariannol ar gyfer y tollau
 cf.account.status.AccountStatusClosed=Ar gau
 cf.account.status.AccountStatusInhibited=Wedi’i wahardd

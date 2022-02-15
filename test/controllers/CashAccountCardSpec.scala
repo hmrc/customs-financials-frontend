@@ -22,7 +22,7 @@ import connectors.CustomsFinancialsSessionCacheConnector
 import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
 import play.api.test.Helpers._

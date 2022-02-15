@@ -84,6 +84,7 @@ cf.accounts.label.topUp=Top up duty deferment {0}
 cf.accounts.contact.details=Account details
 cf.accounts.label.contact.details=Account details for duty deferment {0}
 cf.accounts.view-customs-account=view your customs financial accounts
+cf.accounts.view-customs-account-not-found=view your customs financial accounts.
 cf.accounts.back-customs-account=Back to your customs financial accounts
 cf.account.status.AccountStatusClosed = Closed
 cf.account.status.AccountStatusSuspended = Suspended

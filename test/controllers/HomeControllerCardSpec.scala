@@ -107,7 +107,6 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.getElementsByClass("import-vat-certificates").isEmpty mustBe false
           html.containsLinkWithText("http://localhost:9398/customs/documents/import-vat", "View import VAT certificates (C79)") mustBe true
         }
       }
