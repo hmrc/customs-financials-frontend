@@ -17,7 +17,8 @@
 package services
 
 import config.AppConfig
-import domain.AuditModel
+import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
+
 import javax.inject.{Inject, Singleton}
 import play.api.http.HeaderNames
 import play.api.libs.json.{Json, Writes}
@@ -36,6 +37,11 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   val log: LoggerLike = Logger(this.getClass)
   implicit val dataEventWrites: Writes[DataEvent] = Json.writes[DataEvent]
 
+  val AUDIT_AUTHORISED_TRANSACTION = "View account"
+  val AUDIT_EORI = "EORI"
+  val AUDIT_HISTORIC_EORIS = "HISTORIC_EORI"
+  val AUDIT_TYPE = "ViewAccount"
+
   val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold("-")(_._2)
 
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
@@ -46,6 +52,14 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
         logAuditResult(auditResult)
         auditResult
       }
+  }
+
+  def viewAccount(user: SignedInUser)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val historicEoriAuditDetails: Seq[AuditEori] = user.allEoriHistory.map(eoriHistory => AuditEori(eoriHistory.eori, isHistoric = true))
+    val eoriAuditDetails: AuditEori = AuditEori(user.eori, isHistoric = false)
+    val eoriList = eoriAuditDetails +: historicEoriAuditDetails
+    val auditEvent = AuditModel(AUDIT_TYPE, AUDIT_AUTHORISED_TRANSACTION, Json.toJson(eoriList))
+    audit(auditEvent)
   }
 
   private def toExtendedDataEvent(appName: String, auditModel: AuditModel, path: String)(implicit hc: HeaderCarrier): ExtendedDataEvent =

@@ -17,9 +17,9 @@
 package services
 
 import config.AppConfig
-import domain.{AuditEori, AuditModel}
+import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.captor.ArgCaptor
+import org.mockito.captor.{ArgCaptor, Captor}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -27,12 +27,49 @@ import uk.gov.hmrc.play.audit.http.connector._
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.SpecBase
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AuditingServiceSpec extends SpecBase {
 
   "AuditingService" should {
+
+    "create the correct audit event for view account" in new Setup {
+      val validFrom: LocalDate = LocalDate.now().minusDays(30)
+      val validTo: LocalDate = LocalDate.now().plusDays(30)
+
+      val eoriHistory = Seq(
+        EoriHistory("testEori1", validFrom = Some(validFrom), validUntil = Some(validTo)),
+        EoriHistory("testEori2", validFrom = Some(validFrom), validUntil = Some(validTo))
+      )
+      val user = SignedInUser("testEori3", eoriHistory)
+
+      val expectedAuditEvent = Json.arr(
+        Json.obj(
+          "eori" -> "testEori3",
+          "isHistoric" -> false
+        ),
+        Json.obj(
+          "eori" -> "testEori1",
+          "isHistoric" -> true
+        ),
+        Json.obj(
+          "eori" -> "testEori2",
+          "isHistoric" -> true
+        )
+      )
+
+      await(auditingService.viewAccount(user))
+
+      val dataEventCaptor: Captor[ExtendedDataEvent] = ArgCaptor[ExtendedDataEvent]
+      verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
+      val dataEvent: ExtendedDataEvent = dataEventCaptor.value
+
+      dataEvent.auditSource shouldBe expectedAuditSource
+      dataEvent.auditType shouldBe "ViewAccount"
+      dataEvent.detail shouldBe expectedAuditEvent
+    }
 
     "create the correct data event for a user requesting duty deferment statements" in new Setup {
       val model = AuditModel(AUDIT_TYPE, AUDIT_DUTY_DEFERMENT_TRANSACTION, Json.toJson(AuditEori(eori, false)))
@@ -105,6 +142,10 @@ class AuditingServiceSpec extends SpecBase {
     val AUDIT_VAT_CERTIFICATES = "DisplayVATCertificates"
     val AUDIT_SECURITY_STATEMENTS = "DisplaySecurityStatements"
     val AUDIT_POSTPONED_VAT_STATEMENTS = "DisplayPostponedVATStatements"
+    val AUDIT_AUTHORISED_TRANSACTION = "View account"
+    val AUDIT_EORI = "EORI"
+    val AUDIT_HISTORIC_EORIS = "HISTORIC_EORI"
+
 
     val mockConfig = mock[AppConfig]
     when(mockConfig.appName).thenReturn("customs-financials-frontend")

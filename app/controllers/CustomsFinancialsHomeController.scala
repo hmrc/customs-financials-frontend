@@ -25,7 +25,7 @@ import org.joda.time.DateTime
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Logger, LoggerLike}
-import services.{ApiService, DataStoreService, Notification, NotificationService}
+import services._
 import uk.gov.hmrc.http.{GatewayTimeoutException, SessionId}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.HtmlPartial
@@ -42,6 +42,7 @@ import scala.util.control.NonFatal
 class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 checkEmailIsVerified: EmailAction,
                                                 apiService: ApiService,
+                                                auditingService: AuditingService,
                                                 dataStoreService: DataStoreService,
                                                 notificationService: NotificationService,
                                                 customsHomeView: customs_financials_home,
@@ -60,6 +61,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
       val eori = request.user.eori
       val result = for {
+        _ <- auditingService.viewAccount(request.user)
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
         allAccounts <- getAllAccounts(eori)
         page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
