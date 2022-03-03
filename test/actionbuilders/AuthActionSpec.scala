@@ -16,25 +16,20 @@
 
 package actionbuilders
 
-import actionbuilders.{AuthAction, AuthActionHelper, IdentifierAction}
 import com.google.inject.Inject
+import config.AppConfig
+import org.mockito.ArgumentMatchersSugar.any
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
-import play.api.libs.json.Json
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.Helpers._
+import services.{AuditingService, DataStoreService}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.{~, _}
-import config.AppConfig
-import domain.{AuditModel, EoriHistory}
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import services.{AuditingService, DataStoreService}
+import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.SpecBase
 
-import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -60,9 +55,8 @@ class AuthActionSpec extends SpecBase {
       ).build()
       val config = app.injector.instanceOf[AppConfig]
       val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
-      val authActionHelper = app.injector.instanceOf[AuthActionHelper]
 
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new MissingBearerToken), config, bodyParsers, authActionHelper)
+      val authAction = new AuthAction(new FakeFailingAuthConnector(new MissingBearerToken), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
 
       running(app) {
@@ -82,9 +76,8 @@ class AuthActionSpec extends SpecBase {
       ).build()
       val config = app.injector.instanceOf[AppConfig]
       val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
-      val authActionHelper = app.injector.instanceOf[AuthActionHelper]
 
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new BearerTokenExpired), config, bodyParsers, authActionHelper)
+      val authAction = new AuthAction(new FakeFailingAuthConnector(new BearerTokenExpired), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
 
       running(app) {
@@ -104,9 +97,8 @@ class AuthActionSpec extends SpecBase {
       ).build()
       val config = app.injector.instanceOf[AppConfig]
       val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
-      val authActionHelper = app.injector.instanceOf[AuthActionHelper]
 
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), config, bodyParsers, authActionHelper)
+      val authAction = new AuthAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
 
       running(app) {
@@ -136,74 +128,14 @@ class AuthActionSpec extends SpecBase {
       ).build()
       val config = app.injector.instanceOf[AppConfig]
       val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
-      val authActionHelper = app.injector.instanceOf[AuthActionHelper]
 
-      val authAction = new AuthAction(mockAuthConnector, config, bodyParsers, authActionHelper)
+      val authAction = new AuthAction(mockAuthConnector, config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
 
       running(app) {
         val result = controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId"))
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith("/customs/payment-records/not-subscribed-for-cds")
-      }
-    }
-
-    "audit the historic EORIs for authenticated users in" in {
-      val mockAuditingService = mock[AuditingService]
-      val mockDataStoreService = mock[DataStoreService]
-      val mockAuthConnector = mock[AuthConnector]
-
-      val validFrom = LocalDate.now().minusDays(30)
-      val validTo = LocalDate.now().plusDays(30)
-
-      when(mockDataStoreService.getAllEoriHistory(any)(any))
-        .thenReturn(Future.successful(
-          Seq(
-            EoriHistory("testEori1", validFrom = Some(validFrom), validUntil = Some(validTo)),
-            EoriHistory("testEori2", validFrom = Some(validFrom), validUntil = Some(validTo))
-          )))
-
-      val expectedAuditEvent = Json.arr(
-        Json.obj(
-          "eori" -> "testEori3",
-          "isHistoric" -> false
-        ),
-        Json.obj(
-          "eori" -> "testEori1",
-          "isHistoric" -> true
-        ),
-        Json.obj(
-          "eori" -> "testEori2",
-          "isHistoric" -> true
-        )
-      )
-
-      when(mockAuditingService.audit(eqTo(AuditModel("ViewAccount", "View account", expectedAuditEvent)))(any, any)).thenReturn(Future.successful(AuditResult.Success))
-
-      when(mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[Email] ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(any, any))
-        .thenReturn(Future.successful(
-          Some(Credentials("someProviderId", "someProviderType")) ~
-            Some(Name(Some("someName"), Some("someLastName"))) ~
-            Some(Email("some@email.com")) ~
-            Some(AffinityGroup.Individual) ~
-            Some("id") ~
-            Enrolments(Set(Enrolment("HMRC-CUS-ORG", identifiers = Seq(EnrolmentIdentifier("EORINumber", "testEori3")), "Activated")))))
-
-      val app = application().overrides(
-        inject.bind[AuditingService].toInstance(mockAuditingService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
-      val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
-      val authActionHelper = app.injector.instanceOf[AuthActionHelper]
-
-      val authAction = new AuthAction(mockAuthConnector, config, bodyParsers, authActionHelper)
-      val controller = new Harness(authAction)
-      running(app) {
-        val result = await(controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")))
-        result.header.status mustBe OK
-        Thread.sleep(1000)
-        verify(mockAuditingService).audit(eqTo(AuditModel("ViewAccount", "View account", expectedAuditEvent)))(any, any)
       }
     }
   }

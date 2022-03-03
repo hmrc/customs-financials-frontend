@@ -31,5 +31,5 @@ case class AuthorizedToViewViewModel(eori: String,
   val itemsPerPage: Int = appConfig.numberOfItemsPerPage
   val requestedPage: Int = pageState.page
   val urlForPage: Int => String = pageState.urlForPageFactory(request.path)
-  val itemsDescription = messages("cf.account.authorized-to-view.items-description")
+  val itemsDescription: String = messages("cf.account.authorized-to-view.items-description")
 }

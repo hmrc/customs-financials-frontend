@@ -56,15 +56,7 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     def containsLinkWithText(link: String, text: String): Boolean = {
       val results = document.getElementsByTag("a").asScala.toList
       val foundLinks = results.filter(_.attr("href") == link)
-      if (foundLinks.nonEmpty) {
-        foundLinks.exists(_.text == text)
-      } else false
-    }
-
-    def containsElementByIdWithText(id: String, text: String) = {
-      val items = document.getElementsByAttribute("id").asScala.toList
-      val filteredItems = items.filter(_.id() == id)
-      assert(filteredItems.exists(_.text == text))
+      if (foundLinks.nonEmpty) foundLinks.exists(_.text == text) else false
     }
 
     def containsElementById(id: String): Assertion = {
@@ -76,7 +68,7 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     }
   }
 
-  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty) = new GuiceApplicationBuilder().overrides(
+  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty): GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
     inject.bind[IdentifierAction].toInstance(new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
     api.inject.bind[Metrics].toInstance(new FakeMetrics)
   ).configure("auditing.enabled" -> "false")
@@ -84,22 +76,8 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
   def fakeRequest(method: String = "", path: String = ""): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty) = {
+  def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {
     val eori = "testEori4"
-    SignedInUser(
-      Some(Credentials("2345235235", "GovernmentGateway")),
-      Some(Name(Some("firstName"), Some("secondName"))),
-      Some("test@email.com"),
-      "testEori1",
-      Some(AffinityGroup.Individual),
-      Some("Int-ba17b467-90f3-42b6-9570-73be7b78eb2b"),
-      Enrolments(Set(
-        Enrolment("IR-SA", List(EnrolmentIdentifier("UTR", "111111111")), "Activated", None),
-        Enrolment("IR-CT", List(EnrolmentIdentifier("UTR", "222222222")), "Activated", None),
-        Enrolment("HMRC-CUS-ORG", List(EnrolmentIdentifier("EORINumber", eori)), "Activated", None)
-      )),
-      allEoriHistory
-    )
+    SignedInUser("testEori1", allEoriHistory)
   }
-
 }
