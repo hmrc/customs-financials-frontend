@@ -58,9 +58,7 @@
                         @accountStatus(account.status, "duty-deferment")
                     </header>
                     @if(account.balances.availableBalance >= 0) {
-                        <p class="@{
-                            account.status.balanceAttribute
-                        } available-account-balance govuk-body custom-card__balance">
+                        <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
                         @if(messages.lang == Lang("cy")) {
                             @if(account.status == AccountStatusPending) {
                                 @if(account.balances.availableBalance > 0){<span class="custom-card__balance-text">
@@ -99,9 +97,7 @@
                             @progressBar(account.balances.usedPercentage)
                         }
                     } else {
-                        <p class="@{
-                            account.status.balanceAttribute
-                        } available-account-balance govuk-body custom-card__balance">
+                        <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
                             <span class="govuk-visually-hidden">minus</span>
                             <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
                             <span class="custom-card__balance-amount custom-card__balance-amount--negative">

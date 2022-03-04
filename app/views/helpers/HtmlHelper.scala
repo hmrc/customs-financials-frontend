@@ -32,13 +32,6 @@ object HtmlHelper {
     val isOpen: Boolean = status == AccountStatusOpen
     val isSuspended: Boolean = status == AccountStatusSuspended
     val isPending: Boolean = status == AccountStatusPending
-
-    val balanceAttribute: String = status match {
-      case AccountStatusOpen => "account-balance-status-open"
-      case AccountStatusSuspended => "account-balance-status-suspended"
-      case AccountStatusPending => "account-balance-status-pending"
-      case AccountStatusClosed => "account-balance-status-closed"
-    }
   }
 
 }

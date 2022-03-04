@@ -22,7 +22,7 @@
 
 @(status: CDSAccountStatus, accountAttribute: String, balance: BigDecimal)(implicit messages: Messages)
 
-<p class="@{status.balanceAttribute} @accountAttribute govuk-body custom-card__balance">
+<p id="balance" class="@accountAttribute govuk-body custom-card__balance">
     <span class="custom-card__balance-amount">
     @{Formatters.formatCurrencyAmount(balance)}
     </span>

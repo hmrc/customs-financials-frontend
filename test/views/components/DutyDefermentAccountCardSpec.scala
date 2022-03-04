@@ -48,8 +48,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include available account balance" in new Setup {
       running(app) {
-        content().getElementsByTag("p").hasClass("account-balance-status-open") mustBe true
-        content().getElementsByClass("account-balance-status-open").text mustBe "£99.01 available"
+        content().getElementById("duty-deferment-balance").text mustBe "£99.01 available"
       }
     }
 
@@ -214,15 +213,13 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "display will be available if account balance is not 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementsByTag("p").hasClass("account-balance-status-pending") mustBe true
-          content(dutyDefermentAccountPending).getElementsByClass("account-balance-status-pending").first().text mustBe "£99.01 will be available"
+          content(dutyDefermentAccountPending).getElementById("duty-deferment-balance").text mustBe "£99.01 will be available"
         }
       }
 
       "not display will be available if account balance is 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPendingZeroBalance).getElementsByTag("p").hasClass("account-balance-status-pending") mustBe true
-          content(dutyDefermentAccountPendingZeroBalance).getElementsByClass("account-balance-status-pending").first().text mustBe "£0"
+          content(dutyDefermentAccountPendingZeroBalance).getElementById("duty-deferment-balance").text mustBe "£0"
         }
       }
 
