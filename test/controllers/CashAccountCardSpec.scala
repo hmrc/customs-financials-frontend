@@ -46,7 +46,7 @@ class CashAccountCardSpec extends SpecBase {
 
         val expectedUrl = appConfig.cashAccountUrl
         html.containsLink(expectedUrl)
-        html.getElementsByClass("available-account-balance").text mustBe "£98,765"
+        html.getElementsByClass("available-account-balance").text mustBe "£98,765 available"
       }
     }
   }

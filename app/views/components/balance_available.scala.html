@@ -26,4 +26,9 @@
     <span class="custom-card__balance-amount">
     @{Formatters.formatCurrencyAmount(balance)}
     </span>
+    @if(balance > 0) {
+     <span class="custom-card__balance-text">
+     @messages("cf.available")
+     </span>
+    }
 </p>

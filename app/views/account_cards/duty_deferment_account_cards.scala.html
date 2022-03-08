@@ -74,10 +74,26 @@
                                 <span class="custom-card__balance-amount">
                                 @Formatters.formatCurrencyAmount(account.balances.availableBalance)
                                 </span>
+                                @if(account.balances.availableBalance > 0) {
+                                    <span class="custom-card__balance-text">
+                                    @messages("cf.available")
+                                    </span>
+                                }
                             }
                         } else {
                             <span class="custom-card__balance-amount">
                             @Formatters.formatCurrencyAmount(account.balances.availableBalance)
+                            </span>
+                            <span class="custom-card__balance-text">
+                            @if(account.status == AccountStatusPending) {
+                                @if(account.balances.availableBalance > 0){
+                                    @messages("cf.pending.available")
+                                }
+                            } else {
+                                @if(account.balances.availableBalance > 0) {
+                                    @messages("cf.available")
+                                }
+                            }
                             </span>
                         }
                         </p>

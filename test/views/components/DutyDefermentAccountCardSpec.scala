@@ -48,7 +48,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include available account balance" in new Setup {
       running(app) {
-        content().getElementById("duty-deferment-balance").text mustBe "£99.01"
+        content().getElementById("duty-deferment-balance").text mustBe "£99.01 available"
       }
     }
 
@@ -213,7 +213,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "display will be available if account balance is not 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementById("duty-deferment-balance").text mustBe "£99.01"
+          content(dutyDefermentAccountPending).getElementById("duty-deferment-balance").text mustBe "£99.01 will be available"
         }
       }
 

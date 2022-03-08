@@ -53,7 +53,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
     "include guarantee limit remaining" in new Setup {
       running(app) {
-        content().getElementsByClass("guarantee-account-limit-remaining").text mustBe "£499"
+        content().getElementsByClass("guarantee-account-limit-remaining").text mustBe "£499 available"
       }
     }
 
