@@ -38,13 +38,6 @@ class DutyDefermentInaccurateBalancesSpec extends SpecBase {
         view.getElementById("duty-deferment-balances-warning").getElementsByClass("govuk-warning-text__icon").text mustBe "!"
       }
     }
-
-    "include link to duty deferment scheme contact" in new Setup {
-      running(app) {
-        view.getElementById("duty-deferment-balances-warning").getElementsByTag("a").text mustBe "cf.duty-deferment.outOfDateBalance.contactLink"
-        view.getElementById("duty-deferment-balances-warning").getElementsByTag("a").attr("href") mustBe appConfig.dutyDefermentSchemeContactLink
-      }
-    }
   }
 
   trait Setup {
