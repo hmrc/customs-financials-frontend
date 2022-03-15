@@ -23,11 +23,12 @@
         pWrapped: Boolean = true,
         preLinkMessage: Option[String] = None,
         postLinkMessage: Option[String] = None,
+        linkSentence: Boolean = false,
         pId: Option[String] = None,
         pClass: String = "govuk-body")(implicit messages: Messages)
 
 @link = {
- <a @{linkId.fold("")(id => s"id=$id")} class="@linkClass" href="@location">@Html(messages(linkMessage))</a>
+ <a @{linkId.fold("")(id => s"id=$id")} class="@linkClass" href="@location">@Html(messages(linkMessage))</a>@if(linkSentence){.}
 }
 
 @if(pWrapped){
