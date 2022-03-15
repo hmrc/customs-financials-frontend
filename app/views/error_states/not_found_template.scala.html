@@ -31,9 +31,10 @@
     @p("cf.error.not-found.message.address-typed-wrong")
     @p("cf.error.not-found.message.address-pasted-wrong")
     @link(
-        "cf.accounts.view-customs-account-not-found",
+        "cf.accounts.view-customs-account",
         controllers.routes.CustomsFinancialsHomeController.index.url,
         preLinkMessage = Some("cf.error.not-found.message.go-to-home-page-text1"),
-        linkClass = "govuk-link govuk-link--no-visited-state"
+        linkClass = "govuk-link govuk-link--no-visited-state",
+        linkSentence = true
     )
 }
