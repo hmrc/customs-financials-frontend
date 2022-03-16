@@ -1,3 +1,12 @@
+%contain-floats {
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+}
+
+
 .custom-card {
     @extend %contain-floats;
     border: 1px solid #bfc1c3;
@@ -38,7 +47,7 @@
 
 .card-footer {
     font-size: 1rem;
-    color: $rolling-stone;
+    color: #6f777b;
     @include govuk-media-query($from: desktop) {
         font-size: 1.1875rem;
     }
@@ -50,18 +59,4 @@
         margin: 15px 0 !important;
         float: right;
     }
-}
-
-.account-balance-status-open {
-}
-
-.account-balance-status-suspended {
-}
-
-.account-balance-status-pending {
-    color: #939393 !important;
-}
-
-.account-balance-status-closed {
-    color: #939393 !important;
 }

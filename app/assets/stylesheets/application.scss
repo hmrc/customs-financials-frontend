@@ -3,13 +3,10 @@ $hmrc-assets-path: "/customs/payment-records/assets/lib/hmrc-frontend/hmrc/";
 
 @import "lib/govuk-frontend/govuk/base";
 
-@import "utils/colours";
+@import "components/notifications-bar";
 @import "utils/custom";
-@import "utils/shims";
-@import "components/govuk-summary-list";
 @import "components/progress-bar";
 @import "components/pager";
-@import "components/notifications-bar";
 @import "components/custom-card";
 
 
