@@ -20,7 +20,7 @@
 @(dutyDefermentAccount: DutyDefermentAccount,dutyDefermentAccountDDSetupLinks: Map[(String, String), String])(implicit messages: Messages)
 
 @if(dutyDefermentAccount.isDirectDebitSetupRequired){
-    <div class="govuk-warning-text govuk-!-margin-top-3 govuk-!-margin-bottom-0 card-direct-debit">
+    <div class="govuk-warning-text govuk-!-margin-top-3 govuk-!-margin-bottom-0">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
             <span class="govuk-warning-text__assistive">@messages("cf.duty-deferment.warning")</span>

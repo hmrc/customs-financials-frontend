@@ -79,10 +79,10 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       }
     }
 
-    "include a link to the duty deferment contact details page when status is suspended" in new Setup {
+    "not include a link to the duty deferment contact details page when status is suspended" in new Setup {
       running(app) {
         val expectedUrl = contactDetailsLink1
-        content(dutyDefermentAccountSuspended).containsLink(expectedUrl) mustBe true
+        content(dutyDefermentAccountSuspended).containsLink(expectedUrl) mustBe false
       }
     }
 
