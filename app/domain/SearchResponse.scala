@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package domain
 
-@(message: String, bold: Boolean = false, extraClasses: String = "")(implicit messages: Messages)
+  sealed trait SearchResponse
 
-<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{messages(message)}</p>
+  case object NoAuthorities extends SearchResponse
+
+  case object SearchError extends SearchResponse

@@ -56,6 +56,8 @@ cf.pager.prev=Blaenorol
 cf.pager.next=Nesaf
 cf.pager.summary=Yn dangos {0} – {1} o {2} {3}
 
+eoriNumber.error.format=Nodwch rif EORI yn y fformat cywir
+
 # Help and Support
 cf.help-and-support.title=Help a chymorth
 cf.account.help-support.message=Os ydych yn profi anawsterau, ffoniwch

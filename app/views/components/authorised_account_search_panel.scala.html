@@ -16,6 +16,21 @@
 
 @this()
 
-@(message: String, bold: Boolean = false, extraClasses: String = "")(implicit messages: Messages)
+@(accountType: String, accountNumber: String, balanceAvailable: String)(implicit messages: Messages)
 
-<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{messages(message)}</p>
+<dl class="results govuk-!-margin-top-4">
+    <div>
+        <dt><strong>Account type</strong></dt>
+        <dd>@{accountType}</dd>
+    </div>
+    <div>
+        <dt><strong>Account number</strong></dt>
+        <dd>@{accountNumber}</dd>
+    </div>
+    <div>
+        <dt><strong>Balance available</strong></dt>
+        <dd>£@{balanceAvailable}</dd>
+    </div>
+</dl>
+
+<hr class="govuk-section-break govuk-section-break--s govuk-section-break--visible">

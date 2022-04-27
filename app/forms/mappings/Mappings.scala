@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms.mappings
 
-@(message: String, bold: Boolean = false, extraClasses: String = "")(implicit messages: Messages)
+import play.api.data.Forms._
+import play.api.data.{FieldMapping, Mapping}
 
-<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{messages(message)}</p>
+import java.time.LocalDate
+
+trait Mappings extends Formatters with Constraints {
+  protected def text(errorKey: String = "error.required"): FieldMapping[String] =
+    of(stringFormatter(errorKey))
+}

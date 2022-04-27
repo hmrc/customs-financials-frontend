@@ -9,6 +9,9 @@ GET        /logout-no-survey                                     controllers.Log
 GET        /help/accessibility                                   controllers.StaticPagesController.accessibility
 GET        /not-subscribed-for-cds                               controllers.UnauthorisedController.onPageLoad
 GET        /authorized-to-view                                   controllers.AuthorizedToViewController.onPageLoad(state: domain.AuthorizedToViewPageState)
+POST       /authorized-to-view/search                            controllers.AuthorizedToViewController.onSubmit()
+
+
 GET        /parts-of-service-unavailable                         controllers.CustomsFinancialsHomeController.pageWithoutAccounts
 
 GET        /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package domain
 
-@(message: String, bold: Boolean = false, extraClasses: String = "")(implicit messages: Messages)
+import play.api.libs.json.{Json, OFormat}
 
-<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{messages(message)}</p>
+case class SearchedAuthorities(
+                                numberOfAuthorities: Int,
+                                dutyDefermentAccounts: Seq[AuthorisedDutyDefermentAccount],
+                                generalGuaranteeAccounts: Seq[AuthorisedGeneralGuaranteeAccount],
+                                cdsCashAccounts: Seq[AuthorisedCashAccount]
+                              )
+
+object SearchedAuthorities {
+  implicit val format: OFormat[SearchedAuthorities] = Json.format[SearchedAuthorities]
+}
