@@ -27,9 +27,11 @@ case class SearchedAuthoritiesResponse(
   def toSearchAuthorities: SearchedAuthorities =
     SearchedAuthorities(
       numberOfAuthorities,
-      dutyDefermentAccounts.getOrElse(Seq.empty),
-      generalGuaranteeAccounts.getOrElse(Seq.empty),
-      cdsCashAccounts.getOrElse(Seq.empty)
+      Seq(
+        dutyDefermentAccounts.getOrElse(Seq.empty),
+        generalGuaranteeAccounts.getOrElse(Seq.empty),
+        cdsCashAccounts.getOrElse(Seq.empty)
+      ).flatten
     )
 }
 

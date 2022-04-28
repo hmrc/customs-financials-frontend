@@ -16,14 +16,14 @@
 
 package controllers
 
-import domain.{AccountStatusOpen, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.test.Helpers._
-import services.ApiService
+import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import utils.SpecBase
 
@@ -37,6 +37,72 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
         val result = route(app, request).value
         status(result) should be(OK)
+      }
+    }
+
+    "show the search EORI view when the feature flag is enabled" in new Setup {
+      val newApp: Application = application().configure("features.new-agent-view-enabled" -> true).build()
+      running(newApp) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val result = route(newApp, request).value
+        status(result) should be(OK)
+      }
+    }
+  }
+
+  "onSubmit" should {
+    "return OK if there are authorities returned" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances(10.0, 10.0)))
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Right(SearchedAuthorities(3, Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
+
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe OK
+        html.text().contains("Search results for GB123456789012") shouldBe true
+      }
+    }
+
+    "return OK if there are no authorities returned and display the no authorities page" in new Setup {
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Left(NoAuthorities)))
+
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe OK
+        html.text().contains("There are no matching result for 'GB123456789012'") shouldBe true
+      }
+    }
+
+    "return BAD_REQUEST if an invalid payload sent" in new Setup {
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "return internal server error when there is an error from the API" in new Setup {
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Left(SearchError)))
+
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val result = route(app, request).value
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
   }
@@ -56,7 +122,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByTag("h1").text mustBe "Other accounts you can use"
+        html.getElementsByTag("h1").text mustBe "Find accounts you have authority to use"
       }
     }
   }
@@ -159,7 +225,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val app = application()
         .overrides(
           inject.bind[ApiService].toInstance(mockApiService)
-        ).build()
+        ).configure("features.new-agent-view-enabled" -> false).build()
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
         val result = route(app, request).value
@@ -188,14 +254,16 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val cdsAccounts = CDSAccounts(newUser().eori, accounts)
 
     val mockApiService = mock[ApiService]
+    val mockDataStoreService = mock[DataStoreService]
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
       .thenReturn(Future.successful(cdsAccounts))
 
     val app = application()
       .overrides(
-        inject.bind[ApiService].toInstance(mockApiService)
-      ).build()
+        inject.bind[ApiService].toInstance(mockApiService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService)
+      ).configure("features.new-agent-view-enabled" -> false).build()
   }
 }
 

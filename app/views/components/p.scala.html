@@ -18,4 +18,4 @@
 
 @(message: String, bold: Boolean = false, extraClasses: String = "")(implicit messages: Messages)
 
-<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{messages(message)}</p>
+<p class="govuk-body @extraClasses @if(bold){govuk-!-font-weight-bold}">@{Html(messages(message))}</p>

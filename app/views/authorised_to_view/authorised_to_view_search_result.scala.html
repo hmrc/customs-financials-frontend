@@ -24,57 +24,34 @@
         link: components.link,
         inputText: components.inputText,
         button: components.button,
-        result_panel: components.authorised_account_search_panel
+        result_panel: components.authorised_account_search_panel,
+        company_panel: components.authorised_account_search_company_name,
+        company_inset: components.authorised_account_search_inset
 )
 
 @(query: String, searchedAuthorities: SearchedAuthorities, companyName: Option[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("cf.search.authorities.result.title", query)), helpAndSupport = false, backLink = Some(routes.CustomsFinancialsHomeController.index.url)) {
+@layout(
+    pageTitle = Some(messages("cf.search.authorities.result.title", query)),
+    helpAndSupport = false,
+    backLink = Some(routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(0)).url)
+) {
 
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
     @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities))
     @p("cf.search.authorities.result.p2")
 
- <div class="govuk-panel govuk-panel--details result govuk-!-padding-bottom-5 govuk-!-padding-top-5">
-  <dl class="results govuk-!-margin-top-0 govuk-!-margin-bottom-3">
-   @companyName.map { name =>
-    <div>
-     <dt><strong>Company name</strong></dt>
-     <dd>@name</dd>
+    <div class="govuk-body govuk-!-margin-bottom-9">
+        @company_panel(None, query)
+        @{
+            searchedAuthorities.authorities.map {
+                case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) =>
+                    result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance)
+                case AuthorisedDutyDefermentAccount(account, balances) =>
+                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance))
+                case AuthorisedCashAccount(account, availableAccountBalance) =>
+                    result_panel(account.accountType, account.accountNumber, None)
+            }
+        }
     </div>
-
-    <div>
-     <dt><strong>EORI number</strong></dt>
-     <dd>@query</dd>
-    </div>
-   </dl>
-   }
-
-  <hr class="govuk-section-break govuk-section-break--s govuk-section-break--visible">
-
-  @{searchedAuthorities.cdsCashAccounts.map {
-      cashAccount =>
-          result_panel(
-              "Cash account",
-              cashAccount.account.accountNumber,
-              cashAccount.availableAccountBalance.getOrElse(0).toString
-          )}
-  }
-  @{searchedAuthorities.dutyDefermentAccounts.map {
-      dutyDeferment =>
-          result_panel(
-              "Duty deferment account",
-              dutyDeferment.account.accountNumber,
-              dutyDeferment.balances.fold("")(_.periodAvailableAccountBalance.toString)
-          )}
-  }
-  @{searchedAuthorities.generalGuaranteeAccounts.map {
-      guarantee =>
-          result_panel(
-              "General guarantee account",
-              guarantee.account.accountNumber,
-              guarantee.availableGuaranteeBalance.getOrElse(0).toString
-          )}
-  }
- </div>
 }

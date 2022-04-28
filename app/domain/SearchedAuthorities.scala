@@ -16,15 +16,8 @@
 
 package domain
 
-import play.api.libs.json.{Json, OFormat}
-
 case class SearchedAuthorities(
                                 numberOfAuthorities: Int,
-                                dutyDefermentAccounts: Seq[AuthorisedDutyDefermentAccount],
-                                generalGuaranteeAccounts: Seq[AuthorisedGeneralGuaranteeAccount],
-                                cdsCashAccounts: Seq[AuthorisedCashAccount]
+                                authorities: Seq[AuthorisedAccounts]
                               )
 
-object SearchedAuthorities {
-  implicit val format: OFormat[SearchedAuthorities] = Json.format[SearchedAuthorities]
-}
