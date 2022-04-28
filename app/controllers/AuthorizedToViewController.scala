@@ -17,41 +17,70 @@
 package controllers
 
 import actionbuilders.IdentifierAction
-import config.AppConfig
-import domain.AuthorizedToViewPageState
+import cats.data.EitherT
+import config.{AppConfig, ErrorHandler}
+import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
+import forms.EoriNumberFormProvider
+import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
-import services.ApiService
+import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.authorised_to_view.authorized_to_view
+import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
+                                           errorHandler: ErrorHandler,
+                                           dataStoreService: DataStoreService,
                                            implicit val mcc: MessagesControllerComponents,
-                                           authorizedView: authorized_to_view)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                           authorizedView: authorized_to_view,
+                                           authorisedToViewSearch: authorised_to_view_search,
+                                           authorisedToViewSearchResult: authorised_to_view_search_result,
+                                           authorisedToViewSearchNoResult: authorised_to_view_search_no_result,
+                                           eoriNumberFormProvider: EoriNumberFormProvider)(implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
+  val form: Form[String] = eoriNumberFormProvider()
 
   def onPageLoad(pageState: AuthorizedToViewPageState): Action[AnyContent] = authenticate async { implicit req =>
-    val eori = req.user.eori
-    val result = for {
-      accounts <- apiService.getAccounts(eori).map(_.authorizedToView)
-    } yield {
-      val viewModel = viewmodels.AuthorizedToViewViewModel(req.user.eori, accounts, pageState)
-      Ok(authorizedView(viewModel))
+    if (!appConfig.newAgentView) {
+      val eori = req.user.eori
+      val result = for {
+        accounts <- apiService.getAccounts(eori).map(_.authorizedToView)
+      } yield {
+        val viewModel = viewmodels.AuthorizedToViewViewModel(req.user.eori, accounts, pageState)
+        Ok(authorizedView(viewModel))
+      }
+      result.recover {
+        case _: GatewayTimeoutException =>
+          log.warn(s"Request Timeout while fetching accounts")
+          Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
+      }
+    } else {
+      Future.successful(Ok(authorisedToViewSearch(form)))
     }
-    result.recover {
-      case _: GatewayTimeoutException =>
-        log.warn(s"Request Timeout while fetching accounts")
-        Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
-    }
+  }
+
+  def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
+    form.bindFromRequest().fold(
+      formWithErrors =>
+        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors))),
+      query =>
+        apiService.searchAuthorities(request.user.eori, query).flatMap {
+          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
+          case Left(SearchError) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          case Right(searchedAuthorities) => dataStoreService.getCompanyName(query).map { companyName =>
+             Ok(authorisedToViewSearchResult(query, searchedAuthorities, companyName))
+          }
+        }
+    )
   }
 }
 

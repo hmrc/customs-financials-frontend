@@ -30,6 +30,7 @@ import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api
 import play.api.inject
+import play.api.libs.json.Json
 import play.api.mvc.Results.Status
 
 import scala.concurrent.Future
@@ -99,6 +100,62 @@ class ApiServiceSpec extends SpecBase
         running(app) {
           val result = await(service.getAccounts(traderEori))
           result must be(traderAccountsWithNoCommonResponse.toCdsAccounts(traderEori))
+        }
+      }
+    }
+
+    "searchAuthorities" should {
+      "return NoAuthorities if the API returns 204" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(204, "")))
+
+        val service = app.injector.instanceOf[ApiService]
+
+        running(app) {
+          val result = await(service.searchAuthorities(traderEori, traderEori))
+          result mustBe Left(NoAuthorities)
+        }
+      }
+
+      "return SearchError if the API returns an unexpected status" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(201, "")))
+
+        val service = app.injector.instanceOf[ApiService]
+
+        running(app) {
+          val result = await(service.searchAuthorities(traderEori, traderEori))
+          result mustBe Left(SearchError)
+        }
+      }
+
+      "return SearchError if the API returns an exception" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.failed(UpstreamErrorResponse("failure", 500)))
+
+        val service = app.injector.instanceOf[ApiService]
+
+        running(app) {
+          val result = await(service.searchAuthorities(traderEori, traderEori))
+          result mustBe Left(SearchError)
+        }
+      }
+
+      "return SearchedAuthorities if the API returns 200" in new Setup {
+
+        val responseGuarantee: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+
+        val response = Json.toJson(SearchedAuthoritiesResponse(1, None, Some(Seq(responseGuarantee)), None))
+
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(200, response.toString())))
+
+        val service = app.injector.instanceOf[ApiService]
+
+        running(app) {
+          val result = await(service.searchAuthorities(traderEori, traderEori))
+          result mustBe Right(SearchedAuthorities(1,List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some(10.0)))))
         }
       }
     }

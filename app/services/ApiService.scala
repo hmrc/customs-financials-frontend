@@ -16,6 +16,7 @@
 
 package services
 
+import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import play.api.libs.json.Json
 import play.api.{Logger, LoggerLike}
 import play.mvc.Http.Status
@@ -66,6 +67,23 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     }
   }
 
+
+
+  def searchAuthorities(eori: String, searchID: String)(implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
+    val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
+    val request = SearchAuthoritiesRequest(searchID, eori)
+
+    metricsReporter.withResponseTimeLogging("customs-financials-api.get.search-authorities") {
+      http.POST[SearchAuthoritiesRequest, HttpResponse](apiEndpoint, request).map {
+        case response if response.status == Status.NO_CONTENT => Left(NoAuthorities)
+        case response if response.status != Status.OK => Left(SearchError)
+        case response => Json.parse(response.body).asOpt[SearchedAuthoritiesResponse] match {
+          case Some(value) => Right(value.toSearchAuthorities)
+          case None => Left(SearchError)
+        }
+      }.recover { case _ => Left(SearchError) }
+    }
+  }
 
   def getEnabledNotifications(eori: String)(implicit hc: HeaderCarrier): Future[Seq[DocumentAttributes]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications"

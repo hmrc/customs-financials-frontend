@@ -104,7 +104,7 @@ cf.account.vat.missing-file-hidden-text={0} for {1} unavailable
 cf.postponed-vat.view-certificates.description=These are statements of VAT you have postponed on your imports to use as evidence on your VAT return.
 
 # Authorized to View
-cf.account.authorized-to-view.title=Other accounts you can use
+cf.account.authorized-to-view.title=Find accounts you have authority to use
 cf.account.authorized-to-view.no-matches-found=No matches found
 cf.account.authorized-to-view.account-number=Account:
 cf.account.authorized-to-view.account-limit-remaining=Account limit remaining:
@@ -173,6 +173,38 @@ cf.undeliverable.email.list.1=updates on changes to the Customs Declaration Serv
 cf.undeliverable.email.list.2=urgent updates about goods in customs
 cf.undeliverable.email.list.3=some financial notifications, including Direct Debit notices and VAT
 cf.undeliverable.email.link-text=Verify or change email address
+
+cf.search.authorities= Find accounts you have authority to use
+cf.search.authorities.p1 = You can search by the EORI number or
+cf.search.authorities.link = download all accounts as CSV
+cf.search.authorities.p2 = Accounts are authorised for use when making declarations on the Customs Declarations Service (CDS).
+cf.search.authorities.hint = Enter an EORI number. For example, '‘GB123456789000’'.
+cf.search.authorities.error = Enter an EORI number
+cf.search.authorities.button = Search
+cf.search.authorities.result.title = Search results for {0}
+cf.search.authorities.result.p1 = Showing <strong>{0}</strong> accounts you have standing authority to use.
+cf.search.authorities.result.p2 = Balances are updated every 24 hours.
+cf.search.authorities.balance.consent = No consent to view balance
+cf.search.authorities.result.inset = The business this number is registered to has not consented to their name being shared.
+cf.search.authorities.result.no.result.p1 = There are no matching result for ''{0}''
+cf.search.authorities.result.no.result.p2 = Try searching again by double-checking the EORI number.
+cf.search.authorities.result.eori.number = EORI number
+cf.search.authorities.result.account.type = Account type
+cf.search.authorities.result.account.number = Account number
+cf.search.authorities.result.account.balance = Balance available
+cf.search.authorities.result.company.name = Company name
+cf.search.authorities.result.eori.number = EORI number
+cf.search.authorities.result.account.type = Account type
+cf.search.authorities.result.account.number = Account number
+cf.search.authorities.result.account.balance.available = Balance available
+cf.search.authorities.accountType.DutyDeferment = Duty deferment account
+cf.search.authorities.accountType.GeneralGuarantee = General guarantee account
+cf.search.authorities.accountType.CDSCash = Cash account
+
+
+eoriNumber.error.format = Enter an EORI number in the correct format
+
+
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Warning
