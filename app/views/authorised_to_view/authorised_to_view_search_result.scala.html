@@ -42,7 +42,7 @@
     @p("cf.search.authorities.result.p2")
 
     <div class="govuk-body govuk-!-margin-bottom-9">
-        @company_panel(None, query)
+        @company_panel(companyName, query)
         @{
             searchedAuthorities.authorities.map {
                 case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) =>
