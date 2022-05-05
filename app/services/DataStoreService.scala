@@ -62,7 +62,7 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
   def getCompanyName(eori: String)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
+      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => if (response.consent == "1") Some(response.name) else None)
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
@@ -82,7 +82,7 @@ object EoriHistoryResponse {
   implicit val format: OFormat[EoriHistoryResponse] = Json.format[EoriHistoryResponse]
 }
 
-case class CompanyInformationResponse(name: String, address: CompanyAddress)
+case class CompanyInformationResponse(name: String, consent: String, address: CompanyAddress)
 
 object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]

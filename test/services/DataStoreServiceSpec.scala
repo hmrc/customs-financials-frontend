@@ -143,7 +143,7 @@ class DataStoreServiceSpec extends SpecBase {
       val eori = "GB11111"
       val companyName = "Company name"
       val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
-      val companyInformationResponse = CompanyInformationResponse(companyName, address)
+      val companyInformationResponse = CompanyInformationResponse(companyName, "1", address)
       when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
         .thenReturn(Future.successful(companyInformationResponse))
 
