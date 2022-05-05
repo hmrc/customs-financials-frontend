@@ -107,7 +107,7 @@ cf.account.vat.missing-file-hidden-text=Nid yw {0} ar gyfer {1} ar gael
 cf.postponed-vat.view-certificates.description=Datganiadau TAW yw’r rhain rydych wedi’u gohirio ar eich mewnforion i’w defnyddio fel tystiolaeth ar eich Ffurflen TAW.
 
 # Authorized to View
-cf.account.authorized-to-view.title=Cyfrifon eraill y gallwch eu defnyddio
+cf.account.authorized-to-view.title=Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
 cf.account.authorized-to-view.no-matches-found=Heb ddod o hyd i unrhyw fanylion sy’n cyfateb
 cf.account.authorized-to-view.account-number=Cyfrif:
 cf.account.authorized-to-view.account-limit-remaining=Terfyn y cyfrif sy’n weddill:
@@ -251,3 +251,33 @@ timeout.message="Am resymau diogelwch, cewch eich allgofnodi o’r gwasanaeth hw
 timeout.keepAlive=Parhau i fod wedi’ch mewngofnodi
 timeout.signOut=Allgofnodi
 # ----------------------------------------------------------
+
+
+cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
+cf.search.authorities.p1 = Gallwch chwilio yn ôl y rhif EORI neu
+cf.search.authorities.link = holl gyfrifon fel ffeiliau CSV.
+cf.search.authorities.p2 = Mae cyfrifon wedi’u hawdurdodi i’w defnyddio wrth wneud datganiadau ar y Gwasanaeth Datganiadau Tollau (CDS).
+cf.search.authorities.hint = Nodwch rif EORI. Er enghraifft, ‘GB123456789000’.
+cf.search.authorities.error = Nodwch rif EORI
+cf.search.authorities.button = Chwilio
+cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
+cf.search.authorities.result.p1 = Yn dangos <strong>{0}</strong> o gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio.
+cf.search.authorities.result.p2 = Caiff balansau eu diweddaru bob 24 awr.
+cf.search.authorities.balance.consent = Dim caniatâd i fwrw golwg dros y balans
+cf.search.authorities.result.inset = Nid yw’r busnes y mae’r rhif hwn wedi’i gofrestru iddo wedi caniatáu i’w enw gael ei rannu.
+cf.search.authorities.result.no.result.p1 = Nid oes unrhyw ganlyniadau cyfatebol ar gyfer ''{0}''
+cf.search.authorities.result.no.result.p2 = Rhowch gynnig arall ar chwilio drwy wirio’ch rhif EORI eto.
+cf.search.authorities.result.eori.number = Rhif EORI
+cf.search.authorities.result.account.type = Math o gyfrif
+cf.search.authorities.result.account.number = Rhif y cyfrif
+cf.search.authorities.result.account.balance = Balans ar gael
+cf.search.authorities.result.company.name = Enw’r cwmni
+cf.search.authorities.result.eori.number = Rhif EORI
+cf.search.authorities.result.account.type = Math o gyfrif
+cf.search.authorities.result.account.number = Rhif y cyfrif
+cf.search.authorities.result.account.balance.available = Balans ar gael
+cf.search.authorities.accountType.DutyDeferment = Cyfrif gohirio tollau
+cf.search.authorities.accountType.GeneralGuarantee = Cyfrif gwarant cyffredinol
+cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
+
+eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir

@@ -201,10 +201,7 @@ cf.search.authorities.accountType.DutyDeferment = Duty deferment account
 cf.search.authorities.accountType.GeneralGuarantee = General guarantee account
 cf.search.authorities.accountType.CDSCash = Cash account
 
-
 eoriNumber.error.format = Enter an EORI number in the correct format
-
-
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Warning
