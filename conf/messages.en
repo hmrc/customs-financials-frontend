@@ -146,13 +146,14 @@ cf.customs-financials-home.partial.heading=Sorry, some parts of the service are 
 cf.customs-financials-home.partial.text=You can still view some certificates and statements.
 
 # Notifications for new statements
-cf.customs-financials-home.notification.c79=You have a new Import VAT (C79) certificate
-cf.customs-financials-home.notification.postponed-vat=You have a new Postponed import VAT statement
-cf.customs-financials-home.notification.adjustments=You have a new Import adjustments statement
-cf.customs-financials-home.notification.duty-deferment=You have a new Duty Deferment statement
+cf.customs-financials-home.notification.c79=You have a new import VAT (C79) certificate
+cf.customs-financials-home.notification.postponed-vat=You have a new postponed import VAT statement
+cf.customs-financials-home.notification.adjustments=You have a new import adjustments statement
+cf.customs-financials-home.notification.duty-deferment=You have a new duty deferment statement
 cf.customs-financials-home.notification.requested-c79=Your requested import VAT certificates (C79) are available to view
-cf.customs-financials-home.notification.requested-duty-deferment=Your requested Duty Deferment statements are available to view
+cf.customs-financials-home.notification.requested-duty-deferment=Your requested duty deferment statements are available to view
 cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
+cf.customs-financials-home.notification.requested-postponed-vat=Your requested postponed import VAT statements are available to view
 
 # Verify Your Email Address
 cf.verify.your.email.title=You need to verify the registered CDS email address

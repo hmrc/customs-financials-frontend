@@ -229,9 +229,9 @@ class HomeControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         val notificationsText = html.select("#notification-panel li").asScala.map(_.text()).toList
 
-        notificationsText mustBe List("You have a new Import adjustments statement",
-          "You have a new Import VAT (C79) certificate",
-          "You have a new Postponed import VAT statement",
+        notificationsText mustBe List("You have a new import adjustments statement",
+          "You have a new import VAT (C79) certificate",
+          "You have a new postponed import VAT statement",
         )
       }
     }
