@@ -43,11 +43,14 @@
                     href="@{appConfig.cashAccountUrl}">
                     @messages("cf.customs-financials-home.cash-account.link")
                     </a>
-                    <a class="govuk-link"
+                    <a class="govuk-link govuk-!-margin-right-2"
                     href="@{appConfig.cashAccountTopUpGuidanceUrl}"
                     >
                         <span aria-hidden="true">@messages("cf.accounts.topUp")</span><span class="govuk-visually-hidden">
                     @messages("cf.customs-financials-home.cash-account.top-up.link-label")</span>
+                    </a>
+                    <a class="govuk-link" href="@{appConfig.cashAccountWithdrawUrl}">
+                        <span aria-hidden="true">@messages("cf.accounts.withdraw")</span>
                     </a>
                 </p>
 

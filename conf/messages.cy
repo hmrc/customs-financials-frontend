@@ -70,6 +70,7 @@ cf.accounts.label.dan=Datganiadau ar gyfer gohirio tollau {0}
 cf.accounts.label.usingLimit={0} o {1}
 cf.accounts.viewStatements=Bwrw golwg dros ddatganiadau
 cf.accounts.topUp=Ychwanegu
+cf.accounts.withdraw=Codi arian
 cf.accounts.label.topUp=Ychwanegu at ohirio tollau {0}
 cf.accounts.contact.details=Manylion y cyfrif
 cf.accounts.label.contact.details=Manylion ar gyfer {0} y cyfrif gohirio tollau
