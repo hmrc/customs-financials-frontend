@@ -44,6 +44,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
   lazy val applicationStatusCdsUrl: String = config.get[String]("external-urls.applicationStatusUrl")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
+  lazy val cashAccountWithdrawUrl: String = config.get[String]("external-urls.cashAccountWithdrawUrl")
   lazy val dutyDefermentSchemeContactLink: String = config.get[String]("external-urls.dutyDefermentSchemeContactLink")
   lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
   lazy val loginUrl: String = config.get[String]("external-urls.login")
