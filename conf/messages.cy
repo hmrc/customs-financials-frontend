@@ -234,6 +234,7 @@ month.abbr.11 = Tach
 month.abbr.12 = Rhag
 
 cf.duty-deferment.account.card.account.limit=Terfyn y cyfrif: {0}
+cf.duty-deferment.account.card.account.info-text=Gan gynnwys statws SIVA, EPPS neu AEO
 cf.duty-deferment.account.card.guarantee.limit=Terfyn y warant: {0}
 cf.duty-deferment.account.card.guarantee.limit.remaining=Y warant sy'n weddill: {0}
 cf.duty-deferment.account.card.visually.hidden=Eich
