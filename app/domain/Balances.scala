@@ -41,13 +41,6 @@ case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
     case _ => (MIN, MIN)
   }
 
-  val hasApprovalScheme: Boolean = {
-    (periodGuaranteeLimit.isDefined, periodAccountLimit.isDefined) match {
-      case (true, false) => false
-      case (_, _) => false
-    }
-  }
-
   val availableBalance: BigDecimal = periodAvailableAccountBalance.getOrElse(MIN)
 }
 
