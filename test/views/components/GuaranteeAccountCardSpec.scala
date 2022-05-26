@@ -59,7 +59,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
     "include overall guarantee limit" in new Setup {
       running(app) {
-        content().getElementsByClass("overall-guarantee-limit").text mustBe "£500 of £999"
+        content().getElementById("guarantee-limit-123456").text mustBe "Guarantee limit: £999"
       }
     }
 
@@ -74,9 +74,9 @@ class GuaranteeAccountCardSpec extends SpecBase  {
       }
     }
 
-    "include overall guarantee limit" in new Setup {
+    "not include overall guarantee limit when value is 0" in new Setup {
       running(app) {
-        content(newGuaranteeAccount).getElementsByClass("overall-guarantee-limit").text mustBe "£0 of £0"
+        content(newGuaranteeAccount).notContainElementById("overall-guarantee-limit")
       }
     }
 
@@ -84,18 +84,11 @@ class GuaranteeAccountCardSpec extends SpecBase  {
     "account is open" should {
       val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
 
-      "render progress bar component" in new Setup {
-        running(app) {
-          content(newGuaranteeAccount).getElementsByClass("progress-bar").isEmpty mustBe false
-        }
-      }
-
       "not display open account status" in new Setup {
         running(app) {
           content(newGuaranteeAccount).getElementsByClass("guarantee-account-status").isEmpty mustBe true
         }
       }
-
     }
 
     "account is suspended" should {
@@ -130,7 +123,6 @@ class GuaranteeAccountCardSpec extends SpecBase  {
           status.getElementsByTag("span").first().hasClass("govuk-visually-hidden") mustBe true
         }
       }
-
     }
   }
 

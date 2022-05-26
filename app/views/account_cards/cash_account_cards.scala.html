@@ -27,7 +27,9 @@
 
 @if(accounts.nonEmpty){
     <section id="cash-accounts" class="govuk-!-margin-bottom-9">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">@messages("cf.customs-financials-home.cash-account.title")</h2>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">
+        @messages("cf.customs-financials-home.cash-account.title")
+        </h2>
         @for(account <- accounts) {
             <div class="custom-card cash-account govuk-!-margin-bottom-7">
                 <header class="card-header">
@@ -39,21 +41,23 @@
                 @balanceAvailable(account.status, "available-account-balance", account.balances.AvailableAccountBalance.getOrElse(0.0))
 
                 <p class="govuk-body custom-card__footer">
-                    <a id="cash-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
-                    href="@{appConfig.cashAccountUrl}">
-                    @messages("cf.customs-financials-home.cash-account.link")
+                    <a id="cash-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2" href="@appConfig.cashAccountUrl">
+                        @messages("cf.customs-financials-home.cash-account.link")
                     </a>
-                    <a class="govuk-link govuk-!-margin-right-2"
-                    href="@{appConfig.cashAccountTopUpGuidanceUrl}"
-                    >
-                        <span aria-hidden="true">@messages("cf.accounts.topUp")</span><span class="govuk-visually-hidden">
-                    @messages("cf.customs-financials-home.cash-account.top-up.link-label")</span>
+                    <a class="govuk-link govuk-!-margin-right-2" href="@{appConfig.cashAccountWithdrawUrl}">
+                        <span aria-hidden="true">
+                            @messages("cf.accounts.withdraw")
+                        </span>
                     </a>
-                    <a class="govuk-link" href="@{appConfig.cashAccountWithdrawUrl}">
-                        <span aria-hidden="true">@messages("cf.accounts.withdraw")</span>
+                    <a class="govuk-link" href="@{appConfig.cashAccountTopUpGuidanceUrl}">
+                        <span aria-hidden="true">
+                            @messages("cf.accounts.topUp")
+                        </span>
+                        <span class="govuk-visually-hidden">
+                            @messages("cf.customs-financials-home.cash-account.top-up.link-label")
+                        </span>
                     </a>
                 </p>
-
             </div>
         }
     </section>

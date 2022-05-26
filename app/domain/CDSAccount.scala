@@ -47,25 +47,26 @@ case class DutyDefermentAccount(number: String,
       case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit > 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
-            Formatters.formatCurrencyAmount(accountLimit),
-            Formatters.formatCurrencyAmount(guaranteeLimit),
-            Formatters.formatCurrencyAmount(availableGuaranteeBalance))
+            Some(Formatters.formatCurrencyAmount(accountLimit)),
+            Some(Formatters.formatCurrencyAmount(guaranteeLimit)),
+            Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
         )
       }
       case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit > 0 && guaranteeLimit == 0 => {
         Some(
           DutyDefermentDisplayBalance(
-            Formatters.formatCurrencyAmount(accountLimit),
-            messages("cf.duty-deferment.account.card.not-applicable"),
-            messages("cf.duty-deferment.account.card.not-applicable"))
+            Some(Formatters.formatCurrencyAmount(accountLimit)),
+            None,
+            None)
         )
       }
+      //this one
       case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit == 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
-            messages("cf.duty-deferment.account.card.not-applicable"),
-            Formatters.formatCurrencyAmount(guaranteeLimit),
-            Formatters.formatCurrencyAmount(availableGuaranteeBalance))
+            None,
+            Some(Formatters.formatCurrencyAmount(guaranteeLimit)),
+            Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
         )
       }
       case _ => None

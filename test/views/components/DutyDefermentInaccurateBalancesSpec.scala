@@ -18,7 +18,6 @@ package views.components
 
 import config.AppConfig
 import org.jsoup.Jsoup
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers
 import play.api.test.Helpers.running
 import utils.SpecBase
@@ -32,20 +31,12 @@ class DutyDefermentInaccurateBalancesSpec extends SpecBase {
         view.containsElementById("duty-deferment-balances-warning")
       }
     }
-
-    "display a warning icon" in new Setup {
-      running(app) {
-        view.getElementById("duty-deferment-balances-warning").getElementsByClass("govuk-warning-text__icon").text mustBe "!"
-      }
-    }
   }
 
   trait Setup {
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
     implicit val messages = Helpers.stubMessages()
-
     val view = Jsoup.parse(app.injector.instanceOf[duty_deferment_inaccurate_balances_message].apply().body)
   }
-
 }
