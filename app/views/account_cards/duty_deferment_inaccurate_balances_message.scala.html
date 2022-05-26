@@ -18,11 +18,11 @@
 
 @()(implicit messages: Messages, appConfig: config.AppConfig)
 
-<div class="govuk-warning-text govuk-!-margin-top-6" id="duty-deferment-balances-warning">
-    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-    <strong class="govuk-warning-text__text">
-        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-            @messages("cf.duty-deferment.outOfDateBalance.heading")</h3>
-        <span class="govuk-warning-text__assistive">@messages("cf.duty-deferment.outOfDateBalance.hiddenText")</span></strong>
-    <p class="govuk-body govuk-!-margin-top-4">@messages("cf.duty-deferment.outOfDateBalance.chiefText")</p>
+<div class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-2" id="duty-deferment-balances-warning">
+    <span class="govuk-warning-text__assistive">
+        @messages("cf.duty-deferment.outOfDateBalance.hiddenText")
+    </span>
+    <p class="govuk-body govuk-!-margin-bottom-1">
+        @messages("cf.duty-deferment.outOfDateBalance.chiefText")
+    </p>
 </div>

@@ -88,7 +88,7 @@ cf.duty-deferment.status.AccountStatusPending=Yn aros i gael ei agor ar y Gwasan
 # Duty Deferment Out of date balances message
 cf.duty-deferment.outOfDateBalance.heading = Balansau gohirio tollau sydd heb eu diweddaru
 cf.duty-deferment.outOfDateBalance.hiddenText = Rhybudd o falansau gohirio tollau anghywir
-cf.duty-deferment.outOfDateBalance.chiefText = Os gwnewch unrhyw ddatganiadau mewnforio drwy System y Tollau ar gyfer Trin Nwyddau a Gaiff eu Mewnforio a’u Hallforio (CHIEF), mae’n bosibl nad yw’r balansau a ddangosir wedi’u diweddaru.
+cf.duty-deferment.outOfDateBalance.chiefText = Mae?r balansau?n cynnwys datganiadau mewnforio a wnaed gan ddefnyddio system y Tollau ar gyfer Trin Nwyddau a Gaiff eu Mewnforio a?u Hallforio (CHIEF) neu?r Gwasanaeth Datganiadau Tollau (CDS).
 
 cf.duty-deferment.pending.info = Ni allwch ddefnyddio’r cyfrif hwn ar y Gwasanaeth Datgan Tollau (CDS) eto
 cf.duty-deferment.pending.text = Byddwch yn gallu defnyddio’r cyfrif gohirio hwn o’r dyddiad dechrau y rhoesoch i ni yn eich cais.
@@ -235,7 +235,7 @@ month.abbr.12 = Rhag
 
 cf.duty-deferment.account.card.account.limit=Terfyn y cyfrif: {0}
 cf.duty-deferment.account.card.guarantee.limit=Terfyn y warant: {0}
-cf.duty-deferment.account.card.guarantee.limit.remaining=Terfyn y warant sy’n weddill: {0}
+cf.duty-deferment.account.card.guarantee.limit.remaining=Y warant sy'n weddill: {0}
 cf.duty-deferment.account.card.visually.hidden=Eich
 cf.duty-deferment.account.card.not-applicable=Amherthnasol
 

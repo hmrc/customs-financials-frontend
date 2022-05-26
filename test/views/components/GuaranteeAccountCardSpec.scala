@@ -59,7 +59,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
     "include overall guarantee limit" in new Setup {
       running(app) {
-        content().getElementsByClass("overall-guarantee-limit").text mustBe "£500 of £999"
+        content().getElementById("guarantee-limit-123456").text mustBe "£999"
       }
     }
 

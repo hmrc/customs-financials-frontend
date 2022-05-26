@@ -16,6 +16,6 @@
 
 package domain
 
-case class DutyDefermentDisplayBalance(accountLimit: String,
-                                       guaranteeLimit: String,
-                                       guaranteeLimitRemaining: String)
+case class DutyDefermentDisplayBalance(accountLimit: Option[String],
+                                       guaranteeLimit: Option[String],
+                                       guaranteeLimitRemaining: Option[String])
