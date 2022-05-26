@@ -112,12 +112,6 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       }
     }
 
-    "render progress bar component" in new Setup {
-      running(app) {
-        content().getElementsByClass("progress-bar").isEmpty mustBe false
-      }
-    }
-
     "include the hidden text for negative balance" in new Setup {
       running(app) {
         content(accountWithNegativeBalance).getElementsByTag("span")
@@ -144,22 +138,10 @@ class DutyDefermentAccountCardSpec extends SpecBase {
         content(accountWithNegativeBalance).getElementById("account-limit-123456").text mustBe "Your Account limit: £500"
       }
     }
-
-    "not render progress bar component for negative account balance" in new Setup {
-      running(app) {
-        content(accountWithNegativeBalance).getElementsByClass("progress-bar").isEmpty mustBe true
-      }
-    }
   }
 
   "Duty Deferment Account Card" when {
     "account is open" should {
-      "render progress bar component" in new Setup {
-        running(app) {
-          content(dutyDefermentAccountOpen).getElementsByClass("progress-bar").isEmpty mustBe false
-        }
-      }
-
       "not display open account status" in new Setup {
         running(app) {
           content(dutyDefermentAccountOpen).getElementsByClass("duty-deferment-account-status").isEmpty mustBe true
