@@ -211,7 +211,6 @@ cf.duty-deferment.dd.info=Unable to use this account on CDS
 cf.duty-deferment.dd.setup.text1=You must
 cf.duty-deferment.dd.setup.new.account=set up a new Direct Debit
 cf.duty-deferment.dd.setup.text2=to be able to use this deferment account on Customs Declarations Service (CDS).
-cf.duty-deferment.dd.setup.text3=This status only applies to your CDS account.
 
 # Common messages
 cf.common.missing-documents-guidance.statement = statement
