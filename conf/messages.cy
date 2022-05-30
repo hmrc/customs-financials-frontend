@@ -185,7 +185,6 @@ cf.duty-deferment.dd.info=Ddim yn gallu defnyddio’r cyfrif hwn ar CDS
 cf.duty-deferment.dd.setup.text1=Mae’n rhaid i chi
 cf.duty-deferment.dd.setup.new.account=sefydlu debyd uniongyrchol newydd.
 cf.duty-deferment.dd.setup.text2=allu defnyddio’r cyfrif gohirio hwn ar y Gwasanaeth Datgan Tollau (CDS).
-cf.duty-deferment.dd.setup.text3=Mae’r statws hwn yn berthnasol i’ch cyfrif Gwasanaeth Datgan Tollau yn unig.
 
 # Common messages
 cf.common.missing-documents-guidance.statement = datganiad
