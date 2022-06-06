@@ -259,7 +259,7 @@ month.abbr.11 = Nov
 month.abbr.12 = Dec
 
 cf.duty-deferment.account.card.account.limit=Account limit: {0}
-cf.duty-deferment.account.card.account.info-text=Including SIVA, EPSS OR AEO status
+cf.duty-deferment.account.card.account.info-text=Including SIVA, EPSS or AEO status
 cf.duty-deferment.account.card.guarantee.limit=Guarantee limit: {0}
 cf.duty-deferment.account.card.guarantee.limit.remaining=Guarantee remaining: {0}
 cf.duty-deferment.account.card.visually.hidden=Your
