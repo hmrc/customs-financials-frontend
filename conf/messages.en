@@ -177,10 +177,11 @@ cf.undeliverable.email.list.3=some financial notifications, including Direct Deb
 cf.undeliverable.email.link-text=Verify or change email address
 
 cf.search.authorities= Find accounts you have authority to use
-cf.search.authorities.p1 = You can search by the EORI number or
-cf.search.authorities.link = download all accounts as CSV
-cf.search.authorities.p2 = Accounts are authorised for use when making declarations on the Customs Declarations Service (CDS).
-cf.search.authorities.hint = Enter an EORI number. For example, '‘GB123456789000’'.
+cf.search.authorities.p = You can search by EORI number for accounts you have authority to use on the Customs Declaration Service.
+cf.search.authorities.link = Send a request for all accounts as CSV
+cf.search.authorities.hint = Enter an EORI number starting with GB followed by 12 digits. <br> For example, '‘GB123456789000’'.</br>
+cf.search.authorities.h2 = Request all accounts
+cf.search.authorities.p2 = You can request a list of all accounts you have a standing authority to use in CSV file format.
 cf.search.authorities.error = Enter an EORI number
 cf.search.authorities.button = Search
 cf.search.authorities.result.title = Search results for {0}
@@ -195,13 +196,16 @@ cf.search.authorities.result.account.type = Account type
 cf.search.authorities.result.account.number = Account number
 cf.search.authorities.result.account.balance = Balance available
 cf.search.authorities.result.company.name = Company name
-cf.search.authorities.result.eori.number = EORI number
-cf.search.authorities.result.account.type = Account type
-cf.search.authorities.result.account.number = Account number
 cf.search.authorities.result.account.balance.available = Balance available
 cf.search.authorities.accountType.DutyDeferment = Duty deferment account
 cf.search.authorities.accountType.GeneralGuarantee = General guarantee account
 cf.search.authorities.accountType.CDSCash = Cash account
+
+#TODO check page title
+cf.authorities.request.received.title = Request received for all accounts as CSV
+cf.authorities.request.received.panel.h1 = Request received
+cf.authorities.request.received.p = We will send an email to {0} when your CSV file is ready to download. You can access it from your customs financial accounts home page, usually within 1 hour.
+cf.authorities.request.received.link = Back to find accounts you have authority to use
 
 eoriNumber.error.format = Enter an EORI number in the correct format
 

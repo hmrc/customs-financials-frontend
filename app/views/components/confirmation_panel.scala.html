@@ -16,6 +16,15 @@
 
 @this()
 
-@(msg: String, id: Option[String] = None, classes: String = "govuk-heading-m")(implicit messages: Messages)
+@(h1: String, body: Option[String] = None, id: Option[String] = None)(implicit messages: Messages)
 
-<h2 @{id.fold("")(id => s"id=$id")} class="@classes">@messages(msg)</h2>
+<div class="govuk-panel govuk-panel--confirmation">
+  <h1 class="govuk-panel__title">
+    @messages(h1)
+  </h1>
+  @if(body.nonEmpty) {
+    <div class="govuk-panel__body">
+      @messages(body.get)
+    </div>
+  }
+</div>

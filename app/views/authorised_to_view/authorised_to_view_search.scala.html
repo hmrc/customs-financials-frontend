@@ -22,6 +22,7 @@
         formHelper: FormWithCSRF,
         errorSummary: components.errorSummary,
         h1: components.h1,
+        h2: components.h2,
         p: components.p,
         link: components.link,
         inputText: components.inputText,
@@ -35,8 +36,7 @@
     @formHelper(action = controllers.routes.AuthorizedToViewController.onSubmit()) {
         @errorSummary(form.errors, None)
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
-        @link("cf.search.authorities.link", "", preLinkMessage = Some("cf.search.authorities.p1"), linkSentence = true)
-        @p("cf.search.authorities.p2", extraClasses = "govuk-!-margin-bottom-8")
+        @p("cf.search.authorities.p")
         @inputText(
             form,
             id = "value",
@@ -47,6 +47,10 @@
             classes = Some("govuk-!-width-two-thirds")
         )
         @button(messages("cf.search.authorities.button"), None)
+
+        @h2(msg = "cf.search.authorities.h2")
+        @p("cf.search.authorities.p2")
+        @link("cf.search.authorities.link", "", linkSentence = false)
 
     }
 }

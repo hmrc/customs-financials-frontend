@@ -256,9 +256,7 @@ timeout.signOut=Allgofnodi
 
 
 cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
-cf.search.authorities.p1 = Gallwch chwilio yn ôl y rhif EORI neu
 cf.search.authorities.link = holl gyfrifon fel ffeiliau CSV.
-cf.search.authorities.p2 = Mae cyfrifon wedi’u hawdurdodi i’w defnyddio wrth wneud datganiadau ar y Gwasanaeth Datganiadau Tollau (CDS).
 cf.search.authorities.hint = Nodwch rif EORI. Er enghraifft, ‘GB123456789000’.
 cf.search.authorities.error = Nodwch rif EORI
 cf.search.authorities.button = Chwilio
