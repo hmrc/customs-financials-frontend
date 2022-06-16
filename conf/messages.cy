@@ -71,6 +71,7 @@ cf.accounts.label.usingLimit={0} o {1}
 cf.accounts.viewStatements=Bwrw golwg dros ddatganiadau
 cf.accounts.topUp=Ychwanegu
 cf.accounts.withdraw=Codi arian
+cf.cash-account.withdraw-funds.guidance.link.aria-label=Codi arian o’ch cyfrif arian parod
 cf.accounts.label.topUp=Ychwanegu at ohirio tollau {0}
 cf.accounts.contact.details=Manylion y cyfrif
 cf.accounts.label.contact.details=Manylion ar gyfer {0} y cyfrif gohirio tollau
