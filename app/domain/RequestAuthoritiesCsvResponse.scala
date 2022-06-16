@@ -16,14 +16,11 @@
 
 package domain
 
-sealed trait SearchResponse
+import play.api.libs.json.{Json, OFormat}
 
-case object NoAuthorities extends SearchResponse
+case class RequestAuthoritiesCsvResponse(requestAcceptedDate: String)
 
-case object SearchError extends SearchResponse
+object RequestAuthoritiesCsvResponse {
+  implicit val format: OFormat[RequestAuthoritiesCsvResponse] = Json.format[RequestAuthoritiesCsvResponse]
+}
 
-sealed trait RequestCsvResponse
-
-case object RequestAuthoritiesCSVError extends RequestCsvResponse
-
-case object JsonParseError extends RequestCsvResponse

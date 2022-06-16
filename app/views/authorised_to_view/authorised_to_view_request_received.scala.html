@@ -24,10 +24,14 @@
         panel: components.confirmation_panel
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(email: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("cf.authorities.request.received.title")), helpAndSupport = false, backLink = Some(routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(1)).url)){
-   @panel("cf.authorities.request.received.panel.h1")
-   @p("cf.authorities.request.received.p")
-   @link(linkMessage = "cf.authorities.request.received.link", routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(1)).url)
-}
+ @layout(
+  pageTitle = Some(messages("cf.authorities.request.received.title")),
+  helpAndSupport = false,
+  backLink = Some(routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(0)).url)
+ ) {
+  @panel("cf.authorities.request.received.panel.h1")
+  @p(messages("cf.authorities.request.received.p", email))
+  @link(linkMessage = "cf.authorities.request.received.link", routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(1)).url)
+ }

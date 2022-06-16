@@ -67,8 +67,6 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     }
   }
 
-
-
   def searchAuthorities(eori: String, searchID: String)(implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
     val request = SearchAuthoritiesRequest(searchID, eori)
@@ -96,6 +94,25 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
       http.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
+    }
+  }
+
+  def requestAuthoritiesCsv(eori: String)(implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
+    val apiEndpoint = appConfig.customsFinancialsApi + "/standing-authorities-file"
+    val requestAuthoritiesCsv: RequestAuthoritiesCsv = RequestAuthoritiesCsv(eori)
+    metricsReporter.withResponseTimeLogging("customs-financials-api.request.authorities.csv") {
+      http.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
+        case response if response.status == Status.OK =>
+          Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
+            case value => Right(value)
+            case _ =>
+              log.error("JSON parse error")
+              Left(JsonParseError)
+          }
+        case response =>
+          log.error(s"requestAuthoritiesCsv failed with ${response.status} ${response.body}")
+          Left(RequestAuthoritiesCSVError)
+      }
     }
   }
 }

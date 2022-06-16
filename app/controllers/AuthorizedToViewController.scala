@@ -17,7 +17,6 @@
 package controllers
 
 import actionbuilders.IdentifierAction
-import cats.data.EitherT
 import config.{AppConfig, ErrorHandler}
 import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider

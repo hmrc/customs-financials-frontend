@@ -20,7 +20,6 @@ import config.AppConfig
 import domain.EmailVerifiedResponse
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,5 +29,4 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
     httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
   }
-
 }

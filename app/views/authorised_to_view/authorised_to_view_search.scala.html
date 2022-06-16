@@ -50,7 +50,10 @@
 
         @h2(msg = "cf.search.authorities.h2")
         @p("cf.search.authorities.p2")
-        @link("cf.search.authorities.link", "", linkSentence = false)
-
+        @link("cf.search.authorities.link",
+              controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url,
+              linkId = Some("authorised-request-csv-link"),
+              pWrapped = false
+        )
     }
 }
