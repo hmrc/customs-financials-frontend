@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.authorised_to_view.authorised_request_received
+import views.html.authorised_to_view.authorised_to_view_request_received
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,7 +35,7 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
                                                     errorHandler: ErrorHandler,
                                                     customsDataStore: DataStoreService,
                                                     implicit val mcc: MessagesControllerComponents,
-                                                    authorisedToViewRequestReceived: authorised_request_received,
+                                                    authorisedToViewRequestReceived: authorised_to_view_request_received,
                                                     eoriNumberFormProvider: EoriNumberFormProvider)(implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 

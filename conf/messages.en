@@ -206,8 +206,7 @@ cf.search.authorities.accountType.DutyDeferment = Duty deferment account
 cf.search.authorities.accountType.GeneralGuarantee = General guarantee account
 cf.search.authorities.accountType.CDSCash = Cash account
 
-#TODO check page title
-cf.authorities.request.received.title = Request received for all accounts as CSV
+cf.authorities.request.received.title = Request received
 cf.authorities.request.received.panel.h1 = Request received
 cf.authorities.request.received.p = We will send an email to {0} when your CSV file is ready to download. You can access it from your customs financial accounts home page, usually within 1 hour.
 cf.authorities.request.received.link = Back to find accounts you have authority to use
