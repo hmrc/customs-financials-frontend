@@ -47,6 +47,11 @@ cf.error.unauthorized.title=You are not authorised to view this page
 cf.error.unauthorized.heading=Unauthorised
 cf.error.unauthorized.message=You are not authorised to view this page
 
+# Technical difficulties error
+cf.error.technicalDifficulties.title=Sorry, we’re experiencing technical difficulties
+cf.error.technicalDifficulties.heading=Sorry, we’re experiencing technical difficulties
+cf.error.technicalDifficulties.message=Please try again in a few minutes.
+
 # Page errors
 error.summary.title=There is a problem
 

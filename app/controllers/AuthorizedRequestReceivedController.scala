@@ -18,7 +18,6 @@ package controllers
 
 import actionbuilders.IdentifierAction
 import config.{AppConfig, ErrorHandler}
-import connectors.CustomsFinancialsApiConnector
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -27,7 +26,6 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.authorised_to_view.authorised_request_received
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,9 +49,9 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
         case Right(_) =>
           Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
         case _ =>
-          Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          Future.successful(InternalServerError(errorHandler.technicalDifficulties))
       }
-      case _ => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+      case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
     }
   }
 }

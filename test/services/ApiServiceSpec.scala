@@ -239,9 +239,29 @@ class ApiServiceSpec extends SpecBase
           response mustBe Left(RequestAuthoritiesCSVError)
         }
       }
+
+      "return JsonParseError when JSResultException thrown parsing json response" in new Setup {
+        val jsonError = Json.toJson("some" -> "error")
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, jsonError.toString())))
+
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Left(JsonParseError)
+        }
+      }
+
+      "return RequestAuthoritiesCSVError when exception thrown" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.failed(UpstreamErrorResponse("failure", 500)))
+
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Left(RequestAuthoritiesCSVError)
+        }
+      }
     }
   }
-
 
   trait Setup {
     val mockHttpClient = mock[HttpClient]

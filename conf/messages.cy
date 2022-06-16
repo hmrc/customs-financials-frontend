@@ -48,6 +48,11 @@ cf.error.unauthorized.title=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y du
 cf.error.unauthorized.heading=Heb awdurdod
 cf.error.unauthorized.message=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y dudalen hon
 
+# Technical difficulties error
+cf.error.technicalDifficulties.title=Mae’n ddrwg gennym. Mae anawsterau technegol wedi codi
+cf.error.technicalDifficulties.heading=Mae’n ddrwg gennym. Mae anawsterau technegol wedi codi
+cf.error.technicalDifficulties.message=Rhowch gynnig arall arni mewn ychydig o funudau.
+
 # Page errors
 error.summary.title=Mae problem wedi codi
 

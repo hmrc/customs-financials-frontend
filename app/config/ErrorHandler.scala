@@ -21,7 +21,6 @@ import play.api.mvc.Request
 import play.twirl.api.Html
 import views.html.error_states.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -40,5 +39,10 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
   def unauthorized()(implicit request: Request[_]): Html = {
     errorTemplate(Messages("cf.error.unauthorized.title"), Messages("cf.error.unauthorized.heading"),
       Messages("cf.error.unauthorized.message"))
+  }
+
+  def technicalDifficulties()(implicit request: Request[_]): Html = {
+    errorTemplate(Messages("cf.error.technicalDifficulties.title"), Messages("cf.error.technicalDifficulties.heading"),
+      Messages("cf.error.technicalDifficulties.message"))
   }
 }
