@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package domain
+@this()
 
-sealed trait SearchResponse
+@(h1: String, body: Option[String] = None, id: Option[String] = None)(implicit messages: Messages)
 
-case object NoAuthorities extends SearchResponse
-
-case object SearchError extends SearchResponse
-
-sealed trait RequestCsvResponse
-
-case object RequestAuthoritiesCSVError extends RequestCsvResponse
-
-case object JsonParseError extends RequestCsvResponse
+<div class="govuk-panel govuk-panel--confirmation">
+  <h1 class="govuk-panel__title">
+    @messages(h1)
+  </h1>
+  @if(body.nonEmpty) {
+    <div class="govuk-panel__body">
+      @messages(body.get)
+    </div>
+  }
+</div>

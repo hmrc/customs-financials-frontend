@@ -18,21 +18,16 @@ package services
 
 
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
-import domain._
+import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA, _}
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.inject
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, _}
 import utils.SpecBase
-import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA}
-import org.mockito.ArgumentMatchersSugar.eqTo
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api
-import play.api.inject
-import play.api.libs.json.Json
-import play.api.mvc.Results.Status
-
 import scala.concurrent.Future
 
 //noinspection TypeAnnotation
@@ -45,7 +40,6 @@ class ApiServiceSpec extends SpecBase
         when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(traderAccounts))
 
-        val service = app.injector.instanceOf[ApiService]
         running(app) {
           val result = await(service.getAccounts(traderEori))
           result must be(traderAccounts.toCdsAccounts(traderEori))
@@ -96,7 +90,7 @@ class ApiServiceSpec extends SpecBase
       "return all accounts available for the given EORI from the API service for Acc27" in new Setup() {
         when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(traderAccountsWithNoCommonResponse))
-        val service = app.injector.instanceOf[ApiService]
+
         running(app) {
           val result = await(service.getAccounts(traderEori))
           result must be(traderAccountsWithNoCommonResponse.toCdsAccounts(traderEori))
@@ -109,8 +103,6 @@ class ApiServiceSpec extends SpecBase
         when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(HttpResponse.apply(204, "")))
 
-        val service = app.injector.instanceOf[ApiService]
-
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
           result mustBe Left(NoAuthorities)
@@ -121,8 +113,6 @@ class ApiServiceSpec extends SpecBase
         when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(HttpResponse.apply(201, "")))
 
-        val service = app.injector.instanceOf[ApiService]
-
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
           result mustBe Left(SearchError)
@@ -132,8 +122,6 @@ class ApiServiceSpec extends SpecBase
       "return SearchError if the API returns an exception" in new Setup {
         when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.failed(UpstreamErrorResponse("failure", 500)))
-
-        val service = app.injector.instanceOf[ApiService]
 
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
@@ -151,8 +139,6 @@ class ApiServiceSpec extends SpecBase
         when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(HttpResponse.apply(200, response.toString())))
 
-        val service = app.injector.instanceOf[ApiService]
-
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
           result mustBe Right(SearchedAuthorities(1,List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some(10.0)))))
@@ -165,8 +151,9 @@ class ApiServiceSpec extends SpecBase
     "return a Notifications for the given EORI" in new Setup() {
       val notification = List(DocumentAttributes(traderEori, C79Certificate, "new file", 1000, Map.empty))
       val notifications = SdesNotificationsForEori(traderEori, notification)
-      when[Future[SdesNotificationsForEori]](mockHttpClient.GET(any, any, any)(any, any, any)).thenReturn(Future.successful(notifications))
-      val service = app.injector.instanceOf[ApiService]
+      when[Future[SdesNotificationsForEori]](mockHttpClient.GET(any, any, any)(any, any, any))
+        .thenReturn(Future.successful(notifications))
+
       running(app) {
         val result = await(service.getEnabledNotifications(traderEori))
         result must be(notification)
@@ -205,7 +192,6 @@ class ApiServiceSpec extends SpecBase
     "send a delete notification request" in new Setup() {
       when(mockHttpClient.DELETE[HttpResponse](any, any)(any, any, any))
         .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
-      val service = app.injector.instanceOf[ApiService]
       running(app) {
         await(service.deleteNotification(traderEori, C79Certificate)(hc))
         verify(mockHttpClient).DELETE(any, any)(any, any, any)
@@ -232,8 +218,50 @@ class ApiServiceSpec extends SpecBase
       }
     }
 
-  }
+    "requestAuthoritiesCsv" should {
+      "return OK 200 with requestAcceptedDate" in new Setup {
+        val requestAuthoritiesCsvResponse = Json.toJson(RequestAuthoritiesCsvResponse("DATE"))
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
 
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
+        }
+      }
+
+      "return RequestAuthoritiesCSVError when fails" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
+
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Left(RequestAuthoritiesCSVError)
+        }
+      }
+
+      "return JsonParseError when JSResultException thrown parsing json response" in new Setup {
+        val jsonError = Json.toJson("some" -> "error")
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, jsonError.toString())))
+
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Left(JsonParseError)
+        }
+      }
+
+      "return RequestAuthoritiesCSVError when exception thrown" in new Setup {
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.failed(UpstreamErrorResponse("failure", 500)))
+
+        running(app) {
+          val response = await(service.requestAuthoritiesCsv("EORI"))
+          response mustBe Left(RequestAuthoritiesCSVError)
+        }
+      }
+    }
+  }
 
   trait Setup {
     val mockHttpClient = mock[HttpClient]
@@ -273,5 +301,7 @@ class ApiServiceSpec extends SpecBase
     val app = application().overrides(
       inject.bind[HttpClient].toInstance(mockHttpClient)
     ).build()
+
+    val service = app.injector.instanceOf[ApiService]
   }
 }

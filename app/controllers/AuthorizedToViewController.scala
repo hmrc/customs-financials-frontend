@@ -17,7 +17,6 @@
 package controllers
 
 import actionbuilders.IdentifierAction
-import cats.data.EitherT
 import config.{AppConfig, ErrorHandler}
 import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
@@ -75,7 +74,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       query =>
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
-          case Left(SearchError) => Future.successful(InternalServerError(errorHandler.internalServerErrorTemplate))
+          case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
           case Right(searchedAuthorities) => dataStoreService.getCompanyName(query).map { companyName =>
              Ok(authorisedToViewSearchResult(query, searchedAuthorities, companyName))
           }

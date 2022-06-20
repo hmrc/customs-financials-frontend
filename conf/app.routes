@@ -10,6 +10,7 @@ GET        /help/accessibility                                   controllers.Sta
 GET        /not-subscribed-for-cds                               controllers.UnauthorisedController.onPageLoad
 GET        /authorized-to-view                                   controllers.AuthorizedToViewController.onPageLoad(state: domain.AuthorizedToViewPageState)
 POST       /authorized-to-view                                   controllers.AuthorizedToViewController.onSubmit()
+GET        /request-authorities-csv                              controllers.AuthorizedRequestReceivedController.requestAuthoritiesCsv()
 
 GET        /parts-of-service-unavailable                         controllers.CustomsFinancialsHomeController.pageWithoutAccounts
 

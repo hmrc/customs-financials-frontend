@@ -48,6 +48,11 @@ cf.error.unauthorized.title=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y du
 cf.error.unauthorized.heading=Heb awdurdod
 cf.error.unauthorized.message=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y dudalen hon
 
+# Technical difficulties error
+cf.error.technicalDifficulties.title=Mae’n ddrwg gennym. Mae anawsterau technegol wedi codi
+cf.error.technicalDifficulties.heading=Mae’n ddrwg gennym. Mae anawsterau technegol wedi codi
+cf.error.technicalDifficulties.message=Rhowch gynnig arall arni mewn ychydig o funudau.
+
 # Page errors
 error.summary.title=Mae problem wedi codi
 
@@ -256,10 +261,12 @@ timeout.signOut=Allgofnodi
 
 
 cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
-cf.search.authorities.p1 = Gallwch chwilio yn ôl y rhif EORI neu
-cf.search.authorities.link = holl gyfrifon fel ffeiliau CSV.
-cf.search.authorities.p2 = Mae cyfrifon wedi’u hawdurdodi i’w defnyddio wrth wneud datganiadau ar y Gwasanaeth Datganiadau Tollau (CDS).
-cf.search.authorities.hint = Nodwch rif EORI. Er enghraifft, ‘GB123456789000’.
+cf.search.authorities.p = Gallwch chwilio yn ôl rhif EORI ar gyfer cyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau.
+cf.search.authorities.link = Anfon cais i gael yr holl gyfrifon ar ffurf CSV
+cf.search.authorities.hint = Nodwch rif EORI yn dechrau gyda GB wedi’i ddilyn gan 12 digid. <br> Er enghraifft, '‘GB123456789000’'.</br>
+cf.search.authorities.h2 = Cais am yr holl gyfrifon
+cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio ar ffurf ffeil CSV.
+
 cf.search.authorities.error = Nodwch rif EORI
 cf.search.authorities.button = Chwilio
 cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
@@ -281,5 +288,10 @@ cf.search.authorities.result.account.balance.available = Balans ar gael
 cf.search.authorities.accountType.DutyDeferment = Cyfrif gohirio tollau
 cf.search.authorities.accountType.GeneralGuarantee = Cyfrif gwarant cyffredinol
 cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
+
+cf.authorities.request.received.title = Cais wedi dod i law
+cf.authorities.request.received.panel.h1 = Cais wedi dod i law
+cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ato o hafan eich cyfrifon ariannol ar gyfer y tollau, cyn pen 1 awr fel arfer.
+cf.authorities.request.received.link = Yn ôl i’r dudalen dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
 
 eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir

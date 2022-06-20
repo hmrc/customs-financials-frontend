@@ -16,15 +16,13 @@
 
 package services
 
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
-import play.api.libs.json.Json
-import play.api.{Logger, LoggerLike}
-import play.mvc.Http.Status
 import config.AppConfig
 import domain._
+import play.api.libs.json.{JsResultException, Json}
+import play.api.{Logger, LoggerLike}
+import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,8 +65,6 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     }
   }
 
-
-
   def searchAuthorities(eori: String, searchID: String)(implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
     val request = SearchAuthoritiesRequest(searchID, eori)
@@ -96,6 +92,29 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
       http.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
+    }
+  }
+
+  def requestAuthoritiesCsv(eori: String)(implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
+    val apiEndpoint = appConfig.customsFinancialsApi + "/standing-authorities-file"
+    val requestAuthoritiesCsv: RequestAuthoritiesCsv = RequestAuthoritiesCsv(eori)
+    metricsReporter.withResponseTimeLogging("customs-financials-api.request.authorities.csv") {
+      http.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
+        case response if response.status == Status.OK =>
+          Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
+            case value => Right(value)
+          }
+        case response =>
+          log.error(s"requestAuthoritiesCsv failed with ${response.status} ${response.body}")
+          Left(RequestAuthoritiesCSVError)
+      }.recover {
+        case ex: JsResultException =>
+          log.error(s"requestAuthoritiesCsv threw an JS exception - ${ex.getMessage}")
+          Left(JsonParseError)
+        case ex: Throwable =>
+          log.error(s"requestAuthoritiesCsv threw an exception - ${ex.getMessage}")
+          Left(RequestAuthoritiesCSVError)
+      }
     }
   }
 }
