@@ -73,6 +73,7 @@ cf.accounts.label.usingLimit={0} of {1}
 cf.accounts.viewStatements=View statements
 cf.accounts.topUp=Top up
 cf.accounts.withdraw=Withdraw funds
+cf.cash-account.withdraw-funds.guidance.link.aria-label=Withdraw funds from your cash account
 cf.accounts.label.topUp=Top up duty deferment {0}
 cf.accounts.contact.details=Account details
 cf.accounts.label.contact.details=Account details for duty deferment {0}

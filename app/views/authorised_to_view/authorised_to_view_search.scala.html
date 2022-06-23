@@ -41,10 +41,11 @@
             form,
             id = "value",
             name = "value",
-            label = "",
+            label = messages("cf.search.authorities"),
             hint = Some(messages("cf.search.authorities.hint")),
             isPageHeading = true,
-            classes = Some("govuk-!-width-two-thirds")
+            classes = Some("govuk-!-width-two-thirds"),
+            labelClasses = Some("govuk-visually-hidden")
         )
         @button(messages("cf.search.authorities.button"), None)
 
