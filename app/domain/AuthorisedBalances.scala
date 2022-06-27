@@ -18,7 +18,7 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AuthorisedBalances(periodAvailableGuaranteeBalance: Double, periodAvailableAccountBalance: Double)
+case class AuthorisedBalances(periodAvailableGuaranteeBalance: String, periodAvailableAccountBalance: String)
 
 object AuthorisedBalances {
   implicit val format: OFormat[AuthorisedBalances] = Json.format[AuthorisedBalances]

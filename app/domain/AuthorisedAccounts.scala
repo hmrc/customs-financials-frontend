@@ -21,7 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 sealed trait AuthorisedAccounts
 
 case class AuthorisedGeneralGuaranteeAccount(account: Account,
-                                             availableGuaranteeBalance: Option[Double]) extends AuthorisedAccounts
+                                             availableGuaranteeBalance: Option[String]) extends AuthorisedAccounts
 
 object AuthorisedGeneralGuaranteeAccount {
   implicit val format: OFormat[AuthorisedGeneralGuaranteeAccount] = Json.format[AuthorisedGeneralGuaranteeAccount]
@@ -35,7 +35,7 @@ object AuthorisedDutyDefermentAccount {
 }
 
 case class AuthorisedCashAccount(account: Account,
-                                 availableAccountBalance: Option[Double]) extends AuthorisedAccounts
+                                 availableAccountBalance: Option[String]) extends AuthorisedAccounts
 
 object AuthorisedCashAccount {
   implicit val format: OFormat[AuthorisedCashAccount] = Json.format[AuthorisedCashAccount]

@@ -19,7 +19,7 @@ package domain
 import play.api.libs.json.{Json, OFormat}
 
 case class SearchedAuthoritiesResponse(
-                                        numberOfAuthorities: Int,
+                                        numberOfAuthorities: String,
                                         dutyDefermentAccounts: Option[Seq[AuthorisedDutyDefermentAccount]],
                                         generalGuaranteeAccounts: Option[Seq[AuthorisedGeneralGuaranteeAccount]],
                                         cdsCashAccounts: Option[Seq[AuthorisedCashAccount]]
