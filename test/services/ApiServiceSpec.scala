@@ -132,16 +132,16 @@ class ApiServiceSpec extends SpecBase
       "return SearchedAuthorities if the API returns 200" in new Setup {
 
         val responseGuarantee: AuthorisedGeneralGuaranteeAccount =
-          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-        val response = Json.toJson(SearchedAuthoritiesResponse(1, None, Some(Seq(responseGuarantee)), None))
+        val response = Json.toJson(SearchedAuthoritiesResponse("1", None, Some(Seq(responseGuarantee)), None))
 
         when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(HttpResponse.apply(200, response.toString())))
 
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
-          result mustBe Right(SearchedAuthorities(1,List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some(10.0)))))
+          result mustBe Right(SearchedAuthorities("1",List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some("10.0")))))
         }
       }
     }

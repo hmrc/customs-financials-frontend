@@ -17,7 +17,7 @@
 package domain
 
 case class SearchedAuthorities(
-                                numberOfAuthorities: Int,
+                                numberOfAuthorities: String,
                                 authorities: Seq[AuthorisedAccounts]
                               )
 

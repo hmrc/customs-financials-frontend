@@ -53,14 +53,14 @@ class AuthorizedToViewControllerSpec extends SpecBase {
   "onSubmit" should {
     "return OK if there are authorities returned" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances(10.0, 10.0)))
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
       val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(10.0))
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities(3, Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
