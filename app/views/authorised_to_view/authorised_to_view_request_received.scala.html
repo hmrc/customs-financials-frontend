@@ -28,8 +28,7 @@
 
  @layout(
   pageTitle = Some(messages("cf.authorities.request.received.title")),
-  helpAndSupport = false,
-  backLink = Some(routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(0)).url)
+  helpAndSupport = false
  ) {
   @panel("cf.authorities.request.received.panel.h1")
   @p(messages("cf.authorities.request.received.p", email))
