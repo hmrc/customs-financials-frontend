@@ -50,11 +50,14 @@
         @button(messages("cf.search.authorities.button"), None)
 
         @h2(msg = "cf.search.authorities.h2")
-        @p("cf.search.authorities.p2")
-        @link("cf.search.authorities.link",
-              controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url,
-              linkId = Some("authorised-request-csv-link"),
-              pWrapped = false
-        )
+
+        <p class="govuk-body">@messages("cf.search.authorities.p2")
+            <br/><br/>
+            @link("cf.search.authorities.link",
+            controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url,
+            linkId = Some("authorised-request-csv-link"),
+            pWrapped = false
+            )
+        </p>
     }
 }
