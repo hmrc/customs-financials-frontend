@@ -61,7 +61,7 @@
                     </div>
                     } else {
                     @if(account.balances.availableBalance >= 0) {
-                        <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
+                        <p id="duty-deferment-balance-@{s"${account.number}"}" class="available-account-balance govuk-body custom-card__balance">
                         @if(messages.lang == Lang("cy")) {
                             @if(account.status == AccountStatusPending) {
                                 @if(account.balances.availableBalance > 0){
