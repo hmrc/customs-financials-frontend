@@ -22,12 +22,12 @@
 
 @(status: CDSAccountStatus, accountAttribute: String, balance: BigDecimal)(implicit messages: Messages)
 
-<p id="balance" class="@accountAttribute govuk-body custom-card__balance">
-    <span id="balance-amount" class="custom-card__balance-amount">
+<p id="balance-@accountAttribute" class="@accountAttribute govuk-body custom-card__balance">
+    <span id="balance-amount-@accountAttribute" class="custom-card__balance-amount">
     @{Formatters.formatCurrencyAmount(balance)}
     </span>
     @if(balance > 0) {
-     <span id="balance-text" class="custom-card__balance-text">
+     <span id="balance-text-@accountAttribute" class="custom-card__balance-text">
      @messages("cf.available")
      </span>
     }
