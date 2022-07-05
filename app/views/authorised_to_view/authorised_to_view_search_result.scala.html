@@ -38,7 +38,11 @@
 ) {
 
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
-    @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities))
+    @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities,
+            if(searchedAuthorities.numberOfAuthorities == "1") {""} else { "s" }
+        )
+    )
+
     @p("cf.search.authorities.result.p2")
 
     <div class="govuk-body govuk-!-margin-bottom-9">
