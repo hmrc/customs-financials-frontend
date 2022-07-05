@@ -37,12 +37,15 @@
         @errorSummary(form.errors, None)
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
         @p("cf.search.authorities.p")
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@messages("cf.search.authorities.eori")</li>
+            <li>@messages("cf.search.authorities.account")</li>
+        </ul>
         @inputText(
             form,
             id = "value",
             name = "value",
             label = messages("cf.search.authorities"),
-            hint = Some(messages("cf.search.authorities.hint")),
             isPageHeading = true,
             classes = Some("govuk-!-width-two-thirds"),
             labelClasses = Some("govuk-visually-hidden")

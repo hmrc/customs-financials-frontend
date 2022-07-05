@@ -18,7 +18,7 @@ package controllers
 
 import actionbuilders.IdentifierAction
 import config.{AppConfig, ErrorHandler}
-import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
+import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -28,8 +28,8 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
-
 import javax.inject.{Inject, Singleton}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -75,9 +75,16 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
-          case Right(searchedAuthorities) => dataStoreService.getCompanyName(query).map { companyName =>
-             Ok(authorisedToViewSearchResult(query, searchedAuthorities, companyName))
-          }
+          case Right(searchedAuthorities) =>
+            val clientEori = searchedAuthorities.authorities.map{
+              case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
+              case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
+              case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
+            }.head
+            dataStoreService.getCompanyName(clientEori).map { companyName => {
+              Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName))
+            }
+            }
         }
     )
   }
