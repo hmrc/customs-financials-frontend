@@ -132,4 +132,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
+
+  def filesUrl(fileRole: FileRole): String = s"$sdesApi/files-available/list/${fileRole.name}"
 }

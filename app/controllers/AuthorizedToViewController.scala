@@ -28,8 +28,10 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.helpers.Formatters
 import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
 
+import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -65,20 +67,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
     } else {
-
       for {
         csvFiles <- getCsvFile(req.user.eori)
       } yield {
         val viewmodel = csvFiles
-        val url = Some(viewmodel.head.downloadURL)
-        val date = Some(viewmodel.head.startDate)
-      Ok(authorisedToViewSearch(form, url, date))
+        val fileExists = csvFiles.nonEmpty
+        val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
+        val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+      Ok(authorisedToViewSearch(form, url, date, fileExists))
       }
     }
   }
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
-    sdesConnector.getCsvFiles(eori)
+    sdesConnector.getAuthoritiesCsvFiles(eori)
       .map(_.sortWith(_.startDate isAfter _.startDate))
   }
 
@@ -89,9 +91,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           csvFiles <- getCsvFile(request.user.eori)
         } yield {
           val viewmodel = csvFiles
-          val url = Some(viewmodel.head.downloadURL)
-          val date = Some(viewmodel.head.startDate)
-          BadRequest(authorisedToViewSearch(formWithErrors, url, date))
+          val fileExists = csvFiles.nonEmpty
+          val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
+          val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
         },
 //        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors, None, None))),
       query =>

@@ -37,7 +37,7 @@ class SdesConnector @Inject()(httpClient: HttpClient,
 
   import sdesGatekeeperService._
 
-  def getCsvFiles(eori: String)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[StandingAuthorityFile]] = {
+  def getAuthoritiesCsvFiles(eori: String)(implicit hc: HeaderCarrier): Future[Seq[StandingAuthorityFile]] = {
     val transform = convertTo[StandingAuthorityFile] andThen filterFileFormats(authorityFileFormats)
     getSdesFiles[FileInformation, StandingAuthorityFile](
       appConfig.filesUrl(StandingAuthority),
