@@ -16,8 +16,9 @@
 
 package controllers
 
-import actionbuilders.IdentifierAction
+import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
+import connectors.SdesConnector
 import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -38,6 +39,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
                                            implicit val mcc: MessagesControllerComponents,
+                                           val sdesConnector: SdesConnector,
                                            authorizedView: authorized_to_view,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
@@ -63,14 +65,35 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
     } else {
-      Future.successful(Ok(authorisedToViewSearch(form)))
+
+      for {
+        csvFiles <- getCsvFile(req.user.eori)
+      } yield {
+        val viewmodel = csvFiles
+        val url = Some(viewmodel.head.downloadURL)
+        val date = Some(viewmodel.head.startDate)
+      Ok(authorisedToViewSearch(form, url, date))
+      }
     }
+  }
+
+  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
+    sdesConnector.getCsvFiles(eori)
+      .map(_.sortWith(_.startDate isAfter _.startDate))
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors))),
+        for {
+          csvFiles <- getCsvFile(request.user.eori)
+        } yield {
+          val viewmodel = csvFiles
+          val url = Some(viewmodel.head.downloadURL)
+          val date = Some(viewmodel.head.startDate)
+          BadRequest(authorisedToViewSearch(formWithErrors, url, date))
+        },
+//        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors, None, None))),
       query =>
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))

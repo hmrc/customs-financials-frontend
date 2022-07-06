@@ -85,6 +85,23 @@ class SdesGatekeeperService() {
     )
   }
 
+  implicit def convertToStandingAuthoritiesFile(sdesResponseFile: FileInformation): StandingAuthorityFile = {
+    val metadata = sdesResponseFile.metadata.asMap
+
+    StandingAuthorityFile(
+      sdesResponseFile.filename,
+      sdesResponseFile.downloadURL,
+      sdesResponseFile.fileSize,
+      StandingAuthorityFileMetadata(
+        metadata("PeriodStartYear").toInt,
+        metadata("PeriodStartMonth").toInt,
+        metadata("PeriodStartDay").toInt,
+        FileFormat(metadata("FileType")),
+        FileRole(metadata("FileRole"))),
+      ""
+    )
+  }
+
   def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] = _.map(converter)
 
   private def mapDutyPaymentMethod(dutyPaymentMethod: String): String = {

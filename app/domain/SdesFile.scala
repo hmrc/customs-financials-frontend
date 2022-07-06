@@ -54,6 +54,7 @@ object FileFormat {
 
   val SdesFileFormats: SortedSet[FileFormat] = SortedSet(Pdf, Csv)
   val PvatFileFormats: SortedSet[FileFormat] = SortedSet(Pdf)
+  val authorityFileFormats: SortedSet[FileFormat] = SortedSet(Csv)
 
   def filterFileFormats[T <: SdesFile](allowedFileFormats: SortedSet[FileFormat])(files: Seq[T]): Seq[T] = files.filter(file => allowedFileFormats(file.metadata.fileFormat))
 
@@ -124,6 +125,7 @@ object FileRole {
   case object PostponedVATAmendedStatement extends FileRole("PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
 
   case object SecurityStatement extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
+  case object StandingAuthority extends FileRole("StandingAuthority", "standing-authority", "Download authorities csv", "authorities")
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -133,6 +135,7 @@ object FileRole {
     case "PostponedVATStatement" => PostponedVATStatement
     case "PostponedVATAmendedStatement" => PostponedVATAmendedStatement
     case "SecurityStatement" => SecurityStatement
+    case "StandingAuthority" => StandingAuthority
     case _ => throw new Exception(s"Unknown file role: $name")
   }
 
@@ -151,6 +154,7 @@ object FileRole {
         case "postponed-vat" => Right(PostponedVATStatement)
         case "duty-deferment" => Right(DutyDefermentStatement)
         case "adjustments" => Right(SecurityStatement)
+        case "standing-authority" => Right(StandingAuthority)
         case fileRole => Left(s"unknown file role: ${fileRole}")
       }
     }
@@ -161,6 +165,7 @@ object FileRole {
         case PostponedVATStatement => "postponed-vat"
         case DutyDefermentStatement => "duty-deferment"
         case SecurityStatement => "adjustments"
+        case StandingAuthority => "standing-authority"
         case _ => "unsupported-file-role"
       }
     }
@@ -285,4 +290,19 @@ case class PostponedVatStatementFileMetadata(periodStartYear: Int,
                                                fileRole: FileRole,
                                                source: String,
                                                statementRequestId: Option[String]) extends SdesFileMetadata {
+}
+
+case class StandingAuthorityFile(filename: String, downloadURL: String, size: Long, metadata: StandingAuthorityFileMetadata, eori: String)
+  extends Ordered[StandingAuthorityFile] with SdesFile {
+
+  val startDate: LocalDate = LocalDate.of(metadata.periodStartYear, metadata.periodStartMonth, metadata.periodStartDay)
+
+  def compare(that: StandingAuthorityFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
+}
+
+case class StandingAuthorityFileMetadata(periodStartYear: Int,
+                                             periodStartMonth: Int,
+                                             periodStartDay: Int,
+                                             fileFormat: FileFormat,
+                                             fileRole: FileRole) extends SdesFileMetadata {
 }
