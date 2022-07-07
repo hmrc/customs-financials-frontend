@@ -18,6 +18,8 @@ package controllers
 
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
+import connectors.CustomsFinancialsApiConnector
+import domain.FileRole.StandingAuthority
 import connectors.SdesConnector
 import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
@@ -41,6 +43,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            val sdesConnector: SdesConnector,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
+                                           financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
                                            authorizedView: authorized_to_view,
                                            authorisedToViewSearch: authorised_to_view_search,
@@ -53,6 +56,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   val form: Form[String] = eoriNumberFormProvider()
 
   def onPageLoad(pageState: AuthorizedToViewPageState): Action[AnyContent] = authenticate async { implicit req =>
+    financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
+
     if (!appConfig.newAgentView) {
       val eori = req.user.eori
       val result = for {

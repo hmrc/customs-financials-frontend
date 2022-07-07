@@ -164,6 +164,7 @@ cf.customs-financials-home.notification.requested-c79=Mae’r tystysgrifau TAW m
 cf.customs-financials-home.notification.requested-duty-deferment=Mae’r datganiadau gohirio tollau y gofynnwyd amdanynt gennych ar gael i’w gweld
 cf.customs-financials-home.notification.requested-adjustments=Mae’r datganiadau addasiadau mewnforio y gofynnwyd amdanynt gennych ar gael i’w gweld
 cf.customs-financials-home.notification.requested-postponed-vat=Mae’r datganiadau ar gyfer TAW mewnforio ohiriedig y gofynnoch amdanynt ar gael i’w gweld
+cf.customs-financials-home.notification.authorities=Mae’r rhestr o gyfrifon y gwnaethoch gais amdanynt ac y mae gennych yr awdurdod i’w defnyddio ar gael
 
 # Verify Your Email Address
 cf.verify.your.email.title=Mae angen i chi ddilysu’r cyfeiriad e-bost cofrestredig ar gyfer y Gwasanaeth Datganiadau Tollau

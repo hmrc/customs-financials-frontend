@@ -19,7 +19,7 @@ package controllers
 import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
 import config.AppConfig
 import connectors.{CustomsFinancialsSessionCacheConnector, SecureMessageConnector}
-import domain.FileRole.{DutyDefermentStatement, PostponedVATAmendedStatement}
+import domain.FileRole.{DutyDefermentStatement, PostponedVATAmendedStatement, StandingAuthority}
 import domain._
 import org.joda.time.DateTime
 import play.api.i18n.I18nSupport
@@ -128,21 +128,23 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     implicit request =>
       val eori = request.user.eori
       notificationService.fetchNotifications(eori)
-        .map(_.filterNot(_.fileRole == DutyDefermentStatement))
+        .map(_.filterNot(v => (v.fileRole == DutyDefermentStatement) || (v.fileRole == StandingAuthority)))
         .map(getNotificationMessageKeys)
         .map(keys => Ok(customsHomePartialView(eori, keys)))
   }
 
   def getNotificationMessageKeys(collectionOfDocumentAttributes: Seq[Notification]): Seq[String] = {
     val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
-    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(_.isRequested)
+    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(v => v.isRequested || v.fileRole == StandingAuthority)
+    val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority)
     val requestedMessages = requestedNotifications.map(notification => s"requested-${notification.fileRole.messageKey}")
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
       case (role, notifications) if notifications.size > 1 => s"multiple-${role.messageKey}"
       case (role, _) => role.messageKey
     }
+    val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
 
-    requestedMessages ++ statementMessages
+    authorityMessage ++ requestedMessages ++ statementMessages
   }
 
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>

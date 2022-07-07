@@ -170,6 +170,27 @@ class NotificationPanelSpec extends SpecBase {
         content.getElementsContainingText("cf.customs-financials-home.notification.adjustments").isEmpty mustBe true
       }
     }
+
+    "display Standing Authorities notification" when {
+      "new Standing authorities csv file is available" in {
+        val messageKeys = List("authorities")
+        val expected = List("cf.customs-financials-home.notification.authorities")
+
+        val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
+
+        content.select("#notification-panel li").asScala.map(_.text()).toList mustBe expected
+      }
+    }
+
+    "not display Standing Authorities notification" when {
+      "there is no new Standing authorities csv file" in {
+        val messageKeys = List()
+
+        val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
+
+        content.getElementsContainingText("cf.customs-financials-home.notification.authorities").isEmpty mustBe true
+      }
+    }
   }
 
 }

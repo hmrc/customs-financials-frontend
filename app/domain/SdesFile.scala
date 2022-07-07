@@ -125,7 +125,8 @@ object FileRole {
 
   case object SecurityStatement extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
 
-  case object StandingAuthority extends FileRole("StandingAuthority", "csv-statement", "Download CSV statement", "csv-statement")
+  case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Download standing authorities csv", "authorities")
+
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -154,7 +155,7 @@ object FileRole {
         case "postponed-vat" => Right(PostponedVATStatement)
         case "duty-deferment" => Right(DutyDefermentStatement)
         case "adjustments" => Right(SecurityStatement)
-        case "csv-statement" => Right(StandingAuthority)
+        case "authorities" => Right(StandingAuthority)
         case fileRole => Left(s"unknown file role: ${fileRole}")
       }
     }
@@ -165,7 +166,7 @@ object FileRole {
         case PostponedVATStatement => "postponed-vat"
         case DutyDefermentStatement => "duty-deferment"
         case SecurityStatement => "adjustments"
-        case StandingAuthority => "csv-statement"
+        case StandingAuthority => "authorities"
         case _ => "unsupported-file-role"
       }
     }
