@@ -270,6 +270,9 @@ cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae
 
 cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif
 cf.search.authorities.button = Chwilio
+cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
+cf.search.authorities.eori = Rhif EORI GB
+cf.search.authorities.account = Rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
 cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
 cf.search.authorities.result.p1 = Yn dangos <strong>{0}</strong> o gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio.
 cf.search.authorities.result.p2 = Caiff balansau eu diweddaru bob 24 awr.
