@@ -16,6 +16,7 @@
 
 package controllers
 
+import connectors.SdesConnector
 import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -23,7 +24,7 @@ import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService}
+import services.{ApiService, DataStoreService, SdesService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import utils.SpecBase
 
@@ -41,7 +42,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "show the search EORI view when the feature flag is enabled" in new Setup {
-      val newApp: Application = application().configure("features.new-agent-view-enabled" -> true).build()
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+      val newApp: Application = application().overrides(
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+      ).configure("features.new-agent-view-enabled" -> true).build()
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
         val result = route(newApp, request).value
@@ -87,6 +91,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "return BAD_REQUEST if an invalid payload sent" in new Setup {
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
         val result = route(app, request).value
@@ -196,14 +201,18 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "not display account, account type and eori headings when there are no accounts" in {
       val cdsAccountsEmpty = CDSAccounts(newUser().eori, List.empty)
       val mockApiService = mock[ApiService]
+      val mockSdesConnector = mock[SdesConnector]
       val state = AuthorizedToViewPageState(1)
 
       when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
         .thenReturn(Future.successful(cdsAccountsEmpty))
 
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+
       val app = application()
         .overrides(
-          inject.bind[ApiService].toInstance(mockApiService)
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
         ).build()
 
       running(app) {
@@ -255,14 +264,17 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     val mockApiService = mock[ApiService]
     val mockDataStoreService = mock[DataStoreService]
+    val mockSdesConnector = mock[SdesConnector]
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
       .thenReturn(Future.successful(cdsAccounts))
+    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
     val app = application()
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> false).build()
   }
 }
