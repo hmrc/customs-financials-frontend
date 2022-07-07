@@ -16,10 +16,13 @@
 
 @import config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+@import java.time.LocalDate
+@import domain.FileRole.StandingAuthority
 
 @this(
         layout: Layout,
         formHelper: FormWithCSRF,
+        notificationPanel: components.authorities_notification_panel,
         errorSummary: components.errorSummary,
         h1: components.h1,
         h2: components.h2,
@@ -29,13 +32,14 @@
         button: components.button
 )
 
-@(form: Form[_])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(form: Form[_], url: Option[String], date: String, fileExists: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("cf.search.authorities")), helpAndSupport = false, backLink = Some(routes.CustomsFinancialsHomeController.index.url)){
 
     @formHelper(action = controllers.routes.AuthorizedToViewController.onSubmit()) {
         @errorSummary(form.errors, None)
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
+        @notificationPanel(url, date, fileExists)
         @p("cf.search.authorities.p")
         @inputText(
             form,

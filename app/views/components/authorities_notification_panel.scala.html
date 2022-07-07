@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package domain
+@this()
 
-import play.api.libs.json._
+@(url: Option[String], date: String, fileExists: Boolean)(implicit messages: Messages)
 
-import javax.inject.Inject
-
-case class FileInformation(filename: String,
-                           downloadURL: String,
-                           fileSize: Long,
-                           metadata: Metadata)
-
-@Inject
-object FileInformation {
-  implicit val fileInformationFormats: Format[FileInformation] = Json.format[FileInformation]
+@if(fileExists) {
+<div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
+    <p class="govuk-body">The list of authorities you requested on the @date is available to <a id="csv-authority-link" class="govuk-link" href=@url>download as CSV</a>.</p>
+    <p class="govuk-body">Your list is available to view for 10 days.</p>
+</div>
 }
