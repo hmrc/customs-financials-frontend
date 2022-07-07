@@ -29,7 +29,7 @@
         company_inset: components.authorised_account_search_inset
 )
 
-@(query: String, searchedAuthorities: SearchedAuthorities, companyName: Option[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(query: String, clientEori: String, searchedAuthorities: SearchedAuthorities, companyName: Option[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = Some(messages("cf.search.authorities.result.title", query)),
@@ -38,11 +38,15 @@
 ) {
 
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
-    @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities))
+    @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities,
+            if(searchedAuthorities.numberOfAuthorities == "1") {""} else { "s" }
+        )
+    )
+
     @p("cf.search.authorities.result.p2")
 
     <div class="govuk-body govuk-!-margin-bottom-9">
-        @company_panel(companyName, query)
+        @company_panel(companyName, clientEori)
         @{
             searchedAuthorities.authorities.map {
                 case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) =>

@@ -16,10 +16,10 @@
 
 package controllers
 
-import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
+import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.SdesConnector
-import domain.{AuthorizedToViewPageState, NoAuthorities, SearchError}
+import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -39,7 +39,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
                                            val sdesConnector: SdesConnector,
-                                           checkEmailIsVerified: EmailAction,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
                                            implicit val mcc: MessagesControllerComponents,
@@ -102,10 +101,18 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
-          case Right(searchedAuthorities) => dataStoreService.getCompanyName(query).map { companyName =>
-             Ok(authorisedToViewSearchResult(query, searchedAuthorities, companyName))
-          }
+          case Right(searchedAuthorities) =>
+            val clientEori = searchedAuthorities.authorities.map{
+              case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
+              case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
+              case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
+            }.head
+            dataStoreService.getCompanyName(clientEori).map { companyName => {
+              Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName))
+            }
+            }
         }
     )
   }
 }
+
