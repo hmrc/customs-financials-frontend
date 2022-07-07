@@ -65,6 +65,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
   lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
+  lazy val csvAccountUrl: String = s"$documentsUrl/csv-statement"
 
   lazy val newAgentView: Boolean = config.get[Boolean]("features.new-agent-view-enabled")
 
@@ -132,4 +133,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
+
+  def filesUrl(fileRole: FileRole): String = s"$sdesApi/files-available/list/${fileRole.name}"
 }

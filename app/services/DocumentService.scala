@@ -16,8 +16,8 @@
 
 package services
 
+import domain.{EORI, PostponedVatStatementFile, SdesFile, SecurityStatementFile, StandingAuthorityFile, VatCertificateFile}
 import play.api.i18n.Messages
-import domain.{EORI, PostponedVatStatementFile, SdesFile, SecurityStatementFile, VatCertificateFile}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.{Inject, Singleton}
@@ -37,6 +37,10 @@ class DocumentService @Inject()(sdesService: SdesService,
 
   def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatStatementFile]] = {
     sdesService.getPostponedVatStatements(eori).map(auditFiles(_, eori))
+  }
+
+  def getCsvStatements(eori: EORI)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[StandingAuthorityFile]] = {
+    sdesService.getCsvStatements(eori).map(auditFiles(_, eori))
   }
 
   private def auditFiles[T <: SdesFile](files: Seq[T], eori: EORI)(implicit hc: HeaderCarrier): Seq[T] = {
