@@ -303,5 +303,8 @@ cf.authorities.request.received.title = Cais wedi dod i law
 cf.authorities.request.received.panel.h1 = Cais wedi dod i law
 cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ato o hafan eich cyfrifon ariannol ar gyfer y tollau, cyn pen 1 awr fel arfer.
 cf.authorities.request.received.link = Yn ôl i’r dudalen dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
+cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar {0} ar gael i’w
+cf.authorities.notification-panel.a=lawrlwytho fel CSV
+cf.authorities.notification-panel.p2=Mae’ch rhestr ar gael i’w gweld am 10 diwrnod.
 
 eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir
