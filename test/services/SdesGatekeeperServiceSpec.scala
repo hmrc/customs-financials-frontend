@@ -16,12 +16,10 @@
 
 package services
 
-
-
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement}
-import domain.{Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, VatCertificateFile, VatCertificateFileMetadata}
+import domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement, StandingAuthority}
+import domain.{Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata, VatCertificateFile, VatCertificateFileMetadata}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
@@ -267,8 +265,35 @@ class SdesGatekeeperServiceSpec extends SpecBase {
       }
     }
 
+    "create StandingAuthorityFile from FileInformation" in  {
+      val sdesGatekeeperService = new SdesGatekeeperService()
 
+      val standingAuthorityFileMetadata = List(
+        MetadataItem("PeriodStartYear", "2022"),
+        MetadataItem("PeriodStartMonth", "6"),
+        MetadataItem("PeriodStartDay", "1"),
+        MetadataItem("FileType", "CSV"),
+        MetadataItem("FileRole", "StandingAuthority")
+      )
 
+      val fileInformationForStandingAuthorityCSV = domain.FileInformation(
+        "authorities-2022-06.csv",
+        "https://some.sdes.domain?token=abc123",
+        1234L,
+        Metadata(standingAuthorityFileMetadata)
+      )
+
+      val expectedStandingAuthorityFile = StandingAuthorityFile(
+        "authorities-2022-06.csv",
+        "https://some.sdes.domain?token=abc123",
+        1234L,
+        StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority), ""
+      )
+
+      val standingAuthorityFile = sdesGatekeeperService.convertToStandingAuthoritiesFile(fileInformationForStandingAuthorityCSV)
+
+      standingAuthorityFile must be(expectedStandingAuthorityFile)
+    }
   }
 }
 //scalastyle:on magic.number

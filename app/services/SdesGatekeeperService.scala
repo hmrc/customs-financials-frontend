@@ -16,9 +16,9 @@
 
 package services
 
-import play.api.i18n.Messages
 import domain.DutyPaymentMethod.{CDS, CHIEF}
 import domain.{FileInformation, _}
+import play.api.i18n.Messages
 
 import javax.inject.Singleton
 
@@ -82,6 +82,23 @@ class SdesGatekeeperService() {
         metadata.getOrElse("fileSize", sdesResponseFile.fileSize.toString).toLong,
         metadata.getOrElse("checksum", "MISSING CHECKSUM"),
         metadata.get("statementRequestID"))
+    )
+  }
+
+  implicit def convertToStandingAuthoritiesFile(sdesResponseFile: FileInformation): StandingAuthorityFile = {
+    val metadata = sdesResponseFile.metadata.asMap
+
+    StandingAuthorityFile(
+      sdesResponseFile.filename,
+      sdesResponseFile.downloadURL,
+      sdesResponseFile.fileSize,
+      StandingAuthorityMetadata(
+        metadata("PeriodStartYear").toInt,
+        metadata("PeriodStartMonth").toInt,
+        metadata("PeriodStartDay").toInt,
+        FileFormat(metadata("FileType")),
+        FileRole(metadata("FileRole"))),
+      ""
     )
   }
 

@@ -16,10 +16,11 @@
 
 package controllers
 
-import actionbuilders.IdentifierAction
+import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.CustomsFinancialsApiConnector
 import domain.FileRole.StandingAuthority
+import connectors.SdesConnector
 import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -29,14 +30,17 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.helpers.Formatters
 import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
 
+import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
+                                           val sdesConnector: SdesConnector,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
                                            financialsApiConnector: CustomsFinancialsApiConnector,
@@ -68,14 +72,36 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
     } else {
-      Future.successful(Ok(authorisedToViewSearch(form)))
+      for {
+        csvFiles <- getCsvFile(req.user.eori)
+      } yield {
+        val viewmodel = csvFiles
+        val fileExists = csvFiles.nonEmpty
+        val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
+        val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+        Ok(authorisedToViewSearch(form, url, date, fileExists))
+      }
     }
+  }
+
+  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
+    sdesConnector.getAuthoritiesCsvFiles(eori)
+      .map(_.sortWith(_.startDate isAfter _.startDate))
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors))),
+        for {
+          csvFiles <- getCsvFile(request.user.eori)
+        } yield {
+          val viewmodel = csvFiles
+          val fileExists = csvFiles.nonEmpty
+          val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
+          val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
+        },
+//        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors, None, None))),
       query =>
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))

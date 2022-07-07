@@ -16,11 +16,11 @@
 
 package services
 
-import play.api.i18n.Messages
-import play.api.libs.json.Json
 import config.AppConfig
 import domain.FileFormat._
 import domain.{AuditModel, FileInformation, SdesFile, _}
+import play.api.i18n.Messages
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HttpClient, _}
 
@@ -40,6 +40,8 @@ class SdesService @Inject()(http: HttpClient,
   def sdesImportPVatCertificateListUrl: String = appConfig.sdesApi + "/files-available/list/PostponedVATStatement"
 
   def sdesSecurityStatementListUrl: String = appConfig.sdesApi + "/files-available/list/SecurityStatement"
+
+  def sdesCsvStatementListUrl: String = appConfig.sdesApi + "/files-available/list/StandingAuthority"
 
   val AUDIT_DUTY_DEFERMENT_TRANSACTION = "DUTYDEFERMENTSTATEMENTS"
   val AUDIT_VAT_CERTIFICATES_TRANSACTION = "Display VAT certificates"
@@ -69,6 +71,12 @@ class SdesService @Inject()(http: HttpClient,
     val transform = convertTo[SecurityStatementFile] andThen filterFileFormats(SdesFileFormats)
     auditingService.audit(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false))))
     getSdesFiles[FileInformation, SecurityStatementFile](sdesSecurityStatementListUrl, eori, "sdes.get.security-statements", transform)
+  }
+
+  def getCsvStatements(eori: String)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[StandingAuthorityFile]] = {
+    val transform = convertTo[StandingAuthorityFile] andThen filterFileFormats(authorityFileFormats)
+    //auditingService.audit(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false))))
+    getSdesFiles[FileInformation, StandingAuthorityFile](sdesCsvStatementListUrl, eori, "sdes.get.csv-statement", transform)
   }
 
   def getSdesFiles[A, B <: SdesFile](url: String, key: String, metricsName: String, transform: Seq[A] => Seq[B])
