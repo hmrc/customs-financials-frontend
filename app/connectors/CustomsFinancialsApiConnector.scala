@@ -17,16 +17,26 @@
 package connectors
 
 import config.AppConfig
-import domain.EmailVerifiedResponse
+import domain.{EmailVerifiedResponse, FileRole}
+import play.mvc.Http.Status
+import services.MetricsReporterService
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient)
+class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient, metricsReporter: MetricsReporterService)
                                              (implicit ec: ExecutionContext) {
 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
     httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
+  }
+
+  def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
+    metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
+      httpClient.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
+    }
   }
 }

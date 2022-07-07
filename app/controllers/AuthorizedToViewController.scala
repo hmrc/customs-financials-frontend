@@ -18,6 +18,8 @@ package controllers
 
 import actionbuilders.IdentifierAction
 import config.{AppConfig, ErrorHandler}
+import connectors.CustomsFinancialsApiConnector
+import domain.FileRole.StandingAuthority
 import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -28,8 +30,8 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
-import javax.inject.{Inject, Singleton}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -37,6 +39,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
+                                           financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
                                            authorizedView: authorized_to_view,
                                            authorisedToViewSearch: authorised_to_view_search,
@@ -49,6 +52,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   val form: Form[String] = eoriNumberFormProvider()
 
   def onPageLoad(pageState: AuthorizedToViewPageState): Action[AnyContent] = authenticate async { implicit req =>
+    financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
+
     if (!appConfig.newAgentView) {
       val eori = req.user.eori
       val result = for {

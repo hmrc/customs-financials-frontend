@@ -16,7 +16,7 @@
 
 package services
 
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
+import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -49,7 +49,8 @@ class NotificationServiceSpec extends MockAuditingService  with FutureAwaits wit
           DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map.empty),
           DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
           DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
-          DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9"))
+          DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
+          DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty)
         )
 
       "the given document type is present" in {
@@ -63,7 +64,8 @@ class NotificationServiceSpec extends MockAuditingService  with FutureAwaits wit
           Notification(DutyDefermentStatement, isRequested = false),
           Notification(C79Certificate, isRequested = true),
           Notification(DutyDefermentStatement, isRequested = true),
-          Notification(SecurityStatement, isRequested = true)
+          Notification(SecurityStatement, isRequested = true),
+          Notification(StandingAuthority, isRequested = false)
         )
 
         val actualNotification = await(notificationService.fetchNotifications(eori))

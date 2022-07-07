@@ -161,7 +161,7 @@ cf.customs-financials-home.notification.requested-c79=Your requested import VAT 
 cf.customs-financials-home.notification.requested-duty-deferment=Your requested duty deferment statements are available to view
 cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
 cf.customs-financials-home.notification.requested-postponed-vat=Your requested postponed import VAT statements are available to view
-cf.customs-financials-home.notifications.requested-auth=Your requested list of accounts you have authority to use is available.
+cf.customs-financials-home.notification.authorities=Your requested list of accounts you have authority to use is available
 
 # Verify Your Email Address
 cf.verify.your.email.title=You need to verify the registered CDS email address

@@ -18,7 +18,7 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement}
+import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
@@ -178,6 +178,17 @@ class HomeControllerSpec extends SpecBase {
     }
   }
 
+  "show notification when there is new Standing authorities csv file available" in new Setup {
+    val notifications = List(Notification(StandingAuthority, isRequested = false))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    running(app) {
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
+      val result = route(app, request).value
+      val html = Jsoup.parse(contentAsString(result))
+      html.containsElementById("notification-panel")
+    }
+  }
+
 
   "partial landing page" should {
     "show error message as heading text" in {
@@ -219,7 +230,8 @@ class HomeControllerSpec extends SpecBase {
         Notification(PostponedVATStatement, false),
         Notification(SecurityStatement, false),
         Notification(DutyDefermentStatement, true),
-        Notification(DutyDefermentStatement, false))
+        Notification(DutyDefermentStatement, false),
+        Notification(StandingAuthority, false))
       val eoriNumber = newUser(Seq.empty).eori
       when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
