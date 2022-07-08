@@ -54,7 +54,7 @@
                 case AuthorisedDutyDefermentAccount(account, balances) =>
                     result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance))
                 case AuthorisedCashAccount(account, availableAccountBalance) =>
-                    result_panel(account.accountType, account.accountNumber, None)
+                    result_panel(account.accountType, account.accountNumber, availableAccountBalance)
             }
         }
     </div>
