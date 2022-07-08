@@ -269,7 +269,8 @@ cf.search.authorities.hint = Nodwch rif EORI yn dechrau gyda GB wedi’i ddilyn 
 cf.search.authorities.h2 = Cais am yr holl gyfrifon
 cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio ar ffurf ffeil CSV.
 
-cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
+cf.search.authorities.error.invalid = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
+cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif dilys
 cf.search.authorities.button = Chwilio
 cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
 cf.search.authorities.eori = Rhif EORI GB
