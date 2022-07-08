@@ -219,6 +219,9 @@ cf.authorities.request.received.title = Request received
 cf.authorities.request.received.panel.h1 = Request received
 cf.authorities.request.received.p = We will send an email to {0} when your CSV file is ready to download. You can access it from your customs financial accounts home page, usually within 1 hour.
 cf.authorities.request.received.link = Back to find accounts you have authority to use
+cf.authorities.notification-panel.p1=The list of authorities you requested on the {0} is available to
+cf.authorities.notification-panel.a=download as CSV
+cf.authorities.notification-panel.p2=Your list is available to view for 10 days.
 
 eoriNumber.error.format = Enter an EORI number in the correct format
 

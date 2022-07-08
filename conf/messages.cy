@@ -269,7 +269,7 @@ cf.search.authorities.hint = Nodwch rif EORI yn dechrau gyda GB wedi’i ddilyn 
 cf.search.authorities.h2 = Cais am yr holl gyfrifon
 cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio ar ffurf ffeil CSV.
 
-cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif
+cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
 cf.search.authorities.button = Chwilio
 cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
 cf.search.authorities.eori = Rhif EORI GB
@@ -303,5 +303,8 @@ cf.authorities.request.received.title = Cais wedi dod i law
 cf.authorities.request.received.panel.h1 = Cais wedi dod i law
 cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ato o hafan eich cyfrifon ariannol ar gyfer y tollau, cyn pen 1 awr fel arfer.
 cf.authorities.request.received.link = Yn ôl i’r dudalen dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
+cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar {0} ar gael i’w
+cf.authorities.notification-panel.a=lawrlwytho fel CSV
+cf.authorities.notification-panel.p2=Mae’ch rhestr ar gael i’w gweld am 10 diwrnod.
 
 eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir
