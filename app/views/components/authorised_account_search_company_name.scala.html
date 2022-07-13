@@ -24,16 +24,20 @@
  @inset()
 }
 
-<dl class="govuk-summary-list govuk-!-margin-bottom-0">
+<dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
  @companyName.map { name =>
   <div class="govuk-summary-list__row">
-   <dt class="govuk-summary-list__key"><strong>@messages("cf.search.authorities.result.company.name")</strong></dt>
+   <dt class="govuk-summary-list__key govuk-!-width-one-third">
+    @messages("cf.search.authorities.result.company.name")</dt>
    <dd class="govuk-summary-list__value">@name</dd>
   </div>
  }
 
  <div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key"><strong>@messages("cf.search.authorities.result.eori.number")</strong></dt>
+  <dt class="govuk-summary-list__key govuk-!-width-one-third">
+   @messages("cf.search.authorities.result.eori.number")</dt>
   <dd class="govuk-summary-list__value">@query</dd>
  </div>
 </dl>
+
+<hr class=“govuk-section-break govuk-section-break--m govuk-section-break--visible” style=“clear:left”>
