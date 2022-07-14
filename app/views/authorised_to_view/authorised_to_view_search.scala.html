@@ -59,7 +59,8 @@
         @h2(msg = "cf.search.authorities.h2")
 
         <p class="govuk-body">@messages("cf.search.authorities.p2")</p>
-        <p class="govuk-body">
+
+        <p class="govuk-body govuk-!-margin-bottom-7">
             @link("cf.search.authorities.link",
             controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url,
             linkId = Some("authorised-request-csv-link"),
