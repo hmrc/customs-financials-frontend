@@ -58,6 +58,4 @@ class SdesConnector @Inject()(httpClient: HttpClient,
         }
     }
   }
-
-
 }

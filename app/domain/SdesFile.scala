@@ -268,8 +268,11 @@ case class StandingAuthorityMetadata(periodStartYear: Int,
                                      fileRole: FileRole) extends SdesFileMetadata
 
 
-case class StandingAuthorityFile(filename: String, downloadURL: String, size: Long, metadata: StandingAuthorityMetadata, eori: String)
-  extends Ordered[StandingAuthorityFile] with SdesFile {
+case class StandingAuthorityFile(filename: String,
+                                 downloadURL: String,
+                                 size: Long,
+                                 metadata: StandingAuthorityMetadata,
+                                 eori: String) extends Ordered[StandingAuthorityFile] with SdesFile {
 
   val startDate: LocalDate = LocalDate.of(metadata.periodStartYear, metadata.periodStartMonth, metadata.periodStartDay)
 

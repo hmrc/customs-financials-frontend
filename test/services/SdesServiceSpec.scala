@@ -20,10 +20,9 @@ import config.AppConfig
 import domain.DDStatementType.Weekly
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
-import domain.{AuditEori, AuditModel, CDSAccounts, DutyDefermentStatementFile, DutyDefermentStatementFileMetadata, Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, VatCertificateFile, VatCertificateFileMetadata}
+import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
+import domain.{AuditEori, AuditModel, CDSAccounts, DutyDefermentStatementFile, DutyDefermentStatementFileMetadata, FileInformation, Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata, VatCertificateFile, VatCertificateFileMetadata}
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages
@@ -54,6 +53,7 @@ class SdesServiceSpec extends SpecBase {
     val sdesPostponedVatStatementsUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/PostponedVATStatement"
     val sdesSecurityStatementsUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/SecurityStatement"
     val sdesDutyDefermentStatementsUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/DutyDefermentStatement"
+    val sdesCsvStatementsUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/StandingAuthority"
 
     val vatCertificateFiles = List(
       VatCertificateFile("name_04", "download_url_06", 111L, VatCertificateFileMetadata(2018, 3, Pdf, C79Certificate, None), ""),
@@ -143,6 +143,22 @@ class SdesServiceSpec extends SpecBase {
           MetadataItem("PeriodStartYear", "2018"), MetadataItem("PeriodStartMonth", "3"), MetadataItem("PeriodStartDay", "14"), MetadataItem("PeriodEndYear", "2018"),
           MetadataItem("PeriodEndMonth", "3"), MetadataItem("PeriodEndDay", "23"), MetadataItem("FileType", "bar"), MetadataItem("FileRole", "SecurityStatement"),
           MetadataItem("eoriNumber", someEori), MetadataItem("fileSize", "111"), MetadataItem("checksum", "checksum_01"), MetadataItem("issueDate", "3/4/2018")))))
+
+
+    val csvStatementFiles = List(
+      StandingAuthorityFile("name_01", "download_url_01", 111L, StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority), ""),
+      StandingAuthorityFile("name_02", "download_url_02", 115L, StandingAuthorityMetadata(2022, 5, 25, Csv, StandingAuthority), ""))
+
+    val csvStatementFilesSdesResponse = List(
+        FileInformation("name_01", "download_url_01", 111L, Metadata(List(MetadataItem("PeriodStartYear", "2022"), MetadataItem("PeriodStartMonth", "6"), MetadataItem("PeriodStartDay", "1"), MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority")))),
+        FileInformation("name_02", "download_url_02", 115L, Metadata(List(MetadataItem("PeriodStartYear", "2022"), MetadataItem("PeriodStartMonth", "5"), MetadataItem("PeriodStartDay", "25"), MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority"))))
+      )
+
+    val csvStatementFilesWithUnkownFileTypesSdesResponse = List(
+        FileInformation("name_01", "download_url_01", 111L, Metadata(List(MetadataItem("PeriodStartYear", "2022"), MetadataItem("PeriodStartMonth", "6"), MetadataItem("PeriodStartDay", "1"), MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority")))),
+        FileInformation("name_02", "download_url_02", 115L, Metadata(List(MetadataItem("PeriodStartYear", "2022"), MetadataItem("PeriodStartMonth", "5"), MetadataItem("PeriodStartDay", "25"), MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority")))),
+        FileInformation("name_03", "download_url_03", 115L, Metadata(List(MetadataItem("PeriodStartYear", "2022"), MetadataItem("PeriodStartMonth", "4"), MetadataItem("PeriodStartDay", "25"), MetadataItem("FileType", "pdf"), MetadataItem("FileRole", "StandingAuthority"))))
+      )
 
     val sdesGatekeeperServiceSpy = spy(new SdesGatekeeperService())
     val mockHttp = mock[HttpClient]
@@ -244,6 +260,198 @@ class SdesServiceSpec extends SpecBase {
 
         import sdesService._
         verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+    }
+
+
+    "getCsvStatements" should {
+      "have sdesCsvStatementListUrl configured in AppConfig" in new Setup {
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[AppConfig].toInstance(mockAppConfig)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        sdesService.sdesCsvStatementListUrl
+        verify(mockAppConfig).sdesApi
+      }
+
+      "make a GET request to sdesCsvStatementsUrl" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockHttp).GET(eqTo(url), any, any)(any, any, any)
+      }
+
+      "filter out unknown file types" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, Json.toJson(csvStatementFilesWithUnkownFileTypesSdesResponse).toString())))
+
+        val result = await(sdesService.getCsvStatements(someEoriWithUnknownFileTypes)(hc))
+        result must be(csvStatementFiles)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+
+      "log response time metric" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val cdsAccount = CDSAccounts(newUser().eori, List.empty)
+
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+        when[Future[Seq[CDSAccounts]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
+          .thenReturn(Future.successful(Seq(cdsAccount)))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("sdes.get.csv-statement"))(any)(any)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+
+      "converts Sdes response to List[StandingAuthorityFile]" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val numberOfStatements = csvStatementFilesSdesResponse.length
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, Json.toJson(csvStatementFilesSdesResponse).toString())))
+
+        when(sdesGatekeeperServiceSpy.convertTo(any)).thenCallRealMethod()
+
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+        verify(sdesGatekeeperServiceSpy, times(numberOfStatements)).convertToStandingAuthoritiesFile(any)
+      }
+
+      "audit the request" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[AuditingService].toInstance(mockAuditingService)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+
+        import sdesService._
+        // verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+    }
+
+
+    "getCsvStatements" should {
+      "have sdesCsvStatementListUrl configured in AppConfig" in new Setup {
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[AppConfig].toInstance(mockAppConfig)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        sdesService.sdesCsvStatementListUrl
+        verify(mockAppConfig).sdesApi
+      }
+
+      "make a GET request to sdesCsvStatementsUrl" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockHttp).GET(eqTo(url), any, any)(any, any, any)
+      }
+
+      "filter out unknown file types" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, Json.toJson(csvStatementFilesWithUnkownFileTypesSdesResponse).toString())))
+
+        val result = await(sdesService.getCsvStatements(someEoriWithUnknownFileTypes)(hc))
+        result must be(csvStatementFiles)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+
+      "log response time metric" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val cdsAccount = CDSAccounts(newUser().eori, List.empty)
+
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+        when[Future[Seq[CDSAccounts]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
+          .thenReturn(Future.successful(Seq(cdsAccount)))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("sdes.get.csv-statement"))(any)(any)
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+      }
+
+      "converts Sdes response to List[StandingAuthorityFile]" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val numberOfStatements = csvStatementFilesSdesResponse.length
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, Json.toJson(csvStatementFilesSdesResponse).toString())))
+
+        when(sdesGatekeeperServiceSpy.convertTo(any)).thenCallRealMethod()
+
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+        verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
+        verify(sdesGatekeeperServiceSpy, times(numberOfStatements)).convertToStandingAuthoritiesFile(any)
+      }
+
+      "audit the request" in new Setup {
+        val url = sdesCsvStatementsUrl
+        val app = application().overrides(
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[AuditingService].toInstance(mockAuditingService)
+        ).build()
+        val sdesService = app.injector.instanceOf[SdesService]
+        when[Future[HttpResponse]](mockHttp.GET(eqTo(url),any, any)(any,any,any))
+          .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
+
+        await(sdesService.getCsvStatements(someEori)(hc))
+
+        import sdesService._
+        // verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
         verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
       }
     }

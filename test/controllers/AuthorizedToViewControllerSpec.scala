@@ -54,7 +54,30 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
   }
 
-  "onSubmit" should {
+  "The Authorized to View download CSV page" should {
+    "return OK" in new Setup {
+      running(app) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val result = route(app, request).value
+        status(result) should be(OK)
+      }
+    }
+
+    "download authorities csv page when requests all accounts" in new Setup {
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+      val newApp: Application = application().overrides(
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+      ).configure("microservice.services.sdes.context" -> true).build()
+      running(newApp) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val result = route(newApp, request).value
+        status(result) should be(OK)
+      }
+    }
+  }
+
+
+    "onSubmit" should {
     "return OK if there are authorities returned" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
