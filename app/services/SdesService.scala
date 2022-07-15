@@ -73,7 +73,7 @@ class SdesService @Inject()(http: HttpClient,
     getSdesFiles[FileInformation, SecurityStatementFile](sdesSecurityStatementListUrl, eori, "sdes.get.security-statements", transform)
   }
 
-  def getCsvStatements(eori: String)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[StandingAuthorityFile]] = {
+  def getCsvStatements(eori: String)(implicit hc: HeaderCarrier): Future[Seq[StandingAuthorityFile]] = {
     val transform = convertTo[StandingAuthorityFile] andThen filterFileFormats(authorityFileFormats)
     //auditingService.audit(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false))))
     getSdesFiles[FileInformation, StandingAuthorityFile](sdesCsvStatementListUrl, eori, "sdes.get.csv-statement", transform)
