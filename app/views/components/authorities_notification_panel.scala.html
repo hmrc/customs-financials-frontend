@@ -20,8 +20,8 @@
 
 @if(fileExists) {
 <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
-    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1", date) <a id="csv-authority-link" class="govuk-link" href=@url>
+    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1") <a id="csv-authority-link" class="govuk-link" href=@url>
      @messages("cf.authorities.notification-panel.a")</a>.</p>
-    <p class="govuk-body">@messages("cf.authorities.notification-panel.p2")</p>
+    <p class="govuk-body">@messages("cf.authorities.notification-panel.p2",date)</p>
 </div>
 }
