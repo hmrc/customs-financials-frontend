@@ -18,11 +18,8 @@ package domain
 
 import play.api.libs.json.Json
 
-case class SearchedAuthorities(
-                                numberOfAuthorities: String,
-                                authorities: Seq[AuthorisedAccounts]
-                              )
+case class AuditAuthorities(eori: String, searchId: String, companyName: String, searchedAuthorities: SearchedAuthorities)
 
-object SearchedAuthorities {
-  implicit val format = Json.format[SearchedAuthorities]
+object AuditAuthorities {
+  implicit val format = Json.format[AuditAuthorities]
 }

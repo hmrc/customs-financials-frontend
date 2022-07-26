@@ -27,7 +27,7 @@ import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
-import services.{ApiService, DataStoreService}
+import services.{ApiService, AuditingService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
@@ -43,6 +43,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            val sdesConnector: SdesConnector,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
+                                           auditingService: AuditingService,
                                            financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
                                            authorizedView: authorized_to_view,
@@ -107,12 +108,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
           case Right(searchedAuthorities) =>
+            println(Console.YELLOW + searchedAuthorities + Console.RESET)
             val clientEori = searchedAuthorities.authorities.map{
               case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
               case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
               case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
             }.head
             dataStoreService.getCompanyName(clientEori).map { companyName => {
+              auditingService.auditSearchedAuthorities(request.user.eori, query, companyName.get, searchedAuthorities)
               Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName))
             }
             }

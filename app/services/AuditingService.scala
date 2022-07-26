@@ -17,7 +17,7 @@
 package services
 
 import config.AppConfig
-import domain.{AuditEori, AuditModel, SdesFile, SignedInUser}
+import domain.{AuditAuthorities, AuditEori, AuditModel, SdesFile, SearchedAuthorities, SignedInUser}
 import play.api.http.HeaderNames
 import play.api.libs.json.{Json, Writes}
 import play.api.{Logger, LoggerLike}
@@ -50,6 +50,8 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   def auditCsvStatements(eori: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
     audit(AuditModel("DisplayCsvStatements", "Display csv statements", Json.toJson(AuditEori(eori, isHistoric = false))))
 
+  def auditSearchedAuthorities(eori: String, searchId: String, companyName: String, searchedAuthorities: SearchedAuthorities)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
+    audit(AuditModel("ABCDEFG", "A B C D", Json.toJson(AuditAuthorities(eori, searchId, companyName, searchedAuthorities))))
 
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
