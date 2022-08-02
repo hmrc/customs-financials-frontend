@@ -18,12 +18,12 @@ package connectors
 
 import config.AppConfig
 import domain.FileFormat.{authorityFileFormats, filterFileFormats}
-import domain.FileRole.StandingAuthority
-import domain.{FileInformation, SdesFile, StandingAuthorityFile}
+import domain.FileRole.{StandingAuthority, fileRoleFormat}
+import domain.{FileInformation, FileRole, SdesFile, StandingAuthorityFile}
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
-
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class SdesConnector @Inject()(httpClient: HttpClient,
@@ -33,16 +33,22 @@ class SdesConnector @Inject()(httpClient: HttpClient,
                               auditingService: AuditingService
                              )(implicit executionContext: ExecutionContext) {
 
-
   import sdesGatekeeperService._
 
   def getAuthoritiesCsvFiles(eori: String)(implicit hc: HeaderCarrier): Future[Seq[StandingAuthorityFile]] = {
     val transform = convertTo[StandingAuthorityFile] andThen filterFileFormats(authorityFileFormats)
-    getSdesFiles[FileInformation, StandingAuthorityFile](
+
+    val files = getSdesFiles[FileInformation, StandingAuthorityFile](
       appConfig.filesUrl(StandingAuthority),
       eori,
       "sdes.get.csv-statement",
       transform
+    )
+
+    val filename = files.map(x => x.head.filename)
+
+    auditingService.auditDisplayStandingAuthoritiesCSV(
+      eori, filename, FileRole("CSV"), "CSV")
     )
   }
 
@@ -52,10 +58,6 @@ class SdesConnector @Inject()(httpClient: HttpClient,
       httpClient.GET[HttpResponse](url, headers = Seq("x-client-id" -> appConfig.xClientIdHeader, "X-SDES-Key" -> key))(reads, HeaderCarrier(), implicitly)
         .map(readSeq.read("GET", url, _))
         .map(transform)
-        .map{ files =>
-          auditingService.auditFiles(files, key)
-          files
-        }
     }
   }
 }

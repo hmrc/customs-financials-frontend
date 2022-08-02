@@ -52,7 +52,6 @@ class SdesService @Inject()(http: HttpClient,
   val AUDIT_SECURITY_STATEMENTS = "DisplaySecurityStatements"
   val AUDIT_POSTPONED_VAT_STATEMENTS = "DisplayPostponedVATStatements"
 
-
   import sdesGatekeeperService._
 
   def getVatCertificates(eori: String)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[VatCertificateFile]] = {
