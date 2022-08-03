@@ -17,9 +17,7 @@
 package forms.mappings
 
 import play.api.data.Forms._
-import play.api.data.{FieldMapping, Mapping}
-
-import java.time.LocalDate
+import play.api.data.FieldMapping
 
 trait Mappings extends Formatters with Constraints {
   protected def text(errorKey: String = "error.required"): FieldMapping[String] =

@@ -18,7 +18,7 @@ package connectors
 
 import config.AppConfig
 import domain.FileFormat.{authorityFileFormats, filterFileFormats}
-import domain.FileRole.{StandingAuthority, fileRoleFormat}
+import domain.FileRole.StandingAuthority
 import domain.{FileInformation, FileRole, SdesFile, StandingAuthorityFile}
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
@@ -38,17 +38,15 @@ class SdesConnector @Inject()(httpClient: HttpClient,
   def getAuthoritiesCsvFiles(eori: String)(implicit hc: HeaderCarrier): Future[Seq[StandingAuthorityFile]] = {
     val transform = convertTo[StandingAuthorityFile] andThen filterFileFormats(authorityFileFormats)
 
-    val files = getSdesFiles[FileInformation, StandingAuthorityFile](
+    //FileName is not known at this point?
+    auditingService.auditDisplayStandingAuthoritiesCSV(
+      eori, "File Name", FileRole("StandingAuthority"), "CSV")
+
+    getSdesFiles[FileInformation, StandingAuthorityFile](
       appConfig.filesUrl(StandingAuthority),
       eori,
       "sdes.get.csv-statement",
       transform
-    )
-
-    val filename = files.map(x => x.head.filename)
-
-    auditingService.auditDisplayStandingAuthoritiesCSV(
-      eori, filename, FileRole("CSV"), "CSV")
     )
   }
 

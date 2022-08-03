@@ -20,8 +20,8 @@ import config.AppConfig
 import domain.DDStatementType.Weekly
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
-import domain.{AuditEori, AuditModel, CDSAccounts, DutyDefermentStatementFile, DutyDefermentStatementFileMetadata, FileInformation, Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata, VatCertificateFile, VatCertificateFileMetadata}
+import domain.FileRole._
+import domain._
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
@@ -31,23 +31,25 @@ import play.api.libs.json.{JsArray, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.{HttpClient, _}
 import utils.SpecBase
-
 import scala.concurrent.Future
 
 //noinspection TypeAnnotation
 //scalastyle:off magic.number public.methods.have.type
 class SdesServiceSpec extends SpecBase {
   trait Setup {
+
     val hc: HeaderCarrier = HeaderCarrier()
     implicit val messages: Messages = stubMessages()
+
     val someEori = "12345678"
     val someEoriWithUnknownFileTypes = "EoriFooBar"
     val someDan = "87654321"
-
     val xClientId = "TheClientId"
-
     val xClientIdHeader = "x-client-id"
     val xSDESKey = "X-SDES-Key"
+
+    val DOWNLOAD_STANDING_AUTHORITIES_NAME = "Download Standing Authorities CSV"
+    val DOWNLOAD_STANDING_AUTHORITIES_TYPE = "DownloadStandingAuthoritiesCSV"
 
     val sdesVatCertificatesUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/C79Certificate"
     val sdesPostponedVatStatementsUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/PostponedVATStatement"
@@ -82,7 +84,6 @@ class SdesServiceSpec extends SpecBase {
       domain.FileInformation("name_01", "download_url_01", 1300000L, Metadata(List(MetadataItem("PeriodStartYear", "2018"), MetadataItem("PeriodStartMonth", "6"), MetadataItem("FileType", "PDF"), MetadataItem("FileRole", "C79Certificate"))))
     )
 
-
     val postponedVatCertificateFilesSdesResponse = List(
       domain.FileInformation("name_04", "download_url_06", 111L, Metadata(List(MetadataItem("PeriodStartYear", "2018"), MetadataItem("PeriodStartMonth", "3"), MetadataItem("FileType", "pdf"), MetadataItem("FileRole", "PostponedVATStatement"), MetadataItem("DutyPaymentMethod", "Immediate")))),
       domain.FileInformation("name_04", "download_url_05", 111L, Metadata(List(MetadataItem("PeriodStartYear", "2018"), MetadataItem("PeriodStartMonth", "4"), MetadataItem("FileType", "CSV"), MetadataItem("FileRole", "PostponedVATStatement"), MetadataItem("DutyPaymentMethod", "Immediate")))),
@@ -116,7 +117,6 @@ class SdesServiceSpec extends SpecBase {
         MetadataItem("PeriodEndMonth", "3"), MetadataItem("PeriodEndDay", "23"), MetadataItem("FileType", "CSV"), MetadataItem("FileRole", "DutyDefermentStatement"), MetadataItem("DefermentStatementType", "Weekly"), MetadataItem("DutyOverLimit", "N"), MetadataItem("DutyPaymentType", "BACS"), MetadataItem("DAN", someDan))))
     )
 
-
     val securityStatementFiles = List(
       SecurityStatementFile("name_01", "download_url_01", 111L, SecurityStatementFileMetadata(2018, 3, 14, 2018, 3, 23, Csv, SecurityStatement, someEori, 111L, "checksum_01", None)),
       SecurityStatementFile("name_01", "download_url_01", 111L, SecurityStatementFileMetadata(2018, 3, 14, 2018, 3, 23, Pdf, SecurityStatement, someEori, 111L, "checksum_01", None))
@@ -142,8 +142,8 @@ class SdesServiceSpec extends SpecBase {
         List(domain.FileInformation("name_01", "download_url_01", 111L, Metadata(List(
           MetadataItem("PeriodStartYear", "2018"), MetadataItem("PeriodStartMonth", "3"), MetadataItem("PeriodStartDay", "14"), MetadataItem("PeriodEndYear", "2018"),
           MetadataItem("PeriodEndMonth", "3"), MetadataItem("PeriodEndDay", "23"), MetadataItem("FileType", "bar"), MetadataItem("FileRole", "SecurityStatement"),
-          MetadataItem("eoriNumber", someEori), MetadataItem("fileSize", "111"), MetadataItem("checksum", "checksum_01"), MetadataItem("issueDate", "3/4/2018")))))
-
+          MetadataItem("eoriNumber", someEori), MetadataItem("fileSize", "111"), MetadataItem("checksum", "checksum_01"), MetadataItem("issueDate", "3/4/2018"))))
+        )
 
     val csvStatementFiles = List(
       StandingAuthorityFile("name_01", "download_url_01", 111L, StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority), ""),
@@ -259,11 +259,12 @@ class SdesServiceSpec extends SpecBase {
         await(sdesService.getSecurityStatements(someEori)(hc))
 
         import sdesService._
-        verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
+        verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS,
+          AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
+
         verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
       }
     }
-
 
     "getCsvStatements" should {
       "have sdesCsvStatementListUrl configured in AppConfig" in new Setup {
@@ -354,12 +355,13 @@ class SdesServiceSpec extends SpecBase {
 
         await(sdesService.getCsvStatements(someEori)(hc))
 
-        import sdesService._
-        // verify(mockAuditingService).audit(eqTo(AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(someEori, false)))))(any, any)
+        verify(mockAuditingService).audit(eqTo(AuditModel(
+          DOWNLOAD_STANDING_AUTHORITIES_NAME, DOWNLOAD_STANDING_AUTHORITIES_TYPE,
+          Json.toJson(someEori, false))))(any, any)
+
         verify(mockHttp).GET(eqTo(url),any, any)(any,any,any)
       }
     }
-
 
     "getVatCertificates" should {
       "have sdesImportVatCertificateListUrl configured in AppConfig" in new Setup {
