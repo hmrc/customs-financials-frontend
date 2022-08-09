@@ -17,7 +17,7 @@
 package services
 
 import config.AppConfig
-import domain.{AuditEori, AuditModel, SdesFile, SignedInUser}
+import domain._
 import play.api.http.HeaderNames
 import play.api.libs.json.{Json, Writes}
 import play.api.{Logger, LoggerLike}
@@ -26,7 +26,6 @@ import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.{Disabled, Failure, Success}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.{DataEvent, ExtendedDataEvent}
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -50,6 +49,25 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   def auditCsvStatements(eori: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
     audit(AuditModel("DisplayCsvStatements", "Display csv statements", Json.toJson(AuditEori(eori, isHistoric = false))))
 
+  def auditDisplayStandingAuthoritiesCSV(eori: String, fileName: String, fileRole: FileRole, fileType: String)
+    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
+    audit(AuditModel("DisplayStandingAuthoritiesCSV", "Display Standing Authorities CSV",
+        Json.toJson(AuditDisplayStandingAuths(
+          eori = eori,
+          isHistoric = false,
+          fileName = fileName,
+          fileRole = fileRole,
+          fileType = fileType
+        ))))
+
+  def auditDownloadStandingAuthoritiesCSV(eori: String,
+    fileName: String, metadata: DutyDefermentStatementFileMetadata)
+    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
+    audit(AuditModel("DownloadStandingAuthoritiesCSV", "Download Standing Authorities CSV",
+      Json.toJson(AuditDownloadStandingAuths(eori =  eori, fileName = fileName,
+        periodStartYear = metadata.periodStartYear, periodStartMonth = metadata.periodStartMonth,
+        periodStartDay = metadata.periodStartDay, fileType = "CSV", fileRole = metadata.fileRole
+      ))))
 
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))

@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package forms.mappings
+package domain
 
-import play.api.data.Forms._
-import play.api.data.FieldMapping
+import play.api.libs.json.{Json, OWrites}
 
-trait Mappings extends Formatters with Constraints {
-  protected def text(errorKey: String = "error.required"): FieldMapping[String] =
-    of(stringFormatter(errorKey))
+case class AuditDisplayStandingAuths(eori: String, isHistoric: Boolean,
+  fileName: String, fileRole: FileRole, fileType: String)
+
+object AuditDisplayStandingAuths {
+  implicit val requestAuditDisplayStandingAuthsWrites: OWrites[AuditDisplayStandingAuths] =
+    Json.writes[AuditDisplayStandingAuths]
+
+  implicit val format = Json.format[AuditEori]
 }
