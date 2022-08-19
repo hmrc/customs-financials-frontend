@@ -84,6 +84,11 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
+  def downloadCSVFile(url: String) = authenticate async { implicit req =>
+      sdesConnector.downloadSdesFiles(url)
+
+  }
+
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
     sdesConnector.getAuthoritiesCsvFiles(eori)
       .map(_.sortWith(_.startDate isAfter _.startDate))
