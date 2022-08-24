@@ -125,7 +125,7 @@ object FileRole {
 
   case object SecurityStatement extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
 
-  case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Download standing authorities csv", "authorities")
+  case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
 
   val log: LoggerLike = Logger(this.getClass)
@@ -203,7 +203,7 @@ trait SdesFile {
   def auditModelFor(eori: EORI): AuditModel = {
     val downloadStatementAuditData = DownloadStatementAuditData.apply(metadata, eori)
     val data = downloadStatementAuditData.auditData
-    val auditModel = AuditModel("DownloadStatement", metadata.fileRole.transactionName, Json.toJson(data))
+    val auditModel = AuditModel("DisplayStandingAuthoritiesCSV", metadata.fileRole.transactionName, Json.toJson(data))
     auditModel
   }
 }
