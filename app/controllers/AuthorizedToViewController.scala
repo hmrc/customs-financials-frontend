@@ -101,21 +101,29 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
           BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
         },
-//        Future.successful(BadRequest(authorisedToViewSearch(formWithErrors, None, None))),
       query =>
         apiService.searchAuthorities(request.user.eori, query).flatMap {
           case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
-          case Right(searchedAuthorities) =>
+          case Right(searchedAuthorities) => {
+
+            val displayLink: Boolean = searchedAuthorities.authorities.exists {
+              case AuthorisedDutyDefermentAccount(account, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
+              case AuthorisedCashAccount(account, availableAccountBalance) => availableAccountBalance.isEmpty
+              case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
+            }
+
             val clientEori = searchedAuthorities.authorities.map{
               case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
               case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
               case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
             }.head
+
             dataStoreService.getCompanyName(clientEori).map { companyName => {
-              Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName))
+              Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName, displayLink))
             }
             }
+          }
         }
     )
   }

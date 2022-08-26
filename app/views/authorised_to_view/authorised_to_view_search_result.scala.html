@@ -29,7 +29,8 @@
         company_inset: components.authorised_account_search_inset
 )
 
-@(query: String, clientEori: String, searchedAuthorities: SearchedAuthorities, companyName: Option[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(query: String, clientEori: String, searchedAuthorities: SearchedAuthorities,
+companyName: Option[String], displayLink: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = Some(messages("cf.search.authorities.result.title", query)),
@@ -54,6 +55,14 @@
                 case AuthorisedCashAccount(account, availableAccountBalance) =>
                     result_panel(account.accountType, account.accountNumber, availableAccountBalance)
             }
+        }
+        @if(displayLink) {
+            <details class="govuk-details govuk-!-margin-top-8" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text"> @messages("cf.search.authorities.result.balance.title")</span>
+                </summary>
+                <div class="govuk-details__text"> @messages("cf.search.authorities.result.balance.label")</div>
+            </details>
         }
     </div>
 }
