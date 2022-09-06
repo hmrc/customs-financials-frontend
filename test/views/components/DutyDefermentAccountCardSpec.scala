@@ -28,8 +28,6 @@ import utils.SpecBase
 import viewmodels.FinancialsHomeModel
 import views.html.account_cards.duty_deferment_account_cards
 
-
-
 class DutyDefermentAccountCardSpec extends SpecBase {
 
   "Duty Deferment Account Card" should {
@@ -79,10 +77,17 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       }
     }
 
-    "not include a link to the duty deferment contact details page when status is suspended" in new Setup {
+    "not include a link to the duty deferment contact details page when status is suspended and status id is 4" in new Setup {
       running(app) {
         val expectedUrl = contactDetailsLink1
-        content(dutyDefermentAccountSuspended).containsLink(expectedUrl) mustBe true
+        content(dutyDefermentAccountSuspendedWithStatusId4).containsLink(expectedUrl) mustBe false
+      }
+    }
+
+    "include a link to the duty deferment contact details page when status is suspended and status id is other than 4" in new Setup {
+      running(app) {
+        val expectedUrl = contactDetailsLink1
+        content(dutyDefermentAccountSuspendedWithStatusId7).containsLink(expectedUrl) mustBe true
       }
     }
 
@@ -187,12 +192,6 @@ class DutyDefermentAccountCardSpec extends SpecBase {
         }
       }
 
-      "display set up direct debit if accountStatus is not 'Pending' and accountStatusId is 'DirectDebitMandateCancelled'" in new Setup {
-        running(app) {
-          content(dutyDefermentAccountStatusID4).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
-        }
-      }
-
       "display will be available if account balance is not 0" in new Setup {
         running(app) {
           content(dutyDefermentAccountPending).getElementById("duty-deferment-balance-123456").text mustBe "£99.01 will be available"
@@ -217,7 +216,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "display direct debit setup link if accountStatusId is DirectDebitMandateCancelled" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID4).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountSuspendedWithStatusId4).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe true
         }
       }
 
@@ -346,6 +345,9 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val dutyDefermentAccountStatusID7 = dutyDefermentAccount.copy(statusId = ReturnedMailOther)
     val dutyDefermentAccountStatusID8 = dutyDefermentAccount.copy(statusId = GuaranteeExceeded)
     val dutyDefermentAccountStatusID9 = dutyDefermentAccount.copy(statusId = AccountCancelled)
+
+    val dutyDefermentAccountSuspendedWithStatusId4 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
+    val dutyDefermentAccountSuspendedWithStatusId7 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = ReturnedMailOther)
 
     val dutyDefermentAccountPendingZeroBalance = dutyDefermentAccountPending.copy(balances = DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(00.00))))
 
