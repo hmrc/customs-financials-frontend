@@ -55,7 +55,7 @@
                         </h3>
                         @accountStatus(account.status, "duty-deferment")
                     </header>
-                    @if(account.status == AccountStatusSuspended) {
+                    @if(account.status == AccountStatusSuspended && account.isDirectDebitSetupRequired) {
                         @directDebitSetup(account, model.dutyDefermentAccountDDSetupLinks)
                       </div>
                     </div>
@@ -154,7 +154,6 @@
                     </span>
                     </p>
                 </div>
-                @directDebitSetup(account, model.dutyDefermentAccountDDSetupLinks)
             </div>
           }
         }
