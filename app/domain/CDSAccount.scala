@@ -66,7 +66,7 @@ case class DutyDefermentAccount(number: String,
           DutyDefermentDisplayBalance(
             None,
             Some(Formatters.formatCurrencyAmount(guaranteeLimit)),
-            Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
+            None)
         )
       }
       case _ => None
