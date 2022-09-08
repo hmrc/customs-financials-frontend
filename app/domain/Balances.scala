@@ -41,7 +41,10 @@ case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
     case _ => (MIN, MIN)
   }
 
-  val availableBalance: BigDecimal = periodAvailableAccountBalance.getOrElse(MIN)
+  val availableBalance = (periodAccountLimit, periodAvailableAccountBalance, periodAvailableGuaranteeBalance) match {
+    case (Some(MIN), Some(MIN), _) => periodAvailableGuaranteeBalance.getOrElse(MIN)
+    case _ => periodAvailableAccountBalance.getOrElse(MIN)
+  }
 }
 
 case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,
