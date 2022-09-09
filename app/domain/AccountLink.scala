@@ -39,11 +39,3 @@ case class AccountLink(sessionId: String,
     )
   }
 }
-
-object AccountLink {
-
-  implicit val lastUpdatedReads: Reads[DateTime] = uk.gov.hmrc.mongo.json.ReactiveMongoFormats.dateTimeRead
-  implicit val lastUpdatedWrites: Writes[DateTime] = uk.gov.hmrc.mongo.json.ReactiveMongoFormats.dateTimeWrite
-  implicit val accountLinkFormat: OFormat[AccountLink] = Json.format[AccountLink]
-
-}

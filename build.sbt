@@ -55,7 +55,6 @@ val compileDependencies = Seq(
   "uk.gov.hmrc" %% "auth-client" % "5.7.0-play-28",
   "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
   "org.typelevel" %% "cats-core" % "2.3.0",
-  "uk.gov.hmrc" %% "mongo-caching" % "7.0.0-play-28",
   "uk.gov.hmrc" %% "tax-year" % "1.6.0",
   "org.webjars.npm" % "moment" % "2.29.0",
   "com.typesafe.play" %% "play-json-joda" % "2.9.2"
