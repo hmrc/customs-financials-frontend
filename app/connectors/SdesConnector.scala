@@ -19,7 +19,7 @@ package connectors
 import config.AppConfig
 import domain.FileFormat.{authorityFileFormats, filterFileFormats}
 import domain.FileRole.StandingAuthority
-import domain.{FileInformation, FileRole, SdesFile, StandingAuthorityFile}
+import domain.{FileInformation, SdesFile, StandingAuthorityFile}
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
 import javax.inject.Inject
