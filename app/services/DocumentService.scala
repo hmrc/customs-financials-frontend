@@ -16,7 +16,7 @@
 
 package services
 
-import domain.{EORI, PostponedVatStatementFile, SdesFile, SecurityStatementFile, StandingAuthorityFile, VatCertificateFile}
+import domain.{EORI, SdesFile, StandingAuthorityFile}
 import play.api.i18n.Messages
 import uk.gov.hmrc.http.HeaderCarrier
 

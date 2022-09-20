@@ -18,8 +18,8 @@ package services
 
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.{C79Certificate, PostponedVATStatement, SecurityStatement, StandingAuthority}
-import domain.{Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, SecurityStatementFile, SecurityStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata, VatCertificateFile, VatCertificateFileMetadata}
+import domain.FileRole.{PostponedVATStatement, StandingAuthority}
+import domain.{Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
