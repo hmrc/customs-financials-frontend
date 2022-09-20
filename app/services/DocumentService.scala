@@ -27,18 +27,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class DocumentService @Inject()(sdesService: SdesService,
                                 auditingService: AuditingService)(implicit ec: ExecutionContext) {
 
-  def getVatCertificates(eori: EORI)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[VatCertificateFile]] = {
-    sdesService.getVatCertificates(eori).map(auditFiles(_, eori))
-  }
-
-  def getSecurityStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[SecurityStatementFile]] = {
-    sdesService.getSecurityStatements(eori).map(auditFiles(_, eori))
-  }
-
-  def getPostponedVatStatements(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[PostponedVatStatementFile]] = {
-    sdesService.getPostponedVatStatements(eori).map(auditFiles(_, eori))
-  }
-
   def getCsvStatements(eori: EORI)(implicit hc: HeaderCarrier, messages: Messages): Future[Seq[StandingAuthorityFile]] = {
     sdesService.getCsvStatements(eori).map(auditFiles(_, eori))
   }

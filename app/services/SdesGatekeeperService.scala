@@ -26,23 +26,6 @@ import javax.inject.Singleton
 @Singleton
 class SdesGatekeeperService() {
 
-  implicit def convertToVatCertificateFile(sdesResponseFile: FileInformation)(implicit messages: Messages): VatCertificateFile = {
-    val metadata = sdesResponseFile.metadata.asMap
-
-    VatCertificateFile(
-      sdesResponseFile.filename,
-      sdesResponseFile.downloadURL,
-      sdesResponseFile.fileSize,
-      VatCertificateFileMetadata(
-        metadata("PeriodStartYear").toInt,
-        metadata("PeriodStartMonth").toInt,
-        FileFormat(metadata("FileType")),
-        FileRole(metadata("FileRole")),
-        metadata.get("statementRequestID")),
-      ""
-    )
-  }
-
   implicit def convertToPostponedVatCertificateFile(sdesResponseFile: FileInformation): PostponedVatStatementFile = {
     val metadata = sdesResponseFile.metadata.asMap
 
@@ -59,29 +42,6 @@ class SdesGatekeeperService() {
         metadata.get("statementRequestID")
       ),
       ""
-    )
-  }
-
-  implicit def convertToSecurityStatementFile(sdesResponseFile: FileInformation): SecurityStatementFile = {
-    val metadata = sdesResponseFile.metadata.asMap
-
-    SecurityStatementFile(
-      sdesResponseFile.filename,
-      sdesResponseFile.downloadURL,
-      sdesResponseFile.fileSize,
-      SecurityStatementFileMetadata(
-        metadata("PeriodStartYear").toInt,
-        metadata("PeriodStartMonth").toInt,
-        metadata("PeriodStartDay").toInt,
-        metadata("PeriodEndYear").toInt,
-        metadata("PeriodEndMonth").toInt,
-        metadata("PeriodEndDay").toInt,
-        FileFormat(metadata("FileType")),
-        FileRole(metadata("FileRole")),
-        metadata.getOrElse("eoriNumber", "MISSING EORI NUMBER"),
-        metadata.getOrElse("fileSize", sdesResponseFile.fileSize.toString).toLong,
-        metadata.getOrElse("checksum", "MISSING CHECKSUM"),
-        metadata.get("statementRequestID"))
     )
   }
 
