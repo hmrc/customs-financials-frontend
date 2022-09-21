@@ -57,8 +57,10 @@
             labelClasses = Some("govuk-visually-hidden")
         )
 
-        @button(messages("cf.search.authorities.button"), None)
-        <br>
+
+        <div class="govuk-!-padding-bottom-5">
+            @button(messages("cf.search.authorities.button"), None)
+        </div>
 
         @h2(msg = "cf.search.authorities.h2")
 
