@@ -41,10 +41,12 @@
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
         @notificationPanel(url, date, fileExists)
         @p("cf.search.authorities.p")
+
         <ul class="govuk-list govuk-list--bullet">
             <li>@messages("cf.search.authorities.eori")</li>
             <li>@messages("cf.search.authorities.account")</li>
         </ul>
+
         @inputText(
             form,
             id = "value",
@@ -54,7 +56,10 @@
             classes = Some("govuk-!-width-two-thirds"),
             labelClasses = Some("govuk-visually-hidden")
         )
-        @button(messages("cf.search.authorities.button"), None)
+
+        <div class="govuk-!-padding-bottom-5">
+            @button(messages("cf.search.authorities.button"), None)
+        </div>
 
         @h2(msg = "cf.search.authorities.h2")
 
