@@ -17,7 +17,6 @@
 package domain
 
 import org.joda.time.DateTime
-import play.api.libs.json.{Json, OFormat, Reads, Writes}
 
 case class AccountLink(sessionId: String,
                        eori: EORI,
