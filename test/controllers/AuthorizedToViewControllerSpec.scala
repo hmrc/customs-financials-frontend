@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService, SdesService}
+import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.GatewayTimeoutException
 import utils.SpecBase
 

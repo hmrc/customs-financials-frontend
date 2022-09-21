@@ -24,25 +24,6 @@ import javax.inject.Singleton
 @Singleton
 class SdesGatekeeperService() {
 
-  implicit def convertToPostponedVatCertificateFile(sdesResponseFile: FileInformation): PostponedVatStatementFile = {
-    val metadata = sdesResponseFile.metadata.asMap
-
-    PostponedVatStatementFile(
-      sdesResponseFile.filename,
-      sdesResponseFile.downloadURL,
-      sdesResponseFile.fileSize,
-      PostponedVatStatementFileMetadata(
-        metadata("PeriodStartYear").toInt,
-        metadata("PeriodStartMonth").toInt,
-        FileFormat(metadata("FileType")),
-        FileRole(metadata("FileRole")),
-        mapDutyPaymentMethod(metadata("DutyPaymentMethod")),
-        metadata.get("statementRequestID")
-      ),
-      ""
-    )
-  }
-
   implicit def convertToStandingAuthoritiesFile(sdesResponseFile: FileInformation): StandingAuthorityFile = {
     val metadata = sdesResponseFile.metadata.asMap
 
@@ -62,10 +43,4 @@ class SdesGatekeeperService() {
 
   def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] = _.map(converter)
 
-  private def mapDutyPaymentMethod(dutyPaymentMethod: String): String = {
-    dutyPaymentMethod match {
-      case "Chief" => CHIEF
-      case _ => CDS
-    }
-  }
 }
