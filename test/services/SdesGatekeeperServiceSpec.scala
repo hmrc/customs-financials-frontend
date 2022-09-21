@@ -31,67 +31,6 @@ class SdesGatekeeperServiceSpec extends SpecBase {
   implicit val messages: Messages = Helpers.stubMessages()
   "SdesGatekeeperService" should {
 
-    "convertToPostponedVatCertificateFile" should {
-
-      "create PostponedVatCertificateFile from FileInformation" in {
-        val sdesGatekeeperService = new SdesGatekeeperService()
-
-        val metadata = List(
-          MetadataItem("PeriodStartYear", "2018"),
-          MetadataItem("PeriodStartMonth", "6"),
-          MetadataItem("FileType", "PDF"),
-          MetadataItem("FileRole", "PostponedVATStatement"),
-          MetadataItem("DutyPaymentMethod", "Immediate")
-        )
-
-        val fileInformation = domain.FileInformation(
-          "PostponedVATStatement_100000000323_pdf.pdf",
-          "https://some.sdes.domain?token=abc123",
-          1234,
-          Metadata(metadata)
-        )
-        val expectedPostponedVatCertificateFile = PostponedVatStatementFile(
-          "PostponedVATStatement_100000000323_pdf.pdf",
-          "https://some.sdes.domain?token=abc123",
-          1234L,
-          PostponedVatStatementFileMetadata(2018, 6, Pdf, PostponedVATStatement, CDS, None),
-          ""
-        )
-
-        val postponedVatCertificateFile = sdesGatekeeperService.convertToPostponedVatCertificateFile(fileInformation)
-
-        postponedVatCertificateFile must be(expectedPostponedVatCertificateFile)
-      }
-
-      "raise exception if mandatory information is missing" in  {
-        val sdesGatekeeperService = new SdesGatekeeperService()
-
-        val metadata = List(
-          MetadataItem("PeriodStartYear", "2018"),
-          MetadataItem("PeriodStartMonth", "6"),
-          MetadataItem("FileType", "PDF"),
-          MetadataItem("FileRole", "PostponedVATStatement"),
-          MetadataItem("DutyPaymentMethod", "Immediate")
-        )
-        metadata.foreach { item =>
-
-          val incompleteMetadata = Metadata(metadata.filterNot(_ == item))
-
-          assertThrows[NoSuchElementException] {
-
-            val fileInformation = domain.FileInformation(
-              "PostponedVATStatement_100000000323_pdf.pdf",
-              "https://some.sdes.domain?token=abc123",
-              1234L,
-              incompleteMetadata
-            )
-
-            sdesGatekeeperService.convertToPostponedVatCertificateFile(fileInformation)
-          }
-        }
-      }
-    }
-
     "create StandingAuthorityFile from FileInformation" in  {
       val sdesGatekeeperService = new SdesGatekeeperService()
 

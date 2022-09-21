@@ -46,29 +46,6 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
     Future.sequence(files.map { file =>audit(file.auditModelFor(eori))})
   }
 
-  def auditCsvStatements(eori: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
-    audit(AuditModel("DisplayCsvStatements", "Display csv statements", Json.toJson(AuditEori(eori, isHistoric = false))))
-
-  def auditDisplayStandingAuthoritiesCSV(eori: String, fileName: String, fileRole: FileRole, fileType: String)
-    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
-    audit(AuditModel("DisplayStandingAuthoritiesCSV", "Display Standing Authorities CSV",
-        Json.toJson(AuditDisplayStandingAuths(
-          eori = eori,
-          isHistoric = false,
-          fileName = fileName,
-          fileRole = fileRole,
-          fileType = fileType
-        ))))
-
-  def auditDownloadStandingAuthoritiesCSV(eori: String,
-    fileName: String, metadata: DutyDefermentStatementFileMetadata)
-    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] =
-    audit(AuditModel("DownloadStandingAuthoritiesCSV", "Download Standing Authorities CSV",
-      Json.toJson(AuditDownloadStandingAuths(eori =  eori, fileName = fileName,
-        periodStartYear = metadata.periodStartYear, periodStartMonth = metadata.periodStartMonth,
-        periodStartDay = metadata.periodStartDay, fileType = "CSV", fileRole = metadata.fileRole
-      ))))
-
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
 
