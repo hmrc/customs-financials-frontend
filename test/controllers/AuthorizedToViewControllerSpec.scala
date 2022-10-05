@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.SdesConnector
-import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
+import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
@@ -33,7 +33,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
   "The Authorized to View page" should {
     "return OK" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         status(result) should be(OK)
       }
@@ -45,7 +45,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
       running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
         status(result) should be(OK)
       }
@@ -55,7 +55,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
   "The Authorized to View download CSV page" should {
     "return OK" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         status(result) should be(OK)
       }
@@ -67,7 +67,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("microservice.services.sdes.context" -> true).build()
       running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
         status(result) should be(OK)
       }
@@ -136,17 +136,25 @@ class AuthorizedToViewControllerSpec extends SpecBase {
   "The header section" should {
     "have a back to accounts link on top" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.containsLinkWithText("/customs/payment-records", "link-back")
       }
     }
+
+    "have a heading field" in new Setup {
+      running(app) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        println(html.getElementsByTag("h1").text)
+//        should be("Find accounts you have authority to use")
+      }
+    }
   }
 
   trait Setup {
-
-    val state: AuthorizedToViewPageState = AuthorizedToViewPageState(1)
 
     val dd1 = DutyDefermentAccount("1231231231", newUser().eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
     val dd2 = DutyDefermentAccount("7567567567", newUser().eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), None, None), viewBalanceIsGranted = true, isIsleOfMan = false)

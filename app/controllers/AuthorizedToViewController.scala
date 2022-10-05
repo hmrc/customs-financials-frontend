@@ -20,7 +20,7 @@ import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
 import domain.FileRole.StandingAuthority
-import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
+import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -52,7 +52,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   val log: LoggerLike = Logger(this.getClass)
   val form: Form[String] = eoriNumberFormProvider()
 
-  def onPageLoad(pageState: AuthorizedToViewPageState): Action[AnyContent] = authenticate async { implicit req =>
+  def onPageLoad(): Action[AnyContent] = authenticate async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
       for {
