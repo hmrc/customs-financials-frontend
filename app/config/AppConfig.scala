@@ -67,8 +67,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
   lazy val csvAccountUrl: String = s"$documentsUrl/csv-statement"
 
-  lazy val newAgentView: Boolean = config.get[Boolean]("features.new-agent-view-enabled")
-
   lazy val customsFinancialsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
     config.get[String]("microservice.services.customs-financials-session-cache.context")
 
