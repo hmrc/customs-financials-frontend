@@ -18,9 +18,8 @@ package controllers
 
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
-import connectors.CustomsFinancialsApiConnector
+import connectors.{CustomsFinancialsApiConnector, SdesConnector}
 import domain.FileRole.StandingAuthority
-import connectors.SdesConnector
 import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, NoAuthorities, SearchError}
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -28,10 +27,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
-import uk.gov.hmrc.http.GatewayTimeoutException
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
-import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result, authorized_to_view}
+import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result}
 
 import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
@@ -45,7 +43,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            dataStoreService: DataStoreService,
                                            financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
-                                           authorizedView: authorized_to_view,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
                                            authorisedToViewSearchNoResult: authorised_to_view_search_no_result,
@@ -58,20 +55,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   def onPageLoad(pageState: AuthorizedToViewPageState): Action[AnyContent] = authenticate async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
-    if (!appConfig.newAgentView) {
-      val eori = req.user.eori
-      val result = for {
-        accounts <- apiService.getAccounts(eori).map(_.authorizedToView)
-      } yield {
-        val viewModel = viewmodels.AuthorizedToViewViewModel(req.user.eori, accounts, pageState)
-        Ok(authorizedView(viewModel))
-      }
-      result.recover {
-        case _: GatewayTimeoutException =>
-          log.warn(s"Request Timeout while fetching accounts")
-          Redirect(routes.CustomsFinancialsHomeController.showAccountUnavailable)
-      }
-    } else {
       for {
         csvFiles <- getCsvFile(req.user.eori)
       } yield {
@@ -81,7 +64,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
         Ok(authorisedToViewSearch(form, url, date, fileExists))
       }
-    }
   }
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {

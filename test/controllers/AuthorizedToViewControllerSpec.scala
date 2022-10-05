@@ -20,12 +20,10 @@ import connectors.SdesConnector
 import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, AuthorizedToViewPageState, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.{Application, inject}
+import org.mockito.ArgumentMatchersSugar.any
 import play.api.test.Helpers._
+import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
-import uk.gov.hmrc.http.GatewayTimeoutException
 import utils.SpecBase
 
 import scala.concurrent.Future
@@ -142,127 +140,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         html.containsLinkWithText("/customs/payment-records", "link-back")
-      }
-    }
-
-    "have a heading field" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByTag("h1").text mustBe "Find accounts you have authority to use"
-      }
-    }
-  }
-
-  "The accounts section" should {
-
-    "have a list of duty deferment accounts that I do not own along with their EORI and Account number displayed" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementById("account-0").text mustBe s"Account: ${dd3.number}"
-        html.getElementById("eori-0").text mustBe s"EORI number: ${dd3.owner}"
-        html.getElementById("account-1").text mustBe s"Account: ${dd4.number}"
-        html.getElementById("eori-1").text mustBe s"EORI number: ${dd4.owner}"
-      }
-    }
-
-    "list duty deferment balances only when they are available" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByClass("guaranteeLimitRemaining").text mustBe "Guarantee limit remaining: £50"
-        html.getElementsByClass("accountLimitRemaining").text mustBe "Account limit remaining: £20"
-      }
-    }
-
-    "have a list of cash accounts that I do not own along with their EORI and Account number displayed" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementById("account-2").text mustBe s"Account: ${cashAccount1.number}"
-        html.getElementById("eori-2").text() shouldBe (s"EORI number: ${cashAccount1.owner}")
-        html.getElementById("account-3").text mustBe s"Account: ${cashAccount2.number}"
-        html.getElementById("eori-3").text() shouldBe (s"EORI number: ${cashAccount2.owner}")
-      }
-    }
-
-    "list cash balances only when they are available" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByClass("availableAccountBalance").text mustBe "Available account balance £100"
-      }
-    }
-
-    "have a list of guarantee accounts that I do not own along with their EORI and Account number displayed" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementById("account-4").text mustBe s"Account: ${ggAccount1.number}"
-        html.getElementById("eori-4").text() shouldBe (s"EORI number: ${ggAccount1.owner}")
-        html.getElementById("account-5").text mustBe s"Account: ${ggAccount2.number}"
-        html.getElementById("eori-5").text() shouldBe (s"EORI number: ${ggAccount2.owner}")
-      }
-    }
-
-    "list guarantee balances only when they are available" in new Setup {
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByClass("availableGuaranteeBalance").text mustBe "Guarantee limit remaining £300"
-      }
-    }
-
-    "not display account, account type and eori headings when there are no accounts" in {
-      val cdsAccountsEmpty = CDSAccounts(newUser().eori, List.empty)
-      val mockApiService = mock[ApiService]
-      val mockSdesConnector = mock[SdesConnector]
-      val state = AuthorizedToViewPageState(1)
-
-      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
-        .thenReturn(Future.successful(cdsAccountsEmpty))
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
-
-      val app = application()
-        .overrides(
-          inject.bind[ApiService].toInstance(mockApiService),
-          inject.bind[SdesConnector].toInstance(mockSdesConnector)
-        ).build()
-
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-        html.notContainElementById("account_0")
-        html.notContainElementById("account-type-0")
-        html.notContainElementById("eori_0")
-      }
-    }
-
-    "display Account unavailable page when GatewayTimeoutException is thrown" in {
-      val mockApiService = mock[ApiService]
-      val state = AuthorizedToViewPageState(1)
-
-      when(mockApiService.getAccounts(any)(any))
-        .thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
-      val app = application()
-        .overrides(
-          inject.bind[ApiService].toInstance(mockApiService)
-        ).configure("features.new-agent-view-enabled" -> false).build()
-      running(app) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad(state).url)
-        val result = route(app, request).value
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable.url
       }
     }
   }
