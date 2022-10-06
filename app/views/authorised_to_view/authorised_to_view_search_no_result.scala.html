@@ -31,7 +31,7 @@
 @layout(
     pageTitle = Some(messages("cf.search.authorities.result.title", query)),
     helpAndSupport = false,
-    backLink = Some(routes.AuthorizedToViewController.onPageLoad(AuthorizedToViewPageState(0)).url)
+    backLink = Some(routes.AuthorizedToViewController.onPageLoad().url)
 ) {
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
 

@@ -8,7 +8,7 @@ GET        /logout                                               controllers.Log
 GET        /logout-no-survey                                     controllers.LogoutController.logoutNoSurvey
 GET        /help/accessibility                                   controllers.StaticPagesController.accessibility
 GET        /not-subscribed-for-cds                               controllers.UnauthorisedController.onPageLoad
-GET        /authorized-to-view                                   controllers.AuthorizedToViewController.onPageLoad(state: domain.AuthorizedToViewPageState)
+GET        /authorized-to-view                                   controllers.AuthorizedToViewController.onPageLoad()
 POST       /authorized-to-view                                   controllers.AuthorizedToViewController.onSubmit()
 GET        /request-authorities-csv                              controllers.AuthorizedRequestReceivedController.requestAuthoritiesCsv()
 
