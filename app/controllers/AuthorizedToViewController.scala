@@ -84,9 +84,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
         },
       query => {
-        val searchquery = stripWithWhitespace(query)
-        apiService.searchAuthorities(request.user.eori, searchquery).flatMap {
-          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchquery)))
+        val searchQuery = stripWithWhitespace(query)
+        apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
+          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
           case Right(searchedAuthorities) => {
 
@@ -103,7 +103,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
             }.head
 
             dataStoreService.getCompanyName(clientEori).map { companyName => {
-              Ok(authorisedToViewSearchResult(searchquery, clientEori, searchedAuthorities, companyName, displayLink))
+              Ok(authorisedToViewSearchResult(searchQuery, clientEori, searchedAuthorities, companyName, displayLink))
             }
             }
           }
