@@ -67,7 +67,7 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
 
   def searchAuthorities(eori: String, searchID: String)(implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
-    val request = SearchAuthoritiesRequest(stripWithWhitespace(searchID), eori)
+    val request = SearchAuthoritiesRequest(searchID, eori)
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.search-authorities") {
       http.POST[SearchAuthoritiesRequest, HttpResponse](apiEndpoint, request).map {
@@ -117,7 +117,4 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
       }
     }
   }
-
-  protected def stripWithWhitespace(str: String): String =
-    str.replaceAll("\\s", "")
 }

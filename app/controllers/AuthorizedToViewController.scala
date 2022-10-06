@@ -83,9 +83,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
           BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
         },
-      query =>
-        apiService.searchAuthorities(request.user.eori, query).flatMap {
-          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(query)))
+      query => {
+        val searchQuery = stripWithWhitespace(query)
+        apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
+          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
           case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
           case Right(searchedAuthorities) => {
 
@@ -95,19 +96,22 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
               case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
             }
 
-            val clientEori = searchedAuthorities.authorities.map{
+            val clientEori = searchedAuthorities.authorities.map {
               case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
               case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
               case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
             }.head
 
             dataStoreService.getCompanyName(clientEori).map { companyName => {
-              Ok(authorisedToViewSearchResult(query, clientEori, searchedAuthorities, companyName, displayLink))
+              Ok(authorisedToViewSearchResult(searchQuery, clientEori, searchedAuthorities, companyName, displayLink))
             }
             }
+          }
           }
         }
     )
   }
+  protected def stripWithWhitespace(str: String): String =
+    str.replaceAll("\\s", "")
 }
 
