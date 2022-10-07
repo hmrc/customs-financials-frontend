@@ -24,7 +24,7 @@ class EoriNumberFormProvider extends Mappings {
   def apply(): Form[String] =
     Form(
       "value" -> text("cf.search.authorities.error")
-        .verifying(checkEORI("eoriNumber.error.gbnEori.format","cf.search.authorities.error.invalid"))
+        .verifying(checkEORI("cf.search.authorities.error.invalid"))
 
     )
 }
