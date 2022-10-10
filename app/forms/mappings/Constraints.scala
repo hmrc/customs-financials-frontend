@@ -20,16 +20,16 @@ import play.api.data.validation.{Constraint, Invalid, Valid}
 
 trait Constraints {
 
-  lazy val gbnEoriRegex: String = "^GBN[0-9]*"
+  lazy val gbnEoriRegex: String = "GBN\\d{11}"
   lazy val eoriRegex: String = "GB\\d{12}"
   lazy val danRegex: String = "^[0-9]{7}"
   lazy val canRegex: String = "^[0-9]{11}"
   lazy val ganRegex: String = "^[a-zA-Z0-9]{8,10}"
 
-  protected def checkEORI(gbnErrorKey: String, invalidFormatErrorKey: String): Constraint[String] =
+  protected def checkEORI(invalidFormatErrorKey: String): Constraint[String] =
     Constraint {
       case str if stripWhitespace(str).matches(gbnEoriRegex) =>
-        Invalid(gbnErrorKey,gbnEoriRegex)
+        Valid
       case str if stripWhitespace(str).matches(eoriRegex) =>
         Valid
       case str if stripWhitespace(str).matches(danRegex) =>
