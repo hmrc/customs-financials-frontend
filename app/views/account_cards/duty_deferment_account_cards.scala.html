@@ -131,7 +131,8 @@
                             </a>
                         }
                         @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
-                            <a class="govuk-link govuk-!-margin-right-2" href="@model.dutyDefermentContactDetailsLinks()(appConfig)(account.owner, account.number)">
+                            <a id="account-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
+                            href="@model.dutyDefermentContactDetailsLinks()(appConfig)(account.owner, account.number)">
                                 <span aria-hidden="true">
                                     @messages("cf.accounts.contact.details")
                                 </span>
