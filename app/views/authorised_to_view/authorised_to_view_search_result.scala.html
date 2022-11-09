@@ -53,7 +53,8 @@ companyName: Option[String], displayLink: Boolean)(implicit request: Request[_],
 
                 case AuthorisedDutyDefermentAccount(account, balances) if(
                     balances.map(_.periodAvailableAccountBalance).head == "0.00") =>
-                        result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableGuaranteeBalance))
+                    result_panel(account.accountType, account.accountNumber,
+                balances.map(_.periodAvailableGuaranteeBalance))
 
                 case AuthorisedDutyDefermentAccount(account, balances) =>
                     result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance))
