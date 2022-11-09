@@ -50,8 +50,13 @@ companyName: Option[String], displayLink: Boolean)(implicit request: Request[_],
             searchedAuthorities.authorities.map {
                 case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) =>
                     result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance)
+
+                case AuthorisedDutyDefermentAccount(account, balances) if (balances.map(_.periodAvailableAccountBalance) == "0.00") =>
+                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableGuaranteeBalance))
+
                 case AuthorisedDutyDefermentAccount(account, balances) =>
                     result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance))
+
                 case AuthorisedCashAccount(account, availableAccountBalance) =>
                     result_panel(account.accountType, account.accountNumber, availableAccountBalance)
             }
