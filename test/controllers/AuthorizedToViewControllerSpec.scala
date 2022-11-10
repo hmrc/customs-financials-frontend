@@ -80,7 +80,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.00", "200.00")))
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -95,6 +95,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
+        html.text().contains("£200.00") shouldBe true
       }
     }
 
@@ -102,7 +103,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-          AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
+          AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.00", "0.00")))
         val cashAccount: AuthorisedCashAccount =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -117,6 +118,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
           val html = Jsoup.parse(contentAsString(result))
           status(result) shouldBe OK
           html.text().contains("Search results for GB123456789012") shouldBe true
+          html.text().contains("£1000.00") shouldBe true
         }
       }
 
