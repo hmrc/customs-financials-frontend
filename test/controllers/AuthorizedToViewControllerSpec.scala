@@ -74,13 +74,12 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
   }
 
-
-    "onSubmit" should {
+  "onSubmit" should {
     "return OK if there are authorities returned" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.00", "200.00")))
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -95,32 +94,30 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
-        html.text().contains("£200.00") shouldBe true
       }
     }
 
-      "return OK if there are authorities returned with spaces in search string" in new Setup {
-        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
-        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-          AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.00", "0.00")))
-        val cashAccount: AuthorisedCashAccount =
-          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+    "return OK if there are authorities returned with spaces in search string" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-        when(mockApiService.searchAuthorities(any, any)(any))
-          .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
-        when(mockDataStoreService.getCompanyName(any)(any))
-          .thenReturn(Future.successful(Some("Company name")))
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
-          val result = route(app, request).value
-          val html = Jsoup.parse(contentAsString(result))
-          status(result) shouldBe OK
-          html.text().contains("Search results for GB123456789012") shouldBe true
-          html.text().contains("£1000.00") shouldBe true
-        }
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe OK
+        html.text().contains("Search results for GB123456789012") shouldBe true
       }
+    }
 
     "return OK if there are no authorities returned and display the no authorities page" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
@@ -155,6 +152,26 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
+
+    "Display error message if searching your own EORI number" in new Setup {
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> newUser().eori)
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+        html.text().contains("You cannot search your own EORI number") shouldBe true
+      }
+    }
+
+/*    "Display error message if searching your own Account number" in new Setup {
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "7567567567")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+        html.text().contains("You cannot search your own account number") shouldBe true
+      }
+    }*/
   }
 
   "The header section" should {
@@ -173,22 +190,34 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         println(html.getElementsByTag("h1").text)
-//        should be("Find accounts you have authority to use")
       }
     }
   }
 
   trait Setup {
 
-    val dd1 = DutyDefermentAccount("1231231231", newUser().eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
-    val dd2 = DutyDefermentAccount("7567567567", newUser().eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
-    val dd3 = DutyDefermentAccount("7897897897", "testEori10", AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
-    val dd4 = DutyDefermentAccount("1112223334", "testEori11", AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd1 = DutyDefermentAccount("1231231231", newUser().eori, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+    val dd2 = DutyDefermentAccount("7567567567", newUser().eori, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+    val dd3 = DutyDefermentAccount("7897897897", "testEori10", AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+    val dd4 = DutyDefermentAccount("1112223334", "testEori11", AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
     val cashAccount1 = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(100))))
     val cashAccount2 = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(None))
 
-    val ggAccount1 = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(500), BigDecimal(300))))
+    val ggAccount1 = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
+      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(500), BigDecimal(300))))
+
     val ggAccount2 = GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
 
     val accounts = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
@@ -198,8 +227,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val mockDataStoreService = mock[DataStoreService]
     val mockSdesConnector = mock[SdesConnector]
 
-    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
-      .thenReturn(Future.successful(cdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
     val app = application()
@@ -210,4 +238,3 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       ).configure("features.new-agent-view-enabled" -> false).build()
   }
 }
-

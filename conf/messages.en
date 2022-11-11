@@ -123,6 +123,9 @@ cf.account.authorized-to-view.items-description=approved accounts
 cf.account.authorized-to-view.available-account-balance=Available account balance
 cf.account.authorized-to-view.guarantee-account.account-type=General guarantee account
 cf.account.authorized-to-view.guarantee-account.guarantee-limit-remaining=Guarantee limit remaining
+cf.account.authorized-to-view.auth-own-eori = You cannot authorise your own EORI
+cf.account.authorized-to-view.search-own-eori = You cannot search your own EORI number
+cf.account.authorized-to-view.search-own-accountnumber = You cannot search your own account number
 
 # Not subscribed to CDS
 cf.not-subscribed-to-cds.detail.title=Not registered with CDS
