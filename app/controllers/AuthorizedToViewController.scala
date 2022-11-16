@@ -31,8 +31,12 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
@@ -86,20 +90,19 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       query => {
         val searchQuery = stripWithWhitespace(query)
 
-        //val isQueryAccount = apiService.getAccounts(
-         // request.user.eori).map(_.accounts.forall(_.number == query))
-
-        //isQueryAccount.isCompleted
+        val maxWaitTime: FiniteDuration = Duration(20, TimeUnit.SECONDS)
+        val isQueryAccount: Boolean = Await.result(apiService.getAccounts(
+          request.user.eori).map(_.accounts.forall(_.number == query)),maxWaitTime)
 
         if (request.user.eori.equalsIgnoreCase(query)) {
           Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
             "cf.account.authorized-to-view.search-own-eori").fill(query),
               Some(""), LocalDate.now.toString, false)))
-         } // else if (false) {
-//          Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
-//            "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-//              Some(""), LocalDate.now.toString, false)))
-//        }
+         }  else if (isQueryAccount) {
+            Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
+              "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
+                Some(""), LocalDate.now.toString, false)))
+          }
         else {
           apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
             case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
@@ -138,4 +141,3 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   protected def stripWithWhitespace(str: String): String =
     str.replaceAll("\\s", "")
 }
-

@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.SdesConnector
-import domain.{Account, AccountStatusOpen, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, NoAuthorities, SearchError, SearchedAuthorities}
+import domain._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
@@ -25,7 +25,6 @@ import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import utils.SpecBase
-
 import scala.concurrent.Future
 
 class AuthorizedToViewControllerSpec extends SpecBase {
@@ -79,7 +78,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.0", "200.0")))
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -94,6 +93,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
+        html.text().contains("£100.00") shouldBe false
       }
     }
 
@@ -101,7 +101,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("10.0", "10.0")))
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.0", "0.0")))
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -116,6 +116,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
+        html.text().contains("£1000.00") shouldBe false
       }
     }
 
@@ -155,7 +156,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "Display error message if searching your own EORI number" in new Setup {
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> newUser().eori)
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> newUser().eori)
+
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
@@ -165,7 +169,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
 /*    "Display error message if searching your own Account number" in new Setup {
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "7567567567")
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> "1234567")
+
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
