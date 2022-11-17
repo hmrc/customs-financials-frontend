@@ -20,7 +20,7 @@ import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
 import domain.FileRole.StandingAuthority
-import domain.{AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, NoAuthorities, SearchError}
+import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.I18nSupport
@@ -29,11 +29,14 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
-import views.html.authorised_to_view.{authorised_to_view_search, authorised_to_view_search_no_result, authorised_to_view_search_result}
-
+import views.html.authorised_to_view._
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
+
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
@@ -46,7 +49,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
                                            authorisedToViewSearchNoResult: authorised_to_view_search_no_result,
-                                           eoriNumberFormProvider: EoriNumberFormProvider)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                           eoriNumberFormProvider: EoriNumberFormProvider)(
+                                           implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
@@ -85,33 +89,55 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         },
       query => {
         val searchQuery = stripWithWhitespace(query)
-        apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
-          case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
-          case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
-          case Right(searchedAuthorities) => {
 
-            val displayLink: Boolean = searchedAuthorities.authorities.exists {
-              case AuthorisedDutyDefermentAccount(account, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
-              case AuthorisedCashAccount(account, availableAccountBalance) => availableAccountBalance.isEmpty
-              case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
-            }
+        val maxWaitTime: FiniteDuration = Duration(5, TimeUnit.SECONDS)
+        val isMyAcc = Await.result(apiService.getAccounts(request.user.eori).map(
+          _.myAccounts.exists(_.number == query)), maxWaitTime)
 
-            val clientEori = searchedAuthorities.authorities.map {
-              case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
-              case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
-              case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
-            }.head
-
-            dataStoreService.getCompanyName(clientEori).map { companyName => {
-              Ok(authorisedToViewSearchResult(searchQuery, clientEori, searchedAuthorities, companyName, displayLink))
-            }
-            }
+        if (request.user.eori.equalsIgnoreCase(query)) {
+          Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
+            "cf.account.authorized-to-view.search-own-eori").fill(query),
+              Some(""), LocalDate.now.toString, false)))
+         }  else if (isMyAcc) {
+            Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
+              "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
+                Some(""), LocalDate.now.toString, false)))
           }
+        else {
+          apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
+            case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
+            case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
+            case Right(searchedAuthorities) => {
+
+              val displayLink: Boolean = getDisplayLink(searchedAuthorities)
+              val clientEori: String = getClientEori(searchedAuthorities)
+
+              dataStoreService.getCompanyName(clientEori).map { companyName => {
+                Ok(authorisedToViewSearchResult(searchQuery, clientEori, searchedAuthorities, companyName, displayLink))}
+              }
+            }
           }
         }
+      }
     )
   }
+
+  private def getClientEori(searchedAuthorities: SearchedAuthorities) = {
+    searchedAuthorities.authorities.map {
+      case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
+      case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
+      case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
+    }.head
+  }
+
+  private def getDisplayLink(searchedAuthorities: SearchedAuthorities) = {
+    searchedAuthorities.authorities.exists {
+      case AuthorisedDutyDefermentAccount(account, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
+      case AuthorisedCashAccount(account, availableAccountBalance) => availableAccountBalance.isEmpty
+      case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
+    }
+  }
+
   protected def stripWithWhitespace(str: String): String =
     str.replaceAll("\\s", "")
 }
-

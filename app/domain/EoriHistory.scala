@@ -21,9 +21,7 @@ import java.time.{LocalDate, LocalDateTime}
 import play.api.Logger
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, _}
-
 import scala.util.{Failure, Success, Try}
-
 
 case class EoriHistory(eori: EORI,
                        validFrom: Option[LocalDate],
@@ -34,7 +32,6 @@ case class EoriHistory(eori: EORI,
   def toLoggable():String = {
     s"EoriHistory(Eori: ${obfuscateEori(eori)}, validFrom: $validFrom, validUntil: $validUntil)"
   }
-
 }
 
 object EoriHistory {
@@ -66,5 +63,4 @@ object EoriHistory {
         }
     })
   }
-
 }

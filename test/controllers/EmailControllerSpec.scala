@@ -18,10 +18,8 @@ package controllers
 
 import org.jsoup.Jsoup
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import play.api.test.Helpers._
 import utils.SpecBase
-
 
 class EmailControllerSpec extends SpecBase {
 
@@ -40,5 +38,4 @@ class EmailControllerSpec extends SpecBase {
   trait Setup {
     val app = application().build()
   }
-
 }
