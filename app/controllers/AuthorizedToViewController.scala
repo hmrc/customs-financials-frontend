@@ -90,15 +90,15 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       query => {
         val searchQuery = stripWithWhitespace(query)
 
-        val maxWaitTime: FiniteDuration = Duration(20, TimeUnit.SECONDS)
-        val isQueryAccount: Boolean = Await.result(apiService.getAccounts(
-          request.user.eori).map(_.accounts.forall(_.number == query)),maxWaitTime)
+        val maxWaitTime: FiniteDuration = Duration(5, TimeUnit.SECONDS)
+        val isMyAcc = Await.result(apiService.getAccounts(request.user.eori).map(
+          _.myAccounts.exists(_.number == query)), maxWaitTime)
 
         if (request.user.eori.equalsIgnoreCase(query)) {
           Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
             "cf.account.authorized-to-view.search-own-eori").fill(query),
               Some(""), LocalDate.now.toString, false)))
-         }  else if (isQueryAccount) {
+         }  else if (isMyAcc) {
             Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
               "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
                 Some(""), LocalDate.now.toString, false)))
