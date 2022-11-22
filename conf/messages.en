@@ -60,12 +60,6 @@ cf.pager.prev=Prev
 cf.pager.next=Next
 cf.pager.summary=Showing {0} – {1} of {2} {3}
 
-# Help and Support
-cf.help-and-support.title=Help and support
-cf.account.help-support.message=If you are having issues, phone
-cf.account.help-support.numbers=0300 200 3701
-cf.account.help-support.office-hours=Open 8am to 6pm, Monday to Friday (closed bank holidays).
-
 # Accounts List
 cf.accounts.title=Your customs financial accounts
 cf.accounts.label.dan=View statements for duty deferment {0}

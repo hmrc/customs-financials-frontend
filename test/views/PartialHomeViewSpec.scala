@@ -62,7 +62,6 @@ class PartialHomeViewSpec extends SpecBase {
         view.containsElementById("import-vat")
         view.containsElementById("postponed-vat")
         view.containsElementById("import-adjustments")
-        view.containsElementById("help_and_support")
       }
     }
   }
