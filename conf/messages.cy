@@ -63,12 +63,6 @@ cf.pager.summary=Yn dangos {0} – {1} o {2} {3}
 
 eoriNumber.error.format=Nodwch rif EORI yn y fformat cywir
 
-# Help and Support
-cf.help-and-support.title=Help a chymorth
-cf.account.help-support.message=Os ydych yn profi anawsterau, ffoniwch
-cf.account.help-support.numbers=0300 200 3705
-cf.account.help-support.office-hours=Ar agor 08:30 i 17:00, o ddydd Llun i ddydd Gwener (ar gau ar wyliau banc).
-
 # Accounts List
 cf.accounts.title=Eich cyfrifon ariannol ar gyfer y tollau
 cf.accounts.label.dan=Datganiadau ar gyfer gohirio tollau {0}
