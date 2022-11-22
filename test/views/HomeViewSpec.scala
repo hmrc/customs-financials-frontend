@@ -57,11 +57,6 @@ class HomeViewSpec extends SpecBase {
   }
 
   "not display manage your account authorities link" when {
-    "display help and support message" in new Setup {
-      running(app) {
-        page(modelWithAgentAccess, None).containsElementById("help_and_support")
-      }
-    }
 
     "display recruitment banner" when {
       "display duty deferment inaccurate balance message" in new Setup {
