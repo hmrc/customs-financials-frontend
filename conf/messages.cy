@@ -120,7 +120,7 @@ cf.account.authorized-to-view.items-description=cyfrifon cymeradwy
 cf.account.authorized-to-view.available-account-balance=Balans y cyfrif sydd ar gael
 cf.account.authorized-to-view.guarantee-account.account-type=Cyfrif gwarant cyffredinol
 cf.account.authorized-to-view.guarantee-account.guarantee-limit-remaining=Terfyn y warant sy’n weddill
-cf.account.authorized-to-view.auth-own-eori = Ni allwch awdurdodi’ch EORI eich hun
+cf.account.authorized-to-view.auth-own-eori = Ni allwch awdurdodi eich rhif EORI eich hun
 cf.account.authorized-to-view.search-own-eori = Ni allwch chwilio am eich rhif EORI eich hun
 cf.account.authorized-to-view.search-own-accountnumber = Ni allwch chwilio am rif eich cyfrif eich hun
 
