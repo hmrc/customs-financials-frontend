@@ -49,17 +49,17 @@ companyName: Option[String], displayLink: Boolean)(implicit request: Request[_],
         @{
             searchedAuthorities.authorities.map {
                 case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) =>
-                    result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance)
+                    result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance, None)
 
                 case AuthorisedDutyDefermentAccount(account, balances)
                     if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00"))=>
-                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableGuaranteeBalance))
+                    result_panel(account.accountType, account.accountNumber, None, balances.map(_.periodAvailableGuaranteeBalance))
 
                 case AuthorisedDutyDefermentAccount(account, balances) =>
-                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance))
+                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance), balances.map(_.periodAvailableGuaranteeBalance))
 
                 case AuthorisedCashAccount(account, availableAccountBalance) =>
-                    result_panel(account.accountType, account.accountNumber, availableAccountBalance)
+                    result_panel(account.accountType, account.accountNumber, availableAccountBalance, None)
             }
         }
         @if(displayLink) {
