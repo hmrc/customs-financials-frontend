@@ -229,6 +229,16 @@ class CustomsAccountsSpec extends SpecBase {
         balance.availableBalance must be (50)
       }
 
+      "return the view available balance if periodAvailableAccountBalance and periodAvailableGuaranteeBalance values are available" in {
+        val balance = DutyDefermentBalance(None, None, Some(BigDecimal(100)), Some(BigDecimal(100)))
+        balance.availableBalance must be (100)
+      }
+
+      "return the view available balance if periodAvailableAccountBalance is zero and periodAvailableGuaranteeBalance value is available" in {
+        val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(100)))
+        balance.availableBalance must be (100)
+      }
+
       "return the balance if periodAvailableAccountBalance is a zero value" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(0)))
         balance.availableBalance must be (0)
