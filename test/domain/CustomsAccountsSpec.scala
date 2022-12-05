@@ -241,7 +241,6 @@ class CustomsAccountsSpec extends SpecBase {
     }
 
     "not throw an exception for any input values" in {
-      // poor man's property-based testing...
       val sampleValues = List(Some(BigDecimal(10)), Some(BigDecimal(100)), Some(BigDecimal(-10)), Some(BigDecimal(-100)), Some(BigDecimal(0)), None)
       for {
         periodGuaranteeLimit <- sampleValues

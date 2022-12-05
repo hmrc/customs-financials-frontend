@@ -20,7 +20,6 @@ import config.AppConfig
 import domain.{AccountLink, SessionCacheAccountLink}
 import play.api.libs.json.{Json, OFormat}
 import services.MetricsReporterService
-import domain.AccountLink
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 

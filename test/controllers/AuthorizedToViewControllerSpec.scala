@@ -93,7 +93,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
-        html.text().contains("£100.00") shouldBe false
+        html.text().contains("£100.0") shouldBe true
+        html.text().contains("£200.0") shouldBe true
       }
     }
 

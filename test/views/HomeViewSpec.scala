@@ -50,7 +50,6 @@ class HomeViewSpec extends SpecBase {
 
     "display manage your account authorities link" in new Setup {
       running(app) {
-        println(page(modelWithAgentAccess, None))
         page(modelWithAgentAccess, None).containsLink("http://localhost:9000/customs/manage-authorities")
       }
     }

@@ -16,34 +16,54 @@
 
 @this()
 
-@(accountType: String, accountNumber: String, balanceAvailable: Option[String])(implicit messages: Messages)
+@(accountType: String, accountNumber: String, accountBalanceAvailable: Option[String], guaranteeBalanceAvailable: Option[String])(implicit messages: Messages)
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-!-width-one-third govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @messages("cf.search.authorities.result.account.type")
         </dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @{messages(s"cf.search.authorities.accountType.$accountType")}
         </dd>
     </div>
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-!-width-one-third govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @messages("cf.search.authorities.result.account.number")
         </dt>
-        <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @{accountNumber}
         </dd>
     </div>
-    @if(balanceAvailable) {
+
+    @if(accountBalanceAvailable) {
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-third govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
                 @messages("cf.search.authorities.result.account.balance.available")
+                @if(accountType == "DutyDeferment"){
+                   <div class="govuk-hint govuk-!-margin-bottom-1">
+                        @messages("cf.search.authorities.result.account.balance.available.text")
+                   </div>
+                }
+
             </dt>
-            <dd class="govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-                @balanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
+            <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                @accountBalanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
             </dd>
+
+
         </div>
+    }
+
+    @if(guaranteeBalanceAvailable) {
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @messages("cf.search.authorities.result.guarantee.balance.available")
+        </dt>
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @guaranteeBalanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
+        </dd>
+    </div>
     }
 
 </dl>
