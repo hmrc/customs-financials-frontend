@@ -238,15 +238,9 @@ class CustomsAccountsSpec extends SpecBase {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(-50)))
         balance.availableBalance must be (-50)
       }
-
-      "return the balance if periodAvailableGuaranteeBalance is a value" in {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(50)), None, Some(BigDecimal(50)))
-        balance.availableBalance must be (50)
-      }
     }
 
     "not throw an exception for any input values" in {
-      // poor man's property-based testing...
       val sampleValues = List(Some(BigDecimal(10)), Some(BigDecimal(100)), Some(BigDecimal(-10)), Some(BigDecimal(-100)), Some(BigDecimal(0)), None)
       for {
         periodGuaranteeLimit <- sampleValues
