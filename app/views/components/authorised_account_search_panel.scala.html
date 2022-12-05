@@ -37,28 +37,27 @@
     </div>
 
     @if(accountBalanceAvailable) {
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @if(accountType == "DutyDeferment"){
                 @messages("cf.search.authorities.result.account.balance.available")
-                @if(accountType == "DutyDeferment"){
-                   <div class="govuk-hint govuk-!-margin-bottom-1">
-                        @messages("cf.search.authorities.result.account.balance.available.text")
-                   </div>
-                }
-
-            </dt>
-            <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-                @accountBalanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
-            </dd>
-
-
-        </div>
+            <div class="govuk-hint govuk-!-margin-bottom-1">
+                @messages("cf.search.authorities.result.account.balance.available.text")
+            </div>
+            } else {
+                @messages("cf.search.authorities.result.account.balance")
+            }
+        </dt>
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @accountBalanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
+        </dd>
+    </div>
     }
 
     @if(guaranteeBalanceAvailable) {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            @messages("cf.search.authorities.result.guarantee.balance.available")
+            @messages("cf.search.authorities.result.dutyDeferment.balance.available")
         </dt>
         <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @guaranteeBalanceAvailable.fold(messages("cf.search.authorities.balance.consent"))(v => s"£$v")
