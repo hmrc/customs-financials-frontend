@@ -167,6 +167,19 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
     }
+
+    "Display error message if searching your own account number" in new Setup {
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> accounts.map(_.number).head)
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+        html.text().contains("You cannot search your own account number") shouldBe true
+      }
+    }
   }
 
   "The header section" should {
