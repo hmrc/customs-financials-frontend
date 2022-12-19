@@ -21,7 +21,14 @@
 @(companyName: Option[String], query: String)(implicit messages: Messages)
 
 @if(companyName.isEmpty) {
- @inset()
+    @inset(
+        firstLine="cf.search.authorities.result.inset1",
+    )
+} else {
+    @inset(
+        firstLine="cf.search.authorities.result.inset1",
+        secondLine=Some("cf.search.authorities.result.inset2")
+    )
 }
 
 <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
