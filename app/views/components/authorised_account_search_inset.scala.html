@@ -16,8 +16,12 @@
 
 @this()
 
-@()(implicit messages: Messages)
+@(firstLine: String, secondLine: Option[String] = None)(implicit messages: Messages)
 
 <div class="govuk-inset-text">
- @messages("cf.search.authorities.result.inset")
+    <p>@messages(firstLine)</p>
+
+    @if(secondLine.nonEmpty) {
+        <p>@secondLine.map(m => messages(m))</p>
+    }
 </div>

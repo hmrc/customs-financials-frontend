@@ -18,10 +18,21 @@
 
 @this(inset: authorised_account_search_inset)
 
-@(companyName: Option[String], query: String)(implicit messages: Messages)
+@(companyName: Option[String], query: String, displayLink: Boolean)(implicit messages: Messages)
 
-@if(companyName.isEmpty) {
- @inset()
+@if(companyName.isEmpty && displayLink) {
+    @inset(
+        firstLine="cf.search.authorities.result.inset1",
+        secondLine=Some("cf.search.authorities.result.inset2")
+    )
+} else if (companyName.isEmpty) {
+    @inset(
+        firstLine="cf.search.authorities.result.inset1"
+    )
+} else {
+    @inset(
+        firstLine="cf.search.authorities.result.inset2"
+    )
 }
 
 <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
