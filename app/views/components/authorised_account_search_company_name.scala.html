@@ -20,14 +20,14 @@
 
 @(companyName: Option[String], query: String, displayLink: Boolean)(implicit messages: Messages)
 
-@if(companyName.isEmpty) {
-    @inset(
-        firstLine="cf.search.authorities.result.inset1",
-    )
-} else if (companyName.isEmpty && displayLink) {
+@if(companyName.isEmpty && displayLink) {
     @inset(
         firstLine="cf.search.authorities.result.inset1",
         secondLine=Some("cf.search.authorities.result.inset2")
+    )
+} else if (companyName.isEmpty) {
+    @inset(
+        firstLine="cf.search.authorities.result.inset1"
     )
 } else {
     @inset(
