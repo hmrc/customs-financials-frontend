@@ -16,7 +16,6 @@
 
 package services
 
-import domain.DutyPaymentMethod.{CDS, CHIEF}
 import domain.{FileInformation, _}
 import javax.inject.Singleton
 

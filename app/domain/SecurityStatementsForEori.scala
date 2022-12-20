@@ -17,7 +17,6 @@
 package domain
 
 import controllers.OrderedByEoriHistory
-import controllers.OrderedByEoriHistory
 
 case class SecurityStatementsForEori(eoriHistory: EoriHistory, currentStatements: Seq[SecurityStatementsByPeriod], requestedStatements: Seq[SecurityStatementsByPeriod])
   extends OrderedByEoriHistory[SecurityStatementsForEori]
