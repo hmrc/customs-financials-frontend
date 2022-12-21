@@ -16,12 +16,16 @@
 
 package domain
 
-import domain.FileFormat.Pdf
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import utils.SpecBase
 
-import java.time.LocalDate
+class WithNameSpec extends SpecBase {
 
-case class SecurityStatementsByPeriod(startDate: LocalDate, endDate: LocalDate, files: Seq[SecurityStatementFile]) extends Ordered[SecurityStatementsByPeriod] {
-  val pdf: Option[SecurityStatementFile] = files.find(_.fileFormat == Pdf)
-
-  override def compare(that: SecurityStatementsByPeriod): Int = startDate.compareTo(that.startDate)
+  "WithName" should {
+    "successfully overwrites name" in {
+      val testData = "Test Name"
+      val withName: WithName = new WithName(testData)
+      withName.toString mustBe testData
+    }
+  }
 }

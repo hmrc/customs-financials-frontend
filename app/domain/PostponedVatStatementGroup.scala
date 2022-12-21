@@ -18,7 +18,6 @@ package domain
 
 import domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import play.api.i18n.Messages
-import domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import views.helpers.Formatters
 
 import java.time.LocalDate
