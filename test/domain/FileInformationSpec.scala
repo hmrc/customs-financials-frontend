@@ -17,10 +17,8 @@
 package domain
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatest.matchers.should.Matchers._
 import play.api.libs.json.Json
 import utils.SpecBase
-
 
 class FileInformationSpec extends SpecBase{
 

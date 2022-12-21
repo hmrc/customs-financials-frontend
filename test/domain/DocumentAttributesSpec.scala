@@ -18,10 +18,8 @@ package domain
 
 import domain.FileRole.C79Certificate
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatest.matchers.should.Matchers._
 import services.DocumentAttributes
 import utils.SpecBase
-
 
 class DocumentAttributesSpec extends SpecBase {
 
