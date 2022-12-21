@@ -18,12 +18,12 @@ package connectors
 
 import domain.EmailVerifiedResponse
 import domain.FileRole.StandingAuthority
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject.bind
-import play.api.test.Helpers.{await, _}
+import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import services.MetricsReporterService
 import utils.SpecBase
