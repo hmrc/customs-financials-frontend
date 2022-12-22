@@ -19,9 +19,7 @@ package domain
 import domain.DDStatementType.Weekly
 import domain.FileFormat.{Csv, Pdf}
 import domain.FileRole.DutyDefermentStatement
-import org.scalatest.matchers.must.Matchers
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatest.matchers.should.Matchers._
 import utils.SpecBase
 
 import scala.util.Random
@@ -38,7 +36,6 @@ class SdesFileSpec extends SpecBase {
 
       List(csv,pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
       List(pdf,csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
-
     }
   }
 

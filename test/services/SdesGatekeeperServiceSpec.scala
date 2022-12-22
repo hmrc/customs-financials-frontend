@@ -16,15 +16,13 @@
 
 package services
 
-import domain.DutyPaymentMethod.CDS
-import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.{PostponedVATStatement, StandingAuthority}
-import domain.{Metadata, MetadataItem, PostponedVatStatementFile, PostponedVatStatementFileMetadata, StandingAuthorityFile, StandingAuthorityMetadata}
+import domain.FileFormat.Csv
+import domain.FileRole.StandingAuthority
+import domain.{Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
-
 
 //scalastyle:off magic.number
 class SdesGatekeeperServiceSpec extends SpecBase {

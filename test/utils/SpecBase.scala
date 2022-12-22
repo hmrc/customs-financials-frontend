@@ -75,7 +75,6 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
   def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {
-    val eori = "testEori4"
     SignedInUser("testEori1", allEoriHistory)
   }
 }

@@ -16,11 +16,8 @@
 
 package actionbuilders
 
-
 import domain.{EoriHistory, SignedInUser}
 import play.api.mvc.{AnyContent, BodyParser, PlayBodyParsers, Request, Result}
-import uk.gov.hmrc.auth.core.{AffinityGroup, Enrolment, EnrolmentIdentifier, Enrolments}
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Name}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

@@ -18,7 +18,7 @@ package services
 
 import domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
@@ -27,7 +27,6 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.concurrent.Future

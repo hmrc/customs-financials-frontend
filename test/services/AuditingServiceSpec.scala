@@ -18,7 +18,7 @@ package services
 
 import config.AppConfig
 import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.captor.{ArgCaptor, Captor}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -26,7 +26,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector._
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.SpecBase
-
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
