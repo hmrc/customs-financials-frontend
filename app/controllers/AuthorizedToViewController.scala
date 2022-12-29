@@ -19,7 +19,7 @@ package controllers
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
-import domain.FileRole.StandingAuthority
+import domain.FileRole.{StandingAuthority}
 import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -30,11 +30,10 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
 import views.html.authorised_to_view._
+
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
-
 import javax.inject.{Inject, Singleton}
-
 import scala.concurrent.duration.{Duration, FiniteDuration}
 import scala.concurrent.{Await, ExecutionContext, Future}
 
@@ -71,8 +70,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
-    sdesConnector.getAuthoritiesCsvFiles(eori)
-      .map(_.sortWith(_.startDate isAfter _.startDate))
+      val list = sdesConnector.getAuthoritiesCsvFiles(eori)
+      list.map(_.sortWith(_.filename < _.filename).headOption)
+      //.map(_.sortWith(_.startDate isAfter _.startDate))
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
