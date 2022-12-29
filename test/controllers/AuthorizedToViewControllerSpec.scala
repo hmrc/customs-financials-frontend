@@ -27,7 +27,6 @@ import services.{ApiService, DataStoreService}
 import utils.SpecBase
 
 import scala.concurrent.Future
-import scala.reflect.io.File
 
 class AuthorizedToViewControllerSpec extends SpecBase {
 

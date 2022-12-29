@@ -19,7 +19,7 @@ package controllers
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
-import domain.FileRole.{StandingAuthority, fileRoleFormat}
+import domain.FileRole.{StandingAuthority}
 import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
@@ -27,7 +27,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
 import views.html.authorised_to_view._
