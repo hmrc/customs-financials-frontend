@@ -22,7 +22,6 @@ import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmen
 import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages
