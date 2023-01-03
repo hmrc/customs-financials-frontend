@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package domain
+package config
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.test.FakeRequest
 
-case class MetadataItem(key: String, value: String)
+class ErrorHandlerSpec extends AnyWordSpec
+  with Matchers
+  with GuiceOneAppPerSuite {
 
-object MetadataItem {
-  implicit val metadataItemReads: Reads[MetadataItem] =
-    ((JsPath \ "metadata").read[String] and (JsPath \ "value").read[String]) (MetadataItem.apply _)
-  implicit val metadataItemWrites: Writes[MetadataItem] =  Json.writes[MetadataItem]
+  private val fakeRequest = FakeRequest("GET", "/")
+
+  private val handler = app.injector.instanceOf[ErrorHandler]
+
+  "standardErrorTemplate" should {
+    "render HTML" in {
+      val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
+      html.contentType shouldBe "text/html"
+    }
+  }
 }
