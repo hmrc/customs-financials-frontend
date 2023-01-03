@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,10 +69,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       }
   }
 
-  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]) = {
-      val list = sdesConnector.getAuthoritiesCsvFiles(eori)
-      list.map(_.sortWith(_.filename < _.filename).headOption)
-      //.map(_.sortWith(_.startDate isAfter _.startDate))
+  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
+    sdesConnector.getAuthoritiesCsvFiles(eori)
+      .map(_.sortWith(_.startDate isAfter _.startDate).sortBy(_.filename).toSeq.sortWith(_.filename > _.filename))
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>

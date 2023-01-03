@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import services.{ApiService, DataStoreService}
 import utils.SpecBase
 
 import scala.concurrent.Future
+import scala.reflect.io.File
 
 class AuthorizedToViewControllerSpec extends SpecBase {
 
@@ -73,8 +74,18 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
-    "get csv files sort by file name" in new Setup {
+    "getCsvFile() sort by file name" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+
+      val fileObj1 = File("fileserving1.csv")
+      val fileObj2 = File("fileserving2.csv")
+      val fileObj3 = File("fileserving3.csv")
+      val fileObj4 = File("fileserving4.csv")
+      val fileObj5 = File("fileserving5.csv")
+
+      val fileObjectList = List(fileObj1, fileObj2)
+
+      fileObjectList.sortWith((x1, x2) => x1.lastModified < x2.lastModified)
 
       val filesWithNames = List("CS_000000000154_csv.csv",
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
