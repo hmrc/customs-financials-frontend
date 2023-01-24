@@ -223,6 +223,9 @@ cf.authorities.notification-panel.p1=The list of authorities you requested is av
 cf.authorities.notification-panel.a=download as a CSV
 cf.authorities.notification-panel.p2=The list was created on {0}. It will be available for 10 days.
 
+# Contact Details
+cf.contact-details.title=Your contact details
+
 eoriNumber.error.format = Enter an EORI number in the correct format
 
 # Duty deferment direct debit
