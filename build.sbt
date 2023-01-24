@@ -48,7 +48,6 @@ lazy val microservice = Project(appName, file("."))
 val compileDependencies = Seq(
   "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.24.0",
   "uk.gov.hmrc" %% "play-partials" % "8.2.0-play-28",
-  "uk.gov.hmrc" %% "govuk-template" % "5.72.0-play-28",
   "uk.gov.hmrc" %% "play-frontend-hmrc" % "3.21.0-play-28",
   ws,
   "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
