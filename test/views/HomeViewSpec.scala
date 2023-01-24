@@ -88,7 +88,7 @@ class HomeViewSpec extends SpecBase {
 
       "displays Your contact details as a link text" in new Setup {
         running(app) {
-          page(modelWithAgentAccess, None).containsLinkWithText("#", "Your contract details")
+          page(modelWithAgentAccess, None).containsLinkWithText("#", "Your contact details")
         }
       }
     }
