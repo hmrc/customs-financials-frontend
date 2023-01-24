@@ -25,8 +25,6 @@ import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import utils.SpecBase
-
-import java.util.Date
 import scala.concurrent.Future
 import scala.reflect.io.File
 
