@@ -65,10 +65,31 @@ class HomeViewSpec extends SpecBase {
       }
     }
 
-    "display the message banner partial" in new Setup {
-      private val bannerHtmlPartial = HtmlPartial.Success(None, Html("<b id='banner-html'>Banner html</b>"))
-      running(app) {
-        page(modelWithAgentAccess, Some(bannerHtmlPartial.content)).containsElementById("banner-html")
+    "banner links" when {
+
+      "display the message banner partial" in new Setup {
+        private val bannerHtmlPartial = HtmlPartial.Success(None, Html("<b id='banner-html'>Banner html</b>"))
+        running(app) {
+          page(modelWithAgentAccess, Some(bannerHtmlPartial.content)).containsElementById("banner-html")
+        }
+      }
+
+      "displays home as a link text" in new Setup {
+        running(app) {
+          page(modelWithAgentAccess, None).containsLinkWithText("#", "Home")
+        }
+      }
+
+      "displays Messages as a link text" in new Setup {
+        running(app) {
+          page(modelWithAgentAccess, None).containsLinkWithText("#", "Messages")
+        }
+      }
+
+      "displays Your contact details as a link text" in new Setup {
+        running(app) {
+          page(modelWithAgentAccess, None).containsLinkWithText("#", "Your contact details")
+        }
       }
     }
 
