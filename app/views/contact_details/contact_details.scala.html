@@ -14,12 +14,16 @@
  * limitations under the License.
  *@
 
-@import views.html.components._
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
+@import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
 @import views.html.Layout
 
 @this(
         h1: components.h1,
-        layout: Layout,
+        h2: components.h2,
+        p: components.p,
+        hmrcNewTabLink: HmrcNewTabLink,
+        layout: Layout
 )
 
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
@@ -31,14 +35,58 @@
    @h1("cf.contact-details.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-           Name
-        </dt>
-        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            Company Name
-        </dd>
-    </div>
-   
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                @messages("cf.contact-details.name")
+            </dt>
+            <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                Company Name
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                @messages("cf.contact-details.address")
+            </dt>
+            <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                Company Name
+            </dd>
+        </div>
    </dl>
+
+    <p class="govuk-body">
+        @hmrcNewTabLink(
+            NewTabLink(
+                language = Some(messages.lang.toString),
+                classList = Some("govuk-link"),
+                text=messages("cf.contact-details.report-change-link")
+            )
+        )
+    </p>
+
+    @h2("cf.contact-details.primary-email-address.h2")
+    @p("cf.contact-details.primary-email-address.text")
+
+    <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                @messages("cf.contact-details.email-address")
+            </dt>
+            <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+                sample email
+            </dd>
+        </div>
+   </dl>
+
+    <p class="govuk-body">
+        @hmrcNewTabLink(
+            NewTabLink(
+                language = Some(messages.lang.toString),
+                classList = Some("govuk-link"),
+                text=messages("cf.contact-details.change-email-link")
+            )
+        )
+    </p>
+
+    @h2("cf.contact-details.primary-email-address.h2")
+    @p("cf.contact-details.duty-deferment.text")
 }
