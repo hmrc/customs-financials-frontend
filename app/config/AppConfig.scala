@@ -40,6 +40,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val unstablePeriodDurationSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.unstablePeriodDuration")
 
   lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
+  lazy val reportChangeCdsUrl: String = config.get[String]("external-urls.reportChangeUrl")
   lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
   lazy val applicationStatusCdsUrl: String = config.get[String]("external-urls.applicationStatusUrl")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")

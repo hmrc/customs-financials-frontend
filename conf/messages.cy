@@ -308,6 +308,7 @@ cf.authorities.notification-panel.a=lawrlwytho fel CSV
 cf.authorities.notification-panel.p2=Crëwyd y rhestr ar {0}. Bydd ar gael am 10 diwrnod.
 
 cf.contact-details.title=Eich manylion cyswllt
+cf.contact-details.company-details=Manylion y cwmni
 cf.contact-details.name=Enw
 cf.contact-details.address=Cyfeiriad
 cf.contact-details.email-address=Cyfeiriad e-bost
@@ -317,5 +318,7 @@ cf.contact-details.duty-deferment.h2=Manylion cyswllt gohirio tollau
 cf.contact-details.primary-email-address.text=Os ydych yn newid y cyfeiriad e-bost hwn, sicrhewch fod dal modd i bobl eraill yn eich cwmni gael y negeseuon sydd eu hangen arnynt. Byddwn yn defnyddio’r e-bost hwn er mwyn anfon amrywiaeth o hysbysiadau ynglŷn â’r Gwasanaeth Datganiadau Tollau.
 cf.contact-details.duty-deferment.text=Dim ond os bydd angen i ni gysylltu â chi ynghylch eich cyfrif y byddwn yn defnyddio’r manylion hyn.
 cf.contact-details.change-email-link=Newid eich cyfeiriad e-bost (yn agor tab newydd)
+cf.contact-details.account-number=Rhif y cyfrif
+cf.contact-details.view-change-link=Bwrw golwg drosto neu ei newid
 
 eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir
