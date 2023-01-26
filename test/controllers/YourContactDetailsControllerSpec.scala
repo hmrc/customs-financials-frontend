@@ -16,9 +16,17 @@
 
 package controllers
 
-import base.SpecBase
-import play.api.test.FakeRequest
+import connectors.SdesConnector
+import domain._
+import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchersSugar.any
 import play.api.test.Helpers._
+import play.api.{Application, inject}
+import services.{ApiService, DataStoreService}
+import utils.SpecBase
+import scala.concurrent.Future
+import scala.reflect.io.File
 import views.html.your_contact_details.your_contact_details
 
 class YourContactDetailsControllerSpec extends SpecBase {
@@ -32,5 +40,9 @@ class YourContactDetailsControllerSpec extends SpecBase {
         status(result) should be(OK)
       }
     }
+  }
+
+  trait Setup {
+    val app = application().build()
   }
 }
