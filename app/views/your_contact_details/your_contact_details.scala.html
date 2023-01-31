@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
@@ -28,14 +29,14 @@
         layout: Layout
 )
 
-@()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
     helpAndSupport = false,
     backLink = Some(routes.CustomsFinancialsHomeController.index.url)
 ) {
-    @h1("cf.contact-details.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
+    @h1("cf.contact-details.title", classes = "govuk-heading-xl")
     @h2("cf.contact-details.company-details")
 
     @govukSummaryList(SummaryList(
