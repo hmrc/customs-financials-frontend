@@ -66,6 +66,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
   lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
   lazy val csvAccountUrl: String = s"$documentsUrl/csv-statement"
+  lazy val changeEmailUrl: String = s"$emailFrontendUrl/change-email-address/create"
 
   lazy val customsFinancialsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
     config.get[String]("microservice.services.customs-financials-session-cache.context")
