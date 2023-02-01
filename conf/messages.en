@@ -223,6 +223,21 @@ cf.authorities.notification-panel.p1=The list of authorities you requested is av
 cf.authorities.notification-panel.a=download as a CSV
 cf.authorities.notification-panel.p2=The list was created on {0}. It will be available for 10 days.
 
+# Contact Details
+cf.contact-details.title=Your contact details
+cf.contact-details.company-details=Company details
+cf.contact-details.name=Name
+cf.contact-details.address=Address
+cf.contact-details.email-address=Email address
+cf.contact-details.report-change-link=Report a change to your company details (opens in new tab)
+cf.contact-details.primary-email-address.h2=Primary email address
+cf.contact-details.duty-deferment.h2=Duty deferment contact details
+cf.contact-details.primary-email-address.text=If you change this email address, ensure other people in your company will still get the messages they need. We use this email to send various notifications about the Customs Declaration Service.
+cf.contact-details.duty-deferment.text=We only use these details if we need to contact you about your account.
+cf.contact-details.change-email-link=Change your email address (opens in new tab)
+cf.contact-details.account-number=Account number
+cf.contact-details.view-change-link=View or change
+
 eoriNumber.error.format = Enter an EORI number in the correct format
 
 # Duty deferment direct debit
