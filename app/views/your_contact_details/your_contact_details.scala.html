@@ -29,7 +29,8 @@
         layout: Layout
 )
 
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(eori: String, accountNumber: String, companyName: Option[String], companyAddress: String, email: String)(
+    implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
@@ -46,7 +47,7 @@
                     content = Text(messages("cf.contact-details.name"))
                 ),
                 value = Value(
-                    content = Text("Company Name")
+                    content = Text(companyName.getOrElse(""))
                 )
             ),
             SummaryListRow(
@@ -54,14 +55,7 @@
                     content = Text(messages("cf.contact-details.address"))
                 ),
                 value = Value(
-                    content = HtmlContent(
-                    s"""
-                        ${"96 New Street"}
-                        <br/>
-                        ${"SUNDERLAND"}
-                        <br/>
-                        ${"SR16 4WR"}
-                    """)
+                    content = Text(companyAddress)
                 )
             )
         )
@@ -87,7 +81,7 @@
                     content = Text(messages("cf.contact-details.email-address"))
                 ),
                 value = Value(
-                    content = Text("abc@email.com")
+                    content = Text(email)
                 )
             )
         )
@@ -113,7 +107,7 @@
                     content = Text(messages("cf.contact-details.account-number"))
                 ),
                 value = Value(
-                    content = Text("81727382")
+                    content = Text(accountNumber)
                 ),
                 actions = Some(Actions(
                     items = List(ActionItem(
@@ -123,9 +117,6 @@
                     ))
                 ))
             ),
-
         )
     ))
 }
-
-

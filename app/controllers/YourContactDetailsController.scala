@@ -16,21 +16,35 @@
 
 package controllers
 
+import actionbuilders.IdentifierAction
 import config.AppConfig
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import services.DataStoreService
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
+import scala.concurrent.{ExecutionContext, Future}
 
-class YourContactDetailsController @Inject()(implicit val appConfig: AppConfig,
+class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                        override val messagesApi: MessagesApi,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: your_contact_details
-                                     ) extends FrontendBaseController with I18nSupport {
+                                       dataStoreService: DataStoreService,
+                                       view: your_contact_details,
+                                       implicit val mcc: MessagesControllerComponents)
+                                       (implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                       extends FrontendController(mcc) with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action {
-    implicit request =>
-      Ok(view())
+  def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
+
+    for {
+      companyName <- dataStoreService.getCompanyName(request.user.eori)
+      email <- dataStoreService.getEmail(request.user.eori).flatMap {
+        case Left(_) => Future.successful(InternalServerError)
+        case Right(email) => Future.successful(email.value)
+      }
+
+    } yield {
+      Ok(view(request.user.eori,"AccountNumber",companyName,"Address", email.toString))
+    }
   }
 }
