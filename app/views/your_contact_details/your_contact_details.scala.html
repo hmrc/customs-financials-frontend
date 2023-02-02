@@ -111,25 +111,28 @@
     @h2("cf.contact-details.duty-deferment.h2")
     @p("cf.contact-details.duty-deferment.text")
 
-    @for(accountNumber <- accountNumbers) {
-        @govukSummaryList(SummaryList(
-            rows = Seq(
-                SummaryListRow(
-                    key = Key(
-                        content = Text(messages("cf.contact-details.account-number"))
-                    ),
-                    value = Value(
-                        content = Text(accountNumber)
-                    ),
-                    actions = Some(Actions(
-                        items = List(ActionItem(
-                            content = Text(messages("cf.contact-details.view-change-link")),
-                            href = "#",
-                            visuallyHiddenText = Some(messages("cf.contact-details.view-change-link"))
+
+    @if(accountNumbers.nonEmpty) {
+        @for(accountNumber <- accountNumbers) {
+            @govukSummaryList(SummaryList(
+                rows = Seq(
+                    SummaryListRow(
+                        key = Key(
+                            content = Text(messages("cf.contact-details.account-number"))
+                        ),
+                        value = Value(
+                            content = Text(accountNumber)
+                        ),
+                        actions = Some(Actions(
+                            items = List(ActionItem(
+                                content = Text(messages("cf.contact-details.view-change-link")),
+                                href = "#",
+                                visuallyHiddenText = Some(messages("cf.contact-details.view-change-link"))
+                            ))
                         ))
-                    ))
-                ),
-            )
-        ))
+                    ),
+                )
+            ))
+        }
     }
 }

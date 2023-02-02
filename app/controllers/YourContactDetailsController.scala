@@ -18,20 +18,23 @@ package controllers
 
 import actionbuilders.IdentifierAction
 import config.AppConfig
+import connectors.SessionCacheConnector
 import domain.{CompanyAddress, EORI}
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                        override val messagesApi: MessagesApi,
                                        dataStoreService: DataStoreService,
                                        view: your_contact_details,
-                                       apiService: ApiService,
+                                       sessionCacheConnector: SessionCacheConnector,
                                        implicit val mcc: MessagesControllerComponents)
                                        (implicit val appConfig: AppConfig, ec: ExecutionContext)
                                        extends FrontendController(mcc) with I18nSupport {
@@ -57,10 +60,12 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         countryCode = companyAddress.countryCode
       )
 
-      accountNumber <- Future.successful(Seq("123","345"))
+      sessionId = hc.sessionId.getOrElse(SessionId("Missing Session ID"))
+      accountNumber <- sessionCacheConnector.getAccountNumbers(request.user.eori, sessionId.value)
 
     } yield {
-      Ok(view(request.user.eori, accountNumber, companyName, address, email.toString))
+      Ok(view(request.user.eori, accountNumber.getOrElse(Seq("")),
+        companyName, address, email.toString))
     }
   }
 }
