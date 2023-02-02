@@ -29,7 +29,8 @@
         layout: Layout
 )
 
-@(eori: String, accountNumber: String, companyName: Option[String], companyAddress: String, email: String)(
+@(eori: String, accountNumbers: Seq[String], companyName: Option[String],
+  companyAddress: CompanyAddress, email: String)(
     implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
@@ -54,8 +55,18 @@
                 key = Key(
                     content = Text(messages("cf.contact-details.address"))
                 ),
-                value = Value(
-                    content = Text(companyAddress)
+                    value = Value(
+                        content = HtmlContent(
+                            s"""
+                            ${companyAddress.streetAndNumber}
+                            <br/>
+                            ${companyAddress.city}
+                            <br/>
+                            ${companyAddress.postalCode.getOrElse("")}
+                            <br/>
+                            ${companyAddress.countryCode}
+                            <br/>
+                    """)
                 )
             )
         )
@@ -100,23 +111,25 @@
     @h2("cf.contact-details.duty-deferment.h2")
     @p("cf.contact-details.duty-deferment.text")
 
-    @govukSummaryList(SummaryList(
-        rows = Seq(
-            SummaryListRow(
-                key = Key(
-                    content = Text(messages("cf.contact-details.account-number"))
-                ),
-                value = Value(
-                    content = Text(accountNumber)
-                ),
-                actions = Some(Actions(
-                    items = List(ActionItem(
-                        content = Text(messages("cf.contact-details.view-change-link")), 
-                        href = "#",
-                        visuallyHiddenText = Some(messages("cf.contact-details.view-change-link"))
+    @for(accountNumber <- accountNumbers) {
+        @govukSummaryList(SummaryList(
+            rows = Seq(
+                SummaryListRow(
+                    key = Key(
+                        content = Text(messages("cf.contact-details.account-number"))
+                    ),
+                    value = Value(
+                        content = Text(accountNumber)
+                    ),
+                    actions = Some(Actions(
+                        items = List(ActionItem(
+                            content = Text(messages("cf.contact-details.view-change-link")),
+                            href = "#",
+                            visuallyHiddenText = Some(messages("cf.contact-details.view-change-link"))
+                        ))
                     ))
-                ))
-            ),
-        )
-    ))
+                ),
+            )
+        ))
+    }
 }

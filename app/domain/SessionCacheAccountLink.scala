@@ -26,7 +26,6 @@ case class SessionCacheAccountLink(eori: String,
 
 object SessionCacheAccountLink {
   implicit val format: OFormat[SessionCacheAccountLink] = Json.format[SessionCacheAccountLink]
-
 }
 
 
