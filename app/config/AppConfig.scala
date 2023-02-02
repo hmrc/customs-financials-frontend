@@ -87,9 +87,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val customsFinancialsApi: String = servicesConfig.baseUrl("customs-financials-api") +
     config.get[String]("microservice.services.customs-financials-api.context")
 
-  lazy val customsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
-    config.get[String]("microservice.services.customs-financials-session-cache.context")
-
   lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
     config.get[String]("microservice.services.customs-data-store.context")
 

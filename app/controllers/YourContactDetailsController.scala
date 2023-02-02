@@ -18,12 +18,12 @@ package controllers
 
 import actionbuilders.IdentifierAction
 import config.AppConfig
-import connectors.SessionCacheConnector
-import domain.{CompanyAddress, EORI}
+import connectors.CustomsFinancialsSessionCacheConnector
+import domain.CompanyAddress
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{ApiService, DataStoreService}
+import services.DataStoreService
 import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
@@ -34,7 +34,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                        override val messagesApi: MessagesApi,
                                        dataStoreService: DataStoreService,
                                        view: your_contact_details,
-                                       sessionCacheConnector: SessionCacheConnector,
+                                       sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
                                        implicit val mcc: MessagesControllerComponents)
                                        (implicit val appConfig: AppConfig, ec: ExecutionContext)
                                        extends FrontendController(mcc) with I18nSupport {
