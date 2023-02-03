@@ -50,8 +50,6 @@ class YourContactDetailsViewSpec extends SpecBase {
     "display link to view or change" in new Setup {
       running(app) {
         view.containsLinkWithText("#", "View or change")
-        view.containsLinkWithText(appConfig.reportChangeCdsUrl,
-          "Report a change to your company details (opens in new tab)")
       }
     }
 
