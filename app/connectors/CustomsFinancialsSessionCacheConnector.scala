@@ -22,7 +22,6 @@ import play.api.libs.json.{Json, OFormat}
 import services.MetricsReporterService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,6 +45,10 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
     }
   }
 
+  def getAccountNumbers(eori: String, sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[String]]] =
+    httpClient.GET[Seq[String]](appConfig.customsFinancialsSessionCacheUrl + s"/account-numbers/$eori/$sessionId"
+    ).map(Some(_)).recover { case _ => None }
+
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.remove") {
@@ -55,7 +58,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for{
     accountLink <- accountLinks
-    sessionAccountLink = SessionCacheAccountLink(accountLink.eori,accountLink.accountNumber,accountLink.accountStatus, accountLink.accountStatusId, accountLink.linkId)
-  } yield  sessionAccountLink
-
+    sessionAccountLink = SessionCacheAccountLink(accountLink.eori,accountLink.accountNumber,
+      accountLink.accountStatus, accountLink.accountStatusId, accountLink.linkId)
+  } yield sessionAccountLink
 }

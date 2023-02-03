@@ -37,6 +37,7 @@ class DataStoreServiceSpec extends SpecBase {
     val mockMetricsReporterService = mock[MetricsReporterService]
     val mockHttp = mock[HttpClient]
     implicit val hc: HeaderCarrier = HeaderCarrier()
+    val eori = "GB11111"
 
     val app = application().overrides(
       inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
@@ -54,8 +55,6 @@ class DataStoreServiceSpec extends SpecBase {
 
   "Data store service" should {
     "return json response" in new Setup {
-      val eori = "GB11111"
-
       implicit def stringToOptionLocalDate: String => Option[LocalDate] = in => Some(LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
 
       val expectedEoriHistory = List(EoriHistory("GB11111", "2019-03-01", None), EoriHistory("GB22222", "2018-01-01", "2019-02-28"))
@@ -72,9 +71,9 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "handle MDG down" in new Setup {
-      val eori = "GB11111"
       val expectedResp = List(EoriHistory(eori, None, None))
-      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
+      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
       running(app) {
         val response = service.getAllEoriHistory(eori)
         val result = await(response)
@@ -84,9 +83,9 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "have graceful degradation of the historic eori service should return empty eori history" in new Setup {
-      val eori = "GB11111"
-      val expectedResp = EoriHistoryResponse(Seq(EoriHistory("GB11111", None, None)))
-      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.successful(expectedResp))
+      val expectedResp = EoriHistoryResponse(Seq(EoriHistory(eori, None, None)))
+      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(expectedResp))
       running(app) {
         val response = service.getAllEoriHistory(eori)
         val result = await(response)
@@ -95,22 +94,21 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "log response time metric" in new Setup() {
-      val eori = "GB11111"
-      val expectedResp = EoriHistoryResponse(Seq(EoriHistory("GB11111", None, None)))
-      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.successful(expectedResp))
+      val expectedResp = EoriHistoryResponse(Seq(EoriHistory(eori, None, None)))
+      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(expectedResp))
       running(app) {
         val response = service.getAllEoriHistory(eori)
         await(response)
-        verify(mockMetricsReporterService).withResponseTimeLogging(ArgumentMatchers.eq("customs-data-store.get.eori-history"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(ArgumentMatchers.eq(
+          "customs-data-store.get.eori-history"))(any)(any)
       }
     }
 
     "return existing email" in new Setup {
-      val eori = "GB11111"
-
       val jsonResponse = """{"address":"someemail@mail.com"}""".stripMargin
-
-      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
+      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
 
       running(app) {
         val response = service.getEmail(eori)
@@ -120,8 +118,8 @@ class DataStoreServiceSpec extends SpecBase {
     }
 
     "return a UnverifiedEmail" in new Setup {
-      val eori = "GB11111"
-      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.failed(UpstreamErrorResponse("NoData", 404, 404)))
+      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.failed(UpstreamErrorResponse("NoData", 404, 404)))
 
       running(app) {
         val response = service.getEmail(eori)
@@ -133,34 +131,62 @@ class DataStoreServiceSpec extends SpecBase {
     "throw service unavailable" in new Setup {
       running(app) {
         val eori = "ETMP500ERROR"
-        when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
+        when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+          Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
         assertThrows[ServiceUnavailableException](await(service.getEmail(eori)))
       }
     }
 
-    "return company name" in new Setup {
-      val eori = "GB11111"
-      val companyName = "Company name"
-      val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
-      val companyInformationResponse = CompanyInformationResponse(companyName, "1", address)
-      when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
-        .thenReturn(Future.successful(companyInformationResponse))
+    "CompanyName" should {
+      "return company name" in new Setup {
+        val companyName = "Company name"
+        val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyInformationResponse = CompanyInformationResponse(companyName, "1", address)
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(companyInformationResponse))
 
-      running(app) {
-        val response = service.getCompanyName(eori)
-        val result = await(response)
-        result must be(Some(companyName))
+        running(app) {
+          val response = service.getCompanyName(eori)
+          val result = await(response)
+          result must be(Some(companyName))
+        }
+      }
+
+      "return None when no company information is found" in new Setup {
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+
+        running(app) {
+          val response = await(service.getCompanyName(eori))
+          response mustBe None
+        }
       }
     }
 
-    "return None when no company information is found" in new Setup {
-      val eori = "GB11111"
-      when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
-        .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+    "CompanyAddress" should {
+      "return Company Address" in new Setup {
+        val companyName = "Company name"
+        val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyInformationResponse = CompanyInformationResponse(companyName, "1", address)
 
-      running(app) {
-        val response = await(service.getCompanyName(eori))
-        response mustBe None
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(companyInformationResponse))
+
+        running(app) {
+          val response = service.getCompanyAddress(eori)
+          val result = await(response)
+          result must be(Some(address))
+        }
+      }
+
+      "return None when no Address Found" in new Setup {
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Company Address")))
+
+        running(app) {
+          val response = await(service.getCompanyAddress(eori))
+          response mustBe None
+        }
       }
     }
   }

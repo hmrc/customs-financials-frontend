@@ -16,16 +16,14 @@
 
 package services
 
-import domain.CompanyAddress
 import play.api.Logger
 import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import config.AppConfig
-import domain.{CompanyAddress, EORI, EmailResponses, EoriHistory, UndeliverableEmail, UndeliverableInformation, UnverifiedEmail}
+import domain._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -46,7 +44,7 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     }
   }
 
-  def getEmail(eori: String)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
+  def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/verified-email"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       http.GET[EmailResponse](dataStoreEndpoint).map {
@@ -59,10 +57,20 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     }
   }
 
-  def getCompanyName(eori: String)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+  def getCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => if (response.consent == "1") Some(response.name) else None)
+    }.recover { case e =>
+      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+      None
+    }
+  }
+
+  def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
+    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+    metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
+      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => if (response.consent == "1") Some(response.address) else None)
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None

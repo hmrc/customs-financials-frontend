@@ -16,29 +16,26 @@
 
 package connectors
 
-
 import config.AppConfig
-import domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, DefermentAccountAvailable, SessionCacheAccountLink}
+import domain._
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api
 import play.api.inject
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, SessionId}
 import utils.SpecBase
-
 import java.util.UUID
 import scala.concurrent.Future
 
-class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase with ScalaFutures with FutureAwaits with DefaultAwaitTimeout {
-
+class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
+  with ScalaFutures with FutureAwaits with DefaultAwaitTimeout {
 
   "store session" should {
-    "save  all account links for a session" in new Setup {
+    "save all account links for a session" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
         val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
@@ -59,6 +56,20 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase with ScalaFutu
           .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
         val result = await(connector.removeSession(sessionId.value))
         result.status mustBe OK
+      }
+    }
+  }
+
+  "getAccountNumbers" should {
+    "Should return Nothing when no result found" in new Setup {
+      running(app) {
+        val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
+        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl +
+          "/account-numbers/" + "noneEoriHere/" + sessionId.value
+        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl),any, any)(any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
+        val result = await(connector.getAccountNumbers("noneEoriHere",sessionId.value))
+        result mustBe None
       }
     }
   }

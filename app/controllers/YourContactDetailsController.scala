@@ -16,21 +16,58 @@
 
 package controllers
 
+import actionbuilders.IdentifierAction
 import config.AppConfig
+import connectors.CustomsFinancialsSessionCacheConnector
+import domain.CompanyAddress
 import javax.inject.Inject
+import play.api.{Logger, LoggerLike}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.http.SessionId
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
+import scala.concurrent.{ExecutionContext, Future}
 
-class YourContactDetailsController @Inject()(implicit val appConfig: AppConfig,
+class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                        override val messagesApi: MessagesApi,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: your_contact_details
-                                     ) extends FrontendBaseController with I18nSupport {
+                                       dataStoreService: DataStoreService,
+                                       view: your_contact_details,
+                                       sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+                                       implicit val mcc: MessagesControllerComponents)
+                                       (implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                       extends FrontendController(mcc) with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = Action {
-    implicit request =>
-      Ok(view())
+  val log: LoggerLike = Logger(this.getClass)
+
+  def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
+    for {
+      email <- dataStoreService.getEmail(request.user.eori).flatMap {
+        case Left(_) => Future.successful(InternalServerError)
+        case Right(email) => Future.successful(email.value)
+      }
+
+      companyName <- dataStoreService.getCompanyName(request.user.eori)
+      dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
+
+      companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
+        new CompanyAddress("","",Some(""),""))
+
+      address = CompanyAddress(
+        streetAndNumber = companyAddress.streetAndNumber,
+        city = companyAddress.city,
+        postalCode = companyAddress.postalCode,
+        countryCode = companyAddress.countryCode
+      )
+
+      sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
+      accountNumber <- sessionCacheConnector.getAccountNumbers(request.user.eori, sessionId.value)
+
+
+    } yield {
+      Ok(view(request.user.eori, accountNumber.getOrElse(Seq("")),
+        companyName, address, email.toString))
+    }
   }
 }

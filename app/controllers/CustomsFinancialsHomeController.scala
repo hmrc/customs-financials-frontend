@@ -123,7 +123,6 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     )
   } yield accountLink
 
-
   def pageWithoutAccounts: Action[AnyContent] = authenticate.async {
     implicit request =>
       val eori = request.user.eori
