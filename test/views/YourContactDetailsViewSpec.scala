@@ -17,7 +17,7 @@
 package views
 
 import config.AppConfig
-import domain.CompanyAddress
+import domain.{CompanyAddress,AccountLinkWithoutDate}
 import org.jsoup.Jsoup
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -65,7 +65,11 @@ class YourContactDetailsViewSpec extends SpecBase {
     val eori: String = "EORI0123"
     val email = "email@emailland.com"
     val companyName = Some("CompanyName")
-    val accountNumbers: Seq[String] = Seq("123","4567")
+
+    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
+      eori, "123","1",Some(1),"2345678")
+
+    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink,accountLink)
 
     val companyAddress: CompanyAddress = new CompanyAddress(
       streetAndNumber = "123Street",

@@ -17,12 +17,16 @@
 package connectors
 
 import config.AppConfig
-import domain.{AccountLink, SessionCacheAccountLink}
+import domain.{AccountLink, AccountLinkWithoutDate, SessionCacheAccountLink}
 import play.api.libs.json.{Json, OFormat}
 import services.MetricsReporterService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import javax.inject.Inject
+import play.api.libs.json.Format.GenericFormat
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
+import uk.gov.hmrc.http.HttpReadsInstances.readFromJson
+
 import scala.concurrent.{ExecutionContext, Future}
 
 case class AccountLinksRequest(sessionId: String,
@@ -45,8 +49,9 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
     }
   }
 
-  def getAccountNumbers(eori: String, sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[String]]] =
-    httpClient.GET[Seq[String]](appConfig.customsFinancialsSessionCacheUrl + s"/account-numbers/$eori/$sessionId"
+  def getAccontLinks(eori: String, sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
+    httpClient.GET[Seq[AccountLinkWithoutDate]](
+      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$eori/$sessionId"
     ).map(Some(_)).recover { case _ => None }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
