@@ -78,7 +78,6 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   def directDebitUrl(linkId: String): String =
     s"${config.get[String]("microservice.services.customs-duty-deferment-frontend.url")}/$linkId/direct-debit"
 
-
   lazy val customsSecureMessagingBannerEndpoint: String =
     config.get[Service]("microservice.services.customs-financials-secure-messaging-frontend").baseUrl +
       config.get[String]("microservice.services.customs-financials-secure-messaging-frontend.context") +
