@@ -18,14 +18,13 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class SessionCacheAccountLink(eori: String,
-                                   accountNumber: String,
-                                   accountStatus: CDSAccountStatus,
-                                   accountStatusId: Option[CDSAccountStatusId],
-                                   linkId: String)
+case class AccountLinkWithoutDate(eori: String,
+                            accountNumber: String,
+                            accountStatus: String,
+                            accountStatusId: Option[Int],
+                            linkId: String
+)
 
-object SessionCacheAccountLink {
-  implicit val format: OFormat[SessionCacheAccountLink] = Json.format[SessionCacheAccountLink]
+object AccountLinkWithoutDate {
+  implicit val format: OFormat[AccountLinkWithoutDate] = Json.format[AccountLinkWithoutDate]
 }
-
-

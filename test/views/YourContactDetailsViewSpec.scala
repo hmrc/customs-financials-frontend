@@ -1,0 +1,90 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package views
+
+import config.AppConfig
+import domain.{CompanyAddress,AccountLinkWithoutDate}
+import org.jsoup.Jsoup
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import utils.SpecBase
+import views.html.your_contact_details.your_contact_details
+
+class YourContactDetailsViewSpec extends SpecBase {
+
+  "Customs Financials Your Contact Details" should {
+    "display header" in new Setup {
+      running(app) {
+        view.getElementsByTag("h1").text mustBe "Your contact details"
+      }
+    }
+    "display second header text" in new Setup {
+      running(app) {
+        view.getElementsByTag("h2").text mustBe "Help improve HMRC services " +
+          "Company details Primary email address Duty deferment contact details Support links"
+      }
+    }
+
+    "display the govlink" in new Setup {
+      running(app) {
+        view.getElementsByClass("govuk-link")
+      }
+    }
+
+    "display link to view or change" in new Setup {
+      running(app) {
+        view.containsLinkWithText("#", "View or change")
+      }
+    }
+
+    "display link to report a change" in new Setup {
+      running(app) {
+        view.containsLinkWithText(appConfig.reportChangeCdsUrl,
+          "Report a change to your company details (opens in new tab)")
+      }
+    }
+  }
+
+  trait Setup extends I18nSupport {
+    val eori: String = "EORI0123"
+    val email = "email@emailland.com"
+    val companyName = Some("CompanyName")
+
+    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
+      eori, "123","1",Some(1),"2345678")
+
+    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink,accountLink)
+
+    val companyAddress: CompanyAddress = new CompanyAddress(
+      streetAndNumber = "123Street",
+      city = "city",
+      postalCode = Some("postcode"),
+      countryCode = "CountryCode"
+    )
+
+    implicit val request = FakeRequest("GET", "/some/resource/path")
+    val app = application().build()
+    implicit val appConfig = app.injector.instanceOf[AppConfig]
+
+    def view = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
+      eori,accountNumbers,companyName,companyAddress,email).body)
+
+    override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  }
+}

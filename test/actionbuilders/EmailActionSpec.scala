@@ -49,7 +49,7 @@ class EmailActionSpec extends SpecBase {
       val result = contentAsString(Future.successful(response))
 
       val html = Jsoup.parse(result)
-      html.getElementsByTag("h1").text mustBe s"There's a problem with your email address for the Customs Declaration Service"
+      html.getElementsByTag("h1").text mustBe s"There's a problem with the CDS registered email address"
     }
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
