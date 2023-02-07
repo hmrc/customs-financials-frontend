@@ -19,12 +19,12 @@ package controllers
 import actionbuilders.IdentifierAction
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.CompanyAddress
+import domain.{AccountLinkWithoutDate, CompanyAddress}
 import javax.inject.Inject
 import play.api.{Logger, LoggerLike}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{ApiService, DataStoreService}
+import services.DataStoreService
 import uk.gov.hmrc.http.SessionId
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
@@ -62,11 +62,10 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       )
 
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
-      accountNumber <- sessionCacheConnector.getAccountNumbers(request.user.eori, sessionId.value)
-
+      accountlinks <- sessionCacheConnector.getAccontLinks(request.user.eori, sessionId.value)
 
     } yield {
-      Ok(view(request.user.eori, accountNumber.getOrElse(Seq("")),
+      Ok(view(request.user.eori, accountlinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
         companyName, address, email.toString))
     }
   }
