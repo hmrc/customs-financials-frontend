@@ -72,7 +72,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include a link to the duty deferment contact details page when status is open" in new Setup {
       running(app) {
-        val expectedUrl = contactDetailsLink1
+        val expectedUrl = ddSetupLink
         content().containsLink(expectedUrl) mustBe true
       }
     }
@@ -86,7 +86,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include a link to the duty deferment contact details page when status is suspended and status id is other than 4" in new Setup {
       running(app) {
-        val expectedUrl = contactDetailsLink1
+        val expectedUrl = ddSetupLink
         content(dutyDefermentAccountSuspendedWithStatusId7).containsLink(expectedUrl) mustBe true
       }
     }
@@ -318,7 +318,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val ddSetupLink = "http://localhost:9397/customs/duty-deferment/0123456789/direct-debit"
     val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
-//    val accountLinks = Map[(String, String), String]((eori, dan) -> link)
+
     val dutyDefermentAccount = DutyDefermentAccount(dan, eori, AccountStatusOpen, DefermentAccountAvailable,
       DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
 
