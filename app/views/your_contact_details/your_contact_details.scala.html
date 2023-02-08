@@ -39,10 +39,11 @@
     helpAndSupport = false,
     backLink = Some(routes.CustomsFinancialsHomeController.index.url)
 ) {
-    @h1("cf.contact-details.title", classes = "govuk-heading-xl")
-    @h2("cf.contact-details.company-details")
+    @h1("cf.contact-details.title", classes = "govuk-heading-xl", id=Some("contact-heading"))
+    @h2("cf.contact-details.company-details", id=Some("contact-sub-heading"))
 
     @govukSummaryList(SummaryList(
+        attributes = Map("id" -> "contact-company-details"),
         rows = Seq(
             SummaryListRow(
                 key = Key(
@@ -72,7 +73,7 @@
             )
         )
     ))
-    <p class="govuk-body govuk-!-padding-bottom-9">
+    <p class="govuk-body govuk-!-padding-bottom-9" id="contact-report-change-link">
         @hmrcNewTabLink(
             NewTabLink(
                 language = Some(messages.lang.toString),
@@ -83,10 +84,11 @@
         )
     </p>
     
-    @h2("cf.contact-details.primary-email-address.h2")
+    @h2("cf.contact-details.primary-email-address.h2", id=Some("contact-email-heading"))
     @p("cf.contact-details.primary-email-address.text")
 
     @govukSummaryList(SummaryList(
+        attributes = Map("id" -> "contact-email-address"),
         rows = Seq(
             SummaryListRow(
                 key = Key(
@@ -99,7 +101,7 @@
         )
     ))
 
-    <p class="govuk-body govuk-!-padding-bottom-9">
+    <p class="govuk-body govuk-!-padding-bottom-9" id="contact-change-email-link">
         @hmrcNewTabLink(
             NewTabLink(
                 language = Some(messages.lang.toString),
@@ -110,12 +112,13 @@
         )
     </p>
 
-    @h2("cf.contact-details.duty-deferment.h2")
+    @h2("cf.contact-details.duty-deferment.h2", id=Some("contact-duty-deferment-heading")) 
     @p("cf.contact-details.duty-deferment.text")
 
     @if(accountLinks.nonEmpty) {
         @for(accountLink <- accountLinks) {
             @govukSummaryList(SummaryList(
+                attributes = Map("id" -> "contact-account-details"),
                 rows = Seq(
                     SummaryListRow(
                         key = Key(
