@@ -32,13 +32,8 @@
  @h1(msg = "cf.verify.your.email.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
  @p(messages("cf.verify.your.email.p1"))
- @p(messages("cf.verify.your.email.need-to-verify"))
+ @p(messages("cf.verify.your.email.p2"))
+ @p(messages("cf.verify.your.email.p3"))
 
- @ul(
-  "cf.verify.your.email.list.1",
-  "cf.verify.your.email.list.2",
-  "cf.verify.your.email.list.3"
- )
-
- @button("cf.undeliverable.email.link-text", Some(nextPage))
+ @button("cf.verify.your.email.change.button", Some(nextPage))
 }

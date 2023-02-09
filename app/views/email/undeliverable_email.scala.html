@@ -33,13 +33,15 @@
 
     @p("cf.undeliverable.email.p1")
     @p("cf.undeliverable.email.p2")
-    @p("cf.undeliverable.email.p3")
 
-    @ul(
-        "cf.undeliverable.email.list.1",
-        "cf.undeliverable.email.list.2",
-        "cf.undeliverable.email.list.3"
-    )
+    @h2(msg = "cf.undeliverable.email.verify.heading", classes = "govuk-heading-m govuk-!-margin-bottom-4")
+
+    @p("cf.undeliverable.email.verify.text.p1")
+
+    @h2(msg = "cf.undeliverable.email.change.heading", classes = "govuk-heading-m govuk-!-margin-bottom-4")
+
+    @p("cf.undeliverable.email.change.text.p1")
+    @p("cf.undeliverable.email.change.text.p2")
 
     @button("cf.undeliverable.email.link-text", Some(nextPage))
 }
