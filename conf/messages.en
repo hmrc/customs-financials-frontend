@@ -174,8 +174,8 @@ cf.verify.your.email.list.2=urgent updates about goods in customs
 cf.verify.your.email.list.3=some financial notifications, including Direct Debit notices and VAT
 
 # Undeliverable Email Address
-cf.undeliverable.email.title=There’s a problem with your email address for the Customs Declaration Service
-cf.undeliverable.email.heading=There’s a problem with your email address for the Customs Declaration Service
+cf.undeliverable.email.title=There''s a problem with your email address for the Customs Declaration Service
+cf.undeliverable.email.heading=There''s a problem with your email address for the Customs Declaration Service
 cf.undeliverable.email.p1=We tried to send you an email but it could not be delivered.
 cf.undeliverable.email.p2=Your registered email address is <strong class="bold">{0}</string>.
 cf.undeliverable.email.verify.heading=Verify your email address
