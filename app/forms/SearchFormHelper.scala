@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package config
+package forms
 
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.test.FakeRequest
+import play.api.data.Form
+import play.api.data.Forms.{mapping, nonEmptyText}
 
-class ErrorHandlerSpec extends AnyWordSpec with Matchers
-  with GuiceOneAppPerSuite {
-
-  private val fakeRequest = FakeRequest("GET", "/")
-
-  private val handler = app.injector.instanceOf[ErrorHandler]
-
-  "standardErrorTemplate" should {
-    "render HTML" in {
-      val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
-      html.contentType shouldBe "text/html"
-    }
-  }
+object SearchFormHelper {
+  val form: Form[String] =
+    Form(
+      mapping(
+        "search" ->
+          nonEmptyText
+            .verifying(
+              "error",
+              str => str.nonEmpty
+            )
+      )(identity)(Some(_))
+    )
 }
