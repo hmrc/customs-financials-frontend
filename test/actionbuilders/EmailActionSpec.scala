@@ -20,7 +20,7 @@ package actionbuilders
 import domain.{UndeliverableEmail, UnverifiedEmail}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.{convertToAnyMustWrapper}
 import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -49,7 +49,9 @@ class EmailActionSpec extends SpecBase {
       val result = contentAsString(Future.successful(response))
 
       val html = Jsoup.parse(result)
-      html.getElementsByTag("h1").text mustBe s"There's a problem with the CDS registered email address"
+      html.getElementsByTag("h1").text mustBe s"There's a problem with your email address for the Customs Declaration Service"
+      html.getElementsByTag("h2").text must include ("your email address")
+      html.getElementsByTag("p").text must include ("Customs Declaration Service")
     }
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {

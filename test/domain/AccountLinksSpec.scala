@@ -88,7 +88,7 @@ trait Setup {
   val danId: String = "someDan"
   val lastUpdated: DateTime = DateTime.now()
 
-  val accountLink: AccountLink = new AccountLink(sessionId, eori,
+  val accountLink: AccountLink = AccountLink(sessionId, eori,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(

@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.test.FakeRequest
+import play.api.libs.json._
 
-class ErrorHandlerSpec extends AnyWordSpec with Matchers
-  with GuiceOneAppPerSuite {
+object SimpleStringFormat {
 
-  private val fakeRequest = FakeRequest("GET", "/")
+  def apply[A](fromString: String => A, toString: A => String): Format[A] =
+    Format(
+      Reads {
+        case JsString(value) => JsSuccess(fromString(value))
+        case json            => JsError(s"Expected json string but got ${json.getClass.getSimpleName}")
+      },
+      Writes.apply(entity => JsString(toString(entity)))
+    )
 
-  private val handler = app.injector.instanceOf[ErrorHandler]
-
-  "standardErrorTemplate" should {
-    "render HTML" in {
-      val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
-      html.contentType shouldBe "text/html"
-    }
-  }
 }

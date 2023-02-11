@@ -161,23 +161,28 @@ cf.customs-financials-home.notification.requested-postponed-vat=Your requested p
 cf.customs-financials-home.notification.authorities=Your requested list of accounts you have authority to use is available
 
 # Verify Your Email Address
-cf.verify.your.email.title=You need to verify the registered CDS email address
-cf.verify.your.email.heading=You need to verify the registered CDS email address
-cf.verify.your.email.p1=This is the email address your organisation has registered for the Customs Declaration Service (CDS). You need to verify this email address or change it. You can verify the email instantly provided you have access to the email account.
+cf.verify.your.email.title=Verify your email address for the Customs Declaration Service
+cf.verify.your.email.heading=Verify your email address for the Customs Declaration Service
+cf.verify.your.email.p1=You need to verify the email address you use for the Customs Declaration Service.
+cf.verify.your.email.p2=Your registered email address is <strong class="bold">{0}</string>.
+cf.verify.your.email.p3=If this is not the email address you want to use, you can also change it using this service.
+cf.verify.your.email.change.button=Verify or change email address
+
 cf.verify.your.email.need-to-verify=This will be the only email address we use for:
 cf.verify.your.email.list.1=updates on changes to the Customs Declaration Service
 cf.verify.your.email.list.2=urgent updates about goods in customs
 cf.verify.your.email.list.3=some financial notifications, including Direct Debit notices and VAT
 
 # Undeliverable Email Address
-cf.undeliverable.email.title=There''s a problem with the CDS registered email address
-cf.undeliverable.email.heading=There''s a problem with the CDS registered email address
-cf.undeliverable.email.p1=We tried to send you an email but it could not be delivered. This could be because the inbox is full, or due to a technical problem with your email provider.
-cf.undeliverable.email.p2=This is the email address your organisation has registered for the Customs Declaration Service (CDS). You need to verify this email address or change it. You can verify the email instantly provided you have access to the email account.
-cf.undeliverable.email.p3=This will be the only email address we use for:
-cf.undeliverable.email.list.1=updates on changes to the Customs Declaration Service
-cf.undeliverable.email.list.2=urgent updates about goods in customs
-cf.undeliverable.email.list.3=some financial notifications, including Direct Debit notices and VAT
+cf.undeliverable.email.title=There''s a problem with your email address for the Customs Declaration Service
+cf.undeliverable.email.heading=There''s a problem with your email address for the Customs Declaration Service
+cf.undeliverable.email.p1=We tried to send you an email but it could not be delivered.
+cf.undeliverable.email.p2=Your registered email address is <strong class="bold">{0}</string>.
+cf.undeliverable.email.verify.heading=Verify your email address
+cf.undeliverable.email.verify.text.p1=If this email address is correct, you will need to verify it to continue using the Customs Declaration Service.
+cf.undeliverable.email.change.heading=Change your email address
+cf.undeliverable.email.change.text.p1=If this email address is not correct, you can change it here.
+cf.undeliverable.email.change.text.p2=The Customs Declaration Service uses one email address for various customs-related services. If you change it, take care that other people in your company will still have access to the messages they need.
 cf.undeliverable.email.link-text=Verify or change email address
 
 cf.search.authorities = Find accounts you have authority to use
