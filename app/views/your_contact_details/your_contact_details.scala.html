@@ -115,7 +115,7 @@
     @if(accountLinks.nonEmpty) {
         @h2("cf.contact-details.duty-deferment.h2", id=Some("contact-duty-deferment-heading"))
         @p("cf.contact-details.duty-deferment.text")
-        <div id="contact-account-details">
+        <div id="contact-account-details" class="govuk-!-margin-bottom-9">
             @for(accountLink <- accountLinks) {
                 @govukSummaryList(SummaryList(
                     attributes = Map("id" -> s"contact-account-list-${accountLink.accountNumber}"),
