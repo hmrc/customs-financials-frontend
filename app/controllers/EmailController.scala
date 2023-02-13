@@ -17,24 +17,32 @@
 package controllers
 
 import actionbuilders.IdentifierAction
-import config.AppConfig
+import config.{AppConfig, ErrorHandler}
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
+import services.DataStoreService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.email.verify_your_email
 
 import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmailController @Inject()(authenticate: IdentifierAction,
                                 verifyEmailView: verify_your_email,
+                                customsDataStore: DataStoreService,
+                                errorHandler: ErrorHandler,
                                 implicit val mcc: MessagesControllerComponents)
-                               (implicit val appConfig: AppConfig)
+                               (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 
-  def showUnverified():Action[AnyContent] = authenticate { implicit request =>
-    Ok(verifyEmailView(appConfig.emailFrontendUrl))
+  def showUnverified():Action[AnyContent] = authenticate async { implicit request =>
+    customsDataStore.getEmail(request.user.eori).flatMap {
+      case Right(email) =>
+        Future.successful(Ok(verifyEmailView(appConfig.emailFrontendUrl, email.value)))
+      case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
+    }
   }
 }

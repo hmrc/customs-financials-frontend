@@ -17,9 +17,16 @@
 package controllers
 
 import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.inject
 import play.api.test.Helpers._
+import play.api.test.Helpers.baseApplicationBuilder.overrides
+import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.auth.core.retrieve.Email
 import utils.SpecBase
+
+import scala.concurrent.Future
 
 class EmailControllerSpec extends SpecBase {
 
@@ -36,6 +43,15 @@ class EmailControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app = application().build()
+    val mockApiService: ApiService = mock[ApiService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+
+    when(mockDataStoreService.getEmail(any)(any))
+      .thenReturn(Future.successful(Right(Email("address@email.com"))))
+
+    val app = application()
+    .overrides(
+      inject.bind[DataStoreService].toInstance(mockDataStoreService)
+    ).configure("features.new-agent-view-enabled" -> false).build()
   }
 }
