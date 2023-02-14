@@ -17,7 +17,7 @@
 package connectors
 
 import config.AppConfig
-import domain.{EmailVerifiedResponse, FileRole}
+import domain.{EmailVerifiedResponse, EmailUnverifiedResponse, FileRole}
 import play.mvc.Http.Status
 import services.MetricsReporterService
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -31,6 +31,10 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: 
 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
     httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
+  }
+
+  def isEmailUnverified(implicit hc: HeaderCarrier): Future[String] = {
+    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map( res => res.unVerifiedEmail.get)
   }
 
   def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
