@@ -24,6 +24,12 @@ object EmailVerifiedResponse {
   implicit val format: OFormat[EmailVerifiedResponse] = Json.format[EmailVerifiedResponse]
 }
 
+case class EmailUnverifiedResponse(unVerifiedEmail: Option[String])
+
+object EmailUnverifiedResponse {
+  implicit val format: OFormat[EmailUnverifiedResponse] = Json.format[EmailUnverifiedResponse]
+}
+
 sealed trait EmailResponses
 
 case object UnverifiedEmail extends EmailResponses
