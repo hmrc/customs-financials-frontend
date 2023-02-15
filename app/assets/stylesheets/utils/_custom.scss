@@ -35,3 +35,8 @@
     margin-top: 20px;
     padding-top: 20px;
 }
+
+.app-task-list__task-name>a:link, 
+.govuk-link:link {
+    font-weight: normal;
+}
