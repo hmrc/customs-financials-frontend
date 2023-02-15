@@ -33,9 +33,6 @@ import scala.concurrent.Future
 
 class MetricsReporterServiceSpec extends SpecBase {
 
-
-
-
   "MetricsReporterService" should {
 
     "withResponseTimeLogging" should {
