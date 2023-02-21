@@ -135,7 +135,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   def getNotificationMessageKeys(collectionOfDocumentAttributes: Seq[Notification]): Seq[String] = {
     val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
     val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(v => v.isRequested || v.fileRole == StandingAuthority)
-    val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority)
+    val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
     val requestedMessages = requestedNotifications.map(notification => s"requested-${notification.fileRole.messageKey}")
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
       case (role, notifications) if notifications.size > 1 => s"multiple-${role.messageKey}"
