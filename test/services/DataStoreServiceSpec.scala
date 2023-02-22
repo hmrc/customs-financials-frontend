@@ -16,6 +16,7 @@
 
 package services
 
+import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
@@ -27,6 +28,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
@@ -152,6 +154,31 @@ class DataStoreServiceSpec extends SpecBase {
         }
       }
 
+      "return None when no company information is found" in new Setup {
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+
+        running(app) {
+          val response = await(service.getCompanyName(eori))
+          response mustBe None
+        }
+      }
+    }
+
+    "OwnCompanyName" should {
+      "return own company name" in new Setup {
+        val companyName = "Company name"
+        val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyInformationResponse = CompanyInformationResponse(companyName, "0", address)
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(companyInformationResponse))
+
+        running(app) {
+          val response = service.getOwnCompanyName(eori)
+          val result = await(response)
+          result must be(Some(companyName))
+        }
+      }
       "return None when no company information is found" in new Setup {
         when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
           .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
