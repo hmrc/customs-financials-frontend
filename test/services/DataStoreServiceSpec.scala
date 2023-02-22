@@ -184,7 +184,7 @@ class DataStoreServiceSpec extends SpecBase {
           .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
 
         running(app) {
-          val response = await(service.getCompanyName(eori))
+          val response = await(service.getOwnCompanyName(eori))
           response mustBe None
         }
       }
