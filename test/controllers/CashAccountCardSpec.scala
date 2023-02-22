@@ -88,6 +88,7 @@ class CashAccountCardSpec extends SpecBase {
       .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
 
   }
 }

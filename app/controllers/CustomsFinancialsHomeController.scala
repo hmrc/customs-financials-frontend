@@ -99,7 +99,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                               )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
-      companyName <- dataStoreService.getCompanyName(eori)
+      companyName <- dataStoreService.getOwnCompanyName(eori)
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
       accountLinks = createAccountLinks(sessionId,cdsAccountsList)
       _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
