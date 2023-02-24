@@ -48,7 +48,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         case Right(email) => Future.successful(email.value)
       }
 
-      companyName <- dataStoreService.getCompanyName(request.user.eori)
+      companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
 
       companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
