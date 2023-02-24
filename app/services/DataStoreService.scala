@@ -80,7 +80,7 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
   def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => if (response.consent == "1") Some(response.address) else None)
+      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.address))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
