@@ -49,9 +49,9 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
     }
   }
 
-  def getAccontLinks(eori: String, sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
+  def getAccontLinks(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
     httpClient.GET[Seq[AccountLinkWithoutDate]](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$eori/$sessionId"
+      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$sessionId"
     ).map(Some(_)).recover { case _ => None }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {

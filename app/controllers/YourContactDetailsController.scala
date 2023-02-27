@@ -44,8 +44,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
-        case Left(_) => Future.successful(InternalServerError)
         case Right(email) => Future.successful(email.value)
+        case Left(_) => Future.successful(InternalServerError)
       }
 
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
@@ -62,7 +62,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       )
 
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
-      accountlinks <- sessionCacheConnector.getAccontLinks(request.user.eori, sessionId.value)
+      accountlinks <- sessionCacheConnector.getAccontLinks(sessionId.value)
 
     } yield {
       Ok(view(request.user.eori, accountlinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
