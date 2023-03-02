@@ -28,9 +28,24 @@ class ErrorHandlerSpec extends AnyWordSpec with Matchers
 
   private val handler = app.injector.instanceOf[ErrorHandler]
 
-  "standardErrorTemplate" should {
-    "render HTML" in {
+  "Error handler" should {
+    "render standard error template HTML" in {
       val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
+      html.contentType shouldBe "text/html"
+    }
+
+    "render not found template HTML" in {
+      val html = handler.notFoundTemplate(fakeRequest)
+      html.contentType shouldBe "text/html"
+    }
+
+    "render unauthorized HTML" in {
+      val html = handler.unauthorized()(fakeRequest)
+      html.contentType shouldBe "text/html"
+    }
+
+    "render technical difficulties HTML" in {
+      val html = handler.technicalDifficulties()(fakeRequest)
       html.contentType shouldBe "text/html"
     }
   }

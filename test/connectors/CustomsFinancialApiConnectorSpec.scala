@@ -16,7 +16,7 @@
 
 package connectors
 
-import domain.EmailVerifiedResponse
+import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import domain.FileRole.StandingAuthority
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
@@ -44,6 +44,20 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
       }
     }
 
+    "return unverified email" in new Setup {
+
+      running (app){
+
+        when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
+
+        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+
+        val result: Future[String] = connector.isEmailUnverified(hc)
+        await(result) mustBe "unverified@email.com"
+      }
+    }
+
     "delete notifications should return a boolean based on the result" in new Setup {
 
       running(app) {
@@ -60,7 +74,7 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
 
     val expectedResult = EmailVerifiedResponse(Some("verifiedEmail"))
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    private val mockHttpClient = mock[HttpClient]
+    val mockHttpClient = mock[HttpClient]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
     val response = EmailVerifiedResponse(Some("verifiedEmail"))
