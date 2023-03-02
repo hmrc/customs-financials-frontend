@@ -94,43 +94,5 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val sdesApi: String = servicesConfig.baseUrl("sdes") +
     config.get[String]("microservice.services.sdes.context")
 
-  private lazy val historicRequest = config.get[String]("external-urls.historicRequest")
-  private lazy val requestedStatements = config.get[String]("external-urls.requestedStatements")
-
-  def historicRequestUrl(fileRole: FileRole, linkId: String): String = {
-    fileRole match {
-      case FileRole.DutyDefermentStatement => historicRequest + s"duty-deferment/$linkId"
-      case _ => ""
-    }
-  }
-
-  def historicRequestUrl(fileRole: FileRole): String = {
-    fileRole match {
-      case FileRole.SecurityStatement => historicRequest + "adjustments"
-      case FileRole.C79Certificate | FileRole.PostponedVATStatement => historicRequest + fileRole.featureName
-      case _ => ""
-    }
-  }
-
-  def requestedStatements(fileRole: FileRole, linkId: String): String = {
-    fileRole match {
-      case FileRole.DutyDefermentStatement => requestedStatements + s"duty-deferment/$linkId"
-      case _ => ""
-    }
-  }
-
-  def requestedStatements(fileRole: FileRole): String = {
-    fileRole match {
-      case FileRole.SecurityStatement => requestedStatements + "adjustments"
-      case FileRole.C79Certificate | FileRole.PostponedVATStatement => requestedStatements + fileRole.featureName
-      case _ => ""
-    }
-  }
-
-  def languageMap: Map[String, Lang] = Map(
-    "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy")
-  )
-
   def filesUrl(fileRole: FileRole): String = s"$sdesApi/files-available/list/${fileRole.name}"
 }
