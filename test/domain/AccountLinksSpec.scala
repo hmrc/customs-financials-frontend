@@ -86,7 +86,7 @@ trait Setup {
   val accountStatusId: Option[CDSAccountStatusId] = Option(DebitRejectedAccountClosedOrTransferred)
   val linkId: String = "someLinkId"
   val danId: String = "someDan"
-  val lastUpdated: DateTime = DateTime.now()
+  lazy val lastUpdated: DateTime = DateTime.now()
 
   val accountLink: AccountLink = AccountLink(sessionId, eori,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
