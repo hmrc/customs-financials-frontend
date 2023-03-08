@@ -26,7 +26,7 @@
 @if(errors.nonEmpty) {
     @defining(errors.map { error =>
         ErrorLink(
-            href = Some(s"#${errorFieldName.getOrElse(s"${error.key}.month")}"),
+            href = Some(s"#${errorFieldName.getOrElse(s"${error.key}-error")}"),
             content = Text(messages(error.message, error.args:_*))
         )
     }) { errorLinks =>
