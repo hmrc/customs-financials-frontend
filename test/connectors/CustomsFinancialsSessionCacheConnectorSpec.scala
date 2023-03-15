@@ -20,7 +20,6 @@ import config.AppConfig
 import domain._
 import org.joda.time.DateTime
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
