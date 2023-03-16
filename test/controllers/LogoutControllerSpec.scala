@@ -16,51 +16,54 @@
 
 package controllers
 
+import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
 
+import java.net.URLEncoder
 import scala.concurrent.Future
 
 class LogoutControllerSpec extends SpecBase {
 
   "LogoutController logout" should {
-    "redirect to feedback survey page" in new Setup {
-      val request = fakeRequest(GET, routes.LogoutController.logout.url).withHeaders("X-Session-Id" -> "someSession")
+    "logout" should {
+      "redirect to logout link with survey continue" in new Setup {
 
-      when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
+        when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
-      running(app) {
-        val result = route(app, request).value
-        redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=https%3A%2F%2Fwww.development.tax.service.gov.uk%2Ffeedback%2FCDS-FIN"
+        running(app) {
+          val request = fakeRequest(GET, routes.LogoutController.logout.url).withHeaders("X-Session-Id" -> "someSession")
+          val result = route(app, request).value
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=https%3A%2F%2Fwww.development.tax.service.gov.uk%2Ffeedback%2FCDS-FIN"
+        }
       }
     }
-  }
+    "logoutNoSurvey" should {
+      "redirect to logout link without survey continue" in new Setup {
 
-  "LogoutController logout no survey" should {
-    "redirect to sign-out with the continue as the financials homepage" in new Setup {
-      when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
+        when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
-      running(app) {
-        val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url).withHeaders("X-Session-Id" -> "someSession")
-        val result = route(app, request).value
-        redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
+        running(app) {
+          val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url).withHeaders("X-Session-Id" -> "someSession")
+          val result = route(app, request).value
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
+        }
       }
     }
-  }
 
-  trait Setup {
-    val mockAuthConnector = mock[AuthConnector]
-    val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
-    val app = application().overrides(
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
-      inject.bind[AuthConnector].toInstance(mockAuthConnector)
-    ).build()
+    trait Setup {
+      val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
+      val app: Application = application().build()
+      val config: AppConfig = app.injector.instanceOf[AppConfig]
+    }
   }
 }
