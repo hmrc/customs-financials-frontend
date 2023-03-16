@@ -18,7 +18,6 @@ package controllers
 
 import connectors.CustomsFinancialsSessionCacheConnector
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
 import play.api.test.Helpers._

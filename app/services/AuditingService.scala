@@ -33,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConnector) {
 
   val log: LoggerLike = Logger(this.getClass)
-  implicit val dataEventWrites: Writes[DataEvent] = Json.writes[DataEvent]
 
   val AUDIT_AUTHORISED_TRANSACTION = "View account"
   val AUDIT_EORI = "EORI"
