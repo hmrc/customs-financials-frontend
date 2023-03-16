@@ -46,7 +46,7 @@ lazy val microservice = Project(appName, file("."))
   )
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.14.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.24.0",
   "uk.gov.hmrc" %% "play-partials" % "8.2.0-play-28",
   "uk.gov.hmrc" %% "govuk-template" % "5.79.0-play-28",
   "uk.gov.hmrc" %% "play-frontend-hmrc" % "6.8.0-play-28",
@@ -59,7 +59,7 @@ val compileDependencies = Seq(
 )
 
 val testDependencies = Seq(
- "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.14.0" % Test,
+ "uk.gov.hmrc" %% "bootstrap-test-play-28" % "5.24.0" % Test,
 "org.scalatest" %% "scalatest" % "3.2.9" % Test,
 "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
 "org.jsoup" % "jsoup" % "1.10.2" % Test,
