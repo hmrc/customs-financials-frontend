@@ -19,11 +19,9 @@ package controllers
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.mockito.ArgumentMatchersSugar.eqTo
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.{Application, inject}
+import play.api.Application
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
 
@@ -39,10 +37,10 @@ class LogoutControllerSpec extends SpecBase {
         when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
         running(app) {
-          val request = fakeRequest(GET, routes.LogoutController.logout.url).withHeaders("X-Session-Id" -> "someSession")
+          val request = fakeRequest(GET, routes.LogoutController.logout.url)
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=https%3A%2F%2Fwww.development.tax.service.gov.uk%2Ffeedback%2FCDS-FIN"
+          redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.feedbackService, "UTF-8")}"
         }
       }
     }
@@ -52,10 +50,10 @@ class LogoutControllerSpec extends SpecBase {
         when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
 
         running(app) {
-          val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url).withHeaders("X-Session-Id" -> "someSession")
+          val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url)
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
+          redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.loginContinueUrl, "UTF-8")}"
         }
       }
     }
