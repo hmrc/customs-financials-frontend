@@ -17,51 +17,38 @@
 package controllers
 
 import config.AppConfig
-import connectors.CustomsFinancialsSessionCacheConnector
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
 
 import java.net.URLEncoder
-import scala.concurrent.Future
 
 class LogoutControllerSpec extends SpecBase {
 
-  "LogoutController logout" should {
-    "logout" should {
-      "redirect to logout link with survey continue" in new Setup {
-
-        when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
-
-        running(app) {
-          val request = fakeRequest(GET, routes.LogoutController.logout.url)
-          val result = route(app, request).value
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.feedbackService, "UTF-8")}"
-        }
+  "logout" should {
+    "redirect to logout link with survey continue" in new Setup {
+      running(app) {
+        val request = fakeRequest(GET, routes.LogoutController.logout.url)
+        val result = route(app, request).value
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.feedbackService, "UTF-8")}"
       }
     }
-    "logoutNoSurvey" should {
-      "redirect to logout link without survey continue" in new Setup {
-
-        when(mockSessionCacheConnector.removeSession(eqTo("someSession"))(any)).thenReturn(Future.successful(HttpResponse(NO_CONTENT, "")))
-
-        running(app) {
-          val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url)
-          val result = route(app, request).value
-          status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.loginContinueUrl, "UTF-8")}"
-        }
+  }
+  "logoutNoSurvey" should {
+    "redirect to logout link without survey continue" in new Setup {
+      running(app) {
+        val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url)
+        val result = route(app, request).value
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result).value mustBe s"${config.signOutUrl}?continue=${URLEncoder.encode(config.loginContinueUrl, "UTF-8")}"
       }
     }
+  }
 
-    trait Setup {
-      val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
-      val app: Application = application().build()
-      val config: AppConfig = app.injector.instanceOf[AppConfig]
-    }
+  trait Setup {
+    val app: Application = application().build()
+    val config: AppConfig = app.injector.instanceOf[AppConfig]
   }
 }
