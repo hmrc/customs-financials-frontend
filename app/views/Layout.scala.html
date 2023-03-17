@@ -49,7 +49,7 @@
         companyName: Option[String] = None
 )(contentBlock: Html)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
 
-<link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
+
 
 @phaseBannerContent = {
     @messages("feedback.before")
@@ -71,6 +71,8 @@
 }
 
 @additionalHead = {
+
+<link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
 
 @hmrcTimeoutDialog(TimeoutDialog(
         title = Some(messages("timeout.title")),
