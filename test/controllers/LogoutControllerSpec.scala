@@ -27,6 +27,10 @@ import utils.SpecBase
 
 import scala.concurrent.Future
 
+/*
+* This test case is commenting for time being, it will be reuse in furtherly
+ */
+
 class LogoutControllerSpec extends SpecBase {
 
  /* "LogoutController logout" should {
@@ -52,7 +56,7 @@ class LogoutControllerSpec extends SpecBase {
         redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-out-without-state?continue=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
       }
     }
-  }
+  } */
 
   trait Setup {
     val mockAuthConnector = mock[AuthConnector]
@@ -61,5 +65,5 @@ class LogoutControllerSpec extends SpecBase {
       inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
       inject.bind[AuthConnector].toInstance(mockAuthConnector)
     ).build()
-  }*/
+  }
 }
