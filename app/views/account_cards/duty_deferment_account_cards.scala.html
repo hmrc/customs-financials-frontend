@@ -113,10 +113,10 @@
                         </p>
                     }
 
-                    <p class="govuk-body">
-                        @if(account.status != AccountStatusPending) {
-                            @balances(account, model)
-                        }
+                   
+                    @if(account.status != AccountStatusPending) {
+                        @balances(account, model)
+                    }
                     <span class="card-footer__links govuk-body">
                         @if(account.status != AccountStatusPending) {
                             <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
@@ -145,7 +145,7 @@
                             @pendingTile()
                         }
                     </span>
-                    </p>
+                    
                 </div>
             </div>
           }
