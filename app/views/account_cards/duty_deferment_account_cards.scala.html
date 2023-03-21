@@ -121,6 +121,7 @@
                         @if(account.status != AccountStatusPending) {
                             <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                             href="@model.dutyDefermentAccountDetailsLinks()(appConfig)(account.owner, account.number)">
+                                 @messages("cf.accounts.viewStatements")
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.dan", account.number)
                                 </span>
@@ -129,6 +130,7 @@
                         @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
                             <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                             href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
+                                 @messages("cf.accounts.contact.details")
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.contact.details", account.number)
                                 </span>
@@ -136,6 +138,7 @@
                         }
                         @if(account.status != AccountStatusPending) {
                             <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
+                                @messages("cf.accounts.topUp")
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.topUp", account.number)
                                 </span>
