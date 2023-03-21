@@ -113,17 +113,14 @@
                         </p>
                     }
 
-                    <p class="govuk-body">
-                        @if(account.status != AccountStatusPending) {
-                            @balances(account, model)
-                        }
+                   
+                    @if(account.status != AccountStatusPending) {
+                        @balances(account, model)
+                    }
                     <span class="card-footer__links govuk-body">
                         @if(account.status != AccountStatusPending) {
                             <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                             href="@model.dutyDefermentAccountDetailsLinks()(appConfig)(account.owner, account.number)">
-                                <span aria-hidden="true">
-                                    @messages("cf.accounts.viewStatements")
-                                </span>
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.dan", account.number)
                                 </span>
@@ -132,9 +129,6 @@
                         @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
                             <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                             href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
-                                <span aria-hidden="true">
-                                    @messages("cf.accounts.contact.details")
-                                </span>
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.contact.details", account.number)
                                 </span>
@@ -142,7 +136,6 @@
                         }
                         @if(account.status != AccountStatusPending) {
                             <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
-                                <span aria-hidden="true">@messages("cf.accounts.topUp")</span>
                                 <span class="govuk-visually-hidden">
                                     @messages("cf.accounts.label.topUp", account.number)
                                 </span>
@@ -152,7 +145,7 @@
                             @pendingTile()
                         }
                     </span>
-                    </p>
+                    
                 </div>
             </div>
           }
