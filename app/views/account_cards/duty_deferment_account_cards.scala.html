@@ -27,7 +27,8 @@
         pendingTile: views.html.account_cards.duty_deferment_account_pending,
         balances: views.html.account_cards.duty_deferment_balances,
         duty_deferment_inaccurate_balances_message: duty_deferment_inaccurate_balances_message,
-        h2: components.h2
+        h2: components.h2,
+        hiddenStatus: views.html.components.hidden_status
 )
 
 @(model: FinancialsHomeModel)(implicit messages: Messages, appConfig: AppConfig)
@@ -51,6 +52,7 @@
                     <header class="card-header">
                         <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="dan-@{account.number}">
                             @messages("cf.account") @account.number
+                            @hiddenStatus(account.status)
                         </h3>
                         @accountStatus(account.status, "duty-deferment")
                     </header>

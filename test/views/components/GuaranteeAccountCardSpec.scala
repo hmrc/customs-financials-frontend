@@ -96,7 +96,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
       "hidden status-description for screen readers" in new Setup {
         running(app) {
-          val status = content(newGuaranteeAccount).select("h4.guarantee-account-status").first
+          val status = content(newGuaranteeAccount).select(".guarantee-account").first
           status.getElementsByTag("span").first.getElementsByClass("govuk-visually-hidden").isEmpty mustBe false
         }
       }
@@ -119,7 +119,7 @@ class GuaranteeAccountCardSpec extends SpecBase  {
 
       "hidden status-description for screen readers" in new Setup {
         running(app) {
-          val status = content(newGuaranteeAccount).select("h4.guarantee-account-status").first
+          val status = content(newGuaranteeAccount).select(".guarantee-account").first
           status.getElementsByTag("span").first().hasClass("govuk-visually-hidden") mustBe true
         }
       }

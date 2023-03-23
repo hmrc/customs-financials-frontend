@@ -157,7 +157,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     "account is pending" should {
       "hidden status-description for screen readers" in new Setup {
         running(app) {
-          val status = content(dutyDefermentAccountPending).select("h4.duty-deferment-status").first
+          val status = content(dutyDefermentAccountPending).select(".duty-deferment-account").first
           status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
         }
       }
