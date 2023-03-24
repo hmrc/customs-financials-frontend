@@ -84,6 +84,7 @@ cf.account.status.aria.AccountStatusClosed=Mae’r cyfrif hwn ar gau ar hyn o br
 cf.account.status.aria.AccountStatusSuspended=Mae’r cyfrif hwn wedi’i ohirio ar hyn o bryd
 cf.duty-deferment.status.AccountStatusSuspended=Camau i’w cymryd
 cf.duty-deferment.status.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanaeth Datgan Tollau
+cf.account.status.aria.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanaeth Datgan Tollau
 
 # Duty Deferment Out of date balances message
 cf.duty-deferment.outOfDateBalance.heading = Balansau gohirio tollau sydd heb eu diweddaru

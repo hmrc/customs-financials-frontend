@@ -58,7 +58,7 @@ class CashAccountCardSpec extends SpecBase {
     "generate a hidden suspended status for screen readers" in new Setup {
       running(app) {
         val newCashAccount = CashAccount("123456", "owner", AccountStatusSuspended, DirectDebitMandateCancelled, CDSCashBalance(Some(BigDecimal(987))))
-        val status = content(newCashAccount).select("h4.cash-account-status").first
+        val status = content(newCashAccount).select(".cash-account").first
 
         status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
       }
@@ -67,7 +67,7 @@ class CashAccountCardSpec extends SpecBase {
     "generate a hidden closed status for screen readers" in new Setup {
       running(app) {
         val newCashAccount = CashAccount("123456", "owner", AccountStatusClosed, AccountCancelled, CDSCashBalance(Some(BigDecimal(876))))
-        val status = content(newCashAccount).select("h4.cash-account-status").first
+        val status = content(newCashAccount).select(".cash-account").first
         status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
       }
     }

@@ -19,7 +19,8 @@
 
 @this(
         accountStatus: views.html.components.account_status,
-        balanceAvailable: views.html.components.balance_available
+        balanceAvailable: views.html.components.balance_available,
+        hiddenStatus: views.html.components.hidden_status
 )
 
 @(accounts: Seq[CashAccount])(implicit messages: Messages, appConfig: AppConfig)
@@ -35,6 +36,7 @@
                 <header class="card-header">
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="cans-@{account.number}">
                         @messages("cf.account") @account.number
+                        @hiddenStatus(account.status)
                     </h3>
                     @accountStatus(account.status, "cash-account")
                 </header>

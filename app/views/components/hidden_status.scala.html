@@ -18,18 +18,10 @@
 @import views.helpers.HtmlHelper._
 @this()
 
-@(status: CDSAccountStatus, accountType: String)(implicit messages: Messages)
+@(status: CDSAccountStatus)(implicit messages: Messages)
 
 @if(!status.isOpen) {
-
-    @if((accountType eq "duty-deferment") && (status.isSuspended || status.isPending )) {
-        <span class="@{status.statusAttribute} card-header__status @accountType-status" aria-hidden="true">
-            @messages(s"cf.duty-deferment.status.$status")
-        </span>
-    } else {
-        <span class="@{status.statusAttribute} card-header__status @accountType-status" aria-hidden="true">
-            @messages(s"cf.account.status.$status")
-        </span>
-    }
+    <span class="govuk-visually-hidden">
+        @messages(s"cf.account.status.aria.$status")
+    </span>
 }
-
