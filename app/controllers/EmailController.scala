@@ -22,15 +22,18 @@ import connectors.CustomsFinancialsApiConnector
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
+import services.DataStoreService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.email.verify_your_email
+import views.html.email.{undeliverable_email, verify_your_email}
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class EmailController @Inject()(authenticate: IdentifierAction,
                                 verifyEmailView: verify_your_email,
+                                undeliverableEmail: undeliverable_email,
                                 financialsApiConnector: CustomsFinancialsApiConnector,
+                                dataStoreService: DataStoreService,
                                 implicit val mcc: MessagesControllerComponents)
                                (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -41,6 +44,12 @@ class EmailController @Inject()(authenticate: IdentifierAction,
 
     financialsApiConnector.isEmailUnverified.map {
       case a => Ok(verifyEmailView(appConfig.emailFrontendUrl, a))
+    }
+  }
+
+  def showUndeliverable():Action[AnyContent] = authenticate async { implicit request =>
+    financialsApiConnector.isEmailVerifiedOrUndeliverable.map {
+      case a => Ok(undeliverableEmail(appConfig.emailFrontendUrl, a.verifiedEmail.get)(request, request.messages , appConfig))
     }
   }
 }

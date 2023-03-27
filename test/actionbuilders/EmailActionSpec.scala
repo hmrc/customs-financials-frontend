@@ -18,7 +18,6 @@ package actionbuilders
 
 
 import domain.{UndeliverableEmail, UnverifiedEmail}
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.{convertToAnyMustWrapper}
 import play.api.inject
@@ -44,14 +43,10 @@ class EmailActionSpec extends SpecBase {
 
     "Display undeliverable page when getEmail returns undeliverable" in new Setup {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UndeliverableEmail("some@email.com"))))
-      val response = await(emailAction.filter(authenticatedRequest)).value
-      response.header.status mustBe OK
-      val result = contentAsString(Future.successful(response))
 
-      val html = Jsoup.parse(result)
-      html.getElementsByTag("h1").text mustBe s"There's a problem with your email address for the Customs Declaration Service"
-      html.getElementsByTag("h2").text must include ("your email address")
-      html.getElementsByTag("p").text must include ("Customs Declaration Service")
+      val response = await(emailAction.filter(authenticatedRequest))
+      response.get.header.status mustBe SEE_OTHER
+      response.get.header.headers(LOCATION) must include("/undeliverable-email")
     }
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
