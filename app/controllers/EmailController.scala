@@ -33,7 +33,6 @@ class EmailController @Inject()(authenticate: IdentifierAction,
                                 verifyEmailView: verify_your_email,
                                 undeliverableEmail: undeliverable_email,
                                 financialsApiConnector: CustomsFinancialsApiConnector,
-                                dataStoreService: DataStoreService,
                                 implicit val mcc: MessagesControllerComponents)
                                (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
