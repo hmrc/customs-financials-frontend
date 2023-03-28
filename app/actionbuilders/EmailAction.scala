@@ -16,7 +16,6 @@
 
 package actionbuilders
 
-import config.AppConfig
 import domain.{UndeliverableEmail, UnverifiedEmail}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results._
@@ -24,20 +23,17 @@ import play.api.mvc.{ActionFilter, Result}
 import services.DataStoreService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.html.email.undeliverable_email
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailAction @Inject()(dataStoreService: DataStoreService,
-                            undeliverableEmail: undeliverable_email,
-                            appConfig: AppConfig)(implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi) extends ActionFilter[AuthenticatedRequest] with I18nSupport {
+class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi) extends ActionFilter[AuthenticatedRequest] with I18nSupport {
   def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     dataStoreService.getEmail(request.user.eori).map {
       case Left(value) =>
         value match {
-          case UndeliverableEmail(email) => Some(Ok(undeliverableEmail(appConfig.emailFrontendUrl, email)(request, request.messages , appConfig)))
+          case UndeliverableEmail(email) => Some(Redirect(controllers.routes.EmailController.showUndeliverable()))
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
         }
       case Right(_) => None

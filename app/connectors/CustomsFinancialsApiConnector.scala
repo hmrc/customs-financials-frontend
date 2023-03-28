@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient, metricsReporter: MetricsReporterService)
                                              (implicit ec: ExecutionContext) {
 
-  def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
+  def isEmailVerifiedOrUndeliverable(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
     httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
   }
 

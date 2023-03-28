@@ -39,7 +39,7 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
       running (app){
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
+        val result: Future[EmailVerifiedResponse] = connector.isEmailVerifiedOrUndeliverable(hc)
         await(result) mustBe expectedResult
       }
     }
