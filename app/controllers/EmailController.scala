@@ -22,7 +22,6 @@ import connectors.CustomsFinancialsApiConnector
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.api.{Logger, LoggerLike}
-import services.DataStoreService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.email.{undeliverable_email, verify_your_email}
 

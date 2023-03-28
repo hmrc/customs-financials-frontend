@@ -16,7 +16,6 @@
 
 package actionbuilders
 
-import config.AppConfig
 import domain.{UndeliverableEmail, UnverifiedEmail}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results._
@@ -24,7 +23,6 @@ import play.api.mvc.{ActionFilter, Result}
 import services.DataStoreService
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import views.html.email.undeliverable_email
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
