@@ -61,6 +61,33 @@ class EmailControllerSpec extends SpecBase {
         await(result) mustBe expectedUndeliverabeResult
 
     }
+
+    "return unverified email response" in new Setup {
+      running(app) {
+
+        val request = fakeRequest(GET, routes.EmailController.showUnverified().url)
+        val result = route(app, request).value
+        status(result) shouldBe OK
+      }
+    }
+
+    "return undeliverable email response" in {
+
+      val mockHttpClient = mock[HttpClient]
+      val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
+      val response = EmailVerifiedResponse(Some("undeliverableEmail"))
+
+      when[Future[EmailVerifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(response))
+        val app = application().overrides(
+          bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+          bind[HttpClient].toInstance(mockHttpClient)
+        ).build()
+        val request = fakeRequest(GET, routes.EmailController.showUndeliverable().url)
+        val result = route(app, request).value
+        status(result) shouldBe OK
+
+    }
   }
 
   trait Setup {

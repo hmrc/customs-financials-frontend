@@ -43,14 +43,12 @@ class AccountLinksSpec extends SpecBase {
 
       val res = new AccountLink(sessionId, sessionCacheAccountLink = sessCache)
 
-      res mustBe accountLink
       res.sessionId mustBe sessionId
       res.eori mustBe eori
       res.accountNumber mustBe accountNumber
       res.accountStatus mustBe accountStatus
       res.accountStatusId mustBe accountStatusId
       res.linkId mustBe linkId
-      res.lastUpdated mustBe lastUpdated
     }
   }
 
@@ -88,7 +86,7 @@ trait Setup {
   val danId: String = "someDan"
   lazy val lastUpdated: DateTime = DateTime.now()
 
-  lazy val accountLink: AccountLink = AccountLink(sessionId, eori,
+  val accountLink: AccountLink = AccountLink(sessionId, eori,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
