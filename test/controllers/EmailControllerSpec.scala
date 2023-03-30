@@ -36,7 +36,7 @@ class EmailControllerSpec extends SpecBase {
       running (app){
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result: Future[String] = connector.isEmailUnverified(hc)
+        val result: Future[Option[String]] = connector.isEmailUnverified(hc)
         await(result) mustBe expectedResult
       }
     }
@@ -91,7 +91,7 @@ class EmailControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val expectedResult = "unverifiedEmail"
+    val expectedResult = Some("unverifiedEmail")
     implicit val hc: HeaderCarrier = HeaderCarrier()
     private val mockHttpClient = mock[HttpClient]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]

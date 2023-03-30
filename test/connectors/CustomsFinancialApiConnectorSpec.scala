@@ -53,8 +53,8 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
 
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result: Future[String] = connector.isEmailUnverified(hc)
-        await(result) mustBe "unverified@email.com"
+        val result: Future[Option[String]] = connector.isEmailUnverified(hc)
+        await(result) mustBe Some("unverified@email.com")
       }
     }
 
