@@ -97,7 +97,6 @@
     pageTitle = fullPageTitle,
     serviceUrl = Some(controllers.routes.CustomsFinancialsHomeController.index.url),
     signOutUrl = Some(controllers.routes.LogoutController.logout.url),
-    nonce = CSPNonce.get,
     backLinkUrl = backLink,
     beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None,
     additionalHeadBlock = Some(additionalHead),
