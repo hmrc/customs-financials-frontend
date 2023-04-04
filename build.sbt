@@ -4,7 +4,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "customs-financials-frontend"
 
-val silencerVersion = "1.7.0"
+val silencerVersion = "1.7.12"
 
 
 lazy val microservice = Project(appName, file("."))
@@ -19,8 +19,8 @@ lazy val microservice = Project(appName, file("."))
   .settings(scoverageSettings: _*)
   .settings(publishingSettings: _*)
   .settings(
-    scalaVersion := "2.12.12",
-    targetJvm := "jvm-1.8",
+    scalaVersion := "2.13.8",
+    targetJvm := "jvm-11",
     fork in Test := false,
     parallelExecution in Test := false,
     TwirlKeys.templateImports ++= Seq(
@@ -46,19 +46,18 @@ lazy val microservice = Project(appName, file("."))
   )
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.14.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.15.0",
   "uk.gov.hmrc" %% "play-partials" % "8.4.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "6.8.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.3.0-play-28",
   ws,
-  "uk.gov.hmrc" %% "reactive-circuit-breaker" % "3.5.0",
   "org.typelevel" %% "cats-core" % "2.3.0",
-  "uk.gov.hmrc" %% "tax-year" % "3.0.0",
+  "uk.gov.hmrc" %% "tax-year" % "3.1.0",
   "org.webjars.npm" % "moment" % "2.29.0",
   "com.typesafe.play" %% "play-json-joda" % "2.9.2"
 )
 
 val testDependencies = Seq(
- "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.14.0" % Test,
+ "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.15.0" % Test,
 "org.scalatest" %% "scalatest" % "3.2.9" % Test,
 "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
 "org.jsoup" % "jsoup" % "1.10.2" % Test,

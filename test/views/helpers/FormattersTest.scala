@@ -93,7 +93,7 @@ class FormattersTest extends SpecBase {
   "DateFormatters.timeAsHourMinutesWithAmPm" should {
     "format the date using hh:mm a pattern" in {
       val date = LocalDateTime.parse("2020-04-08T12:30")
-      Formatters.timeAsHourMinutesWithAmPm(date) mustBe "12:30 PM"
+      Formatters.timeAsHourMinutesWithAmPm(date) mustBe "12:30 pm"
     }
   }
 

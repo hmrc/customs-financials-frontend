@@ -36,8 +36,9 @@ class YourContactDetailsViewSpec extends SpecBase {
     }
     "display second header text" in new Setup {
       running(app) {
-        view.getElementsByTag("h2").text mustBe "Help improve HMRC services " +
+        view.getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
           "Company details Primary email address Duty deferment contact details Support links"
+        //view.getElementsByTag("h2").text must include("Company details Primary email address Duty deferment contact details Support links")
       }
     }
 
