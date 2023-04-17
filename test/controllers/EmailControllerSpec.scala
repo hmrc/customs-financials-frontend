@@ -56,7 +56,7 @@ class EmailControllerSpec extends SpecBase {
 
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result: Future[EmailVerifiedResponse] = connector.isEmailVerifiedOrUndeliverable(hc)
+        val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
 
         await(result) mustBe expectedUndeliverabeResult
 
