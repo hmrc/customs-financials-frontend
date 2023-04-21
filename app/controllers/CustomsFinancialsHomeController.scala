@@ -77,9 +77,12 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
     for {
+      xiEori <- dataStoreService.getXiEoriInformation(eori)
       accounts <- getAccounts
+      xiEoriAccounts <- apiService.getAccounts(xiEori.get)
+
       historicAccounts <- Future.sequence(seqOfEoriHistory.map(each => apiService.getAccounts(each.eori)))
-    } yield historicAccounts :+ accounts
+    } yield historicAccounts :+ accounts :+ xiEoriAccounts
   } recoverWith {
     case _: GatewayTimeoutException =>
       log.warn(s"Request Timeout while fetching accounts")
@@ -115,6 +118,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     accountLink = AccountLink(
       sessionId.value,
       cdsAccount.owner,
+      cdsAccounts.isNiAccount,
       cdsAccount.number,
       cdsAccount.status,
       Option(cdsAccount.statusId),

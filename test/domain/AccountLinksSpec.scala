@@ -24,7 +24,7 @@ class AccountLinksSpec extends SpecBase {
 
   "AccountLink" should {
     "should be able to assign data to an accountLink" in new Setup {
-      val res = new AccountLink(sessionId, eori,
+      val res = new AccountLink(sessionId, eori,isNiAccount,
         accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
       res mustBe accountLink
@@ -38,7 +38,7 @@ class AccountLinksSpec extends SpecBase {
     }
 
     "should be created from a sessionCacheInstance" in new Setup {
-      val sessCache = new SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+      val sessCache = new SessionCacheAccountLink(eori, isNiAccount, accountNumber, AccountStatusOpen,
         Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       val res = new AccountLink(sessionId, sessionCacheAccountLink = sessCache)
@@ -65,7 +65,7 @@ class AccountLinksSpec extends SpecBase {
   "SessionCacheLink" should {
     "should be able to assign data to this SessionCache" in new Setup {
 
-      val res = SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+      val res = SessionCacheAccountLink(eori, isNiAccount, accountNumber, AccountStatusOpen,
         Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       res mustBe sessionCache
@@ -85,13 +85,14 @@ trait Setup {
   val linkId: String = "someLinkId"
   val danId: String = "someDan"
   lazy val lastUpdated: DateTime = DateTime.now()
+  val isNiAccount: Boolean = false
 
-  val accountLink: AccountLink = AccountLink(sessionId, eori,
+  val accountLink: AccountLink = AccountLink(sessionId, eori,isNiAccount,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
     eori,accountNumber, datelessAccount, datelssStatus, linkId)
 
-  val sessionCache = SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+  val sessionCache = SessionCacheAccountLink(eori, isNiAccount, accountNumber, AccountStatusOpen,
     Option(DebitRejectedAccountClosedOrTransferred), linkId)
 }

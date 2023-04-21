@@ -19,6 +19,7 @@ package domain
 import play.api.libs.json.{Json, Reads}
 
 case class AccountResponseDetail(EORINo: Option[String],
+                                 isNiAccount: Boolean,
                                  referenceDate: Option[String],
                                  dutyDefermentAccount: Option[Seq[DutyDefermentAccountResponse]],
                                  generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccountResponse]],

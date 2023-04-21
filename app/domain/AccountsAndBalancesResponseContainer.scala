@@ -25,7 +25,7 @@ case class AccountsAndBalancesResponseContainer(accountsAndBalancesResponse: Acc
     val generalGuaranteeAccounts: Seq[domain.GeneralGuaranteeAccount] = details.generalGuaranteeAccount.fold(Seq.empty[domain.GeneralGuaranteeAccount])(_.map(_.toDomain()))
     val cashAccounts: Seq[CashAccount] = details.cdsCashAccount.fold(Seq.empty[CashAccount])(_.map(_.toDomain()))
 
-    domain.CDSAccounts(eori, dutyDefermentAccounts ++ generalGuaranteeAccounts ++ cashAccounts)
+    domain.CDSAccounts(eori, details.isNiAccount, dutyDefermentAccounts ++ generalGuaranteeAccounts ++ cashAccounts)
   }
 }
 

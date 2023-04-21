@@ -24,6 +24,7 @@ import config.AppConfig
 import domain._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,6 +68,16 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     }
   }
 
+  def getXiEoriInformation(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
+    metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
+      http.GET[XiEoriInformationResponse](dataStoreEndpoint).map(response => if (response.xieori.nonEmpty) Some(response.xieori) else None)
+    }.recover { case e =>
+      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+      None
+    }
+  }
+
   def getOwnCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
@@ -104,4 +115,20 @@ case class CompanyInformationResponse(name: String, consent: String, address: Co
 
 object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]
+}
+
+case class XiEoriInformationResponse(xieori: String, consent: String, address: XiEoriAddress)
+
+object XiEoriInformationResponse {
+  implicit val format: OFormat[XiEoriInformationResponse] = Json.format[XiEoriInformationResponse]
+}
+
+case class XiEoriAddress(streetNumber1: String,
+                                    streetNumber2: Option[String],
+                                    city: String,
+                                    countryCode: String,
+                                    postalCode: Option[String])
+
+object XiEoriAddress {
+  implicit val format: OFormat[XiEoriAddress] = Json.format[XiEoriAddress]
 }
