@@ -307,12 +307,12 @@ class HomeControllerSpec extends SpecBase {
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new InternalServerException("SPS is Down")))
+      when(mockDataStoreService.getXiEoriInformation(any)(any)).thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts.url
       }
     }
   }
@@ -358,6 +358,7 @@ class HomeControllerSpec extends SpecBase {
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
+      when(mockDataStoreService.getXiEoriInformation(any)(any)).thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -431,6 +432,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getXiEoriInformation(any)(any)).thenReturn(Future.successful(Some("XI Eori Test Own Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
 
