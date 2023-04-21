@@ -25,7 +25,8 @@ case class FinancialsHomeModel(eori: EORI,
                                companyName: Option[String],
                                accounts: Seq[CDSAccounts],
                                notificationMessageKeys: Seq[String],
-                               accountLinks: Seq[AccountLink]) {
+                               accountLinks: Seq[AccountLink],
+                               xiEori: Option[String] = None) {
   private val allMyAccounts: Seq[CDSAccount] = accounts.flatMap(_.myAccounts)
   val dutyDefermentAccounts: Seq[DutyDefermentAccount] = filterDutyDefermentAccounts(allMyAccounts)
   val guaranteeAccountViewModels: Seq[GeneralGuaranteeAccount] = filterGuaranteeAccounts(allMyAccounts)

@@ -19,7 +19,7 @@ package controllers
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
-import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -28,7 +28,7 @@ import play.api.i18n.Messages
 import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService, Notification, NotificationService}
+import services.{ApiService, DataStoreService, Notification, NotificationService, XiEoriInformationReponse}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{GatewayTimeoutException, HttpResponse, InternalServerException, SessionId}
 import utils.SpecBase
@@ -129,7 +129,6 @@ class HomeControllerSpec extends SpecBase {
       }
     }
   }
-
 
   "show notification when there is new Securities Statement available" in new Setup {
 
@@ -417,6 +416,9 @@ class HomeControllerSpec extends SpecBase {
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
     }
 
+    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+
     val mockAccounts = mock[CDSAccounts]
     val mockApiService = mock[ApiService]
     val mockNotificationService = mock[NotificationService]
@@ -432,6 +434,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
 
     val app = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),

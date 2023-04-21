@@ -35,7 +35,6 @@
         hmrcTimeoutDialog: HmrcTimeoutDialog,
         eoriBanner: components.eori_banner,
         hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
-
 )
 
 @(pageTitle: Option[String] = None,
@@ -46,10 +45,9 @@
         userResearchBanner: Boolean = true,
         maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
         eori: Option[String] = None,
-        companyName: Option[String] = None
+        companyName: Option[String] = None,
+        xiEori: Option[String] = None
 )(contentBlock: Html)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
-
-
 
 @phaseBannerContent = {
     @messages("feedback.before")
@@ -66,7 +64,7 @@
 
 @beforeContent = {
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eori.isDefined){ @eoriBanner(eori, companyName)}
+    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori)}
     @hmrcLanguageSelectHelper()
 }
 

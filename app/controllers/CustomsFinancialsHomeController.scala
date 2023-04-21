@@ -100,11 +100,12 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
+      xiEori <- dataStoreService.getXiEori(eori)
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
       accountLinks = createAccountLinks(sessionId,cdsAccountsList)
       _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
-      val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks)
+      val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori.map(x => x.xiEori))
       Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
     }
   }
