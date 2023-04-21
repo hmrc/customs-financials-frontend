@@ -313,6 +313,7 @@ class HomeControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         status(result) mustBe SEE_OTHER
+//        redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts.url
       }
     }
   }
