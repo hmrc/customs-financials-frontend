@@ -26,6 +26,7 @@ class CustomsAccountsSpec extends SpecBase {
 
   private val traderEori = "12345678"
   private val agentEori =  "09876543"
+  private val isNiAccount = false
 
   val guaranteeAccount = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(1000000), BigDecimal(200000))))
   val guaranteeAccountZeroLimit = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(200001))))
@@ -40,12 +41,12 @@ class CustomsAccountsSpec extends SpecBase {
   val cashAccount = CashAccount(cashAccountNumber, traderEori, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999.99))))
 
   val traderAccounts = List(guaranteeAccount, dd1, dd2, cashAccount)
-  val traderCdsAccounts = CDSAccounts(traderEori, traderAccounts)
+  val traderCdsAccounts = CDSAccounts(traderEori, isNiAccount, traderAccounts)
 
   val agentClientsAccounts = List(dd1, dd2, cashAccount)
   val agentOwnAccounts = List(dd3, dd4)
   val agentAccounts = agentClientsAccounts ++ agentOwnAccounts
-  val agentCdsAccounts = CDSAccounts(agentEori, agentAccounts)
+  val agentCdsAccounts = CDSAccounts(agentEori, isNiAccount, agentAccounts)
 
   "CDSAccounts" should {
 

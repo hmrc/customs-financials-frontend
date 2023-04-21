@@ -61,12 +61,14 @@ class ApiServiceSpec extends SpecBase
         val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false, None), Some(Limits("200", "100")), None)
         val cashAccountNumber = "987654"
         val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false, None), Some("999.99"))
+        val isNiAccount = false
 
         val accounts = AccountsAndBalancesResponseContainer(
           domain.AccountsAndBalancesResponse(
             Some(domain.AccountResponseCommon("", Some(""), "", None)),
             domain.AccountResponseDetail(
               Some(""),
+              isNiAccount,
               None,
               Some(Seq(dd1, dd2)),
               Some(Seq(guaranteeAccount)),
@@ -274,11 +276,13 @@ class ApiServiceSpec extends SpecBase
     val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false, None), Some(Limits("200", "100")), None)
     val cashAccountNumber = "987654"
     val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false, None), Some("999.99"))
+    val isNiAccount = false
     val traderAccounts = AccountsAndBalancesResponseContainer(
       domain.AccountsAndBalancesResponse(
         Some(domain.AccountResponseCommon("", Some(""), "", None)),
         domain.AccountResponseDetail(
           Some(""),
+          isNiAccount,
           None,
           Some(Seq(dd1, dd2)),
           Some(Seq(guaranteeAccount)),
@@ -291,6 +295,7 @@ class ApiServiceSpec extends SpecBase
         None,
         domain.AccountResponseDetail(
           Some(""),
+          isNiAccount,
           None,
           Some(Seq(dd1, dd2)),
           Some(Seq(guaranteeAccount)),

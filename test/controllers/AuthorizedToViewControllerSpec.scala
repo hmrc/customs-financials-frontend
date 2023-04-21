@@ -255,7 +255,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val ggAccount2 = GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
 
     val accounts = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
-    val cdsAccounts = CDSAccounts(newUser().eori, accounts)
+
+    val isNiAccount = false
+
+    val cdsAccounts = CDSAccounts(newUser().eori, isNiAccount, accounts)
 
     val mockApiService = mock[ApiService]
     val mockDataStoreService = mock[DataStoreService]

@@ -55,9 +55,10 @@ class HomeControllerSpec extends SpecBase {
       val sessionId = SessionId("session")
       val eoriNumber = newUser(Seq.empty).eori
       val companyName = Some("Company Name 1")
+      val isNiAccount = false
       val cdsAccounts = Seq(
-        CDSAccounts(eoriNumber, Seq(DutyDefermentAccount(dan1, eori1, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false))),
-        CDSAccounts(eoriNumber, Seq(DutyDefermentAccount(dan2, eori2, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+        CDSAccounts(eoriNumber, isNiAccount, Seq(DutyDefermentAccount(dan1, eori1, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false))),
+        CDSAccounts(eoriNumber, isNiAccount, Seq(DutyDefermentAccount(dan2, eori2, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
       )
 
       val newApp = application().build()
