@@ -19,14 +19,14 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable}
+import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService, NotificationService}
+import services.{ApiService, DataStoreService, NotificationService, XiEoriInformationReponse}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
@@ -61,6 +61,10 @@ class CashAccountCardSpec extends SpecBase {
       DefermentAccountAvailable,
       CDSCashBalance(Some(BigDecimal(someAvailableCashBalance)))
     )
+
+    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+
     val mockAccounts = mock[CDSAccounts]
     val mockApiService = mock[ApiService]
     val mockNotificationService = mock[NotificationService]
@@ -89,6 +93,6 @@ class CashAccountCardSpec extends SpecBase {
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
   }
 }

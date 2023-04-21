@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.mockito.ArgumentMatchersSugar.eqTo
@@ -27,7 +27,7 @@ import play.api.i18n.Messages
 import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService, NotificationService}
+import services.{ApiService, DataStoreService, NotificationService, XiEoriInformationReponse}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
@@ -152,8 +152,14 @@ class HomeControllerCardSpec extends SpecBase {
     }
     "show the historic eori duty deferment cards" in {
 
-      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111", AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
-      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111", AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+      val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+      val xi = XiEoriInformationReponse("Some XiEori","yes", add)
 
       val mockAccounts = mock[CDSAccounts]
       val mockApiService = mock[ApiService]
@@ -173,6 +179,7 @@ class HomeControllerCardSpec extends SpecBase {
       when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
       when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
       when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
 
       val app = application().overrides(
         inject.bind[CDSAccounts].toInstance(mockAccounts),
@@ -250,9 +257,11 @@ class HomeControllerCardSpec extends SpecBase {
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
 
-
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
+
+    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)
@@ -260,6 +269,7 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
 
     val app = application().overrides(

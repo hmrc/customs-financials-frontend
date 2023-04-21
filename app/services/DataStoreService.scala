@@ -77,6 +77,17 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     }
   }
 
+  def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[XiEoriInformationReponse]] = {
+    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
+
+    metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
+      http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(response => Some(response))
+    }.recover { case e =>
+      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+      None
+    }
+  }
+
   def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
@@ -104,4 +115,10 @@ case class CompanyInformationResponse(name: String, consent: String, address: Co
 
 object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]
+}
+
+case class XiEoriInformationReponse(xiEori: String, consent: String, address: XiEoriAddressInformation)
+
+object XiEoriInformationReponse {
+  implicit val format: OFormat[XiEoriInformationReponse] = Json.format[XiEoriInformationReponse]
 }
