@@ -357,16 +357,16 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances))
+      CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances))
     )
     val accountLinks = Seq(
-      AccountLink(sessionId = "sessionId", eori, accountNumber = dan, linkId = "0123456789", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now)
+      AccountLink(sessionId = "sessionId", eori, false, accountNumber = dan, linkId = "0123456789", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now)
     )
 
-    val model = FinancialsHomeModel(eori, companyName, accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty)
+    val model = FinancialsHomeModel(eori, companyName, accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards]
-      .apply(model.copy(accounts = Seq(CDSAccounts(eori, Seq(dutyDefermentAccount))))).body)
+      .apply(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount))))).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

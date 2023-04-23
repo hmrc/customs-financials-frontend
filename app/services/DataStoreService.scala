@@ -77,11 +77,11 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     }
   }
 
-  def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[XiEoriInformationReponse]] = {
+  def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
-      http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(response => Some(response))
+      http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(response => Some(response.xiEori))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None

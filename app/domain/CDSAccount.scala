@@ -36,8 +36,6 @@ case class DutyDefermentAccount(number: String,
                                 isIsleOfMan: Boolean) extends Ordered[DutyDefermentAccount] with CDSAccount {
   override def compare(that: DutyDefermentAccount): Int = number.compareTo(that.number)
 
-  def displayAccountLimit(eori: String): Boolean = owner == eori
-
   def displayBalances(periodAccountLimit: Option[BigDecimal],
                       periodGuaranteeLimit: Option[BigDecimal],
                       periodGuaranteeLimitRemaining: Option[BigDecimal]

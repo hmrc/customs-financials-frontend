@@ -16,8 +16,8 @@
 
 @this()
 
-@(accountNumber: String, accountLimit: Option[String], guaranteeLimit: Option[String], guaranteeLimitRemaining: Option[String], viewBalances: Boolean, viewAccountLimits: Boolean)(implicit messages: Messages)
-  @if(viewAccountLimits) {
+@(accountNumber: String, accountLimit: Option[String], guaranteeLimit: Option[String], guaranteeLimitRemaining: Option[String], viewBalances: Boolean)(implicit messages: Messages)
+
 
       @if(accountLimit.nonEmpty) {
           <p class="govuk-body govuk-!-margin-bottom-1" id="account-limit-@accountNumber">
@@ -36,7 +36,7 @@
               @messages("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit.get)
           </p>
       }
-  }
+
 
 @if(viewBalances){
     @if(guaranteeLimitRemaining.nonEmpty) {

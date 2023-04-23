@@ -40,12 +40,12 @@ class CustomsAccountsSpec extends SpecBase {
   val cashAccount = CashAccount(cashAccountNumber, traderEori, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999.99))))
 
   val traderAccounts = List(guaranteeAccount, dd1, dd2, cashAccount)
-  val traderCdsAccounts = CDSAccounts(traderEori, traderAccounts)
+  val traderCdsAccounts = CDSAccounts(traderEori, None, traderAccounts)
 
   val agentClientsAccounts = List(dd1, dd2, cashAccount)
   val agentOwnAccounts = List(dd3, dd4)
   val agentAccounts = agentClientsAccounts ++ agentOwnAccounts
-  val agentCdsAccounts = CDSAccounts(agentEori, agentAccounts)
+  val agentCdsAccounts = CDSAccounts(agentEori, None, agentAccounts)
 
   "CDSAccounts" should {
 

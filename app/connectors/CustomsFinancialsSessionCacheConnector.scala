@@ -63,7 +63,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for{
     accountLink <- accountLinks
-    sessionAccountLink = SessionCacheAccountLink(accountLink.eori,accountLink.accountNumber,
+    sessionAccountLink = SessionCacheAccountLink(accountLink.eori, accountLink.isNiAccount, accountLink.accountNumber,
       accountLink.accountStatus, accountLink.accountStatusId, accountLink.linkId)
   } yield sessionAccountLink
 }

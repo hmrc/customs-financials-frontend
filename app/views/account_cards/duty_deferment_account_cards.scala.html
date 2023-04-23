@@ -52,6 +52,9 @@
                     <header class="card-header">
                         <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="dan-@{account.number}">
                             @messages("cf.account") @account.number
+                            @if(model.isNiAccountIndicator()(appConfig)(account.owner, account.number)) {
+                            (@messages("cf.NiAccount"))
+                            }
                             @hiddenStatus(account.status)
                         </h3>
                         @accountStatus(account.status, "duty-deferment")

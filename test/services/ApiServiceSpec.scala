@@ -68,6 +68,7 @@ class ApiServiceSpec extends SpecBase
             domain.AccountResponseDetail(
               Some(""),
               None,
+              None,
               Some(Seq(dd1, dd2)),
               Some(Seq(guaranteeAccount)),
               Some(Seq(cashAccount))
@@ -280,6 +281,7 @@ class ApiServiceSpec extends SpecBase
         domain.AccountResponseDetail(
           Some(""),
           None,
+          None,
           Some(Seq(dd1, dd2)),
           Some(Seq(guaranteeAccount)),
           Some(Seq(cashAccount))
@@ -291,6 +293,7 @@ class ApiServiceSpec extends SpecBase
         None,
         domain.AccountResponseDetail(
           Some(""),
+          None,
           None,
           Some(Seq(dd1, dd2)),
           Some(Seq(guaranteeAccount)),

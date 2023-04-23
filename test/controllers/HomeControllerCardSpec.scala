@@ -171,6 +171,7 @@ class HomeControllerCardSpec extends SpecBase {
       when(accounts.myAccounts).thenReturn(List(currentEoriDDAccount, historicEoriDDAccount))
       when(accounts.accounts).thenReturn(List(currentEoriDDAccount, historicEoriDDAccount))
       when(accounts.isAgent).thenReturn(false)
+      when(accounts.isNiAccount).thenReturn(Some(false))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(accounts))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(accounts))
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
@@ -179,7 +180,7 @@ class HomeControllerCardSpec extends SpecBase {
       when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
       when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
       when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
       val app = application().overrides(
         inject.bind[CDSAccounts].toInstance(mockAccounts),
@@ -266,10 +267,11 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)
     when(mockAccounts.isAgent).thenReturn(false)
+    when(mockAccounts.isNiAccount).thenReturn(Some(false))
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
 
     val app = application().overrides(
