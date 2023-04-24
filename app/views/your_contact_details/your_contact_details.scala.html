@@ -27,6 +27,8 @@
         p: components.p,
         hmrcNewTabLink: HmrcNewTabLink,
         govukSummaryList: GovukSummaryList,
+        accountGB: components.account_link_GB,
+        accountNI: components.account_link_NI,
         layout: Layout
 )
 
@@ -117,26 +119,11 @@
         @p("cf.contact-details.duty-deferment.text")
         <div id="contact-account-details" class="govuk-!-margin-bottom-9">
             @for(accountLink <- accountLinks) {
-                @govukSummaryList(SummaryList(
-                    attributes = Map("id" -> s"contact-account-list-${accountLink.accountNumber}"),
-                    rows = Seq(
-                        SummaryListRow(
-                            key = Key(
-                                content = Text(messages("cf.contact-details.account-number"))
-                            ),
-                            value = Value(
-                                content = Text(accountLink.accountNumber)
-                            ),
-                            actions = Some(Actions(
-                                items = List(ActionItem(
-                                    content = Text(messages("cf.contact-details.view-change-link")),
-                                    href=appConfig.contactDetailsUrl(accountLink.linkId),
-                                    visuallyHiddenText = Some(messages("cf.contact-details.view-change-link"))
-                                ))
-                            ))
-                        ),
-                    )
-                ))
+                @if(!accountLink.isNiAccount) {
+                    @accountGB(accountLink, false)
+                } else {
+                    @accountNI(accountLink, true)
+                }
             }
         </div>
     }

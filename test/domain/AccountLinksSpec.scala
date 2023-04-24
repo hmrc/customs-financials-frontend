@@ -57,8 +57,8 @@ class AccountLinksSpec extends SpecBase {
   "AccountLinkWithoutDate" should {
     "should be able to assign data to an accountLink" in new Setup {
 
-      val res = new AccountLinkWithoutDate(eori,accountNumber,
-        datelessAccount, datelssStatus, linkId)
+      val res = new AccountLinkWithoutDate(eori, false,
+        accountNumber, datelessAccount, datelssStatus, linkId)
 
       res mustBe accountLinkWithoutDate
     }
@@ -92,7 +92,7 @@ trait Setup {
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-    eori,accountNumber, datelessAccount, datelssStatus, linkId)
+    eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
 
   val sessionCache = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
     Option(DebitRejectedAccountClosedOrTransferred), linkId)
