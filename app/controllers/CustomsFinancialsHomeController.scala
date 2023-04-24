@@ -63,8 +63,9 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       val result = for {
         _ <- auditingService.viewAccount(request.user)
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
-        allAccounts <- getAllAccounts(eori)
-        page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
+        xiEori <- dataStoreService.getXiEori(eori)
+        allAccounts <- getAllAccounts(eori, xiEori)
+        page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
       } yield page
       result.recover{
         case TimeoutResponse  =>
@@ -72,14 +73,14 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       }
   }
 
-  private def getAllAccounts(eori: EORI)(implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
-    val getAccounts = apiService.getAccounts(eori)
+  private def getAllAccounts(eori: EORI, xiEori: Option[String])(implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
+    val eoriList = Seq(eori, xiEori.getOrElse("")).filterNot(_ == "")
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
     for {
-      accounts <- getAccounts
+      accounts <- Future.sequence(eoriList.map(eachEori => apiService.getAccounts(eachEori)))
       historicAccounts <- Future.sequence(seqOfEoriHistory.map(each => apiService.getAccounts(each.eori)))
-    } yield historicAccounts :+ accounts
+    } yield historicAccounts ++ accounts
   } recoverWith {
     case _: GatewayTimeoutException =>
       log.warn(s"Request Timeout while fetching accounts")
@@ -94,18 +95,18 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   private def pageWithAccounts(eori: EORI,
+                               xiEori: Option[String],
                                cdsAccountsList: Seq[CDSAccounts],
                                maybeBannerPartial: Option[HtmlPartial]
                               )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
-      xiEori <- dataStoreService.getXiEori(eori)
       sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
       accountLinks = createAccountLinks(sessionId,cdsAccountsList)
       _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
-      val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori.map(x => x.xiEori))
+      val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori)
       Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
     }
   }
@@ -116,6 +117,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     accountLink = AccountLink(
       sessionId.value,
       cdsAccount.owner,
+      cdsAccounts.isNiAccount.getOrElse(false),
       cdsAccount.number,
       cdsAccount.status,
       Option(cdsAccount.statusId),

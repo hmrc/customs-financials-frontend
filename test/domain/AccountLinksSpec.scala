@@ -24,12 +24,13 @@ class AccountLinksSpec extends SpecBase {
 
   "AccountLink" should {
     "should be able to assign data to an accountLink" in new Setup {
-      val res = new AccountLink(sessionId, eori,
+      val res = new AccountLink(sessionId, eori, false,
         accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
       res mustBe accountLink
       res.sessionId mustBe sessionId
       res.eori mustBe eori
+      res.isNiAccount mustBe false
       res.accountNumber mustBe accountNumber
       res.accountStatus mustBe accountStatus
       res.accountStatusId mustBe accountStatusId
@@ -38,13 +39,14 @@ class AccountLinksSpec extends SpecBase {
     }
 
     "should be created from a sessionCacheInstance" in new Setup {
-      val sessCache = new SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+      val sessCache = new SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
         Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       val res = new AccountLink(sessionId, sessionCacheAccountLink = sessCache)
 
       res.sessionId mustBe sessionId
       res.eori mustBe eori
+      res.isNiAccount mustBe false
       res.accountNumber mustBe accountNumber
       res.accountStatus mustBe accountStatus
       res.accountStatusId mustBe accountStatusId
@@ -65,7 +67,7 @@ class AccountLinksSpec extends SpecBase {
   "SessionCacheLink" should {
     "should be able to assign data to this SessionCache" in new Setup {
 
-      val res = SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+      val res = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
         Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       res mustBe sessionCache
@@ -86,12 +88,12 @@ trait Setup {
   val danId: String = "someDan"
   lazy val lastUpdated: DateTime = DateTime.now()
 
-  val accountLink: AccountLink = AccountLink(sessionId, eori,
+  val accountLink: AccountLink = AccountLink(sessionId, eori, false,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
     eori,accountNumber, datelessAccount, datelssStatus, linkId)
 
-  val sessionCache = SessionCacheAccountLink(eori, accountNumber, AccountStatusOpen,
+  val sessionCache = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
     Option(DebitRejectedAccountClosedOrTransferred), linkId)
 }

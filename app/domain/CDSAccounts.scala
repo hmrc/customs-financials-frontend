@@ -16,7 +16,7 @@
 
 package domain
 
-case class CDSAccounts(eori: String, accounts: Seq[CDSAccount]) {
+case class CDSAccounts(eori: String, isNiAccount:Option[Boolean], accounts: Seq[CDSAccount]) {
   lazy val (myAccounts, authorizedToView) = accounts.partition(_.owner == eori)
   lazy val isAgent: Boolean = authorizedToView.nonEmpty
 }

@@ -63,7 +63,7 @@ class CashAccountCardSpec extends SpecBase {
     )
 
     val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
-    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+    val xi = XiEoriInformationReponse("SomeXiEori","yes", add)
 
     val mockAccounts = mock[CDSAccounts]
     val mockApiService = mock[ApiService]
@@ -83,6 +83,7 @@ class CashAccountCardSpec extends SpecBase {
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))
     when(mockAccounts.eori).isLenient()
     when(mockAccounts.isAgent).thenReturn(false)
+    when(mockAccounts.isNiAccount).thenReturn(Some(false))
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(mockAccounts))
@@ -93,6 +94,6 @@ class CashAccountCardSpec extends SpecBase {
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi)))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
   }
 }

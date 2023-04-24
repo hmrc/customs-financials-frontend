@@ -77,21 +77,21 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
     val sessionId = SessionId(UUID.randomUUID().toString)
     val url = "/some-url"
     val sessionCacheLinks = Seq(
-      SessionCacheAccountLink("eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1"),
-      SessionCacheAccountLink("eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1")
+      SessionCacheAccountLink("eori1", false, "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1"),
+      SessionCacheAccountLink("eori2", false, "dan2", AccountStatusClosed, Option(AccountCancelled), "link1")
     )
 
     val someLinks = Seq(
-      AccountLink(sessionId.value, "eori1", "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now),
-      AccountLink(sessionId.value, "eori2", "dan2", AccountStatusClosed, Option(AccountCancelled), "link1", DateTime.now)
+      AccountLink(sessionId.value, "eori1", false, "dan1", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now),
+      AccountLink(sessionId.value, "eori2", false, "dan2", AccountStatusClosed, Option(AccountCancelled), "link1", DateTime.now)
     )
     val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
     val mockAppConfig = mock[AppConfig]
     val mockHttpClient = mock[HttpClient]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    val accountLink = AccountLink(sessionId.value, "eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now)
-    val sessionAccountCacheLink = SessionCacheAccountLink("eori1", "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
+    val accountLink = AccountLink(sessionId.value, "eori1", false, "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now)
+    val sessionAccountCacheLink = SessionCacheAccountLink("eori1", false, "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
 
     when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
     val app = application().overrides(

@@ -46,4 +46,10 @@ case class FinancialsHomeModel(eori: EORI,
       (accountLink.eori, accountLink.accountNumber) -> appConfig.contactDetailsUrl(accountLink.linkId)
     }.toMap
   }
+
+  def isNiAccountIndicator()(implicit appConfig: AppConfig): Map[(EORI, String), Boolean] = {
+    accountLinks.map { accountLink =>
+      (accountLink.eori, accountLink.accountNumber) -> accountLink.isNiAccount
+    }.toMap
+  }
 }

@@ -15,6 +15,7 @@ cf.csv=CSV
 cf.header.eori=EORI:
 cf.header.companyName = {0} -
 cf.account=Account:
+cf.NiAccount=Northern Ireland
 cf.available=available
 cf.pending.available=will be available
 cf.unavailable=Unavailable

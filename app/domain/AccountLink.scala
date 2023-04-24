@@ -20,6 +20,7 @@ import org.joda.time.DateTime
 
 case class AccountLink(sessionId: String,
                        eori: EORI,
+                       isNiAccount: Boolean,
                        accountNumber: String,
                        accountStatus: CDSAccountStatus,
                        accountStatusId: Option[CDSAccountStatusId],
@@ -30,6 +31,7 @@ case class AccountLink(sessionId: String,
   def this(id: String, sessionCacheAccountLink: SessionCacheAccountLink) = {
     this(id,
       sessionCacheAccountLink.eori,
+      sessionCacheAccountLink.isNiAccount,
       sessionCacheAccountLink.accountNumber,
       sessionCacheAccountLink.accountStatus,
       sessionCacheAccountLink.accountStatusId,

@@ -19,6 +19,7 @@ package domain
 import play.api.libs.json.{Json, OFormat}
 
 case class SessionCacheAccountLink(eori: String,
+                                   isNiAccount: Boolean,
                                    accountNumber: String,
                                    accountStatus: CDSAccountStatus,
                                    accountStatusId: Option[CDSAccountStatusId],

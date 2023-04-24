@@ -16,8 +16,7 @@
 
 package services
 
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
-import domain.{CompanyAddress, EoriHistory, UnverifiedEmail}
+import domain.{CompanyAddress, EoriHistory, UndeliverableEmail, UnverifiedEmail, XiEoriAddressInformation}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
@@ -154,6 +153,20 @@ class DataStoreServiceSpec extends SpecBase {
         }
       }
 
+      "return None when consent is not given" in new Setup {
+        val companyName = "Company name"
+        val address = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyInformationResponse = CompanyInformationResponse(companyName, "0", address)
+        when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(companyInformationResponse))
+
+        running(app) {
+          val response = service.getCompanyName(eori)
+          val result = await(response)
+          result mustBe None
+        }
+      }
+
       "return None when no company information is found" in new Setup {
         when[Future[CompanyInformationResponse]](mockHttp.GET(any, any, any)(any, any, any))
           .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
@@ -212,6 +225,31 @@ class DataStoreServiceSpec extends SpecBase {
 
         running(app) {
           val response = await(service.getCompanyAddress(eori))
+          response mustBe None
+        }
+      }
+    }
+
+    "XiEori" should {
+      "return xi eori" in new Setup {
+        val xiEori = "XI123456789"
+        val xiAddress = XiEoriAddressInformation("Street1", None, "City", "GB", Some("Post Code"))
+        val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
+        when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(xiEoriResponse))
+
+        running(app) {
+          val response = service.getXiEori(eori)
+          val result = await(response)
+          result must be(Some(xiEori))
+        }
+      }
+      "return None when no xi Eori is found" in new Setup {
+        when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Xi EORI Information")))
+
+        running(app) {
+          val response = await(service.getXiEori(eori ))
           response mustBe None
         }
       }
