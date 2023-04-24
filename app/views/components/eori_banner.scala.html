@@ -20,10 +20,10 @@
 
     @eori.map { eoriNumber =>
         <div class="govuk-phase-banner">
-            <p class="govuk-phase-banner__content">
+            <p id="eori-company" class="govuk-phase-banner__content">
                 @companyName match {
                     case Some(companyName) => {
-                        <span  id="eori-company" class="govuk-phase-banner__text">@messages("cf.header.companyName", companyName) @eoriNumber </span>
+                        <span class="govuk-phase-banner__text">@messages("cf.header.companyName", companyName) @eoriNumber </span>
                         @if(xiEori) { <span>, @xiEori </span> }
                     }
                     case _ => { <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span> }
