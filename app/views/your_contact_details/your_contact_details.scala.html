@@ -27,8 +27,7 @@
         p: components.p,
         hmrcNewTabLink: HmrcNewTabLink,
         govukSummaryList: GovukSummaryList,
-        accountGB: components.account_link_GB,
-        accountNI: components.account_link_NI,
+        account: components.account_link,
         layout: Layout
 )
 
@@ -120,9 +119,10 @@
         <div id="contact-account-details" class="govuk-!-margin-bottom-9">
             @for(accountLink <- accountLinks) {
                 @if(!accountLink.isNiAccount) {
-                    @accountGB(accountLink, false)
+                    @account(accountLink, false, accountLink.accountNumber)
                 } else {
-                    @accountNI(accountLink, true)
+                    @account(accountLink, true,
+                        accountLink.accountNumber + " " + messages("cf.contact-details.ni"))
                 }
             }
         </div>

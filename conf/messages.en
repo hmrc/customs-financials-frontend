@@ -244,7 +244,7 @@ cf.contact-details.duty-deferment.text=We only use these details if we need to c
 cf.contact-details.change-email-link=Change your email address (opens in new tab)
 cf.contact-details.account-number=Account number
 cf.contact-details.view-change-link=View or change
-cf.contact-details.ni=Northern Ireland
+cf.contact-details.ni=(Northern Ireland)
 
 eoriNumber.error.format = Enter an EORI number in the correct format
 
