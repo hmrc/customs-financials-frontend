@@ -16,6 +16,7 @@ cf.header.eori=EORI:
 cf.header.eori.dash= -
 cf.header.companyName = {0} -
 cf.account=Cyfrif:
+cf.NiAccount=(Gogledd Iwerddon)
 cf.available=ar gael
 cf.pending.available.pre=Bydd
 cf.pending.available.post=ar gael
