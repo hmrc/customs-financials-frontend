@@ -1,3 +1,5 @@
+site.error=Gwall
+
 language.cymraeg = Cymraeg
 language.english = English
 language.change.english=Change the language to English

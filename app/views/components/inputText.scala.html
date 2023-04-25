@@ -48,7 +48,7 @@
         content = HtmlContent(messages(hintKey))
         )),
         value = form(name).value,
-        errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)),classes="govuk-!-width-two-thirds")),
+        errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)), visuallyHiddenText= Some(messages("site.error")), classes="govuk-!-width-two-thirds")),
         autocomplete = autocomplete,
         inputmode = inputmode,
         pattern = pattern,
