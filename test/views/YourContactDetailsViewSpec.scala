@@ -68,7 +68,7 @@ class YourContactDetailsViewSpec extends SpecBase {
     val companyName = Some("CompanyName")
 
     val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-      eori, "123","1",Some(1),"2345678")
+      eori, false, "123","1",Some(1),"2345678")
 
     val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink,accountLink)
 
