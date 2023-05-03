@@ -16,7 +16,7 @@
 
 @this()
 
-@(eori: Option[String] = None, companyName: Option[String] = None, xiEori: Option[String] = None)(implicit messages: Messages)
+@(eori: Option[String] = None, companyName: Option[String] = None, xiEori: String)(implicit messages: Messages)
 
     @eori.map { eoriNumber =>
         <div class="govuk-phase-banner">
@@ -24,7 +24,7 @@
                 @companyName match {
                     case Some(companyName) => {
                         <span class="govuk-phase-banner__text">@messages("cf.header.companyName", companyName) @eoriNumber </span>
-                        @if(xiEori) { <span>, @xiEori </span> }
+                        @if(xiEori.contains("XI")) { <span>, @xiEori </span> }
                     }
                     case _ => { <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span> }
                 }
