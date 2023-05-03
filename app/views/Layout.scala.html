@@ -64,7 +64,7 @@
 
 @beforeContent = {
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori)}
+    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori.getOrElse(""))}
     @hmrcLanguageSelectHelper()
 }
 
