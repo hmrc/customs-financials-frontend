@@ -26,6 +26,7 @@ lazy val microservice = Project(appName, file("."))
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",
+      "utils.ViewUtils._",
       "controllers._",
       "domain._"
     ),
