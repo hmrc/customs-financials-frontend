@@ -18,12 +18,14 @@ package views.helpers
 
 import play.api.i18n.Messages
 
-object PageTitle {
 
-  def fullPageTitle(title: Option[String])(implicit messages: Messages): Option[String] = {
-     title match {
-       case Some(text) => Some(s"$text - ${messages("service.name")} - GOV.UK")
-       case _ => Some(s"${messages("service.name")} - GOV.UK")
-      }
+
+case class PageTitle(title: String, formErrorsExist: Boolean = false) {
+
+  def fullTitle()(implicit messages: Messages): String = {
+    val standardTitle = s"$title - ${messages("service.name")} - GOV.UK"
+    val errorTitle    = s"${messages("site.error")}: $standardTitle"
+
+    if (formErrorsExist) errorTitle else standardTitle
   }
 }

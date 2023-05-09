@@ -17,6 +17,7 @@
 @import views.html.components._
 @import domain.EORI
 @import views.html.Layout
+@import views.helpers.PageTitle
 
 @this(
     layout: Layout,
@@ -27,7 +28,9 @@
 
 @(eori: EORI, notificationMessageKeys: Seq[String])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.customs-financials-home.partial.heading"))) {
+@layout(
+    PageTitle(messages("cf.customs-financials-home.partial.heading"))
+) {
 
     @h1("cf.customs-financials-home.partial.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
     @p("cf.customs-financials-home.partial.text")

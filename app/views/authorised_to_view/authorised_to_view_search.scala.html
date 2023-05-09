@@ -15,6 +15,7 @@
  *@
 
 @import config.AppConfig
+@import views.helpers.PageTitle
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 @import java.time.LocalDate
 @import domain.FileRole.StandingAuthority
@@ -34,7 +35,11 @@
 
 @(form: Form[_], url: Option[String], date: String, fileExists: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("cf.search.authorities")), helpAndSupport = false, backLink = Some(routes.CustomsFinancialsHomeController.index.url)){
+@layout(
+        PageTitle(messages("cf.search.authorities"), form.hasErrors), 
+        helpAndSupport = false, 
+        backLink = Some(routes.CustomsFinancialsHomeController.index.url)
+    ){
 
     @formHelper(action = controllers.routes.AuthorizedToViewController.onSubmit()) {
         @errorSummary(form.errors, None)

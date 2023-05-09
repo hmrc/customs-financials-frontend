@@ -17,6 +17,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
 @import views.html.Layout
+@import views.helpers.PageTitle
 
 
 @this(
@@ -30,7 +31,10 @@
 
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
+@layout(
+    PageTitle(messages("cf.not-subscribed-to-cds.detail.title")),
+    helpAndSupport = false
+) {
     @h1("cf.not-subscribed-to-cds.detail.heading",id = None, classes = "govuk-heading-l")
     @h2("cf.not-subscribed-to-cds.detail.how-to-get-access-info", id = None)
     @newTabLink("cf.not-subscribed-to-cds.detail.eori-link", appConfig.registerCdsUrl, preLinkMessage = Some("cf.not-subscribed-to-cds.detail.eori-info"))

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import views.helpers.PageTitle.fullPageTitle
+@import views.helpers.PageTitle
 @import views.html.Layout
 
 
@@ -26,7 +26,10 @@
 
 @(pageTitle: String, heading: String, details: String*)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(pageTitle), helpAndSupport = false) {
+@layout(
+    PageTitle(pageTitle),
+    helpAndSupport = false
+    ) {
 
     @h1(heading, classes = "govuk-heading-xl")
 

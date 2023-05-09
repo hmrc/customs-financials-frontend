@@ -17,6 +17,7 @@
 @import views.html.Layout
 @import views.html.components._
 @import config.AppConfig
+@import views.helpers.PageTitle
 
 @this(
         p: p,
@@ -28,7 +29,9 @@
 )
 @(nextPage: String, email: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@layout(pageTitle = Some(messages("cf.undeliverable.email.title"))) {
+@layout(
+    PageTitle(messages("cf.undeliverable.email.title"))
+) {
 
     @h1(msg = "cf.undeliverable.email.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
