@@ -1,4 +1,5 @@
 site.error=Gwall
+site.govuk=GOV.UK
 
 language.cymraeg = Cymraeg
 language.english = English
