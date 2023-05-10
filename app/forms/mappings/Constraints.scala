@@ -43,6 +43,6 @@ trait Constraints {
     }
 
   protected def stripWhitespace(str: String): String =
-    str.replaceAll("\\s", "")
+    str.replaceAll("\\s", "").toUpperCase
 
 }
