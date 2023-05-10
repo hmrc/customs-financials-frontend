@@ -138,5 +138,5 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   protected def stripWithWhitespace(str: String): String =
-    str.replaceAll("\\s", "")
+    str.replaceAll("\\s", "").toUpperCase
 }
