@@ -49,10 +49,10 @@ lazy val microservice = Project(appName, file("."))
 val compileDependencies = Seq(
   "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.15.0",
   "uk.gov.hmrc" %% "play-partials" % "8.4.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.3.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.7.0-play-28",
   ws,
   "org.typelevel" %% "cats-core" % "2.3.0",
-  "uk.gov.hmrc" %% "tax-year" % "3.1.0",
+  "uk.gov.hmrc" %% "tax-year" % "3.2.0",
   "org.webjars.npm" % "moment" % "2.29.0",
   "com.typesafe.play" %% "play-json-joda" % "2.9.2"
 )
