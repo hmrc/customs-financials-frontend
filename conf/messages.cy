@@ -331,6 +331,7 @@ cf.contact-details.duty-deferment.text=Dim ond os bydd angen i ni gysylltu â ch
 cf.contact-details.change-email-link=Newid eich cyfeiriad e-bost (yn agor tab newydd)
 cf.contact-details.account-number=Rhif y cyfrif
 cf.contact-details.view-change-link=Bwrw golwg drosto neu ei newid
+cf.contact-details.hidden-view-change-link=contact details for the account number {0}
 cf.contact-details.ni=(Gogledd Iwerddon)
 
 eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir
