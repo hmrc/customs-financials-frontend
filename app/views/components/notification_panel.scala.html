@@ -18,8 +18,8 @@
 
 @if(notificationMessageKeys.nonEmpty) {
     <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
-        <ul class="govuk-list">
-        @for(notificationMessageKey <- notificationMessageKeys) {<li>@messages(s"cf.customs-financials-home.notification.$notificationMessageKey")</li>}
-        </ul>
+        @for(notificationMessageKey <- notificationMessageKeys) {
+            <p class="govuk-body govuk-!-margin-bottom-1">@messages(s"cf.customs-financials-home.notification.$notificationMessageKey")</p>
+        }
     </div>
 }
