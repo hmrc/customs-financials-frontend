@@ -48,7 +48,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
-          content.select("#notification-panel li").asScala.map(_.text()).toList must contain(message)
+          content.select("#notification-panel p").asScala.map(_.text()).toList must contain(message)
         )
       }
 
@@ -60,7 +60,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
-          content.select("#notification-panel li").asScala.map(_.text()).toList must contain(message)
+          content.select("#notification-panel p").asScala.map(_.text()).toList must contain(message)
         )
       }
     }
@@ -86,7 +86,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
-          content.select("#notification-panel li").asScala.map(_.text()).toList must contain(message)
+          content.select("#notification-panel p").asScala.map(_.text()).toList must contain(message)
         )
       }
 
@@ -97,7 +97,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
-          content.select("#notification-panel li").asScala.map(_.text()).toList must contain(message)
+          content.select("#notification-panel p").asScala.map(_.text()).toList must contain(message)
         )
       }
     }
@@ -122,7 +122,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
         val expected = List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.postponed-vat")
 
-        content.select("#notification-panel li").asScala.map(_.text()).toList mustBe expected
+        content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
       }
     }
 
@@ -144,7 +144,7 @@ class NotificationPanelSpec extends SpecBase {
 
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.select("#notification-panel li").asScala.map(_.text()).toList mustBe expected
+        content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
       }
 
       "new requested Securities statement is available" in {
@@ -155,7 +155,7 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
-          content.select("#notification-panel li").asScala.map(_.text()).toList must contain(message)
+          content.select("#notification-panel p").asScala.map(_.text()).toList must contain(message)
         )
       }
     }
@@ -178,7 +178,7 @@ class NotificationPanelSpec extends SpecBase {
 
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.select("#notification-panel li").asScala.map(_.text()).toList mustBe expected
+        content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
       }
     }
 

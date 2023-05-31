@@ -237,7 +237,7 @@ class HomeControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        val notificationsText = html.select("#notification-panel li").asScala.map(_.text()).toList
+        val notificationsText = html.select("#notification-panel p").asScala.map(_.text()).toList
 
         notificationsText mustBe List("You have a new import adjustments statement",
           "You have a new import VAT (C79) certificate",
@@ -276,7 +276,7 @@ class HomeControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        val notificationsText = html.select("#notification-panel li").asScala.map(_.text()).toList
+        val notificationsText = html.select("#notification-panel p").asScala.map(_.text()).toList
 
         notificationsText mustBe List(
           "Your requested import VAT certificates (C79) are available to view",
