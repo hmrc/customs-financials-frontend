@@ -86,12 +86,12 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
       }
     }
 
-    "Should return failure when fails to find sessionId" in new Setup {
+    "Should return 404 when fails to find sessionId" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
-        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.failed(new RuntimeException("")))
+        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]], any[Seq[(String, String)]])(any, any, any))
+          .thenReturn(Future.failed(new RuntimeException("")))
 
         val result = await(connector.getSessionId(sessionId.value))
         result mustBe None

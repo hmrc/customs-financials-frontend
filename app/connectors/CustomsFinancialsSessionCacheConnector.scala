@@ -57,7 +57,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[String]] =
     httpClient.GET[String](appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId"
-    ).map(Some(_)).recover { case _ => None}
+    ).map(Some(_)).recover { case _ => None }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id
