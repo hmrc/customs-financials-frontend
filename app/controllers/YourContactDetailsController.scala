@@ -33,13 +33,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
-                                             override val messagesApi: MessagesApi,
-                                             dataStoreService: DataStoreService,
-                                             view: your_contact_details,
-                                             sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                             implicit val mcc: MessagesControllerComponents)
-                                             (implicit val appConfig: AppConfig, ec: ExecutionContext)
-                                             extends FrontendController(mcc) with I18nSupport {
+                                       override val messagesApi: MessagesApi,
+                                       dataStoreService: DataStoreService,
+                                       view: your_contact_details,
+                                       sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+                                       implicit val mcc: MessagesControllerComponents)
+                                       (implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                       extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 
