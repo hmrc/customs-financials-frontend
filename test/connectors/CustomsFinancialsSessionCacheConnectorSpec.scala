@@ -73,6 +73,34 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
     }
   }
 
+  "getSessionId" should {
+    "Should return X when success" in new Setup {
+      running(app) {
+        val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
+        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/account-links/session" + sessionId.value
+
+        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any)(any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
+
+        val result = await(connector.getSessionId(sessionId.value))
+        result mustBe OK
+      }
+    }
+
+    "Should return Y when failure" in new Setup {
+      running(app) {
+        val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
+        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/account-links/session" + sessionId.value
+
+        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any)(any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(NOT_FOUND, "")))
+
+        val result = await(connector.getSessionId(sessionId.value))
+        result mustBe None
+      }
+    }
+  }
+
   trait Setup {
     val sessionId = SessionId(UUID.randomUUID().toString)
     val url = "/some-url"
