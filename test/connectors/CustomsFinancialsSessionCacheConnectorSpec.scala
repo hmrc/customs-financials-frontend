@@ -74,26 +74,24 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
   }
 
   "getSessionId" should {
-    "Should return X when success" in new Setup {
+    "Should return Ok and a SessionId when success" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/account-links/session" + sessionId.value
 
-        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any)(any, any, any))
-          .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
+        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
 
         val result = await(connector.getSessionId(sessionId.value))
-        result mustBe OK
+        result mustBe Some("Some_String")
       }
     }
 
-    "Should return Y when failure" in new Setup {
+    "Should return failure when fails to find sessionId" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/account-links/session" + sessionId.value
 
-        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any)(any, any, any))
-          .thenReturn(Future.successful(HttpResponse.apply(NOT_FOUND, "")))
+        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.failed(new RuntimeException("")))
 
         val result = await(connector.getSessionId(sessionId.value))
         result mustBe None
