@@ -33,13 +33,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
-  override val messagesApi: MessagesApi,
-  dataStoreService: DataStoreService,
-  view: your_contact_details,
-  sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-  implicit val mcc: MessagesControllerComponents)
-  (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+                                             override val messagesApi: MessagesApi,
+                                             dataStoreService: DataStoreService,
+                                             view: your_contact_details,
+                                             sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+                                             implicit val mcc: MessagesControllerComponents)
+                                             (implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                             extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -54,22 +54,6 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       }
     }
   }
-
-
- /* def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
-    hc.sessionId match {
-      case Some(localSessionId) =>
-        sessionCacheConnector.getSessionId(localSessionId.value).flatMap {
-          case Some(sessionIdFromCache) =>
-            if (sessionIdFromCache == localSessionId.value) {generateView(request, localSessionId)
-            } else { redirectToHomePage() }
-          case _ => redirectToHomePage()
-        }
-      case _ =>
-        log.error("Missing SessionID")
-        Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
-    }
-  }*/
 
   def redirectToHomePage(): Future[Result] = {
     Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
@@ -94,8 +78,10 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
         new CompanyAddress("","",Some(""),""))
 
-      address = CompanyAddress(streetAndNumber = companyAddress.streetAndNumber,
-        city = companyAddress.city, postalCode = companyAddress.postalCode,
+      address = CompanyAddress(
+        streetAndNumber = companyAddress.streetAndNumber,
+        city = companyAddress.city,
+        postalCode = companyAddress.postalCode,
         countryCode = companyAddress.countryCode)
 
       accountlinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
