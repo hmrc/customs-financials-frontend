@@ -25,7 +25,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits._
 import javax.inject.Inject
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import sun.rmi.runtime.Log
 import uk.gov.hmrc.http.HttpReadsInstances.readFromJson
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -52,12 +51,12 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   def getAccontLinks(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
     httpClient.GET[Seq[AccountLinkWithoutDate]](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$sessionId"
-    ).map(Some(_)).recover { case _ => None }
+      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$sessionId").map(
+      Some(_)).recover { case _ => None }
 
-  def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[String]] =
-    httpClient.GET[String](appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId"
-    ).map(Some(_)).recover { case _ => None }
+  def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] =
+    httpClient.GET[HttpResponse](appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId"
+    ).map(Some(_)).recover { case _ => None}
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id

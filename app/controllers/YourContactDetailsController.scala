@@ -42,14 +42,24 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   val log: LoggerLike = Logger(this.getClass)
 
   def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
+    hc.sessionId match {
+      case Some(headerId) => verifySessionAndViewPage(request, headerId)
+      case _ =>
+        log.error("Missing SessionID")
+        redirectToHomePage()
+    }
+  }
 
-    val localSessionId: SessionId = getSessionId()
+  private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent],
+    headerId: SessionId)(implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
 
-    localSessionId match {
-      case sessionCache => sessionCacheConnector.getSessionId(localSessionId.value) match {
-        case _ if sessionCache.value == localSessionId.value => generateView(request,localSessionId)
-        case _ => redirectToHomePage()
-      }
+    sessionCacheConnector.getSessionId(headerId.value).flatMap {
+      case Some(cacheId) =>
+        if (cacheId.body == headerId.value) { generateView(request, headerId) }
+        else { redirectToHomePage() }
+      case _ =>
+        log.error("Missing SessionID")
+        redirectToHomePage()
     }
   }
 
@@ -83,10 +93,5 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
   private def redirectToHomePage(): Future[Result] = {
     Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
-  }
-
-  private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
-    SessionId(hc.sessionId.getOrElse(
-      {log.error("Missing SessionID"); SessionId("Missing Session ID")}).value)
   }
 }
