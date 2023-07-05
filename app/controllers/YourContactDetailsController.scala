@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
@@ -30,7 +29,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                        override val messagesApi: MessagesApi,
@@ -48,16 +46,17 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
     val localSessionId: SessionId = getSessionId()
 
     localSessionId match {
-      case sessionCacheId => sessionCacheConnector.getSessionId(localSessionId.value) match {
-        case _ if sessionCacheId.value == localSessionId.value => generateView(request, localSessionId)
+      case sessionCache => sessionCacheConnector.getSessionId(localSessionId.value) match {
+        case _ if sessionCache.value == localSessionId.value => generateView(request,localSessionId)
         case _ => redirectToHomePage()
       }
     }
   }
 
-  private def generateView(request: AuthenticatedRequest[AnyContent], localSessionId: SessionId)
-    (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
-
+  private def generateView(request: AuthenticatedRequest[AnyContent],
+                           localSessionId: SessionId)(implicit hc: HeaderCarrier,
+                           messages: Messages,
+                           appConfig: AppConfig): Future[Result] = {
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)
@@ -88,8 +87,6 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
   private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
     SessionId(hc.sessionId.getOrElse(
-      {
-        log.error("Missing SessionID"); SessionId("Missing Session ID")
-      }).value)
+      {log.error("Missing SessionID"); SessionId("Missing Session ID")}).value)
   }
 }
