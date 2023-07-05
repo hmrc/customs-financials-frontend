@@ -16,18 +16,18 @@
 
 package controllers
 
-import actionbuilders.IdentifierAction
+import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import domain.{AccountLinkWithoutDate, CompanyAddress}
-import javax.inject.Inject
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Logger, LoggerLike}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.DataStoreService
-import uk.gov.hmrc.http.SessionId
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.your_contact_details.your_contact_details
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
@@ -42,6 +42,21 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   val log: LoggerLike = Logger(this.getClass)
 
   def onPageLoad(): Action[AnyContent] = authenticate async { implicit request =>
+
+    val localSessionId: SessionId = getSessionId()
+
+    localSessionId match {
+      case sessionCache => sessionCacheConnector.getSessionId(localSessionId.value) match {
+        case _ if sessionCache.value == localSessionId.value => generateView(request,localSessionId)
+        case _ => redirectToHomePage()
+      }
+    }
+  }
+
+  private def generateView(request: AuthenticatedRequest[AnyContent],
+                           localSessionId: SessionId)(implicit hc: HeaderCarrier,
+                           messages: Messages,
+                           appConfig: AppConfig): Future[Result] = {
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)
@@ -50,23 +65,28 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
-
       companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
-        new CompanyAddress("","",Some(""),""))
+        new CompanyAddress("", "", Some(""), ""))
 
       address = CompanyAddress(
         streetAndNumber = companyAddress.streetAndNumber,
         city = companyAddress.city,
         postalCode = companyAddress.postalCode,
-        countryCode = companyAddress.countryCode
-      )
+        countryCode = companyAddress.countryCode)
 
-      sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
-      accountlinks <- sessionCacheConnector.getAccontLinks(sessionId.value)
-
+      accountlinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
     } yield {
       Ok(view(request.user.eori, accountlinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
-        companyName, address, email.toString))
+        companyName, address, email.toString)(request, messages, appConfig))
     }
+  }
+
+  private def redirectToHomePage(): Future[Result] = {
+    Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
+  }
+
+  private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
+    SessionId(hc.sessionId.getOrElse(
+      {log.error("Missing SessionID"); SessionId("Missing Session ID")}).value)
   }
 }
