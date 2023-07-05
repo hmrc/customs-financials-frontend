@@ -48,18 +48,18 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
     val localSessionId: SessionId = getSessionId()
 
     localSessionId match {
-      case a => sessionCacheConnector.getSessionId(localSessionId.value) match {
-        case sessionCache if a.value == localSessionId.value => generateView(request, localSessionId)
+      case sessionCacheId => sessionCacheConnector.getSessionId(localSessionId.value) match {
+        case _ if sessionCacheId.value == localSessionId.value => generateView(request, localSessionId)
         case _ => redirectToHomePage()
       }
     }
   }
 
-  def redirectToHomePage(): Future[Result] = {
+  private def redirectToHomePage(): Future[Result] = {
     Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
   }
 
-  def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
+  private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
     SessionId(hc.sessionId.getOrElse(
       {log.error("Missing SessionID"); SessionId("Missing Session ID")}).value)
   }

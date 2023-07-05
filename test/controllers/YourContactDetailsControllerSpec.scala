@@ -28,7 +28,6 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpClient
 import utils.SpecBase
-
 import scala.concurrent.Future
 
 class YourContactDetailsControllerSpec extends SpecBase {
