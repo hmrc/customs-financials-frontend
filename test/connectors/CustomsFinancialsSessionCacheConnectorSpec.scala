@@ -78,11 +78,17 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
-        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+        when[Future[HttpResponse]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful(HttpResponse(OK, "Some_String")))
 
-        val result = await(connector.getSessionId(sessionId.value))
-        result mustBe Some("Some_String")
+        val result: Option[HttpResponse] = await(connector.getSessionId(sessionId.value))
+
+        result.map {
+          res => {
+            res.status mustBe OK
+            res.body mustBe "Some_String"
+          }
+        }
       }
     }
 
@@ -90,8 +96,8 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
-        when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]], any[Seq[(String, String)]])(any, any, any))
-          .thenReturn(Future.failed(new RuntimeException("")))
+        when[Future[HttpResponse]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.failed(new RuntimeException("")))
 
         val result = await(connector.getSessionId(sessionId.value))
         result mustBe None
