@@ -55,15 +55,6 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  private def redirectToHomePage(): Future[Result] = {
-    Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
-  }
-
-  private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
-    SessionId(hc.sessionId.getOrElse(
-      {log.error("Missing SessionID"); SessionId("Missing Session ID")}).value)
-  }
-
   private def generateView(request: AuthenticatedRequest[AnyContent], localSessionId: SessionId)
     (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
 
@@ -76,7 +67,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
       companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
-        new CompanyAddress("","",Some(""),""))
+        new CompanyAddress("", "", Some(""), ""))
 
       address = CompanyAddress(
         streetAndNumber = companyAddress.streetAndNumber,
@@ -90,5 +81,15 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         companyName, address, email.toString)(request, messages, appConfig))
     }
   }
-}
 
+  private def redirectToHomePage(): Future[Result] = {
+    Future.successful(Redirect(routes.CustomsFinancialsHomeController.index.url))
+  }
+
+  private def getSessionId()(implicit hc: HeaderCarrier): SessionId = {
+    SessionId(hc.sessionId.getOrElse(
+      {
+        log.error("Missing SessionID"); SessionId("Missing Session ID")
+      }).value)
+  }
+}
