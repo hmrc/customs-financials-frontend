@@ -108,14 +108,14 @@ trait SpecBase extends AnyWordSpecLike
    *
    * @param method HTTP Method type
    * @param path url for the Call
-   * @param sessionValue Session value that is to be matched
+   * @param sessionIdValue Session value that is to be matched
    * @return
    */
   def fakeRequestWithSession(method: String = emptyString,
                              path: String = emptyString,
-                             sessionValue: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
+                             sessionIdValue: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
-      .withSession(("sessionId", sessionValue))
+      .withSession(("sessionId", sessionIdValue))
 
   def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {
     SignedInUser("testEori1", allEoriHistory)
