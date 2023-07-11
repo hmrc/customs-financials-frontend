@@ -20,10 +20,10 @@ import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector}
 import domain._
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
-import play.api.{Application, inject}
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
@@ -34,16 +34,16 @@ import scala.concurrent.Future
 class YourContactDetailsControllerSpec extends SpecBase {
 
   "YourContactDetailsController" should {
-  "return OK" in new Setup {
-    val sessionValue = "session_acfe456"
+    "return OK when request session id is found in the cache" in new Setup {
+      val sessionValue = "session_acfe456"
 
-    when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
         any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionValue))))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
+       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
         sessionValue)
 
