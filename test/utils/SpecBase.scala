@@ -104,7 +104,7 @@ trait SpecBase extends AnyWordSpecLike
 
   /**
    * Creates the FakeRequest with session with the supplied
-   * method, path and sessionValue
+   * method, path and sessionIdValue
    *
    * @param method HTTP Method type
    * @param path url for the Call
