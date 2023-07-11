@@ -43,7 +43,7 @@ class YourContactDetailsControllerSpec extends SpecBase {
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionValue))))
 
-       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
         sessionValue)
 
