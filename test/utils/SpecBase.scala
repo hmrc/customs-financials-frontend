@@ -17,8 +17,8 @@
 package utils
 
 
-import akka.stream.testkit.NoMaterializer
 import actionbuilders.{FakeIdentifierAction, IdentifierAction}
+import akka.stream.testkit.NoMaterializer
 import com.codahale.metrics.MetricRegistry
 import com.kenshoo.play.metrics.Metrics
 import domain.{EoriHistory, SignedInUser}
@@ -46,7 +46,14 @@ class FakeMetrics extends Metrics {
   override val toJson: String = "{}"
 }
 
-trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with ScalaFutures with Matchers with IntegrationPatience {
+trait SpecBase extends AnyWordSpecLike
+  with MockitoSugar
+  with OptionValues
+  with ScalaFutures
+  with Matchers
+  with IntegrationPatience {
+
+  val emptyString = ""
 
   implicit class DocumentHelper(document: Document) {
     def containsLink(link: String): Boolean = {
@@ -74,7 +81,6 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     api.inject.bind[Metrics].toInstance(new FakeMetrics)
   ).configure("auditing.enabled" -> "false")
 
-
   @implicitNotFound("Pass a type for the identifier action")
   def applicationBuilder[IA <: IdentifierAction](disableAuth: Boolean = false)(implicit c: ClassTag[IA]) : GuiceApplicationBuilder = {
 
@@ -93,8 +99,23 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
         "metrics.enabled" -> "false")
   }
 
-  def fakeRequest(method: String = "", path: String = ""): FakeRequest[AnyContentAsEmpty.type] =
+  def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+
+  /**
+   * Creates the FakeRequest with session with the supplied
+   * method, path and sessionValue
+   *
+   * @param method HTTP Method type
+   * @param path url for the Call
+   * @param sessionValue Session value that is to be matched
+   * @return
+   */
+  def fakeRequestWithSession(method: String = emptyString,
+                             path: String = emptyString,
+                             sessionValue: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+      .withSession(("sessionId", sessionValue))
 
   def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {
     SignedInUser("testEori1", allEoriHistory)
