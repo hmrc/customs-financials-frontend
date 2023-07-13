@@ -5,7 +5,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.12"
-
+val bootstrapVersion = "7.19.0"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -47,7 +47,7 @@ lazy val microservice = Project(appName, file("."))
   )
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.19.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
   "uk.gov.hmrc" %% "play-partials" % "8.4.0-play-28",
   "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.14.0-play-28",
   ws,
@@ -58,7 +58,7 @@ val compileDependencies = Seq(
 )
 
 val testDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.19.0" % Test,
+  "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % Test,
   "org.scalatest" %% "scalatest" % "3.2.9" % Test,
   "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
   "org.jsoup" % "jsoup" % "1.10.2" % Test,
