@@ -5,7 +5,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.12"
-
+val bootstrapVersion = "7.19.0"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -47,9 +47,9 @@ lazy val microservice = Project(appName, file("."))
   )
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "7.15.0",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
   "uk.gov.hmrc" %% "play-partials" % "8.4.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.7.0-play-28",
+  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.14.0-play-28",
   ws,
   "org.typelevel" %% "cats-core" % "2.3.0",
   "uk.gov.hmrc" %% "tax-year" % "3.2.0",
@@ -58,13 +58,13 @@ val compileDependencies = Seq(
 )
 
 val testDependencies = Seq(
- "uk.gov.hmrc" %% "bootstrap-test-play-28" % "7.15.0" % Test,
-"org.scalatest" %% "scalatest" % "3.2.9" % Test,
-"org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
-"org.jsoup" % "jsoup" % "1.10.2" % Test,
-"com.typesafe.play" %% "play-test" % current % Test,
-"com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % "test, it",
-"org.mockito" %% "mockito-scala-scalatest" % "1.16.46" % "test, it"
+  "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % Test,
+  "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
+  "org.jsoup" % "jsoup" % "1.10.2" % Test,
+  "com.typesafe.play" %% "play-test" % current % Test,
+  "com.vladsch.flexmark" % "flexmark-all" % "0.35.10" % "test, it",
+  "org.mockito" %% "mockito-scala-scalatest" % "1.16.46" % "test, it"
 )
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
