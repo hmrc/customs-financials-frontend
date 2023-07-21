@@ -20,7 +20,8 @@ import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.Application
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
@@ -32,13 +33,15 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
     "display by h tags" should {
       "display header" in new Setup {
         running(app) {
-          view.getElementsByTag("h1").text mustBe "Request received"
+          view.getElementsByTag("h1").text mustBe
+            msg("cf.authorities.request.received.panel.h1")
         }
       }
 
       "display help link" in new Setup {
         running(app) {
-          view.getElementsByTag("h2").text mustBe "Help make GOV.UK better What happens next Support links"
+          view.getElementsByTag("h2").text mustBe
+            "Help make GOV.UK better What happens next Support links"
         }
       }
     }
@@ -46,27 +49,26 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
     "display by Id" should {
       "display header" in new Setup {
         running(app) {
-          view.getElementById("cf.authorities.request.received.panel.h1").text mustBe "Request received"
+          view.getElementById("cf.authorities.request.received.panel.h1").text mustBe
+            msg("cf.authorities.request.received.panel.h1")
         }
       }
 
       "display label" in new Setup {
         running(app) {
-          view.getElementById("cf.authorities.label").text mustBe
-            "You have requested a list of all accounts you have authority to use."
+          view.getElementById("cf.authorities.label").text mustBe msg("cf.authorities.label")
         }
       }
 
       "display next" in new Setup {
         running(app) {
-          view.getElementById("cf.authorities.next").text mustBe "What happens next"
+          view.getElementById("cf.authorities.next").text mustBe msg("cf.authorities.next")
         }
       }
 
       "display next msg" in new Setup {
         running(app) {
-          view.getElementById("cf.authorities.next.msg").text mustBe
-            "Your list will be available from the 'Find accounts you have authority to use' page, usually within 1 hour."
+          view.getElementById("cf.authorities.next.msg").text mustBe msg("cf.authorities.next.msg")
         }
       }
     }
@@ -95,5 +97,10 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
       app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+    def messages(app: Application): Messages =
+      app.injector.instanceOf[MessagesApi].preferred(fakeRequest(emptyString, emptyString))
+
+    implicit val msg: Messages = messages(app)
   }
 }
