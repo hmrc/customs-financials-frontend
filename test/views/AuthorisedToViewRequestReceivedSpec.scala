@@ -74,7 +74,7 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
     }
   }
 
-  trait Setup extends I18nSupport {
+  trait Setup {
     val eori: String = "EORI0123"
     val email = "email@emailland.com"
 
@@ -95,11 +95,6 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
 
     def view = Jsoup.parse(
       app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
-
-    override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-    def messages(app: Application): Messages =
-      app.injector.instanceOf[MessagesApi].preferred(fakeRequest(emptyString, emptyString))
 
     implicit val msg: Messages = messages(app)
   }
