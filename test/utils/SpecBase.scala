@@ -29,7 +29,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.api
-import play.api.inject
+import play.api.i18n.{Messages, MessagesApi}
+import play.api.{Application, inject}
 import play.api.inject.bind
 import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
 import play.api.mvc.AnyContentAsEmpty
@@ -54,6 +55,9 @@ trait SpecBase extends AnyWordSpecLike
   with IntegrationPatience {
 
   val emptyString = ""
+
+  def messages(app: Application): Messages =
+    app.injector.instanceOf[MessagesApi].preferred(fakeRequest(emptyString, emptyString))
 
   implicit class DocumentHelper(document: Document) {
     def containsLink(link: String): Boolean = {
