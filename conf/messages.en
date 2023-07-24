@@ -212,6 +212,7 @@ cf.search.authorities.result.no.result.p2 = This could be because:
 cf.search.authorities.result.no.result.p3 = you entered an incorrect EORI number or duty deferment, cash or general guarantee account number
 cf.search.authorities.result.no.result.p4 = you do not have authority to use the account with the Customs Declarations Service
 cf.search.authorities.result.eori.number = EORI number
+cf.search.authorities.result.xiEori.number = XI EORI number
 cf.search.authorities.result.account.type = Account type
 cf.search.authorities.result.account.number = Account number
 cf.search.authorities.result.account.balance = Balance available

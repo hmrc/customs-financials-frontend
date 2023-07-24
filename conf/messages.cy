@@ -300,6 +300,7 @@ cf.search.authorities.result.account.balance = Balans ar gael
 cf.search.authorities.result.company.name = Enw’r cwmni
 cf.search.authorities.result.balance.title = Pam na allaf weld balans cyfrif?
 cf.search.authorities.result.eori.number = Rhif EORI
+cf.search.authorities.result.xiEori.number = Rhif EORI XI
 cf.search.authorities.result.account.type = Math o gyfrif
 cf.search.authorities.result.account.number = Rhif y cyfrif
 cf.search.authorities.result.account.balance.available = Balans y cyfrif sydd ar gael

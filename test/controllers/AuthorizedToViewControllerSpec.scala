@@ -25,6 +25,7 @@ import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import utils.SpecBase
+
 import scala.concurrent.Future
 import scala.reflect.io.File
 
@@ -113,6 +114,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
         val result = route(app, request).value
@@ -136,6 +139,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
@@ -150,6 +154,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return OK if there are no authorities returned and display the no authorities page" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(NoAuthorities)))
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
@@ -157,6 +162,127 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
         html.text().contains("There are no matching result for 'GB123456789012'") shouldBe true
+      }
+    }
+
+    "return OK if there are no authorities returned for both GB/XI EORI for a account and" +
+      " display no authorities page" in new Setup {
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(Left(NoAuthorities)))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+        html.text().contains("There are no matching result for '1000000'") shouldBe true
+      }
+    }
+
+    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for account" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("100.0", "200.0")))
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+
+        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+        html.text().contains("£100.0") shouldBe true
+        html.text().contains("£200.0") shouldBe true
+        html.text().contains(messages(app)("cf.search.authorities.result.xiEori.number")) shouldBe true
+      }
+    }
+
+    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
+      "GB EORI but not for XI EORI for an account number" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("100.0", "200.0")))
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).andThenAnswer(
+        Future.successful(Left(NoAuthorities))
+      )
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+
+        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+        html.text().contains("£100.0") shouldBe true
+        html.text().contains("£200.0") shouldBe true
+        html.text().contains(messages(app)("cf.search.authorities.result.eori.number")) shouldBe true
+      }
+    }
+
+    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
+      "XI EORI but not for GB EORI for an account number" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("100.0", "200.0")))
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+
+        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+        html.text().contains("£100.0") shouldBe true
+        html.text().contains("£200.0") shouldBe true
+        html.text().contains(messages(app)("cf.search.authorities.result.xiEori.number")) shouldBe true
       }
     }
 
@@ -170,18 +296,39 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
-    "return internal server error when there is an error from the API" in new Setup {
+    "return internal server error when there are errors from the API while" +
+      "retrieving authorities for GB and XI EORI for EORI" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError)))
+        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val result = route(app, request).value
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "return internal server error when there are errors from the API while" +
+      "retrieving authorities for GB and XI EORI for input account number" in new Setup {
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
         val result = route(app, request).value
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
     "Display error message if searching your own EORI number" in new Setup {
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+
       running(app) {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
@@ -195,6 +342,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "Display error message if searching your own account number" in new Setup {
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+
       running(app) {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(

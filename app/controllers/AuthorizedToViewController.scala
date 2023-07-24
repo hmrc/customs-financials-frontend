@@ -19,23 +19,22 @@ package controllers
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
-import domain.FileRole.{StandingAuthority}
+import domain.FileRole.StandingAuthority
 import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.i18n.{I18nSupport, Messages}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
 import java.time.LocalDate
-import java.util.concurrent.TimeUnit
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.duration.{Duration, FiniteDuration}
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
@@ -69,56 +68,140 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       }
   }
 
-  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
-    sdesConnector.getAuthoritiesCsvFiles(eori)
-      .map(_.sortWith(_.startDate isAfter _.startDate).sortBy(_.filename).toSeq.sortWith(_.filename > _.filename))
-  }
-
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
         for {
           csvFiles <- getCsvFile(request.user.eori)
         } yield {
-          val viewmodel = csvFiles
+          val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
-          val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
-          val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(""))
+          val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
           BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
         },
-      query => {
-        val searchQuery = stripWithWhitespace(query)
+      query => processSearchQuery(request, query)
+    )
+  }
 
-        val maxWaitTime: FiniteDuration = Duration(5, TimeUnit.SECONDS)
-        val isMyAcc = Await.result(apiService.getAccounts(request.user.eori).map(
-          _.myAccounts.exists(_.number == query)), maxWaitTime)
+  private def processSearchQuery(request: AuthenticatedRequest[AnyContent],
+                                 query: EORI)(implicit hc: HeaderCarrier,
+                                              messages: Messages, appConfig: AppConfig): Future[Result] = {
+    val searchQuery = stripWithWhitespace(query)
 
-        if (request.user.eori.equalsIgnoreCase(query)) {
-          Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
-            "cf.account.authorized-to-view.search-own-eori").fill(query),
-              Some(""), LocalDate.now.toString, false)))
-         }  else if (isMyAcc) {
-            Future.successful(BadRequest(authorisedToViewSearch(form.withError("value",
-              "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-                Some(""), LocalDate.now.toString, false)))
-          }
-        else {
-          apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
-            case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
-            case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
-            case Right(searchedAuthorities) => {
+    val result = for {
+      cdsAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
+      xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
+    } yield {
+      val isMyAcc = cdsAccounts.myAccounts.exists(_.number == query)
 
-              val displayLink: Boolean = getDisplayLink(searchedAuthorities)
-              val clientEori: String = getClientEori(searchedAuthorities)
+      (request.user.eori, isMyAcc) match {
+        case (eori, _) if eori.equalsIgnoreCase(query) =>
+          Future.successful(
+            BadRequest(authorisedToViewSearch(
+              form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
+              Some(""),
+              LocalDate.now.toString,
+              fileExists = false)(request, messages, appConfig)))
+        case (_, true) =>
+          Future.successful(
+            BadRequest(authorisedToViewSearch(
+              form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
+              Some(""),
+              LocalDate.now.toString,
+              fileExists = false)(request, messages, appConfig)))
+        case _ =>
+          searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
+      }
+    }
+    result.flatten
+  }
 
-              dataStoreService.getCompanyName(clientEori).map { companyName => {
-                Ok(authorisedToViewSearchResult(searchQuery, clientEori, searchedAuthorities, companyName, displayLink))}
-              }
+  /**
+   *
+   * @param request AuthenticatedRequest[AnyContent]
+   * @param searchQuery EORI
+   * @param hc HeaderCarrier
+   * @param messages Messages
+   * @param appConfig AppConfig
+   * @return
+   */
+  private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
+                                              searchQuery: EORI,
+                                              xiEORI: Option[String])
+                                             (implicit hc: HeaderCarrier,
+                                              messages: Messages, appConfig: AppConfig): Future[Result] = {
+    val result = for {
+     authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
+     authForXIEORI <- apiService.searchAuthorities(xiEORI.getOrElse(""), searchQuery)
+    } yield {
+      (authForGBEORI, authForXIEORI) match {
+        case (Left(NoAuthorities), Left(NoAuthorities)) =>
+          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
+
+        case (Left(SearchError), Left(SearchError)) =>
+          Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+
+        case (Right(gbAuthorities), Right(xiAuthorities)) =>
+          val displayLink: Boolean = getDisplayLink(gbAuthorities)
+          val clientEori: EORI = getClientEori(gbAuthorities)
+
+          dataStoreService.getCompanyName(clientEori).flatMap {
+            companyName => {
+              Future.successful(Ok(
+                authorisedToViewSearchResult(
+                  searchQuery, clientEori, gbAuthorities, companyName, displayLink)(request, messages, appConfig)))
             }
+          }
+        case (gbAuth, xiAuth) =>
+          val retrievedAuthorities = if (gbAuth.isRight && xiAuth.isLeft) {
+            gbAuth
+          } else {
+            xiAuth
+          }
+
+          retrievedAuthorities match {
+            case Right(authorities) => {
+              val displayLink: Boolean = getDisplayLink(authorities)
+              val clientEori: EORI = getClientEori(authorities)
+
+              dataStoreService.getCompanyName(clientEori).flatMap {
+                companyName => {
+                  Future.successful(Ok(
+                    authorisedToViewSearchResult(
+                      searchQuery, clientEori, authorities, companyName, displayLink)(request, messages, appConfig)))
+                }
+              }
           }
         }
       }
-    )
+    }
+    result.flatten
+  }
+
+
+  /*    apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
+        case Left(NoAuthorities) =>
+          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
+        case Left(SearchError) =>
+          Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+        case Right(searchedAuthorities) =>
+
+          val displayLink: Boolean = getDisplayLink(searchedAuthorities)
+          val clientEori: EORI = getClientEori(searchedAuthorities)
+
+          dataStoreService.getCompanyName(clientEori).flatMap {
+            companyName => {
+              Future.successful(Ok(
+                authorisedToViewSearchResult(
+                  searchQuery, clientEori, searchedAuthorities, companyName, displayLink)(request, messages, appConfig)))
+            }
+          }
+      }*/
+
+  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
+    sdesConnector.getAuthoritiesCsvFiles(eori)
+      .map(_.sortWith(_.startDate isAfter _.startDate).sortBy(_.filename).toSeq.sortWith(_.filename > _.filename))
   }
 
   private def getClientEori(searchedAuthorities: SearchedAuthorities) = {
