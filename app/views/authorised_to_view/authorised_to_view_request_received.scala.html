@@ -17,12 +17,11 @@
 @import config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 
-@this(
-        layout: Layout,
-        p: components.p,
-        link: components.link,
-        panel: components.confirmation_panel
-)
+@this(layout: Layout,
+      p: components.p,
+      link: components.link,
+      panel: components.confirmation_panel,
+      h2: components.h2)
 
 @(email: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -30,7 +29,12 @@
   pageTitle = Some(messages("cf.authorities.request.received.title")),
   helpAndSupport = false
  ) {
-  @panel("cf.authorities.request.received.panel.h1")
-  @p(messages("cf.authorities.request.received.p", email))
-  @link(linkMessage = "cf.authorities.request.received.link", routes.CustomsFinancialsHomeController.index.url)
- }
+    <div>
+        <div id="cf.authorities.request.received.panel.h1">@panel("cf.authorities.request.received.panel.h1")</div>
+        <div id="cf.authorities.label">@p(messages("cf.authorities.label"))</div>
+        <div id="cf.authorities.next">@h2(messages("cf.authorities.next"))</div>
+        <div id="cf.authorities.next.msg">@p(messages("cf.authorities.next.msg"))</div>
+        <div id="cf.authorities.request.received.link">@link(linkMessage = "cf.authorities.request.received.link",
+            routes.CustomsFinancialsHomeController.index.url)</div>
+    </div>
+  }

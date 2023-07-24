@@ -37,7 +37,6 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
           val html = Jsoup.parse(contentAsString(result))
           status(result) shouldBe OK
           html.text().contains("Request received") shouldBe true
-          html.text().contains("address@email.com") shouldBe true
       }
     }
 

@@ -233,6 +233,9 @@ cf.authorities.request.received.link = Back to view your customs financial accou
 cf.authorities.notification-panel.p1=The list of authorities you requested is available to
 cf.authorities.notification-panel.a=download as a CSV
 cf.authorities.notification-panel.p2=The list was created on {0}. It will be available for 10 days.
+cf.authorities.label = You have requested a list of all accounts you have authority to use.
+cf.authorities.next = What happens next
+cf.authorities.next.msg = Your list will be available from the ''Find accounts you have authority to use'' page, usually within 1 hour.
 
 # Contact Details
 cf.contact-details.title=Your contact details

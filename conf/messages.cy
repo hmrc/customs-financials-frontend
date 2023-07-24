@@ -318,6 +318,9 @@ cf.authorities.request.received.link = Yn ôl i fwrw golwg dros eich cyfrifon ar
 cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar gael i’w
 cf.authorities.notification-panel.a=lawrlwytho fel CSV
 cf.authorities.notification-panel.p2=Crëwyd y rhestr ar {0}. Bydd ar gael am 10 diwrnod.
+cf.authorities.label = Rydych wedi gwneud cais am restr o’r holl gyfrifon y mae gennych awdurdod i’w defnyddio.
+cf.authorities.next = Yr hyn sy’n digwydd nesaf
+cf.authorities.next.msg = Bydd eich rhestr ar gael o’r dudalen ‘Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio’, fel arfer o fewn 1 awr.
 
 cf.contact-details.title=Eich manylion cyswllt
 cf.contact-details.company-details=Manylion y cwmni
