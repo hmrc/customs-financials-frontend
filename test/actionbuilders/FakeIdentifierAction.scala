@@ -24,7 +24,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers)(eoriHistory: Seq[EoriHistory]) extends IdentifierAction {
 
-  lazy val newUser: SignedInUser = SignedInUser("testEori1", eoriHistory)
+  lazy val newUser: SignedInUser = SignedInUser("testEori1", eoriHistory, Some("someAltEori"))
 
   override def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedRequest[A]]] =
     Future.successful(Right(AuthenticatedRequest(request, newUser)))

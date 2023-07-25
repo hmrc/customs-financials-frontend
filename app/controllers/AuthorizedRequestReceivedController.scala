@@ -43,15 +43,14 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
   val form: Form[String] = eoriNumberFormProvider()
 
   def requestAuthoritiesCsv(): Action[AnyContent] = authenticate async { implicit req =>
+
     customsDataStore.getEmail(req.user.eori).flatMap {
       case Right(email) =>
-        apiService.requestAuthoritiesCsv(req.user.eori).flatMap {
-        case Right(_) =>
-          Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
-        case _ =>
-          Future.successful(InternalServerError(errorHandler.technicalDifficulties))
+        apiService.requestAuthoritiesCsv(req.user.eori, req.user.XiEori).flatMap {
+        case Right(_) => Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
+        case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
       }
-      case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
+      case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
     }
   }
 }

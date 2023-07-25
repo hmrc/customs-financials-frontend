@@ -18,7 +18,7 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class RequestAuthoritiesCsv(requestingEori: String)
+case class RequestAuthoritiesCsv(requestingEori: String, altnerativeEori: Option[String])
 
 object RequestAuthoritiesCsv {
   implicit val format: OFormat[RequestAuthoritiesCsv] = Json.format[RequestAuthoritiesCsv]
