@@ -131,6 +131,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                               xiEORI: Option[String])
                                              (implicit hc: HeaderCarrier,
                                               messages: Messages, appConfig: AppConfig): Future[Result] = {
+    println("========== xiEORI updated is ======="+xiEORI)
+
     val result = for {
      authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
      authForXIEORI <- apiService.searchAuthorities(xiEORI.getOrElse(""), searchQuery)
@@ -142,62 +144,84 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         case (Left(SearchError), Left(SearchError)) =>
           Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
 
+        case (Right(gbAuthorities), Left(_)) =>
+          processAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities)
+
+        case (Left(_), Right(xiAuthorities)) =>
+          processAuthAndViewResultPage(request, searchQuery, messages, appConfig, xiAuthorities, isGBAuth = false)
+
         case (Right(gbAuthorities), Right(xiAuthorities)) =>
-          val displayLink: Boolean = getDisplayLink(gbAuthorities)
-          val clientEori: EORI = getClientEori(gbAuthorities)
+          processGBAndXIAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities, xiAuthorities)
 
-          dataStoreService.getCompanyName(clientEori).flatMap {
-            companyName => {
-              Future.successful(Ok(
-                authorisedToViewSearchResult(
-                  searchQuery, Some(clientEori), gbAuthorities, companyName, displayLink)(request, messages, appConfig)))
-            }
-          }
-        case (gbAuth, xiAuth) =>
-          val retrievedAuthorities = if (gbAuth.isRight && xiAuth.isLeft) {
-            gbAuth
-          } else {
-            xiAuth
-          }
+        case (Left(NoAuthorities), Left(SearchError)) =>
+          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
 
-          retrievedAuthorities match {
-            case Right(authorities) => {
-              val displayLink: Boolean = getDisplayLink(authorities)
-              val clientEori: EORI = getClientEori(authorities)
-
-              dataStoreService.getCompanyName(clientEori).flatMap {
-                companyName => {
-                  Future.successful(Ok(
-                    authorisedToViewSearchResult(
-                      searchQuery, Some(clientEori), authorities, companyName, displayLink)(request, messages, appConfig)))
-                }
-              }
-          }
-        }
+        case (Left(SearchError), Left(NoAuthorities)) =>
+          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
       }
     }
     result.flatten
   }
 
+  private def processAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
+                                           searchQuery: EORI,
+                                           messages: Messages,
+                                           appConfig: AppConfig,
+                                           searchedAuthorities: SearchedAuthorities,
+                                           isGBAuth: Boolean = true)(implicit hc: HeaderCarrier): Future[Result] = {
 
-  /*    apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
-        case Left(NoAuthorities) =>
-          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
-        case Left(SearchError) =>
-          Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
-        case Right(searchedAuthorities) =>
+        val displayLink: Boolean = getDisplayLink(searchedAuthorities)
+        val clientEori: EORI = getClientEori(searchedAuthorities)
 
-          val displayLink: Boolean = getDisplayLink(searchedAuthorities)
-          val clientEori: EORI = getClientEori(searchedAuthorities)
+        dataStoreService.getCompanyName(clientEori).flatMap {
+          companyName => {
 
-          dataStoreService.getCompanyName(clientEori).flatMap {
-            companyName => {
-              Future.successful(Ok(
-                authorisedToViewSearchResult(
-                  searchQuery, clientEori, searchedAuthorities, companyName, displayLink)(request, messages, appConfig)))
+            val searchResultView = if (isGBAuth) {
+              authorisedToViewSearchResult(
+                searchQuery, Option(clientEori), searchedAuthorities, companyName, displayLink)(
+                request, messages, appConfig)
+            } else {
+              authorisedToViewSearchResult(
+                searchQuery, None, searchedAuthorities, companyName, displayLink, Option(clientEori))(
+                request, messages, appConfig)
             }
+
+            Future.successful(Ok(searchResultView))
           }
-      }*/
+        }
+  }
+
+  private def processGBAndXIAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
+                                                  searchQuery: EORI,
+                                                  messages: Messages,
+                                                  appConfig: AppConfig,
+                                                  gbAuthorities: SearchedAuthorities,
+                                                  xiAuthorities: SearchedAuthorities)(
+                                                   implicit hc: HeaderCarrier): Future[Result] = {
+    val displayLinkForGBAuth = getDisplayLink(gbAuthorities)
+    val displayLinkForXIAuth = getDisplayLink(xiAuthorities)
+    val displayLink = displayLinkForGBAuth && displayLinkForXIAuth
+
+    val gbEori: EORI = getClientEori(gbAuthorities)
+    val xiEori: EORI = getClientEori(xiAuthorities)
+
+    dataStoreService.getCompanyName(gbEori).flatMap {
+      companyName => {
+        Future.successful(Ok(
+          authorisedToViewSearchResult(
+            searchQuery,
+            Option(gbEori),
+            finalSearchAuthoritiesToShow(gbAuthorities, xiAuthorities),
+            companyName,
+            displayLink,
+            Option(xiEori))(request, messages, appConfig)))
+      }
+    }
+  }
+
+  private def finalSearchAuthoritiesToShow(gbAuthorities: SearchedAuthorities,
+                                           xiAuthorities: SearchedAuthorities): SearchedAuthorities  =
+    List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth)).head
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
     sdesConnector.getAuthoritiesCsvFiles(eori)
