@@ -34,6 +34,15 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
   "AuthorisedToViewSearchResult view" should {
     "display the correct title, header and company name" in new SetUp {
+
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search_result].apply(
+          "1100001",
+          Option("GBN45365789211"),
+          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+          Option("TestCompany"),
+          displayLink = true).body)
+
       running(app) {
         view.title() mustBe
           s"${messages(app)(
@@ -51,6 +60,16 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
     }
 
     "display both GB and XI EORI labels if authorities are returned for both" in new SetUp {
+
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search_result].apply(
+          "1100001",
+          Option("GBN45365789211"),
+          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+          Option("TestCompany"),
+          displayLink = true,
+          Option("XI45365789211")).body)
+
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
       summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
@@ -63,6 +82,14 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
     }
 
     "display only GB EORI label if authorities are available only for GB EORI" in new SetUp {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search_result].apply(
+          "1100001",
+          Option("GBN45365789211"),
+          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+          Option("TestCompany"),
+          displayLink = true).body)
+
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
       summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
@@ -71,6 +98,15 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
     }
 
     "display only XI EORI label if authorities are available for XI EORI" in new SetUp {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search_result].apply(
+          "1100001",
+          None,
+          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+          Option("TestCompany"),
+          displayLink = true,
+          Option("XI45365789211")).body)
+
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
       summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
@@ -92,13 +128,5 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
         Some(AuthorisedBalances("100.0", "200.0")))
     val cashAccount: AuthorisedCashAccount =
       AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
-
-    def view: Document = Jsoup.parse(
-      app.injector.instanceOf[authorised_to_view_search_result].apply(
-        "1100001",
-        "GBN45365789211",
-        SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
-        Option("TestCompany"),
-        displayLink = true).body)
   }
 }

@@ -150,7 +150,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
             companyName => {
               Future.successful(Ok(
                 authorisedToViewSearchResult(
-                  searchQuery, clientEori, gbAuthorities, companyName, displayLink)(request, messages, appConfig)))
+                  searchQuery, Some(clientEori), gbAuthorities, companyName, displayLink)(request, messages, appConfig)))
             }
           }
         case (gbAuth, xiAuth) =>
@@ -169,7 +169,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                 companyName => {
                   Future.successful(Ok(
                     authorisedToViewSearchResult(
-                      searchQuery, clientEori, authorities, companyName, displayLink)(request, messages, appConfig)))
+                      searchQuery, Some(clientEori), authorities, companyName, displayLink)(request, messages, appConfig)))
                 }
               }
           }
