@@ -28,8 +28,13 @@
         company_inset: components.authorised_account_search_inset
 )
 
-@(query: String, clientEori: String, searchedAuthorities: SearchedAuthorities,
-companyName: Option[String], displayLink: Boolean)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(
+query: String,
+clientEori: String,
+searchedAuthorities: SearchedAuthorities,
+companyName: Option[String],
+displayLink: Boolean
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
     pageTitle = Some(messages("cf.search.authorities.result.title", query)),
