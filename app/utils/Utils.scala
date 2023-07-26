@@ -21,9 +21,20 @@ object Utils {
   val gbEORIPrefix = "GB"
   val gbnEORIPrefix = "GBN"
   val xiEORIPrefix = "XI"
+  val danRegex = "^[0-9]{7}"
+  val canRegex = "^[0-9]{11}"
+  val ganRegex = "^[a-zA-Z0-9]{8,10}"
 
+  /**
+   * Returns true if the input is a valid Account number otherwise false
+   * Returns false if the input is a EORI
+   *
+   * @param inputStr SearchQuery
+   * @return Boolean
+   */
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&
       !inputStr.startsWith(gbnEORIPrefix) &&
-      !inputStr.startsWith(xiEORIPrefix)
+      !inputStr.startsWith(xiEORIPrefix) && (
+      inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr.matches(ganRegex))
 }
