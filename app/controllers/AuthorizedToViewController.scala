@@ -86,8 +86,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   private def processSearchQuery(request: AuthenticatedRequest[AnyContent],
-                                 query: EORI)(implicit hc: HeaderCarrier,
-                                              messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                 query: EORI)(
+                                  implicit hc: HeaderCarrier,
+                                  messages: Messages, appConfig: AppConfig): Future[Result] = {
     val searchQuery = stripWithWhitespace(query)
 
     val result = for {
@@ -123,13 +124,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   /**
-   *
-   * @param request AuthenticatedRequest[AnyContent]
-   * @param searchQuery EORI
-   * @param hc HeaderCarrier
-   * @param messages Messages
-   * @param appConfig AppConfig
-   * @return
+   * Search and processes the Authorities for the valid input, further, displays the view accordingly
    */
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
                                               searchQuery: EORI,
@@ -158,6 +153,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           processAuthAndViewResultPage(request, searchQuery, messages, appConfig, xiAuthorities, isGBAuth = false)
 
         case (Right(gbAuthorities), Right(xiAuthorities)) =>
+          //Currently below is processing authorities when search string is an account number
           processGBAndXIAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities, xiAuthorities)
 
         case (Left(NoAuthorities), Left(SearchError)) =>
@@ -174,6 +170,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     result.flatten
   }
 
+  /**
+   * Processes the SearchedAuthorities for GB or XI EORI
+   */
   private def processAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
                                            searchQuery: EORI,
                                            messages: Messages,
@@ -202,6 +201,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         }
   }
 
+  /**
+   * Processes the Authorities for both GB and XI EORI. It is only used when
+   * search string is a valid account number
+   */
   private def processGBAndXIAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
                                                   searchQuery: EORI,
                                                   messages: Messages,
@@ -230,8 +233,12 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
+  /**
+   * Selects the SearchedAuthorities (out of GB and XI authorities) which has permission to show the balance.
+   * It is used only when search string is a valid account number
+   */
   private def finalSearchAuthoritiesToShow(gbAuthorities: SearchedAuthorities,
-                                           xiAuthorities: SearchedAuthorities): SearchedAuthorities  =
+                                           xiAuthorities: SearchedAuthorities): SearchedAuthorities =
     List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth)).head
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
