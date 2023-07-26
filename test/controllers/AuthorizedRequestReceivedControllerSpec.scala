@@ -54,7 +54,7 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
     }
 
     "should be directed to InternalServerError page when error is returned from ACC41" in new Setup {
-      when(mockApiService.requestAuthoritiesCsv(any)(any))
+      when(mockApiService.requestAuthoritiesCsv(any,any)(any))
         .thenReturn(Future.successful(Left(RequestAuthoritiesCSVError)))
 
       running(app) {
@@ -73,7 +73,7 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val requestAuthorityCsvResponse: RequestAuthoritiesCsvResponse =  RequestAuthoritiesCsvResponse("date")
 
-    when(mockApiService.requestAuthoritiesCsv(any)(any))
+    when(mockApiService.requestAuthoritiesCsv(any,any)(any))
       .thenReturn(Future.successful(Right(requestAuthorityCsvResponse)))
 
     when(mockDataStoreService.getEmail(any)(any))

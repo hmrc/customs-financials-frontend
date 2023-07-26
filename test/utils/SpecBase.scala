@@ -122,6 +122,6 @@ trait SpecBase extends AnyWordSpecLike
       .withSession(("sessionId", sessionIdValue))
 
   def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {
-    SignedInUser("testEori1", allEoriHistory)
+    SignedInUser("testEori1", allEoriHistory, Some("someAltEori"))
   }
 }

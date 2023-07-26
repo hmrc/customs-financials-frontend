@@ -42,7 +42,7 @@ class AuditingServiceSpec extends SpecBase {
         EoriHistory("testEori1", validFrom = Some(validFrom), validUntil = Some(validTo)),
         EoriHistory("testEori2", validFrom = Some(validFrom), validUntil = Some(validTo))
       )
-      val user = SignedInUser("testEori3", eoriHistory)
+      val user = SignedInUser("testEori3", eoriHistory, Some("someAltEori"))
 
       val expectedAuditEvent = Json.arr(
         Json.obj(

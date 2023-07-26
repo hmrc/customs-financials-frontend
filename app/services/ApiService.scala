@@ -95,9 +95,12 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     }
   }
 
-  def requestAuthoritiesCsv(eori: String)(implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
+  def requestAuthoritiesCsv(eori: String, alternateEORI: Option[String])(
+    implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
+
     val apiEndpoint = appConfig.customsFinancialsApi + "/standing-authorities-file"
-    val requestAuthoritiesCsv: RequestAuthoritiesCsv = RequestAuthoritiesCsv(eori)
+    val requestAuthoritiesCsv: RequestAuthoritiesCsv = RequestAuthoritiesCsv(eori, alternateEORI)
+
     metricsReporter.withResponseTimeLogging("customs-financials-api.request.authorities.csv") {
       http.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
         case response if response.status == Status.OK =>
