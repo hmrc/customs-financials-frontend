@@ -46,7 +46,7 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
 
     customsDataStore.getEmail(req.user.eori).flatMap {
       case Right(email) =>
-        apiService.requestAuthoritiesCsv(req.user.eori, req.user.XiEori).flatMap {
+        apiService.requestAuthoritiesCsv(req.user.eori, req.user.xiEori).flatMap {
         case Right(_) => Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
         case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
       }

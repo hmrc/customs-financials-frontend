@@ -16,4 +16,4 @@
 
 package domain
 
-case class SignedInUser(eori: String, allEoriHistory: Seq[EoriHistory], XiEori: Option[String])
+case class SignedInUser(eori: String, allEoriHistory: Seq[EoriHistory], xiEori: Option[String])
