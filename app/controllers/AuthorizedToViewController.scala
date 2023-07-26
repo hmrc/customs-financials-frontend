@@ -105,7 +105,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         else {
           apiService.searchAuthorities(request.user.eori, searchQuery).flatMap {
             case Left(NoAuthorities) => Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)))
-            case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties))
+            case Left(SearchError) => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
             case Right(searchedAuthorities) => {
 
               val displayLink: Boolean = getDisplayLink(searchedAuthorities)

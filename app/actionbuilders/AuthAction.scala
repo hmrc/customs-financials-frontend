@@ -47,7 +47,8 @@ class AuthAction @Inject()(val authConnector: AuthConnector,
           case Some(eori) =>
             for {
               allEoriHistory <- dataStoreService.getAllEoriHistory(eori.value)
-              signedInUser = SignedInUser(eori.value, allEoriHistory)
+              xiEori <- dataStoreService.getXiEori(eori.value)
+              signedInUser = SignedInUser(eori.value, allEoriHistory, xiEori)
             } yield Right(AuthenticatedRequest(request, signedInUser))
           case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad)))
         }

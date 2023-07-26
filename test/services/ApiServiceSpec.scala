@@ -226,7 +226,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI"))
+          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
           response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
         }
       }
@@ -236,7 +236,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI"))
+          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
           response mustBe Left(RequestAuthoritiesCSVError)
         }
       }
@@ -247,7 +247,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(OK, jsonError.toString())))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI"))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Left(JsonParseError)
         }
       }
@@ -257,7 +257,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.failed(UpstreamErrorResponse("failure", 500)))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI"))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Left(RequestAuthoritiesCSVError)
         }
       }
