@@ -179,26 +179,25 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            appConfig: AppConfig,
                                            searchedAuthorities: SearchedAuthorities,
                                            isGBAuth: Boolean = true)(implicit hc: HeaderCarrier): Future[Result] = {
+    val displayLink: Boolean = getDisplayLink(searchedAuthorities)
+    val clientEori: EORI = getClientEori(searchedAuthorities)
 
-        val displayLink: Boolean = getDisplayLink(searchedAuthorities)
-        val clientEori: EORI = getClientEori(searchedAuthorities)
+    dataStoreService.getCompanyName(clientEori).flatMap {
+      companyName => {
 
-        dataStoreService.getCompanyName(clientEori).flatMap {
-          companyName => {
-
-            val searchResultView = if (isGBAuth) {
-              authorisedToViewSearchResult(
-                searchQuery, Option(clientEori), searchedAuthorities, companyName, displayLink)(
-                request, messages, appConfig)
-            } else {
-              authorisedToViewSearchResult(
-                searchQuery, None, searchedAuthorities, companyName, displayLink, Option(clientEori))(
-                request, messages, appConfig)
-            }
-
-            Future.successful(Ok(searchResultView))
-          }
+        val searchResultView = if (isGBAuth) {
+          authorisedToViewSearchResult(
+            searchQuery, Option(clientEori), searchedAuthorities, companyName, displayLink)(
+            request, messages, appConfig)
+        } else {
+          authorisedToViewSearchResult(
+            searchQuery, None, searchedAuthorities, companyName, displayLink, Option(clientEori))(
+            request, messages, appConfig)
         }
+
+        Future.successful(Ok(searchResultView))
+      }
+    }
   }
 
   /**
