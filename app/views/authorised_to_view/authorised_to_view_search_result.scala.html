@@ -29,12 +29,12 @@
 )
 
 @(
-query: String,
-clientEori: Option[String] = None,
-searchedAuthorities: SearchedAuthorities,
-companyName: Option[String],
-displayLink: Boolean,
-xiEORI: Option[String] = None
+    query: String,
+    clientEori: Option[String] = None,
+    searchedAuthorities: SearchedAuthorities,
+    companyName: Option[String],
+    displayLink: Boolean,
+    xiEORI: Option[String] = None
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(

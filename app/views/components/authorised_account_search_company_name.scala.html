@@ -19,10 +19,10 @@
 @this(inset: authorised_account_search_inset)
 
 @(
-companyName: Option[String],
-clientEORI: Option[String],
-displayLink: Boolean,
-xiEORI: Option[String] = None
+    companyName: Option[String],
+    clientEORI: Option[String],
+    displayLink: Boolean,
+    xiEORI: Option[String] = None
 )(implicit messages: Messages)
 
 @if(companyName.isEmpty && displayLink) {

@@ -127,10 +127,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
    * Search and processes the Authorities for the valid input, further, displays the view accordingly
    */
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
-                                              searchQuery: EORI,
-                                              xiEORI: Option[String] = None)
-                                             (implicit hc: HeaderCarrier,
-                                              messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                             searchQuery: EORI,
+                                             xiEORI: Option[String] = None)
+                                            (implicit hc: HeaderCarrier,
+                                             messages: Messages, appConfig: AppConfig): Future[Result] = {
     val result = for {
       authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
       authForXIEORI <- if (xiEORI.isDefined) {
