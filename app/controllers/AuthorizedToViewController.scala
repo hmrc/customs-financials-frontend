@@ -29,6 +29,7 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import utils.Utils.{emptyString, isSearchQueryAnAccountNumber}
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
@@ -111,7 +112,11 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case _ =>
-          searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
+          if(isSearchQueryAnAccountNumber(searchQuery)) {
+            searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
+          } else {
+            searchAuthoritiesForValidInput(request, searchQuery)
+          }
       }
     }
     result.flatten
@@ -128,10 +133,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
    */
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
                                               searchQuery: EORI,
-                                              xiEORI: Option[String])
+                                              xiEORI: Option[String] = None)
                                              (implicit hc: HeaderCarrier,
                                               messages: Messages, appConfig: AppConfig): Future[Result] = {
-    val emptyString = ""
     val result = for {
       authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
       authForXIEORI <- if (xiEORI.isDefined) {
@@ -160,7 +164,11 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
 
         case (Left(SearchError), Left(NoAuthorities)) =>
-          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
+          if (isSearchQueryAnAccountNumber(searchQuery)) {
+            Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+          } else {
+            Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
+          }
       }
     }
     result.flatten

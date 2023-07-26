@@ -305,13 +305,13 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       running(app) {
         val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "12345678")
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB12345678")
         val result = route(app, request).value
         status(result) shouldBe OK
       }
     }
 
-    "return OK and go to view search no result page when there are errors from the API while" +
+    "return Internal Server Error when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for input account number" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
@@ -322,7 +322,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
         val result = route(app, request).value
-        status(result) shouldBe OK
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
