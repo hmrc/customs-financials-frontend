@@ -18,7 +18,12 @@
 
 @this(inset: authorised_account_search_inset)
 
-@(companyName: Option[String], query: String, displayLink: Boolean)(implicit messages: Messages)
+@(
+    companyName: Option[String],
+    clientEORI: Option[String],
+    displayLink: Boolean,
+    xiEORI: Option[String] = None
+)(implicit messages: Messages)
 
 @if(companyName.isEmpty && displayLink) {
     @inset(
@@ -36,19 +41,38 @@
 }
 
 <dl class="govuk-summary-list govuk-summary-list--no-border govuk-!-margin-bottom-0">
- @companyName.map { name =>
-  <div class="govuk-summary-list__row">
-   <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-    @messages("cf.search.authorities.result.company.name")</dt>
-   <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">@name</dd>
-  </div>
- }
+    @companyName.map { name =>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @messages("cf.search.authorities.result.company.name")
+        </dt>
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @name
+        </dd>
+    </div>
+    }
 
- <div class="govuk-summary-list__row">
-  <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-   @messages("cf.search.authorities.result.eori.number")</dt>
-  <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">@query</dd>
- </div>
+    @clientEORI.map { gbEORI =>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @messages("cf.search.authorities.result.eori.number")
+        </dt>
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @gbEORI
+        </dd>
+    </div>
+    }
+
+    @xiEORI.map { xiEori =>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @messages("cf.search.authorities.result.xiEori.number")
+        </dt>
+        <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
+            @xiEori
+        </dd>
+    </div>
+    }
 </dl>
 
 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="clear:left" aria-hidden="true">

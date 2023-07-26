@@ -16,7 +16,12 @@
 
 @this()
 
-@(accountType: String, accountNumber: String, accountBalanceAvailable: Option[String], guaranteeBalanceAvailable: Option[String])(implicit messages: Messages)
+@(
+    accountType: String,
+    accountNumber: String,
+    accountBalanceAvailable: Option[String],
+    guaranteeBalanceAvailable: Option[String]
+)(implicit messages: Messages)
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     <div class="govuk-summary-list__row">

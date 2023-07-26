@@ -192,7 +192,7 @@ cf.undeliverable.email.link-text=Verify or change email address
 
 cf.search.authorities = Find accounts you have authority to use
 cf.search.authorities.p = You can search for accounts you have authority to use on the Customs Declaration Service by:
-cf.search.authorities.eori = an EORI number starting GB or GBN
+cf.search.authorities.eori = an EORI number starting GB, GBN or XI
 cf.search.authorities.account = an account number for duty deferment, cash or general guarantee account
 cf.search.authorities.link = Request all accounts as CSV
 cf.search.authorities.hint = Enter an EORI number starting with GB followed by 12 digits. <br> For example, '‘GB123456789000’'.</br>
@@ -212,6 +212,7 @@ cf.search.authorities.result.no.result.p2 = This could be because:
 cf.search.authorities.result.no.result.p3 = you entered an incorrect EORI number or duty deferment, cash or general guarantee account number
 cf.search.authorities.result.no.result.p4 = you do not have authority to use the account with the Customs Declarations Service
 cf.search.authorities.result.eori.number = EORI number
+cf.search.authorities.result.xiEori.number = XI EORI number
 cf.search.authorities.result.account.type = Account type
 cf.search.authorities.result.account.number = Account number
 cf.search.authorities.result.account.balance = Balance available
