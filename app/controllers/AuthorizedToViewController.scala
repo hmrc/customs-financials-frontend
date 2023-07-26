@@ -131,11 +131,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                               xiEORI: Option[String])
                                              (implicit hc: HeaderCarrier,
                                               messages: Messages, appConfig: AppConfig): Future[Result] = {
-    println("========== xiEORI updated is ======="+xiEORI)
-
+    val emptyString = ""
     val result = for {
-     authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
-     authForXIEORI <- apiService.searchAuthorities(xiEORI.getOrElse(""), searchQuery)
+      authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
+      authForXIEORI <- if (xiEORI.isDefined) {
+        apiService.searchAuthorities(xiEORI.getOrElse(emptyString), searchQuery)
+      } else {
+        Future.successful(Left(NoAuthorities))
+      }
     } yield {
       (authForGBEORI, authForXIEORI) match {
         case (Left(NoAuthorities), Left(NoAuthorities)) =>

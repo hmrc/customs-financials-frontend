@@ -296,7 +296,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
-    "return internal server error when there are errors from the API while" +
+    "return OK and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for EORI" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
@@ -305,13 +305,13 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       running(app) {
         val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "12345678")
         val result = route(app, request).value
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe OK
       }
     }
 
-    "return internal server error when there are errors from the API while" +
+    "return OK and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for input account number" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
@@ -322,7 +322,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
         val result = route(app, request).value
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe OK
       }
     }
 
@@ -372,7 +372,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        println(html.getElementsByTag("h1").text)
       }
     }
   }
