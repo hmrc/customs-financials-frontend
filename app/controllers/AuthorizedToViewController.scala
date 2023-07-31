@@ -242,7 +242,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            xiAuthorities: SearchedAuthorities): SearchedAuthorities = {
     val listOfEligibleAuthorities = List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth))
 
-    if(listOfEligibleAuthorities.isEmpty) gbAuthorities else listOfEligibleAuthorities.head
+    if (listOfEligibleAuthorities.isEmpty) gbAuthorities else listOfEligibleAuthorities.head
   }
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
