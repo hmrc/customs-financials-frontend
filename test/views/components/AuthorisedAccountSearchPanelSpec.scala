@@ -29,7 +29,29 @@ import views.html.components.authorised_account_search_panel
 class AuthorisedAccountSearchPanelSpec extends SpecBase {
 
   "AuthorisedAccountSearchPanel view" should {
-    "load correctly with correct guidance" in new Setup {
+    "load correctly with correct guidance when using duty deferement" in new Setup {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_account_search_panel].apply(
+          "DutyDeferment",
+          accountNumber,
+          Option("16000"),
+          Option("17000")
+        ).body)
+
+      val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
+
+      elements.get(0).getElementsByTag("dt").html() mustBe
+        messages(app)("cf.search.authorities.result.account.type")
+      elements.get(0).getElementsByTag("dd").html() mustBe
+        messages(app)("cf.search.authorities.accountType.DutyDeferment","").trim
+
+      elements.get(1).getElementsByTag("dt").html() mustBe
+        messages(app)("cf.search.authorities.result.account.number")
+      elements.get(1).getElementsByTag("dd").html() mustBe accountNumber
+    }
+
+
+    "load correctly with correct guidance with using CDSCash" in new Setup {
       val view: Document = Jsoup.parse(
         app.injector.instanceOf[authorised_account_search_panel].apply(
           "CDSCash",

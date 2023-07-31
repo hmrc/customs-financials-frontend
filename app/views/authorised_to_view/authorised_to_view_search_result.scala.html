@@ -61,7 +61,8 @@
                     result_panel(account.accountType, account.accountNumber, None, balances.map(_.periodAvailableGuaranteeBalance))
 
                 case AuthorisedDutyDefermentAccount(account, balances) =>
-                    result_panel(account.accountType, account.accountNumber, balances.map(_.periodAvailableAccountBalance), balances.map(_.periodAvailableGuaranteeBalance))
+                    result_panel(account.accountType, account.accountNumber,
+                        balances.map(_.periodAvailableAccountBalance), balances.map(_.periodAvailableGuaranteeBalance), xiEORI.nonEmpty)
 
                 case AuthorisedCashAccount(account, availableAccountBalance) =>
                     result_panel(account.accountType, account.accountNumber, availableAccountBalance, None)
