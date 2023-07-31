@@ -99,21 +99,19 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
       (request.user.eori, isMyAcc) match {
         case (eori, _) if eori.equalsIgnoreCase(query) =>
-          Future.successful(
-            BadRequest(authorisedToViewSearch(
+          Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
               Some(""),
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case (_, true) =>
-          Future.successful(
-            BadRequest(authorisedToViewSearch(
+          Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
               Some(""),
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case _ =>
-          if(isSearchQueryAnAccountNumber(searchQuery)) {
+          if(xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
           } else {
             searchAuthoritiesForValidInput(request, searchQuery)
@@ -143,7 +141,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         case (Left(NoAuthorities), Left(NoAuthorities)) =>
           Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
 
-        case (Left(SearchError), Left(SearchError)) =>
+        case (Left(SearchError), Left(SearchError)) | (Left(SearchError), Left(NoAuthorities))
+             | (Left(NoAuthorities), Left(SearchError)) =>
           Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
 
         case (Right(gbAuthorities), Left(_)) =>
@@ -155,9 +154,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         case (Right(gbAuthorities), Right(xiAuthorities)) =>
           //Currently below is processing authorities when search string is an account number
           processGBAndXIAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities, xiAuthorities)
-
-        case (Left(NoAuthorities), Left(SearchError)) =>
-          Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
 
         case (Left(SearchError), Left(NoAuthorities)) =>
           if (isSearchQueryAnAccountNumber(searchQuery)) {

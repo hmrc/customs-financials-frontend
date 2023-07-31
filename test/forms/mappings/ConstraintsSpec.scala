@@ -28,7 +28,12 @@ class ConstraintsSpec extends SpecBase with Constraints {
       result shouldEqual Valid
     }
 
-    "return Invalid when an incorrect EORI format is provided" in {
+    "return valid when XI EORI is provided" in {
+      val result = checkEORI("error.invalid2")("XI123456789102")
+      result shouldEqual Valid
+    }
+
+    "return Invalid when an incorrect EORI Length is provided" in {
       val result = checkEORI("error.invalid2")("XI453")
       result shouldEqual Invalid("error.invalid2", """GB\d{12}""")
     }

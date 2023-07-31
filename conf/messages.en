@@ -222,7 +222,8 @@ cf.search.authorities.result.account.balance.available.text = Including SIVA, EP
 cf.search.authorities.result.guarantee.balance.available = Guarantee balance available
 cf.search.authorities.result.balance.title = Why can I not see an account balance?
 cf.search.authorities.result.balance.label = The company that owns the account can choose to keep the balance private. You can still use the account.
-cf.search.authorities.accountType.DutyDeferment = Duty deferment account
+cf.search.authorities.accountType.DutyDeferment = Duty deferment {0}
+cf.search.authorities.accountType.Ni = (Northern Ireland)
 cf.search.authorities.accountType.GeneralGuarantee = General guarantee account
 cf.search.authorities.accountType.CDSCash = Cash account
 
