@@ -84,7 +84,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
-          html.getElementById("xi-csv-authority-link").html()
+          html.getElementById("xi-csv-authority-link").attr("href")
         }
       }
     }
@@ -102,7 +102,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
         StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
         StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
-        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
+        StandingAuthorityFile("SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
       )
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
@@ -395,7 +395,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
-          html.getElementById("xi-csv-authority-link").html()
+          html.getElementById("xi-csv-authority-link").attr("href")
         }
       }
     }
@@ -413,7 +413,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
         StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
         StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
-        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
+        StandingAuthorityFile("SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
       )
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))

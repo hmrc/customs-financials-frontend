@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@this()
+@this(
+        link: components.link
+)
 
 @(
   gbAuthCsvUrl: Option[String] = None,
@@ -28,10 +30,22 @@
 
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
         @gbAuthCsvUrl.map { url =>
-        <li><a id="gb-csv-authority-link" class="govuk-link" href=@url>@messages("cf.authorities.notification-panel.a.gb-authority")</a></li>
+        <li>
+            @link("cf.authorities.notification-panel.a.gb-authority",
+            url,
+            linkId = Some("gb-csv-authority-link"),
+            pWrapped = false
+            )
+        </li>
         }
         @xiAuthCsvUrl.map { url =>
-        <li><a id="xi-csv-authority-link" class="govuk-link" href=@url>@messages("cf.authorities.notification-panel.a.xi-authority")</a></li>
+        <li>
+            @link("cf.authorities.notification-panel.a.xi-authority",
+            url,
+            linkId = Some("xi-csv-authority-link"),
+            pWrapped = false
+            )
+        </li>
         }
     </ul>
 

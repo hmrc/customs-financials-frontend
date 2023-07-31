@@ -29,7 +29,7 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Utils.{emptyString, isSearchQueryAnAccountNumber}
+import utils.Utils.{CsvFiles, emptyString, isSearchQueryAnAccountNumber, partitionCsvFilesByFileNamePattern}
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
@@ -63,9 +63,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       } yield {
         val viewModel = csvFiles
         val fileExists = csvFiles.nonEmpty
-        val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(emptyString))
-        val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-        Ok(authorisedToViewSearch(form, url, None, date, fileExists))
+        val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+
+        val gbAuthUrl = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+        val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+        val date = Formatters.dateAsDayMonthAndYear(
+          Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+
+        Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
       }
   }
 
@@ -77,9 +82,13 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         } yield {
           val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
-          val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(emptyString))
+          val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+
+          val gbAuthUrl: Option[EORI] = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+          val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
           val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-          BadRequest(authorisedToViewSearch(formWithErrors, url, None, date, fileExists))
+
+          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists))
         },
       query => processSearchQuery(request, query)
     )
@@ -102,16 +111,16 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Future.successful(
             BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
-              Some(emptyString),
-              Some(emptyString),
+              None,
+              None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case (_, true) =>
           Future.successful(
             BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-              Some(emptyString),
-              Some(emptyString),
+              None,
+              None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case _ =>
