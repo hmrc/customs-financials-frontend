@@ -17,10 +17,13 @@
 package controllers
 
 import connectors.SdesConnector
+import domain.FileFormat.Csv
+import domain.FileRole.StandingAuthority
 import domain._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
@@ -49,6 +52,78 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
         status(result) should be(OK)
+      }
+    }
+
+    "display the search EORI view with GB authority link when there are only GB authorities' csv file" in new Setup {
+
+      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
+      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+
+      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+      val suthCsvFiles: Seq[StandingAuthorityFile] = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L,standAuthMetadata ,"GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata,"GB123456789012")
+      )
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
+
+      val newApp: Application = application().overrides(
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+      ).configure("features.new-agent-view-enabled" -> true).build()
+      running(newApp) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(newApp, request).value
+        status(result) should be(OK)
+
+        val html = Jsoup.parse(contentAsString(result))
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
+        intercept[RuntimeException] {
+          html.getElementById("xi-csv-authority-link").html()
+        }
+      }
+    }
+
+    "display the search EORI view with GB and XI authority link when there are" +
+      "GB and XI authorities' csv files" in new Setup {
+      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
+      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+      val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
+      val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
+
+      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+      val suthCsvFiles: Seq[StandingAuthorityFile] = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
+        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
+      )
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
+
+      val newApp: Application = application().overrides(
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+      ).configure("features.new-agent-view-enabled" -> true).build()
+      running(newApp) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(newApp, request).value
+        status(result) should be(OK)
+
+        val html = Jsoup.parse(contentAsString(result))
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
+        html.getElementById("xi-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.xi-authority")
+        html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
       }
     }
   }
@@ -293,6 +368,70 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "return BAD_REQUEST with correct CSV links for GB authorities if an invalid payload sent" in new Setup {
+      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
+      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012")
+      )
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
+      running(app) {
+        val request = fakeRequest(
+          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
+        intercept[RuntimeException] {
+          html.getElementById("xi-csv-authority-link").html()
+        }
+      }
+    }
+
+    "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
+      "if an invalid payload sent" in new Setup {
+      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
+      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+      val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
+      val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
+
+      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
+        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
+      )
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
+      running(app) {
+        val request = fakeRequest(
+          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
+        html.getElementById("xi-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.xi-authority")
+        html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
       }
     }
 

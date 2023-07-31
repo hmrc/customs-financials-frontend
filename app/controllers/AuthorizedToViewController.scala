@@ -59,13 +59,13 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
       for {
-        csvFiles <- getCsvFile(req.user.eori)
+        csvFiles: Seq[StandingAuthorityFile] <- getCsvFile(req.user.eori)
       } yield {
-        val viewmodel = csvFiles
+        val viewModel = csvFiles
         val fileExists = csvFiles.nonEmpty
-        val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
-        val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-        Ok(authorisedToViewSearch(form, url, date, fileExists))
+        val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(emptyString))
+        val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+        Ok(authorisedToViewSearch(form, url, None, date, fileExists))
       }
   }
 
@@ -77,9 +77,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         } yield {
           val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
-          val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(""))
+          val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(emptyString))
           val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-          BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
+          BadRequest(authorisedToViewSearch(formWithErrors, url, None, date, fileExists))
         },
       query => processSearchQuery(request, query)
     )
@@ -102,14 +102,16 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           Future.successful(
             BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
-              Some(""),
+              Some(emptyString),
+              Some(emptyString),
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case (_, true) =>
           Future.successful(
             BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-              Some(""),
+              Some(emptyString),
+              Some(emptyString),
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case _ =>
@@ -262,5 +264,5 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   protected def stripWithWhitespace(str: String): String =
-    str.replaceAll("\\s", "").toUpperCase
+    str.replaceAll("\\s", emptyString).toUpperCase
 }
