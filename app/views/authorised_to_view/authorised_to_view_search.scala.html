@@ -48,7 +48,7 @@
     @formHelper(action = controllers.routes.AuthorizedToViewController.onSubmit()) {
         @errorSummary(form.errors, None)
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
-        @notificationPanel(url, date, fileExists)
+        @notificationPanel(url, None, date, fileExists)
         @p("cf.search.authorities.p")
 
         <ul class="govuk-list govuk-list--bullet">

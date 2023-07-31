@@ -16,12 +16,25 @@
 
 @this()
 
-@(url: Option[String], date: String, fileExists: Boolean)(implicit messages: Messages)
+@(
+  gbAuthCsvUrl: Option[String] = None,
+  xiAuthCsvUrl: Option[String] = None,
+  date: String,
+  fileExists: Boolean)(implicit messages: Messages)
 
 @if(fileExists) {
 <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
-    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1") <a id="csv-authority-link" class="govuk-link" href=@url>
-     @messages("cf.authorities.notification-panel.a")</a>.</p>
+    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1")</p>
+
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
+        @gbAuthCsvUrl.map { url =>
+        <li><a id="gb-csv-authority-link" class="govuk-link" href=@url>@messages("cf.authorities.notification-panel.a.gb-authority")</a></li>
+        }
+        @xiAuthCsvUrl.map { url =>
+        <li><a id="xi-csv-authority-link" class="govuk-link" href=@url>@messages("cf.authorities.notification-panel.a.xi-authority")</a></li>
+        }
+    </ul>
+
     <p class="govuk-body">@messages("cf.authorities.notification-panel.p2",date)</p>
 </div>
 }
