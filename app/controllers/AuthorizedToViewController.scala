@@ -230,11 +230,16 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
   /**
    * Selects the SearchedAuthorities (out of GB and XI authorities) which has permission to show the balance.
+   * Selects gbAuthorities when both authorities have no balance
+   *
    * It is used only when search string is a valid account number
    */
   private def finalSearchAuthoritiesToShow(gbAuthorities: SearchedAuthorities,
-                                           xiAuthorities: SearchedAuthorities): SearchedAuthorities =
-    List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth)).head
+                                           xiAuthorities: SearchedAuthorities): SearchedAuthorities = {
+    val listOfEligibleAuthorities = List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth))
+
+    if (listOfEligibleAuthorities.isEmpty) gbAuthorities else listOfEligibleAuthorities.head
+  }
 
   private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
     sdesConnector.getAuthoritiesCsvFiles(eori)
