@@ -50,6 +50,7 @@ class AuthoritiesNotificationPanelSpec extends SpecBase {
 
       view.getElementById("gb-csv-authority-link").html() mustBe
         messages(app)("cf.authorities.notification-panel.a.gb-authority")
+      view.getElementById("gb-csv-authority-link").attr("href") mustBe "gbURL"
     }
 
     "display the correct guidance when both GB and XI authorities' file exist" in new Setup {
@@ -66,9 +67,11 @@ class AuthoritiesNotificationPanelSpec extends SpecBase {
 
       view.getElementById("gb-csv-authority-link").html() mustBe
         messages(app)("cf.authorities.notification-panel.a.gb-authority")
+      view.getElementById("gb-csv-authority-link").attr("href") mustBe "gbURL"
 
       view.getElementById("xi-csv-authority-link").html() mustBe
         messages(app)("cf.authorities.notification-panel.a.xi-authority")
+      view.getElementById("xi-csv-authority-link").attr("href") mustBe "xiURL"
 
       elements.get(0).getElementsByTag("p").html() must contain
       messages(app)("cf.authorities.notification-panel.p1")
