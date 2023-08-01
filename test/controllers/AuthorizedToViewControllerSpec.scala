@@ -57,17 +57,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "display the search EORI view with GB authority link when there are only GB authorities' csv file" in new Setup {
 
-      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
-      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
 
-      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
-
-      val suthCsvFiles: Seq[StandingAuthorityFile] = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L,standAuthMetadata ,"GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata,"GB123456789012")
-      )
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
 
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
@@ -91,19 +83,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "display the search EORI view with GB and XI authority link when there are" +
       "GB and XI authorities' csv files" in new Setup {
-      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
-      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
-      val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
-      val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
 
-      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
-
-      val suthCsvFiles: Seq[StandingAuthorityFile] = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
-        StandingAuthorityFile("SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
-      )
+      val suthCsvFiles: Seq[StandingAuthorityFile] =
+        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
 
@@ -399,16 +381,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "return BAD_REQUEST with correct CSV links for GB authorities if an invalid payload sent" in new Setup {
-      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
-      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
-      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
 
-      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012")
-      )
+      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
 
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
       running(app) {
         val request = fakeRequest(
           POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
@@ -429,19 +405,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
       "if an invalid payload sent" in new Setup {
-      val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
-      val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
-      val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
-      val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
 
-      val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
-
-      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, "XI123456789012"),
-        StandingAuthorityFile("SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, "XI123456789012")
-      )
+      val authCsvFiles: Seq[StandingAuthorityFile] =
+        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
       running(app) {
@@ -571,9 +537,29 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val accounts = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
     val cdsAccounts = CDSAccounts(newUser().eori, None, accounts)
 
-    val mockApiService = mock[ApiService]
-    val mockDataStoreService = mock[DataStoreService]
-    val mockSdesConnector = mock[SdesConnector]
+    val gbEORI = "GB123456789012"
+    val xiEORI = "XI123456789012"
+
+    val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
+    val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
+    val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
+    val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
+
+    val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+    val gbStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
+      "SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, gbEORI)
+    val gbStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
+      "SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, gbEORI)
+
+    val xiStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
+      "SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, xiEORI)
+    val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
+      "SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, xiEORI)
+
+    val mockApiService: ApiService = mock[ApiService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockSdesConnector: SdesConnector = mock[SdesConnector]
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
