@@ -29,7 +29,7 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Utils.{emptyString, isSearchQueryAnAccountNumber}
+import utils.Utils.{CsvFiles, emptyString, isSearchQueryAnAccountNumber, partitionCsvFilesByFileNamePattern}
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
@@ -58,15 +58,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   def onPageLoad(): Action[AnyContent] = authenticate async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
-      for {
-        csvFiles <- getCsvFile(req.user.eori)
-      } yield {
-        val viewmodel = csvFiles
-        val fileExists = csvFiles.nonEmpty
-        val url = Some(viewmodel.headOption.map(_.downloadURL).getOrElse(""))
-        val date = Formatters.dateAsDayMonthAndYear(Some(viewmodel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-        Ok(authorisedToViewSearch(form, url, date, fileExists))
-      }
+    for {
+      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile(req.user.eori)
+    } yield {
+      val viewModel = csvFiles
+      val fileExists = csvFiles.nonEmpty
+      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+
+      val gbAuthUrl = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+      val date = Formatters.dateAsDayMonthAndYear(
+        Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+
+      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
@@ -77,9 +82,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         } yield {
           val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
-          val url = Some(viewModel.headOption.map(_.downloadURL).getOrElse(""))
-          val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-          BadRequest(authorisedToViewSearch(formWithErrors, url, date, fileExists))
+          val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+
+          val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+          val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+          val date = Formatters.dateAsDayMonthAndYear(
+            Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+
+          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists))
         },
       query => processSearchQuery(request, query)
     )
@@ -101,13 +111,15 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         case (eori, _) if eori.equalsIgnoreCase(query) =>
           Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
-              Some(""),
+              None,
+              None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case (_, true) =>
           Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-              Some(""),
+              None,
+              None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
         case _ =>
@@ -263,5 +275,5 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   protected def stripWithWhitespace(str: String): String =
-    str.replaceAll("\\s", "").toUpperCase
+    str.replaceAll("\\s", emptyString).toUpperCase
 }

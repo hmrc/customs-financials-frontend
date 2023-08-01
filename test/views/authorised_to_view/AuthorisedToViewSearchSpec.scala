@@ -33,6 +33,15 @@ import views.html.authorised_to_view.authorised_to_view_search
 class AuthorisedToViewSearchSpec extends SpecBase {
   "AuthorisedToViewSearch view" should {
     "display correct title and guidance" in new SetUp {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option("url"),
+          None,
+          date,
+          fileExists = true
+        ).body)
+
       view.title() mustBe "Find accounts you have authority to use - View your customs financial accounts " +
         "- GOV.UK - View your customs financial accounts - GOV.UK"
       val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
@@ -44,6 +53,15 @@ class AuthorisedToViewSearchSpec extends SpecBase {
     }
 
     "display correct link for CSV file" in new SetUp {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option("url"),
+          None,
+          date,
+          fileExists = true
+        ).body)
+
       view.getElementById("authorised-request-csv-link").html() mustBe
         messages(app)("cf.search.authorities.link")
 
@@ -51,6 +69,61 @@ class AuthorisedToViewSearchSpec extends SpecBase {
 
       anchorTag.attr("href") mustBe
         controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
+    }
+
+    "display correct guidance when csv url is of GB authority" in new SetUp {
+      val gbAuthUrl = "gbURL"
+
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option(gbAuthUrl),
+          None,
+          date,
+          fileExists = true
+        ).body)
+
+      view.getElementById("authorised-request-csv-link").html() mustBe
+        messages(app)("cf.search.authorities.link")
+
+      val anchorTag: Elements = view.getElementById("authorised-request-csv-link").getElementsByTag("a")
+
+      anchorTag.attr("href") mustBe
+        controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
+
+      view.getElementById("gb-csv-authority-link").html() mustBe
+        messages(app)("cf.authorities.notification-panel.a.gb-authority")
+      view.getElementById("gb-csv-authority-link").attr("href") mustBe gbAuthUrl
+    }
+
+    "display correct guidance when csv urls for both GB and XI authorities are available" in new SetUp {
+      val gbAuthUrl = "gbURL"
+      val xiAuthUrl = "xiURL"
+
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option(gbAuthUrl),
+          Option(xiAuthUrl),
+          date,
+          fileExists = true
+        ).body)
+
+      view.getElementById("authorised-request-csv-link").html() mustBe
+        messages(app)("cf.search.authorities.link")
+
+      val anchorTag: Elements = view.getElementById("authorised-request-csv-link").getElementsByTag("a")
+
+      anchorTag.attr("href") mustBe
+        controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
+
+      view.getElementById("gb-csv-authority-link").html() mustBe
+        messages(app)("cf.authorities.notification-panel.a.gb-authority")
+      view.getElementById("gb-csv-authority-link").attr("href") mustBe gbAuthUrl
+
+      view.getElementById("xi-csv-authority-link").html() mustBe
+        messages(app)("cf.authorities.notification-panel.a.xi-authority")
+      view.getElementById("xi-csv-authority-link").attr("href") mustBe xiAuthUrl
     }
   }
 
@@ -61,13 +134,6 @@ class AuthorisedToViewSearchSpec extends SpecBase {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
     val form: Form[String] = new EoriNumberFormProvider().apply()
-
-    val view: Document = Jsoup.parse(
-      app.injector.instanceOf[authorised_to_view_search].apply(
-        form,
-        Option("url"),
-        "SomeDate",
-        fileExists = true
-      ).body)
+    val date = "SomeDate"
   }
 }

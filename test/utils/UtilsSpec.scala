@@ -16,7 +16,12 @@
 
 package utils
 
+import domain.FileFormat.Csv
+import domain.FileRole.StandingAuthority
+import domain.StandingAuthorityMetadata
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import domain.StandingAuthorityFile
+import Utils._
 
 class UtilsSpec extends SpecBase {
 "isSearchQueryAnAccountNumber" should {
@@ -37,6 +42,55 @@ class UtilsSpec extends SpecBase {
   "emptyString" should {
     "return correct value" in {
       Utils.emptyString mustBe empty
+    }
+  }
+
+  "xiCsvFileNameRegEx" should {
+    "return true when string matches the regex" in {
+      "SA_000000000154_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_00000005666666y153_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_avbncgg_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+    }
+
+    "return false when string does not match the regex" in {
+      "SA_000000000153_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "authorities-2022-11.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "TA_000000000154_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "SA_000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "_000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "SA_000000000156.csv".matches(xiCsvFileNameRegEx) mustBe false
+    }
+  }
+
+  "partitionCsvFilesByFileNamePattern" should {
+    "return correct list of GB and XI authorities partitioned by the file name pattern" in {
+      val standAuthMetadata: StandingAuthorityMetadata =
+        StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+
+      val gbAuthFiles = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", "", 500L, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", "", 500L, standAuthMetadata, "GB123456789012"))
+
+      val xiAuthFiles =
+        Seq(StandingAuthorityFile("SA_000000000153_XI_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"),
+          StandingAuthorityFile("SA_000000000154_XI_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"))
+
+      val csvFileForBothGBAndXI = gbAuthFiles ++ xiAuthFiles
+
+      Utils.partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
+        CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)
+
+      Utils.partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(
+        gbCsvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
+
+      Utils.partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(
+        gbCsvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
+    }
+
+    "return empty list of GB and XI authorities partitioned when input list is empty" in {
+
+      Utils.partitionCsvFilesByFileNamePattern(Seq.empty) mustBe CsvFiles(Seq.empty, Seq.empty)
     }
   }
 }

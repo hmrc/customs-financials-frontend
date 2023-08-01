@@ -14,14 +14,41 @@
  * limitations under the License.
  *@
 
-@this()
+@this(
+        link: components.link
+)
 
-@(url: Option[String], date: String, fileExists: Boolean)(implicit messages: Messages)
+@(
+  gbAuthCsvUrl: Option[String] = None,
+  xiAuthCsvUrl: Option[String] = None,
+  date: String,
+  fileExists: Boolean)(implicit messages: Messages)
 
 @if(fileExists) {
 <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
-    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1") <a id="csv-authority-link" class="govuk-link" href=@url>
-     @messages("cf.authorities.notification-panel.a")</a>.</p>
+    <p class="govuk-body">@messages("cf.authorities.notification-panel.p1")</p>
+
+    <ul class="govuk-list">
+        @gbAuthCsvUrl.map { url =>
+        <li>
+            @link("cf.authorities.notification-panel.a.gb-authority",
+            url,
+            linkId = Some("gb-csv-authority-link"),
+            pWrapped = false
+            )
+        </li>
+        }
+        @xiAuthCsvUrl.map { url =>
+        <li>
+            @link("cf.authorities.notification-panel.a.xi-authority",
+            url,
+            linkId = Some("xi-csv-authority-link"),
+            pWrapped = false
+            )
+        </li>
+        }
+    </ul>
+
     <p class="govuk-body">@messages("cf.authorities.notification-panel.p2",date)</p>
 </div>
 }
