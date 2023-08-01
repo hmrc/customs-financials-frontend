@@ -63,10 +63,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     } yield {
       val viewModel = csvFiles
       val fileExists = csvFiles.nonEmpty
-      val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
 
-      val gbAuthUrl = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-      val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+      val gbAuthUrl = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
       val date = Formatters.dateAsDayMonthAndYear(
         Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
@@ -82,10 +82,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
         } yield {
           val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
-          val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+          val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
 
-          val gbAuthUrl: Option[EORI] = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-          val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+          val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+          val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
           val date = Formatters.dateAsDayMonthAndYear(
             Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
