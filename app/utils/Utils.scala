@@ -28,6 +28,7 @@ object Utils {
   val danRegex = "^[0-9]{7}"
   val canRegex = "^[0-9]{11}"
   val ganRegex = "^[a-zA-Z0-9]{8,10}"
+  val xiCsvFileNameRegEx = "SA_[\\w]+_XI_csv.csv$"
 
   /**
    * Returns true if the input is a valid Account number otherwise false
@@ -50,8 +51,8 @@ object Utils {
    * @return CsvFiles
    */
   def partitionCsvFilesByFileNamePattern(csvFiles: Seq[StandingAuthorityFile],
-                                         fileNamePattern: String = xiEORIPrefix): CsvFiles = {
-    val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.contains(fileNamePattern))
+                                         fileNamePattern: String = xiCsvFileNameRegEx): CsvFiles = {
+    val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.matches(fileNamePattern))
     CsvFiles(partitionedList._2, partitionedList._1)
   }
 

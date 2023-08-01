@@ -45,6 +45,24 @@ class UtilsSpec extends SpecBase {
     }
   }
 
+  "xiCsvFileNameRegEx" should {
+    "return true when string matches the regex" in {
+      "SA_000000000154_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_00000005666666y153_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_avbncgg_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+    }
+
+    "return false when string does not match the regex" in {
+      "SA_000000000153_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "authorities-2022-11.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "TA_000000000154_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "SA_000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "_000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "000000000156_csv.csv".matches(xiCsvFileNameRegEx) mustBe false
+      "SA_000000000156.csv".matches(xiCsvFileNameRegEx) mustBe false
+    }
+  }
+
   "partitionCsvFilesByFileNamePattern" should {
     "return correct list of GB and XI authorities partitioned by the file name pattern" in {
       val standAuthMetadata: StandingAuthorityMetadata =

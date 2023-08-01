@@ -68,7 +68,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       val gbAuthUrl = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
       val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
       val date = Formatters.dateAsDayMonthAndYear(
-        Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+        Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
       Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
     }
@@ -87,7 +87,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
           val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
           val date = Formatters.dateAsDayMonthAndYear(
-            Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+            Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
           BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists))
         },
