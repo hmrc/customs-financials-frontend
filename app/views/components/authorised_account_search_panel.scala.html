@@ -16,11 +16,11 @@
 
 @this()
 
-@(
-    accountType: String,
-    accountNumber: String,
-    accountBalanceAvailable: Option[String],
-    guaranteeBalanceAvailable: Option[String]
+@(accountType: String,
+  accountNumber: String,
+  accountBalanceAvailable: Option[String],
+  guaranteeBalanceAvailable: Option[String],
+  isXi: Boolean = false
 )(implicit messages: Messages)
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">
@@ -28,9 +28,15 @@
         <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">
             @messages("cf.search.authorities.result.account.type")
         </dt>
+
         <dd class="govuk-!-width-three-quarters govuk-summary-list__value govuk-!-padding-top-0 govuk-!-padding-bottom-0">
-            @{messages(s"cf.search.authorities.accountType.$accountType")}
+            @if(isXi) {
+                @{messages(s"cf.search.authorities.accountType.$accountType", messages("cf.search.authorities.accountType.Ni"))}
+            } else {
+                @{messages(s"cf.search.authorities.accountType.$accountType", "")}
+            }
         </dd>
+
     </div>
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key govuk-!-width-three-quarters govuk-!-padding-top-0 govuk-!-padding-bottom-0">

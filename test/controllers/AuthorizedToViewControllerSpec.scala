@@ -240,6 +240,33 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
+    "return OK if there are authorities returned for both GB and XI EORI and both SearchAuthorities " +
+      "have no balance" in new Setup {
+      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+      val cashAccount: AuthorisedCashAccount =
+        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+
+      when(mockApiService.searchAuthorities(any, any)(any))
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .andThenAnswer(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+
+      when(mockDataStoreService.getCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Company name")))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+
+      running(app) {
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe OK
+        html.text().contains("Search results for GB123456789012") shouldBe true
+      }
+    }
+
     "return OK if there are no authorities returned for both GB/XI EORI for a account and" +
       " display no authorities page" in new Setup {
 
@@ -435,7 +462,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
-    "return OK and go to view search no result page when there are errors from the API while" +
+    "return Internal Server Error and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for EORI" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
@@ -446,7 +473,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB12345678")
         val result = route(app, request).value
-        status(result) shouldBe OK
+        status(result) shouldBe 500
       }
     }
 
