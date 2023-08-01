@@ -58,20 +58,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   def onPageLoad(): Action[AnyContent] = authenticate async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
-      for {
-        csvFiles: Seq[StandingAuthorityFile] <- getCsvFile(req.user.eori)
-      } yield {
-        val viewModel = csvFiles
-        val fileExists = csvFiles.nonEmpty
-        val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+    for {
+      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile(req.user.eori)
+    } yield {
+      val viewModel = csvFiles
+      val fileExists = csvFiles.nonEmpty
+      val csvFilesForBothGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
 
-        val gbAuthUrl = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-        val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-        val date = Formatters.dateAsDayMonthAndYear(
-          Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+      val gbAuthUrl = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+      val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+      val date = Formatters.dateAsDayMonthAndYear(
+        Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
-        Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
-      }
+      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
+    }
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
@@ -86,7 +86,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
           val gbAuthUrl: Option[EORI] = csvFilesForBothGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
           val xiAuthUrl = csvFilesForBothGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-          val date = Formatters.dateAsDayMonthAndYear(Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          val date = Formatters.dateAsDayMonthAndYear(
+            Some(viewModel.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
 
           BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists))
         },
