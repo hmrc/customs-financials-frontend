@@ -44,7 +44,7 @@ object Utils {
       inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr.matches(ganRegex))
 
   /**
-   * Splits the Seq of StandingAuthorityFile into Seq of StandingAuthorityFile
+   * Partitions the Seq of StandingAuthorityFile into Seq of StandingAuthorityFile
    * for GB and XI authority by provided file name pattern
    *
    * @param csvFiles Seq[StandingAuthorityFile]
