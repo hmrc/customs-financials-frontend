@@ -16,7 +16,7 @@
 
 package services
 
-import domain.{CompanyAddress, EoriHistory, UndeliverableEmail, UnverifiedEmail, XiEoriAddressInformation}
+import domain.{CompanyAddress, EoriHistory, UnverifiedEmail, XiEoriAddressInformation}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
@@ -251,6 +251,22 @@ class DataStoreServiceSpec extends SpecBase {
         running(app) {
           val response = await(service.getXiEori(eori ))
           response mustBe None
+        }
+      }
+
+      "return None when retunred xi Eori is empty" in new Setup {
+        val xiEori: String = emptyString
+        val xiAddress: XiEoriAddressInformation =
+          XiEoriAddressInformation("Street1", None, "City", "GB", Some("Post Code"))
+        val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
+
+        when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(xiEoriResponse))
+
+        running(app) {
+          val response = service.getXiEori(eori)
+          val result = await(response)
+          result mustBe None
         }
       }
     }

@@ -279,6 +279,7 @@ cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae
 
 cf.search.authorities.error.invalid = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
 cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif dilys
+cf.search.authorities.error.register-xi-eori = Mae’n rhaid i chi fod wedi cofrestru ar gyfer EORI XI er mwyn gwneud y chwiliad hwn
 cf.search.authorities.button = Chwilio
 cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
 cf.search.authorities.eori = rhif EORI sy’n dechrau gyda GB, GBN neu XI

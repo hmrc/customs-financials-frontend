@@ -26,22 +26,22 @@ import Utils._
 class UtilsSpec extends SpecBase {
 "isSearchQueryAnAccountNumber" should {
   "return true when input string is Account number" in {
-    Utils.isSearchQueryAnAccountNumber("1234567") mustBe true
-    Utils.isSearchQueryAnAccountNumber("123456789") mustBe true
-    Utils.isSearchQueryAnAccountNumber("Ab34567890") mustBe true
-    Utils.isSearchQueryAnAccountNumber("Ab345678") mustBe true
+    isSearchQueryAnAccountNumber("1234567") mustBe true
+    isSearchQueryAnAccountNumber("123456789") mustBe true
+    isSearchQueryAnAccountNumber("Ab34567890") mustBe true
+    isSearchQueryAnAccountNumber("Ab345678") mustBe true
   }
 
   "return false when input string is an EORI" in {
-    Utils.isSearchQueryAnAccountNumber("GB1234567789") mustBe false
-    Utils.isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
-    Utils.isSearchQueryAnAccountNumber("XI12345670890") mustBe false
+    isSearchQueryAnAccountNumber("GB1234567789") mustBe false
+    isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
+    isSearchQueryAnAccountNumber("XI12345670890") mustBe false
   }
 }
 
   "emptyString" should {
     "return correct value" in {
-      Utils.emptyString mustBe empty
+      emptyString mustBe empty
     }
   }
 
@@ -78,19 +78,45 @@ class UtilsSpec extends SpecBase {
 
       val csvFileForBothGBAndXI = gbAuthFiles ++ xiAuthFiles
 
-      Utils.partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
+      partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
         CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)
 
-      Utils.partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(
+      partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(
         gbCsvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
 
-      Utils.partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(
+      partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(
         gbCsvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
     }
 
     "return empty list of GB and XI authorities partitioned when input list is empty" in {
 
-      Utils.partitionCsvFilesByFileNamePattern(Seq.empty) mustBe CsvFiles(Seq.empty, Seq.empty)
+      partitionCsvFilesByFileNamePattern(Seq.empty) mustBe CsvFiles(Seq.empty, Seq.empty)
+    }
+  }
+
+  "isXIEori" should {
+    "return true when input is XI EORI" in {
+      isXIEori("XI123456789012") mustBe true
+      isXIEori("XI567896345987") mustBe true
+      isXIEori("XI888888888888") mustBe true
+      isXIEori("XI000000000000") mustBe true
+      isXIEori("XI000000000000  ") mustBe true
+      isXIEori(" XI000000000000  ") mustBe true
+    }
+
+    "return false when input is not XI EORI" in {
+      isXIEori("xi123456789012") mustBe false
+      isXIEori("XI567896345") mustBe false
+      isXIEori("56789634512345") mustBe false
+      isXIEori("5678963451XI23") mustBe false
+      isXIEori("567896345123XI") mustBe false
+      isXIEori(emptyString) mustBe false
+      isXIEori("GB123456789012") mustBe false
+      isXIEori("gb123456789012") mustBe false
+      isXIEori("GB12345678") mustBe false
+      isXIEori("567896345123GB") mustBe false
+      isXIEori("GBN12345678901") mustBe false
+      isXIEori("GBN123456789") mustBe false
     }
   }
 }

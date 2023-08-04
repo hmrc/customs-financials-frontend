@@ -29,7 +29,7 @@ import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Utils.{CsvFiles, emptyString, isSearchQueryAnAccountNumber, partitionCsvFilesByFileNamePattern}
+import utils.Utils.{CsvFiles, emptyString, isSearchQueryAnAccountNumber, isXIEori, partitionCsvFilesByFileNamePattern}
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
@@ -100,28 +100,35 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                   implicit hc: HeaderCarrier,
                                   messages: Messages, appConfig: AppConfig): Future[Result] = {
     val searchQuery = stripWithWhitespace(query)
-
+println("=============== request.user.eori :::"+request.user.eori)
     val result = for {
       cdsAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
     } yield {
       val isMyAcc = cdsAccounts.myAccounts.exists(_.number == query)
 
-      (request.user.eori, isMyAcc) match {
-        case (eori, _) if eori.equalsIgnoreCase(query) =>
+      (request.user.eori, isMyAcc, xiEORI) match {
+        case (eori, _, _) if eori.equalsIgnoreCase(query) =>
           Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
               None,
               None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
-        case (_, true) =>
+        case (_, true, _) =>
           Future.successful(BadRequest(authorisedToViewSearch(
               form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
               None,
               None,
               LocalDate.now.toString,
               fileExists = false)(request, messages, appConfig)))
+        case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
+          Future.successful(BadRequest(authorisedToViewSearch(
+            form.withError("value", "cf.search.authorities.error.register-xi-eori").fill(query),
+            None,
+            None,
+            LocalDate.now.toString,
+            fileExists = false)(request, messages, appConfig)))
         case _ =>
           if(xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
