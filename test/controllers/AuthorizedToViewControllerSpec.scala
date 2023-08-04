@@ -432,9 +432,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return BAD_REQUEST with correct error msg when agent is not registered for his own XI EORI" +
       " and search authority using trader's XI EORI" in new Setup {
 
-      val authCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2)
-
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
       when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
@@ -447,10 +444,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
 
-      /*  html.getElementById("gb-csv-authority-link").html() mustBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
-*/
         html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
       }
     }

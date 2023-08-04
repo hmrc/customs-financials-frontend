@@ -24,7 +24,7 @@ import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -100,7 +100,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                   implicit hc: HeaderCarrier,
                                   messages: Messages, appConfig: AppConfig): Future[Result] = {
     val searchQuery = stripWithWhitespace(query)
-println("=============== request.user.eori :::"+request.user.eori)
+
     val result = for {
       cdsAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
@@ -109,26 +109,14 @@ println("=============== request.user.eori :::"+request.user.eori)
 
       (request.user.eori, isMyAcc, xiEORI) match {
         case (eori, _, _) if eori.equalsIgnoreCase(query) =>
-          Future.successful(BadRequest(authorisedToViewSearch(
-              form.withError("value", "cf.account.authorized-to-view.search-own-eori").fill(query),
-              None,
-              None,
-              LocalDate.now.toString,
-              fileExists = false)(request, messages, appConfig)))
+          displayErrorView(query,"cf.account.authorized-to-view.search-own-eori")(
+            request, messages, appConfig)
         case (_, true, _) =>
-          Future.successful(BadRequest(authorisedToViewSearch(
-              form.withError("value", "cf.account.authorized-to-view.search-own-accountnumber").fill(query),
-              None,
-              None,
-              LocalDate.now.toString,
-              fileExists = false)(request, messages, appConfig)))
+          displayErrorView(query,"cf.account.authorized-to-view.search-own-accountnumber")(
+            request, messages, appConfig)
         case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
-          Future.successful(BadRequest(authorisedToViewSearch(
-            form.withError("value", "cf.search.authorities.error.register-xi-eori").fill(query),
-            None,
-            None,
-            LocalDate.now.toString,
-            fileExists = false)(request, messages, appConfig)))
+          displayErrorView(query,"cf.search.authorities.error.register-xi-eori")(
+            request, messages, appConfig)
         case _ =>
           if(xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
@@ -139,6 +127,22 @@ println("=============== request.user.eori :::"+request.user.eori)
     }
     result.flatten
   }
+
+  /**
+   * Displays the error view for the Business exceptions using
+   * relevant message key
+   */
+  private def displayErrorView(query: EORI,
+                               msgKey: String)(
+                                implicit request: Request[_],
+                                messages: Messages,
+                                appConfig: AppConfig): Future[Result] =
+    Future.successful(BadRequest(authorisedToViewSearch(
+      form.withError("value", msgKey).fill(query),
+      None,
+      None,
+      LocalDate.now.toString,
+      fileExists = false)(request, messages, appConfig)))
 
   /**
    * Search and processes the Authorities for the valid input, further, displays the view accordingly
