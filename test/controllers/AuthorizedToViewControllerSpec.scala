@@ -27,6 +27,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.SpecBase
 
 import scala.concurrent.Future
@@ -425,6 +426,25 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         html.getElementById("xi-csv-authority-link").html() mustBe
           messages(app)("cf.authorities.notification-panel.a.xi-authority")
         html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
+      }
+    }
+
+    "return BAD_REQUEST with correct error msg when agent is not registered for his own XI EORI" +
+      " and search authority using trader's XI EORI" in new Setup {
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
+      when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
+
+      running(app) {
+        val request = fakeRequest(
+          POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "XI123456789012")
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+
+        html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
       }
     }
 

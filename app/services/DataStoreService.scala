@@ -16,14 +16,15 @@
 
 package services
 
+import config.AppConfig
+import domain._
 import play.api.Logger
 import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.retrieve.Email
-import config.AppConfig
-import domain._
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -81,7 +82,8 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
-      http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(response => Some(response.xiEori))
+      http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
+        response => if (response.xiEori.isEmpty) None else Some(response.xiEori))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None

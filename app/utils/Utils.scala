@@ -29,6 +29,7 @@ object Utils {
   val canRegex = "^[0-9]{11}"
   val ganRegex = "^[a-zA-Z0-9]{8,10}"
   val xiCsvFileNameRegEx = "SA_[\\w]+_XI_csv.csv$"
+  val xiEoriRegex = "XI\\d{12}"
 
   /**
    * Returns true if the input is a valid Account number otherwise false
@@ -55,6 +56,13 @@ object Utils {
     val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.matches(fileNamePattern))
     CsvFiles(partitionedList._2, partitionedList._1)
   }
+
+  /**
+   * Returns true if input string is XI EORI otherwise returns false
+   * Example: isXIEori("XI123456789012") = true
+   * Example: isXIEori("xi123456789012") = false
+   */
+  def isXIEori(str: String): Boolean = str.trim.matches(xiEoriRegex)
 
   case class CsvFiles(gbCsvFiles: Seq[StandingAuthorityFile], xiCsvFiles: Seq[StandingAuthorityFile])
 }
