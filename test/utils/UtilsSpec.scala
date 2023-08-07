@@ -94,6 +94,31 @@ class UtilsSpec extends SpecBase {
     }
   }
 
+  "xiEoriRegex" should {
+    "return true when input matches regex" in {
+      "XI123456789012".matches(xiEoriRegex) mustBe true
+      "XI567896345987".matches(xiEoriRegex) mustBe true
+      "XI888888888888".matches(xiEoriRegex) mustBe true
+      "XI000000000000".matches(xiEoriRegex) mustBe true
+      "XI000000000000".matches(xiEoriRegex) mustBe true
+    }
+
+    "return false when input does not match regex" in {
+      "xi123456789012".matches(xiEoriRegex) mustBe false
+      "XI567896345".matches(xiEoriRegex) mustBe false
+      "56789634512345".matches(xiEoriRegex) mustBe false
+      "5678963451XI23".matches(xiEoriRegex) mustBe false
+      "567896345123XI".matches(xiEoriRegex) mustBe false
+      emptyString.matches(xiEoriRegex) mustBe false
+      "GB123456789012".matches(xiEoriRegex) mustBe false
+      "gb123456789012".matches(xiEoriRegex) mustBe false
+      "GB12345678".matches(xiEoriRegex) mustBe false
+      "567896345123GB".matches(xiEoriRegex) mustBe false
+      "GBN12345678901".matches(xiEoriRegex) mustBe false
+      "GBN123456789".matches(xiEoriRegex) mustBe false
+    }
+  }
+
   "isXIEori" should {
     "return true when input is XI EORI" in {
       isXIEori("XI123456789012") mustBe true
