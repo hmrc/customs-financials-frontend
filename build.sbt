@@ -19,7 +19,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(scoverageSettings: _*)
   .settings(publishingSettings: _*)
   .settings(
-    scalaVersion := "2.13.11",
+    scalaVersion := "2.13.8",
     targetJvm := "jvm-11",
     fork in Test := false,
     parallelExecution in Test := false,
