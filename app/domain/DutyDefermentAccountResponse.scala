@@ -26,7 +26,7 @@ case class DutyDefermentAccountResponse(account: AccountResponse, isIomAccount: 
       limits.map(limit => BigDecimal(limit.periodAccountLimit)),
       balances.map(balance => BigDecimal(balance.periodAvailableGuaranteeBalance)),
       balances.map(balance => BigDecimal(balance.periodAvailableAccountBalance)))
-    domain.DutyDefermentAccount(account.number,account.owner,account.accountStatus.getOrElse(AccountStatusOpen),
+    domain.DutyDefermentAccount(account.number,account.owner,isNiAccount,account.accountStatus.getOrElse(AccountStatusOpen),
       account.accountStatusID.getOrElse(DefermentAccountAvailable), balance, account.viewBalanceIsGranted, isIomAccount)
   }
 }
