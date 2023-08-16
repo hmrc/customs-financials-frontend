@@ -56,11 +56,11 @@ class ApiServiceSpec extends SpecBase
         ).build()
 
         val traderEori = "12345678"
-        val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, viewBalanceIsGranted = false, isleOfManFlag = None), Some("1000000"), Some("200000"))
-        val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false, None), Some(Limits("200", "100")), Some(Bal("50", "20")))
-        val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false, None), Some(Limits("200", "100")), None)
+        val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, viewBalanceIsGranted = false), Some("1000000"), Some("200000"))
+        val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false), false, false, Some(Limits("200", "100")), Some(Bal("50", "20")))
+        val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false), false, false, Some(Limits("200", "100")), None)
         val cashAccountNumber = "987654"
-        val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false, None), Some("999.99"))
+        val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false), Some("999.99"))
 
         val accounts = AccountsAndBalancesResponseContainer(
           domain.AccountsAndBalancesResponse(
@@ -270,11 +270,11 @@ class ApiServiceSpec extends SpecBase
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val traderEori = "12345678"
     val agentEori = "09876543"
-    val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, false, None), Some("1000000"), Some("200000"))
-    val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false, None), Some(Limits("200", "100")), Some(Bal("50", "20")))
-    val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false, None), Some(Limits("200", "100")), None)
+    val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, false), Some("1000000"), Some("200000"))
+    val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false), false, false, Some(Limits("200", "100")), Some(Bal("50", "20")))
+    val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false), false, false, Some(Limits("200", "100")), None)
     val cashAccountNumber = "987654"
-    val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false, None), Some("999.99"))
+    val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false), Some("999.99"))
     val traderAccounts = AccountsAndBalancesResponseContainer(
       domain.AccountsAndBalancesResponse(
         Some(domain.AccountResponseCommon("", Some(""), "", None)),
