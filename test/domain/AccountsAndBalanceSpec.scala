@@ -49,7 +49,8 @@ class AccountsAndBalanceSpec extends SpecBase  {
 
         val account = Json.parse(json).as[AccountResponse]
 
-        val expectedAccount = AccountResponse("123456", "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None)
+        val expectedAccount = AccountResponse("123456",
+          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None)
         account mustBe expectedAccount
       }
     }

@@ -31,10 +31,22 @@ class CustomsAccountsSpec extends SpecBase {
   val guaranteeAccountZeroLimit = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(200001))))
   val guaranteeAccountZeroBalance = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(200002), BigDecimal(0))))
   val guaranteeAccountZeroLimitZeroBalance = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(0))))
-  val dd1 = DutyDefermentAccount("1231231231", traderEori,AccountStatusOpen, DirectDebitMandateCancelled, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
-  val dd2 = DutyDefermentAccount("7567567567", traderEori,AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
-  val dd3 = DutyDefermentAccount("7897897897", agentEori,AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
-  val dd4 = DutyDefermentAccount("1112223334", agentEori,AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+  val dd1 = DutyDefermentAccount("1231231231", traderEori, false,
+    AccountStatusOpen, DirectDebitMandateCancelled, DutyDefermentBalance(Some(BigDecimal(200)),
+      Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+  val dd2 = DutyDefermentAccount("7567567567", traderEori, false, AccountStatusOpen,
+    DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+      None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+  val dd3 = DutyDefermentAccount("7897897897", agentEori, false, AccountStatusOpen,
+    DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+      Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+
+  val dd4 = DutyDefermentAccount("1112223334", agentEori,false, AccountStatusOpen,
+    DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+      None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
   private val cashAccountNumber = "987654"
   val cashAccount = CashAccount(cashAccountNumber, traderEori, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999.99))))

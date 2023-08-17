@@ -32,7 +32,8 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
         None
       )
       val expectedDDBalance = DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20)))
-      val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", AccountStatusOpen, DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
+      val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", false, AccountStatusOpen,
+        DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
       val account = AccountResponse("1231231231", "", "EORI12345678",accountStatus = None, None, viewBalanceIsGranted = false)
       val dda = DDA(account, false, false, Some(Limits("200", "100")), Some(Bal("50", "20")))
 
@@ -49,7 +50,7 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
         Some(false),
         None
       )
-      val account = AccountResponse("1231231231", "", "EORI12345678",accountStatus = None, accountStatusID = None, viewBalanceIsGranted = false)
+      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None, accountStatusID = None, viewBalanceIsGranted = false)
       val dda = DDA(account, isIomAccount = iomList.nonEmpty, isNiAccount = false, Some(Limits("200", "100")), Some(Bal("50", "20")))
 
       iomList.foreach { case(iom) => {

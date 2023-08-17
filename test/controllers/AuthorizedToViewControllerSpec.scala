@@ -530,19 +530,19 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
   trait Setup {
 
-    val dd1 = DutyDefermentAccount("1231231231", newUser().eori, AccountStatusOpen,
+    val dd1 = DutyDefermentAccount("1231231231", newUser().eori, false, AccountStatusOpen,
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd2 = DutyDefermentAccount("7567567567", newUser().eori, AccountStatusOpen,
+    val dd2 = DutyDefermentAccount("7567567567", newUser().eori, false, AccountStatusOpen,
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd3 = DutyDefermentAccount("7897897897", "testEori10", AccountStatusOpen,
+    val dd3 = DutyDefermentAccount("7897897897", "testEori10", false, AccountStatusOpen,
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd4 = DutyDefermentAccount("1112223334", "testEori11", AccountStatusOpen,
+    val dd4 = DutyDefermentAccount("1112223334", "testEori11", false, AccountStatusOpen,
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 

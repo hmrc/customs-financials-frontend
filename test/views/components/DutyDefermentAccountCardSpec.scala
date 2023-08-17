@@ -319,13 +319,15 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
 
-    val dutyDefermentAccount = DutyDefermentAccount(dan, eori, AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
+    val dutyDefermentAccount = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), // scalastyle:ignore magic.number
+        Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
 
-    val accountWithNegativeBalance = DutyDefermentAccount(dan, eori, AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(500)), Some(BigDecimal(299)), Some(BigDecimal(-100))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
+    val accountWithNegativeBalance = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(500)), Some(BigDecimal(299)), // scalastyle:ignore magic.number
+        Some(BigDecimal(-100))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
 
-    val dutyDefermentAccountWithoutBalances = DutyDefermentAccount(dan, eori, AccountStatusOpen, DefermentAccountAvailable,
+    val dutyDefermentAccountWithoutBalances = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
       DutyDefermentBalance(None, None, None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
     val dutyDefermentAccountOpen = dutyDefermentAccount.copy(status = AccountStatusOpen)
@@ -349,7 +351,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val dutyDefermentAccountSuspendedWithStatusId4 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
     val dutyDefermentAccountSuspendedWithStatusId7 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = ReturnedMailOther)
 
-    val dutyDefermentAccountPendingZeroBalance = dutyDefermentAccountPending.copy(balances = DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(00.00))))
+    val dutyDefermentAccountPendingZeroBalance = dutyDefermentAccountPending.copy(balances =
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(00.00)))) // scalastyle:ignore magic.number
 
     implicit val request = FakeRequest("GET", "/some/resource/path")
     val app = application().build()
@@ -357,16 +360,18 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances))
-    )
-    val accountLinks = Seq(
-      AccountLink(sessionId = "sessionId", eori, false, accountNumber = dan, linkId = "0123456789", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now)
-    )
+      CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances)))
+
+    val accountLinks = Seq(AccountLink(
+      sessionId = "sessionId", eori, false, accountNumber = dan,
+      linkId = "0123456789", accountStatus = AccountStatusOpen,
+      accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now))
 
     val model = FinancialsHomeModel(eori, companyName, accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
 
-    def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards]
-      .apply(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount))))).body)
+    def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(
+      app.injector.instanceOf[duty_deferment_account_cards].apply(
+        model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount))))).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }
