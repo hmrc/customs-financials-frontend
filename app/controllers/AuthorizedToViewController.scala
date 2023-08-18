@@ -24,12 +24,12 @@ import domain._
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Utils.{CsvFiles, emptyString, isSearchQueryAnAccountNumber, isXIEori, partitionCsvFilesByFileNamePattern}
+import utils.Utils.{CsvFiles, emptyString, isXIEori, partitionCsvFilesByFileNamePattern}
 import views.helpers.Formatters
 import views.html.authorised_to_view._
 
@@ -178,12 +178,13 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           //Currently below is processing authorities when search string is an account number
           processGBAndXIAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities, xiAuthorities)
 
-        case (Left(SearchError), Left(NoAuthorities)) =>
+          //TODO: Need to be looked at
+        /*case (Left(SearchError), Left(NoAuthorities)) =>
           if (isSearchQueryAnAccountNumber(searchQuery)) {
             Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
           } else {
             Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
-          }
+          }*/
       }
     }
     result.flatten

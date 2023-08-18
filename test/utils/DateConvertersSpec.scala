@@ -16,9 +16,10 @@
 
 package utils
 import java.time.{LocalDate, ZoneId}
-
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import services.DateConverters
+
+import java.text.SimpleDateFormat
 import java.util.Date
 
 
@@ -47,7 +48,7 @@ class DateConvertersSpec extends SpecBase {
   }
 
   trait Setup {
-    val date: Date = new Date("01/02/2022")
+    val date: Date = new SimpleDateFormat("mm/dd/yyyy").parse("01/02/2022")
     val localDate: LocalDate = LocalDate.of(
       2022, 1, 2)
   }

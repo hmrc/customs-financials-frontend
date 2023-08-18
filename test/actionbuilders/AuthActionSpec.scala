@@ -54,7 +54,7 @@ class AuthActionSpec extends SpecBase {
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).build()
       val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
+      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
 
       val authAction = new AuthAction(new FakeFailingAuthConnector(new MissingBearerToken), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
@@ -75,7 +75,7 @@ class AuthActionSpec extends SpecBase {
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).build()
       val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
+      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
 
       val authAction = new AuthAction(new FakeFailingAuthConnector(new BearerTokenExpired), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
@@ -96,7 +96,7 @@ class AuthActionSpec extends SpecBase {
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).build()
       val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
+      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
 
       val authAction = new AuthAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)
@@ -127,7 +127,7 @@ class AuthActionSpec extends SpecBase {
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).build()
       val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector.instanceOf[BodyParsers.Default]
+      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
 
       val authAction = new AuthAction(mockAuthConnector, config, bodyParsers, mockDataStoreService)
       val controller = new Harness(authAction)

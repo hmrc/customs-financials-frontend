@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.email.{undeliverable_email, verify_your_email}
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class EmailController @Inject()(authenticate: IdentifierAction,
                                 verifyEmailView: verify_your_email,

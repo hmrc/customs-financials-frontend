@@ -24,8 +24,7 @@ import play.api.test.FakeRequest
 import utils.SpecBase
 import viewmodels.Paginated
 
-import scala.collection.JavaConverters._
-
+import scala.jdk.CollectionConverters._
 object PaginatorElement {
   def apply(e: Element):List[PaginatorElement] = {
     e.select("li").asScala.map( li => {

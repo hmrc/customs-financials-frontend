@@ -17,7 +17,6 @@
 package config
 
 import domain.FileRole
-import play.api.i18n.Lang
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 

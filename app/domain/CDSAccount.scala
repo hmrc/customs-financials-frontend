@@ -16,7 +16,6 @@
 
 package domain
 
-import play.api.i18n.Messages
 import views.helpers.Formatters
 
 trait CDSAccount {
@@ -39,7 +38,7 @@ case class DutyDefermentAccount(number: String,
   def displayBalances(periodAccountLimit: Option[BigDecimal],
                       periodGuaranteeLimit: Option[BigDecimal],
                       periodGuaranteeLimitRemaining: Option[BigDecimal]
-                     )(implicit messages: Messages): Option[DutyDefermentDisplayBalance] = {
+                     ): Option[DutyDefermentDisplayBalance] = {
 
     (periodAccountLimit, periodGuaranteeLimit, periodGuaranteeLimitRemaining) match {
       case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit > 0 && guaranteeLimit > 0 => {

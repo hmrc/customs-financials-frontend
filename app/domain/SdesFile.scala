@@ -127,7 +127,6 @@ object FileRole {
 
   case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
-
   val log: LoggerLike = Logger(this.getClass)
 
   def apply(name: String): FileRole = name match {
@@ -142,7 +141,7 @@ object FileRole {
 
   def unapply(fileRole: FileRole): Option[String] = Some(fileRole.name)
 
-  implicit val fileRoleFormat = new Format[FileRole] {
+  implicit val fileRoleFormat: Format[FileRole] = new Format[FileRole] {
     def reads(json: JsValue) = JsSuccess(apply(json.as[String]))
 
     def writes(obj: FileRole) = JsString(obj.name)
@@ -186,7 +185,7 @@ trait SdesFileMetadata {
   def periodStartMonth: Int
 
   def toMap[T <: SdesFileMetadata with Product]: Map[String, String] = {
-    val fieldNames: Seq[String] = getClass.getDeclaredFields.map(_.getName)
+    val fieldNames: Seq[String] = getClass.getDeclaredFields.toIndexedSeq.map(_.getName)
     val fieldValues: Seq[String] = productIterator.map(_.toString).toSeq
     fieldNames.zip(fieldValues).toMap
   }
@@ -260,13 +259,11 @@ case class SecurityStatementFileMetadata(periodStartYear: Int,
                                          checksum: String,
                                          statementRequestId: Option[String]) extends SdesFileMetadata
 
-
 case class StandingAuthorityMetadata(periodStartYear: Int,
                                      periodStartMonth: Int,
                                      periodStartDay: Int,
                                      fileFormat: FileFormat,
                                      fileRole: FileRole) extends SdesFileMetadata
-
 
 case class StandingAuthorityFile(filename: String,
                                  downloadURL: String,
@@ -279,8 +276,11 @@ case class StandingAuthorityFile(filename: String,
   def compare(that: StandingAuthorityFile): Int = startDate.compareTo(that.startDate)
 }
 
-case class VatCertificateFile(filename: String, downloadURL: String, size: Long, metadata: VatCertificateFileMetadata, eori: String)(implicit messages: Messages)
-  extends Ordered[VatCertificateFile] with SdesFile {
+case class VatCertificateFile(filename: String,
+                              downloadURL: String,
+                              size: Long,
+                              metadata: VatCertificateFileMetadata,
+                              eori: String)(implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
@@ -290,7 +290,11 @@ case class VatCertificateFile(filename: String, downloadURL: String, size: Long,
 
 case class SdesFileWithId[A <: SdesFile](sdesFile: A, id: String)
 
-case class PostponedVatStatementFile(filename: String, downloadURL: String, size: Long, metadata: PostponedVatStatementFileMetadata, eori: String)
+case class PostponedVatStatementFile(filename: String,
+                                     downloadURL: String,
+                                     size: Long,
+                                     metadata: PostponedVatStatementFileMetadata,
+                                     eori: String)
   extends Ordered[PostponedVatStatementFile] with SdesFile {
 
   def compare(that: PostponedVatStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
@@ -300,13 +304,11 @@ case class VatCertificateFileMetadata(periodStartYear: Int,
                                       periodStartMonth: Int,
                                       fileFormat: FileFormat,
                                       fileRole: FileRole,
-                                      statementRequestId: Option[String]) extends SdesFileMetadata {
-}
+                                      statementRequestId: Option[String]) extends SdesFileMetadata
 
 case class PostponedVatStatementFileMetadata(periodStartYear: Int,
                                                periodStartMonth: Int,
                                                fileFormat: FileFormat,
                                                fileRole: FileRole,
                                                source: String,
-                                               statementRequestId: Option[String]) extends SdesFileMetadata {
-}
+                                               statementRequestId: Option[String]) extends SdesFileMetadata
