@@ -521,7 +521,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        html.getElementById("h1") must not be ""
+        html.getElementById("h1") must not be emptyString
       }
     }
   }
