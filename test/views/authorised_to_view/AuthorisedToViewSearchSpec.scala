@@ -39,7 +39,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           Option("url"),
           None,
           date,
-          fileExists = true
+          fileExists = true,
+          isXiEoriEnabled = false
         ).body)
 
       view.title() mustBe "Find accounts you have authority to use - View your customs financial accounts " +
@@ -52,6 +53,27 @@ class AuthorisedToViewSearchSpec extends SpecBase {
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
     }
 
+    "display correct title and XI Eori guidance" in new SetUp {
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option("url"),
+          None,
+          date,
+          fileExists = true,
+          isXiEoriEnabled = true
+        ).body)
+
+      view.title() mustBe "Find accounts you have authority to use - View your customs financial accounts " +
+        "- GOV.UK - View your customs financial accounts - GOV.UK"
+      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
+
+      val liElements: Elements = elements.get(0).getElementsByTag("li")
+
+      liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.xi")
+      liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
+    }
+
     "display correct link for CSV file" in new SetUp {
       val view: Document = Jsoup.parse(
         app.injector.instanceOf[authorised_to_view_search].apply(
@@ -59,7 +81,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           Option("url"),
           None,
           date,
-          fileExists = true
+          fileExists = true,
+          isXiEoriEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -80,7 +103,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           Option(gbAuthUrl),
           None,
           date,
-          fileExists = true
+          fileExists = true,
+          isXiEoriEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -106,7 +130,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           Option(gbAuthUrl),
           Option(xiAuthUrl),
           date,
-          fileExists = true
+          fileExists = true,
+          isXiEoriEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
