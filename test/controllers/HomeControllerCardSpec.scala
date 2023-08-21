@@ -152,10 +152,10 @@ class HomeControllerCardSpec extends SpecBase {
     }
     "show the historic eori duty deferment cards" in {
 
-      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111", AccountStatusOpen, DefermentAccountAvailable,
+      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",false ,AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", AccountStatusOpen, DefermentAccountAvailable,
+      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", false, AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
       val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
@@ -223,6 +223,7 @@ class HomeControllerCardSpec extends SpecBase {
         DutyDefermentAccount(
           Random.alphanumeric.take(8).mkString,
           eoriNumber,
+          false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(
@@ -237,6 +238,7 @@ class HomeControllerCardSpec extends SpecBase {
         DutyDefermentAccount(
           Random.alphanumeric.take(8).mkString,
           Random.alphanumeric.take(8).mkString,
+          false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(

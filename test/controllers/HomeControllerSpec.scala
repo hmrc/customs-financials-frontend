@@ -55,9 +55,17 @@ class HomeControllerSpec extends SpecBase {
       val sessionId = SessionId("session")
       val eoriNumber = newUser(Seq.empty).eori
       val companyName = Some("Company Name 1")
+
       val cdsAccounts = Seq(
-        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan1, eori1, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false))),
-        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan2, eori2, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan1, eori1, false,
+          AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal),
+            Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)),
+          viewBalanceIsGranted = true, isIsleOfMan = false))),
+
+        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan2, eori2, false,
+          AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal),
+            Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)),
+          viewBalanceIsGranted = true, isIsleOfMan = false)))
       )
 
       val newApp = application().build()
@@ -385,12 +393,12 @@ class HomeControllerSpec extends SpecBase {
         DefermentAccountAvailable,
         Some(GeneralGuaranteeBalance(BigDecimal(someGuaranteeLimit), BigDecimal(someAvailableGuaranteeBalance)))
       )
-      val someCashAccount = CashAccount("1000001", eoriNumber, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
+      val someCashAccount = CashAccount("1000001", eoriNumber,AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
           Random.alphanumeric.take(8).mkString,
-          eoriNumber,
+          eoriNumber, false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(
@@ -405,6 +413,7 @@ class HomeControllerSpec extends SpecBase {
         DutyDefermentAccount(
           Random.alphanumeric.take(8).mkString,
           Random.alphanumeric.take(8).mkString,
+          false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(

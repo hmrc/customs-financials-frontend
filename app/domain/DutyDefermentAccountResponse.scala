@@ -18,14 +18,16 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class DutyDefermentAccountResponse(account: AccountResponse, limits: Option[Limits], balances: Option[DefermentBalancesResponse]) {
+case class DutyDefermentAccountResponse(account: AccountResponse, isIomAccount: Boolean = false, isNiAccount: Boolean,
+  limits: Option[Limits], balances: Option[DefermentBalancesResponse]) {
   def toDomain(): domain.DutyDefermentAccount = {
     val balance = domain.DutyDefermentBalance(
       limits.map(limit => BigDecimal(limit.periodGuaranteeLimit)),
       limits.map(limit => BigDecimal(limit.periodAccountLimit)),
       balances.map(balance => BigDecimal(balance.periodAvailableGuaranteeBalance)),
       balances.map(balance => BigDecimal(balance.periodAvailableAccountBalance)))
-    domain.DutyDefermentAccount(account.number,account.owner,account.accountStatus.getOrElse(AccountStatusOpen), account.accountStatusID.getOrElse(DefermentAccountAvailable), balance, account.viewBalanceIsGranted, account.isleOfManFlag.getOrElse(false))
+    domain.DutyDefermentAccount(account.number,account.owner,isNiAccount,account.accountStatus.getOrElse(AccountStatusOpen),
+      account.accountStatusID.getOrElse(DefermentAccountAvailable), balance, account.viewBalanceIsGranted, isIomAccount)
   }
 }
 

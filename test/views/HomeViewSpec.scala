@@ -125,13 +125,23 @@ class HomeViewSpec extends SpecBase {
     def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
-        DutyDefermentAccount(dan2, eori1, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, false, AccountStatusOpen,
+        DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
+          Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
+
+        DutyDefermentAccount(dan2, eori1, false, AccountStatusOpen, DefermentAccountAvailable,
+          DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
+            Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
     )
 
     val accountsWithNoAgent: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
-        DutyDefermentAccount(dan2, eori, AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, false, AccountStatusOpen,
+        DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
+          Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
+
+        DutyDefermentAccount(dan2, eori, false, AccountStatusOpen, DefermentAccountAvailable,
+          DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
+            Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
     )
 
     val accountLinks = Seq(AccountLink(sessionId = "sessionId", eori, false, accountNumber = dan1, linkId = "linkId", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now()))
