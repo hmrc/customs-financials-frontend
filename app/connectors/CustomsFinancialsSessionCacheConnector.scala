@@ -18,17 +18,15 @@ package connectors
 
 import config.AppConfig
 import domain.{AccountLink, AccountLinkWithoutDate, SessionCacheAccountLink}
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import play.api.libs.json.{Json, OFormat}
 import services.MetricsReporterService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import javax.inject.Inject
-import play.api.libs.json.Format.GenericFormat
-import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import uk.gov.hmrc.http.HttpReadsInstances.readFromJson
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-
 case class AccountLinksRequest(sessionId: String,
                                accountLinks: Seq[SessionCacheAccountLink])
 

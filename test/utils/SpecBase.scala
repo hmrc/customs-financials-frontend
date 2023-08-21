@@ -39,8 +39,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import scala.annotation.implicitNotFound
-import scala.collection.JavaConverters.asScalaBufferConverter
 import scala.reflect.ClassTag
+import scala.jdk.CollectionConverters._
 
 class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry

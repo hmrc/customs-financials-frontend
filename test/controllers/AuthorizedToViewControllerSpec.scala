@@ -146,8 +146,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
       val filesseperated = filesWithNames.map(x => x.split("_")(1))
 
-      val filesSorted = filesseperated.sortWith(_ < _).headOption
-
       filesseperated.sortWith(_ < _).headOption
 
       running(app) {
@@ -376,7 +374,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
         val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -524,6 +521,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+        html.getElementById("h1") must not be emptyString
       }
     }
   }

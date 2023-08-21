@@ -28,13 +28,13 @@ import play.api.i18n.Messages
 import play.api.inject
 import play.api.test.Helpers
 import play.api.test.Helpers._
-import services.{ApiService, DataStoreService, Notification, NotificationService, XiEoriInformationReponse}
+import services._
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{GatewayTimeoutException, HttpResponse, InternalServerException, SessionId}
 import utils.SpecBase
 import viewmodels.FinancialsHomeModel
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
 import scala.util.Random
 
@@ -76,8 +76,8 @@ class HomeControllerSpec extends SpecBase {
         val accountLinks = controller.createAccountLinks(sessionId, cdsAccounts)
         val model = FinancialsHomeModel(eoriNumber, companyName, cdsAccounts, notificationMessageKeys = List(), accountLinks, None)
 
-        model.dutyDefermentAccountDetailsLinks()(appConfig)(eori1, dan1)
-        model.dutyDefermentAccountDetailsLinks()(appConfig)(eori2, dan2)
+        model.dutyDefermentAccountDetailsLinks()(appConfig)((eori1, dan1))
+        model.dutyDefermentAccountDetailsLinks()(appConfig)((eori2, dan2))
       }
     }
   }

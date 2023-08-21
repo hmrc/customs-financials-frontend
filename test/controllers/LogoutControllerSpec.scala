@@ -17,15 +17,9 @@
 package controllers
 
 import connectors.CustomsFinancialsSessionCacheConnector
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
-import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
-
-import scala.concurrent.Future
 
 /*
 * This test case is commenting for time being, it will be reuse in furtherly
