@@ -37,7 +37,8 @@
     gbAuthCsvUrl: Option[String] = None,
     xiAuthCsvUrl: Option[String] = None,
     date: String,
-    fileExists: Boolean
+    fileExists: Boolean,
+    isXiEoriEnabled: Boolean
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
@@ -53,7 +54,11 @@
         @p("cf.search.authorities.p")
 
         <ul class="govuk-list govuk-list--bullet">
-            <li>@messages("cf.search.authorities.eori")</li>
+            @if(isXiEoriEnabled) {
+                <li>@messages("cf.search.authorities.eori.xi")</li>
+            }else{
+                <li>@messages("cf.search.authorities.eori")</li>
+            }
             <li>@messages("cf.search.authorities.account")</li>
         </ul>
 

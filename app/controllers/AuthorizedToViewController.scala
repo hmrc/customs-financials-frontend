@@ -69,8 +69,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
       val date = Formatters.dateAsDayMonthAndYear(
         Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+      val isXiEoriEnabled = appConfig.xiEoriEnabled
 
-      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists))
+      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
     }
   }
 
@@ -88,8 +89,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
           val date = Formatters.dateAsDayMonthAndYear(
             Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          val isXiEoriEnabled = appConfig.xiEoriEnabled
 
-          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists))
+          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
         },
       query => processSearchQuery(request, query)
     )
@@ -142,7 +144,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       None,
       None,
       LocalDate.now.toString,
-      fileExists = false)(request, messages, appConfig)))
+      fileExists = false,
+      isXiEoriEnabled = false)(request, messages, appConfig)))
 
   /**
    * Search and processes the Authorities for the valid input, further, displays the view accordingly

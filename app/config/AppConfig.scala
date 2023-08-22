@@ -32,6 +32,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
 
   lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
   lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
+  lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
   lazy val sessionCacheExpiryInSeconds: Int = config.get[Int]("microservice.services.customs-financials-frontend.sessionCache.expirySeconds")
   lazy val serviceNameSdes: String = config.get[String]("microservice.services.sdes.circuit-breaker.serviceName")
   lazy val numberOfCallsToSwitchCircuitBreakerSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.numberOfCallsToTriggerStateChange")
