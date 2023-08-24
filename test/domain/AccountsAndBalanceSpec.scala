@@ -50,7 +50,7 @@ class AccountsAndBalanceSpec extends SpecBase  {
         val account = Json.parse(json).as[AccountResponse]
 
         val expectedAccount = AccountResponse("123456",
-          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None)
+          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
         account mustBe expectedAccount
       }
     }
@@ -65,7 +65,7 @@ class AccountsAndBalanceSpec extends SpecBase  {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None)
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
       account mustBe expectedAccount
     }
 
@@ -80,7 +80,7 @@ class AccountsAndBalanceSpec extends SpecBase  {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true , accountStatusID = None)
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true , accountStatusID = None, isleOfManFlag = Some(true))
       account mustBe expectedAccount
     }
 

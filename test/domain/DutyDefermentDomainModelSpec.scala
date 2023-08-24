@@ -35,7 +35,7 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
       val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", false, AccountStatusOpen,
         DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
       val account = AccountResponse("1231231231", "", "EORI12345678",accountStatus = None, None, viewBalanceIsGranted = false)
-      val dda = DDA(account, false, false, Some(Limits("200", "100")), Some(Bal("50", "20")))
+      val dda = DDA(account, Some(false), false, Some(Limits("200", "100")), Some(Bal("50", "20")))
 
       statusList.foreach { case(status) => {
         val dd = dda.copy(account = account.copy(accountStatus = status))
@@ -50,11 +50,11 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
         Some(false),
         None
       )
-      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None, accountStatusID = None, viewBalanceIsGranted = false)
-      val dda = DDA(account, isIomAccount = iomList.nonEmpty, isNiAccount = false, Some(Limits("200", "100")), Some(Bal("50", "20")))
+      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None, accountStatusID = None, viewBalanceIsGranted = false, isleOfManFlag = None)
+      val dda = DDA(account, isIomAccount = Some(iomList.nonEmpty), isNiAccount = false, Some(Limits("200", "100")), Some(Bal("50", "20")))
 
       iomList.foreach { case(iom) => {
-        val dd = dda.copy(isIomAccount = iom.getOrElse(false))
+        val dd = dda.copy(isIomAccount = Some(iom.getOrElse(false)))
         dd.toDomain().isIsleOfMan mustBe iom.getOrElse(false)
         }
       }
