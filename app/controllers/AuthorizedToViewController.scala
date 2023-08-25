@@ -59,7 +59,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
     for {
-      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile(req.user.eori)
+      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile()
     } yield {
       val viewModel = csvFiles
       val fileExists = csvFiles.nonEmpty
@@ -79,7 +79,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     form.bindFromRequest().fold(
       formWithErrors =>
         for {
-          csvFiles <- getCsvFile(request.user.eori)
+          csvFiles <- getCsvFile()
         } yield {
           val viewModel = csvFiles
           val fileExists = csvFiles.nonEmpty
@@ -106,18 +106,25 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     val result = for {
       cdsAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
+      csvFiles <- getCsvFile()(request)
     } yield {
       val isMyAcc = cdsAccounts.myAccounts.exists(_.number == query)
+      val viewModel = csvFiles
+      val fileExists = csvFiles.nonEmpty
+      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+
+      val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
 
       (request.user.eori, isMyAcc, xiEORI) match {
         case (eori, _, _) if eori.equalsIgnoreCase(query) =>
-          displayErrorView(query,"cf.account.authorized-to-view.search-own-eori")(
+          displayErrorView(query,"cf.account.authorized-to-view.search-own-eori", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case (_, true, _) =>
-          displayErrorView(query,"cf.account.authorized-to-view.search-own-accountnumber")(
+          displayErrorView(query,"cf.account.authorized-to-view.search-own-accountnumber", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
-          displayErrorView(query,"cf.search.authorities.error.register-xi-eori")(
+          displayErrorView(query,"cf.search.authorities.error.register-xi-eori", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case _ =>
           if(xiEORI.nonEmpty) {
@@ -135,17 +142,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
    * relevant message key
    */
   private def displayErrorView(query: EORI,
-                               msgKey: String)(
+                               msgKey: String,
+                               fileExists: Boolean,
+                               gbAuthUrl: Option[String],
+                               xiAuthUrl: Option[String])(
                                 implicit request: Request[_],
                                 messages: Messages,
                                 appConfig: AppConfig): Future[Result] =
     Future.successful(BadRequest(authorisedToViewSearch(
       form.withError("value", msgKey).fill(query),
-      None,
-      None,
+      gbAuthUrl,
+      xiAuthUrl,
       LocalDate.now.toString,
-      fileExists = false,
-      isXiEoriEnabled = false)(request, messages, appConfig)))
+      fileExists,
+      appConfig.xiEoriEnabled)(request, messages, appConfig)))
 
   /**
    * Search and processes the Authorities for the valid input, further, displays the view accordingly
@@ -268,8 +278,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     if (listOfEligibleAuthorities.isEmpty) gbAuthorities else listOfEligibleAuthorities.head
   }
 
-  private def getCsvFile(eori: String)(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
-    sdesConnector.getAuthoritiesCsvFiles(eori)
+  private def getCsvFile()(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
+    sdesConnector.getAuthoritiesCsvFiles(req.user.eori)
       .map(_.sortWith(_.startDate isAfter _.startDate).sortBy(_.filename).toSeq.sortWith(_.filename > _.filename))
   }
 

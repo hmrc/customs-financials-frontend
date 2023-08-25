@@ -476,6 +476,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "Display error message if searching your own EORI number" in new Setup {
+      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
+
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
@@ -486,6 +489,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe BAD_REQUEST
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
     }
