@@ -41,7 +41,7 @@ class UnauthorisedControllerSpec extends SpecBase {
         val result = route(app, request).value
         status(result) mustBe OK
         val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByTag("h1").text mustBe "To continue with this you need to get access to Customs Declaration Services (CDS)"
+        html.getElementsByTag("h1").text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
       }
     }
 

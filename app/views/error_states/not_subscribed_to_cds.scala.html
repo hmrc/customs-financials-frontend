@@ -14,17 +14,15 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
-@import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
 @import views.html.Layout
 
 
 @this(
         layout: Layout,
-        newTabLink: components.newTabLink,
         h1: components.h1,
         h2: components.h2,
-        p: components.p
+        p: components.p,
+        link: components.link
 )
 
 
@@ -32,8 +30,15 @@
 
 @layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
     @h1("cf.not-subscribed-to-cds.detail.heading",id = None, classes = "govuk-heading-l")
-    @h2("cf.not-subscribed-to-cds.detail.how-to-get-access-info", id = None)
-    @newTabLink("cf.not-subscribed-to-cds.detail.eori-link", appConfig.registerCdsUrl, preLinkMessage = Some("cf.not-subscribed-to-cds.detail.eori-info"))
-    @newTabLink("cf.not-subscribed-to-cds.detail.get-access-link", appConfig.subscribeCdsUrl, preLinkMessage = Some("cf.not-subscribed-to-cds.detail.get-access-info"))
-    @p("cf.not-subscribed-to-cds.detail.process-application-info")
+    @h2("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds", id = None)
+    @p("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds-guidance-text")
+    @h2("cf.not-subscribed-to-cds.detail.subscribe-cds.title")
+    <p class="govuk-body govuk-!-margin-bottom-7">
+        @link(
+            "cf.not-subscribed-to-cds.detail.subscribe-cds.link",
+            appConfig.subscribeCdsUrl,
+            linkId = Some("subscribe-cds-link"),
+            pWrapped = false
+        )
+    </p>
 }

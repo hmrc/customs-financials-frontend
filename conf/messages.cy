@@ -131,13 +131,15 @@ cf.account.authorized-to-view.search-own-accountnumber = Ni allwch chwilio am ri
 
 # Not subscribed to CDS
 cf.not-subscribed-to-cds.detail.title=Heb gofrestru â’r Gwasanaeth Datgan Tollau
-cf.not-subscribed-to-cds.detail.heading=Er mwyn mynd yn eich blaen, mae angen i chi gael mynediad at y Gwasanaeth Datgan Tollau (CDS)
+cf.not-subscribed-to-cds.detail.heading=I fynd yn eich blaen, mae angen i chi danysgrifio i’r Gwasanaeth Datganiadau Tollau (CDS)
 cf.not-subscribed-to-cds.detail.eori-info=Bydd angen y canlynol arnoch:
 cf.not-subscribed-to-cds.detail.eori-link=Rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) (yn agor ffenestr neu dab newydd).
 cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, gallwch
 cf.not-subscribed-to-cds.detail.get-access-link=cael mynediad at CDS (yn agor ffenestr neu dab newydd).
-cf.not-subscribed-to-cds.detail.how-to-get-access-info=Sut i gael mynediad at CDS
-cf.not-subscribed-to-cds.detail.process-application-info=Gall gymryd hyd at awr i CThEM brosesu’ch cais.
+cf.not-subscribed-to-cds.detail.already-subscribed-to-cds=Os ydych eisoes wedi tanysgrifio i’r CDS
+cf.not-subscribed-to-cds.detail.already-subscribed-to-cds-guidance-text=Gwiriwch eich bod wedi mewngofnodi gyda’r Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth sy’n gysylltiedig â’ch Rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) a’ch cyfrif CDS.
+cf.not-subscribed-to-cds.detail.subscribe-cds.title=Tanysgrifio i’r CDS
+cf.not-subscribed-to-cds.detail.subscribe-cds.link=Tanysgrifio i’r Gwasanaeth Datganiadau Tollau.
 
 # Customs Financials Home Page
 cf.customs-financials-home.title=Eich cyfrifon ariannol ar gyfer y tollau
