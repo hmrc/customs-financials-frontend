@@ -36,7 +36,7 @@ class NotSubscribedToCdsViewSpec extends SpecBase {
 
     "display page heading" in new Setup{
       running(app) {
-        view.getElementsByTag("h1").text mustBe "To continue with this you need to get access to Customs Declaration Services (CDS)"
+        view.getElementsByTag("h1").text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
       }
     }
 
