@@ -523,8 +523,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "Display error message if searching your own account number" in new Setup {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
-      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
-      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any)).thenReturn(Future.successful(xiCdsAccounts))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+        .thenReturn(Future.successful(cdsAccounts))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
+        .thenReturn(Future.successful(xiCdsAccounts))
 
       running(app) {
         val request = fakeRequest(POST,
@@ -539,9 +541,12 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "Display error message if searching your own XI DD account number" in new Setup {
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789012")))
-      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
-      when(mockApiService.getAccounts(ArgumentMatchers.eq("XI123456789012"))(any)).thenReturn(Future.successful(xiCdsAccounts))
+      when(mockDataStoreService.getXiEori(any)(any))
+        .thenReturn(Future.successful(Some("XI123456789012")))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+        .thenReturn(Future.successful(cdsAccounts))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq("XI123456789012"))(any))
+        .thenReturn(Future.successful(xiCdsAccounts))
 
       running(app) {
         val request = fakeRequest(POST,
@@ -637,10 +642,14 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSdesConnector: SdesConnector = mock[SdesConnector]
 
-    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
-    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any)).thenReturn(Future.successful(xiCdsAccounts))
-    when(mockApiService.getAccounts(ArgumentMatchers.anyString())(any)).thenReturn(Future.successful(emptyCdsAccounts))
-    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+      .thenReturn(Future.successful(cdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
+      .thenReturn(Future.successful(xiCdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.anyString())(any))
+      .thenReturn(Future.successful(emptyCdsAccounts))
+    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any))
+      .thenReturn(Future.successful(Seq.empty))
 
     val app = application()
       .overrides(
