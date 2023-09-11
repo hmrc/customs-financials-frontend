@@ -104,11 +104,13 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     val searchQuery = stripWithWhitespace(query)
 
     val result = for {
-      cdsAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
+      gbEoriAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
+      xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
       csvFiles <- getCsvFile()(request)
     } yield {
-      val isMyAcc = cdsAccounts.myAccounts.exists(_.number == query)
+      val isMyAcc = gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
+
       val viewModel = csvFiles
       val fileExists = csvFiles.nonEmpty
       val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
@@ -117,7 +119,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
 
       (request.user.eori, isMyAcc, xiEORI) match {
-        case (eori, _, _) if eori.equalsIgnoreCase(query) =>
+        case (eori, _, _) if eori.equalsIgnoreCase(query) || (xiEORI.isDefined && xiEORI.get.equalsIgnoreCase(query)) =>
           displayErrorView(query,"cf.account.authorized-to-view.search-own-eori", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case (_, true, _) =>
@@ -135,6 +137,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       }
     }
     result.flatten
+  }
+
+  private def getXiEoriCdsAccounts(request: AuthenticatedRequest[AnyContent], xiEORI: Option[String])
+                                  (implicit hc: HeaderCarrier) = {
+    xiEORI match {
+      case Some(x) => apiService.getAccounts(x)
+      case None => Future.successful(CDSAccounts(request.user.eori, None, Seq.empty[CDSAccount]))
+    }
   }
 
   /**

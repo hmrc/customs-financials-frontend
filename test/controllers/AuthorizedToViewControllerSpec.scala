@@ -498,13 +498,60 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       }
     }
 
+    "Display error message if searching your own XI EORI number" in new Setup {
+      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> "XI123456789912")
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+
+        html.getElementById("gb-csv-authority-link").html() mustBe
+          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+
+        html.text().contains("You cannot search your own EORI number") shouldBe true
+      }
+    }
+
     "Display error message if searching your own account number" in new Setup {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+        .thenReturn(Future.successful(cdsAccounts))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
+        .thenReturn(Future.successful(xiCdsAccounts))
 
       running(app) {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
           "value" -> accounts.map(_.number).head)
+
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe BAD_REQUEST
+        html.text().contains("You cannot search your own account number") shouldBe true
+      }
+    }
+
+    "Display error message if searching your own XI DD account number" in new Setup {
+      when(mockDataStoreService.getXiEori(any)(any))
+        .thenReturn(Future.successful(Some("XI123456789012")))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+        .thenReturn(Future.successful(cdsAccounts))
+      when(mockApiService.getAccounts(ArgumentMatchers.eq("XI123456789012"))(any))
+        .thenReturn(Future.successful(xiCdsAccounts))
+
+      running(app) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> xiAccounts.map(_.number).head)
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -552,6 +599,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
+    val xiDd = DutyDefermentAccount("1231231000", newUser().xiEori.get, true, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+
     val cashAccount1 = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(100))))
     val cashAccount2 = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(None))
 
@@ -561,7 +612,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val ggAccount2 = GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
 
     val accounts = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
+    val xiAccounts = List(xiDd)
+
     val cdsAccounts = CDSAccounts(newUser().eori, None, accounts)
+    val xiCdsAccounts = CDSAccounts(newUser().xiEori.get, None, xiAccounts)
+    val emptyCdsAccounts = CDSAccounts(newUser().eori, None, List())
 
     val gbEORI = "GB123456789012"
     val xiEORI = "XI123456789012"
@@ -587,8 +642,14 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSdesConnector: SdesConnector = mock[SdesConnector]
 
-    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
-    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+      .thenReturn(Future.successful(cdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
+      .thenReturn(Future.successful(xiCdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.anyString())(any))
+      .thenReturn(Future.successful(emptyCdsAccounts))
+    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any))
+      .thenReturn(Future.successful(Seq.empty))
 
     val app = application()
       .overrides(
