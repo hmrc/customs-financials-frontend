@@ -107,10 +107,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       gbEoriAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
 
-      xiEoriAccounts: CDSAccounts <- xiEORI match {
-        case Some(x) => apiService.getAccounts(x)
-        case None    => Future.successful(CDSAccounts(request.user.eori, None, Seq.empty[CDSAccount]))
-      }
+      xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
+
       csvFiles <- getCsvFile()(request)
     } yield {
       val isMyAcc = gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
@@ -141,6 +139,14 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       }
     }
     result.flatten
+  }
+
+  private def getXiEoriCdsAccounts(request: AuthenticatedRequest[AnyContent], xiEORI: Option[String])
+                                  (implicit hc: HeaderCarrier) = {
+    xiEORI match {
+      case Some(x) => apiService.getAccounts(x)
+      case None => Future.successful(CDSAccounts(request.user.eori, None, Seq.empty[CDSAccount]))
+    }
   }
 
   /**
