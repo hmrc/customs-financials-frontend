@@ -106,9 +106,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     val result = for {
       gbEoriAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
-
       xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
-
       csvFiles <- getCsvFile()(request)
     } yield {
       val isMyAcc = gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
