@@ -427,7 +427,7 @@ class HomeControllerSpec extends SpecBase {
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
     }
 
-    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+    val add = XiEoriAddressInformation("",Some(""),None,None,Some(""))
     val xi = XiEoriInformationReponse("Some XiEori","yes", add)
 
     val mockAccounts = mock[CDSAccounts]
@@ -446,7 +446,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xieori)))
 
     val app = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),
