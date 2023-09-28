@@ -83,7 +83,7 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
       http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
-        response => if (response.xieori.isEmpty) None else Some(response.xieori))
+        response => if (response.xiEori.isEmpty) None else Some(response.xiEori))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
@@ -119,7 +119,7 @@ object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]
 }
 
-case class XiEoriInformationReponse(xieori: String, consent: String, address: XiEoriAddressInformation)
+case class XiEoriInformationReponse(xiEori: String, consent: String, address: XiEoriAddressInformation)
 
 object XiEoriInformationReponse {
   implicit val format: OFormat[XiEoriInformationReponse] = Json.format[XiEoriInformationReponse]

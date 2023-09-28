@@ -446,7 +446,7 @@ class HomeControllerSpec extends SpecBase {
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xieori)))
+    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
     val app = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),
