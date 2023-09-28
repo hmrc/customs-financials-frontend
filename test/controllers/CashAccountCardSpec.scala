@@ -62,8 +62,8 @@ class CashAccountCardSpec extends SpecBase {
       CDSCashBalance(Some(BigDecimal(someAvailableCashBalance)))
     )
 
-    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
-    val xi = XiEoriInformationReponse("SomeXiEori","yes", add)
+    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val xi = XiEoriInformationReponse("SomeXiEori", "yes", add)
 
     val mockAccounts = mock[CDSAccounts]
     val mockApiService = mock[ApiService]

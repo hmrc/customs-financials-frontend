@@ -427,8 +427,8 @@ class HomeControllerSpec extends SpecBase {
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
     }
 
-    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
-    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
 
     val mockAccounts = mock[CDSAccounts]
     val mockApiService = mock[ApiService]

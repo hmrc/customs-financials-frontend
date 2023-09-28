@@ -233,7 +233,7 @@ class DataStoreServiceSpec extends SpecBase {
     "XiEori" should {
       "return xi eori" in new Setup {
         val xiEori = "XI123456789"
-        val xiAddress = XiEoriAddressInformation("Street1", None, "City", "GB", Some("Post Code"))
+        val xiAddress = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
         when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))
           .thenReturn(Future.successful(xiEoriResponse))
@@ -257,7 +257,7 @@ class DataStoreServiceSpec extends SpecBase {
       "return None when retunred xi Eori is empty" in new Setup {
         val xiEori: String = emptyString
         val xiAddress: XiEoriAddressInformation =
-          XiEoriAddressInformation("Street1", None, "City", "GB", Some("Post Code"))
+          XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
         when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))

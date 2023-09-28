@@ -157,8 +157,8 @@ class HomeControllerCardSpec extends SpecBase {
       val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", false, AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-      val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
-      val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+      val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+      val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
 
       val mockAccounts = mock[CDSAccounts]
       val mockApiService = mock[ApiService]
@@ -262,7 +262,7 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
 
-    val add = XiEoriAddressInformation("",Some(""),"","",Some(""))
+    val add = XiEoriAddressInformation("",Some(""),None,None,Some(""))
     val xi = XiEoriInformationReponse("Some XiEori","yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
