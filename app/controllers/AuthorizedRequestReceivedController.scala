@@ -44,6 +44,7 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
 
   def requestAuthoritiesCsv(): Action[AnyContent] = authenticate async { implicit req =>
 
+
     customsDataStore.getEmail(req.user.eori).flatMap {
       case Right(email) =>
         apiService.requestAuthoritiesCsv(req.user.eori, req.user.xiEori).flatMap {
