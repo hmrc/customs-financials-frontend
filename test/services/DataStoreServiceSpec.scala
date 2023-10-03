@@ -16,6 +16,7 @@
 
 package services
 
+import config.AppConfig
 import domain.{CompanyAddress, EoriHistory, UnverifiedEmail, XiEoriAddressInformation}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
@@ -268,6 +269,41 @@ class DataStoreServiceSpec extends SpecBase {
           val result = await(response)
           result mustBe None
         }
+      }
+
+      "return None when feature flag is false" in {
+        val mockMetricsReporterService = mock[MetricsReporterService]
+        val mockHttp = mock[HttpClient]
+        val mockAppConfig = mock[AppConfig]
+        implicit val hc: HeaderCarrier = HeaderCarrier()
+        val eori = "GB11111"
+        val xiEori = "XI123456789"
+        val xiAddress = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
+        val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
+
+        when[Future[XiEoriInformationReponse]](mockHttp.GET(any, any, any)(any, any, any))
+          .thenReturn(Future.successful(xiEoriResponse))
+
+        when(mockMetricsReporterService.withResponseTimeLogging[Seq[EoriHistory]](any)(any)(any))
+          .thenAnswer((i: InvocationOnMock) => {
+            i.getArgument[Future[Seq[EoriHistory]]](1)
+          })
+
+        when(mockAppConfig.customsDataStore)
+          .thenReturn("test/value")
+        when(mockAppConfig.xiEoriEnabled)
+          .thenReturn(false)
+
+        val app = application().overrides(
+          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[AppConfig].toInstance(mockAppConfig)
+        ).build()
+        val service = app.injector.instanceOf[DataStoreService]
+
+        val response = service.getXiEori(eori)
+        val result = await(response)
+        result mustBe None
       }
     }
   }
