@@ -64,7 +64,6 @@ val testDependencies = Seq(
   "com.typesafe.play" %% "play-test" % current % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % "test, it",
   "org.mockito" %% "mockito-scala-scalatest" % "1.17.14" % "test, it",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.23.0-play-28" % Test,
   "uk.gov.hmrc" %% "tax-year" % "3.3.0" % Test
 )
 
