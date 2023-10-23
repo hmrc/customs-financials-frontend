@@ -38,5 +38,4 @@ class ServiceSpec extends SpecBase {
       service.toString shouldEqual expectedUrl
     }
 
- 
 }
