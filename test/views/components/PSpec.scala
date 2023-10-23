@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
-import play.twirl.api.{HtmlFormat,Html}
+import play.twirl.api.{HtmlFormat}
 import utils.SpecBase
 import views.html.components.p
 
@@ -35,7 +35,7 @@ class PSpec extends SpecBase {
                 )(messages(app))
                 val html: Document = Jsoup.parse(contentAsString(output))
 
-                html.getElementsByTag("p").attr("class") must include("govuk-body")    
+                html.getElementsByTag("p").attr("class") must include("govuk-body")
             }
         }
 
@@ -48,7 +48,7 @@ class PSpec extends SpecBase {
                 )(messages(app))
                 val html: Document = Jsoup.parse(contentAsString(output))
 
-                html.getElementsByClass("custom-class").text() must include("Hello, world!")    
+                html.getElementsByClass("custom-class").text() must include("Hello, world!")
             }
         }
 
