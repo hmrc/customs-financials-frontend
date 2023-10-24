@@ -31,4 +31,17 @@ class DateTimeServiceSpec extends SpecBase {
       service.systemDateTime() mustBe LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12, 30))
     }
   }
+
+  "return local time .now if fixedDateTime is disabled" in {
+    val app = application().configure("features.fixed-system-time" -> false).build()
+    val service = app.injector.instanceOf[DateTimeService]
+
+    val mockClock = mock[DateTimeService]
+    def now = LocalDateTime.now()
+    when(mockClock.systemDateTime()).thenReturn(now)
+
+    running(app) {
+      service.systemDateTime().withNano(0) mustBe now.withNano(0)
+    }
+  }
 }
