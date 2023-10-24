@@ -26,8 +26,8 @@ import utils.SpecBase
 import views.html.components.progress_bar
 
 class ProgressBarSpec extends SpecBase {
-    "P component" should {
-        "render the default class name when classes is not defined" in new Setup {
+    "ProgressBar" should {
+        "should generate correct HTML" in new Setup {
             running(app) {
                 val view = app.injector.instanceOf[progress_bar]
                 val output: HtmlFormat.Appendable = view(
