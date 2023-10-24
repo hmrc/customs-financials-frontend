@@ -21,6 +21,7 @@ import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
+import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.test.Helpers.stubMessages
 import utils.SpecBase
 import views.helpers.Formatters
@@ -38,8 +39,8 @@ class SdesFileSpec extends SpecBase {
       val pdf = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Pdf))
       val csv = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Csv))
 
-      List(csv,pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
-      List(pdf,csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
+      List(csv, pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
+      List(pdf, csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
     }
   }
 
@@ -58,7 +59,49 @@ class SdesFileSpec extends SpecBase {
     }
 
     "return correct output for unapply method" in new Setup {
-      FileRole.unapply(FileRole("DutyDefermentStatement")) mustBe Some("DutyDefermentStatement")
+      val fileRoleName: String = FileRole("DutyDefermentStatement") match {
+        case FileRole(name) => name
+        case _ => emptyString
+      }
+
+      fileRoleName mustBe "DutyDefermentStatement"
+    }
+
+    "return correct output for Reads" in new Setup {
+
+      import domain.FileRole.fileRoleFormat
+
+      Json.fromJson(JsString("C79Certificate")) mustBe JsSuccess(FileRole("C79Certificate"))
+      Json.fromJson(JsString("DutyDefermentStatement")) mustBe JsSuccess(FileRole("DutyDefermentStatement"))
+      Json.fromJson(JsString("PostponedVATStatement")) mustBe JsSuccess(FileRole("PostponedVATStatement"))
+      Json.fromJson(JsString("PostponedVATAmendedStatement")) mustBe JsSuccess(FileRole("PostponedVATAmendedStatement"))
+      Json.fromJson(JsString("SecurityStatement")) mustBe JsSuccess(FileRole("SecurityStatement"))
+      Json.fromJson(JsString("StandingAuthority")) mustBe JsSuccess(FileRole("StandingAuthority"))
+    }
+
+    "return correct output for Writes" in new Setup {
+      Json.toJson(FileRole("C79Certificate")) mustBe JsString("C79Certificate")
+    }
+
+    "bind correct value for pathBinder" in {
+      import domain.FileRole.pathBinder
+
+      pathBinder.bind(emptyString, "import-vat") mustBe Right(C79Certificate)
+      pathBinder.bind(emptyString, "postponed-vat") mustBe Right(PostponedVATStatement)
+      pathBinder.bind(emptyString, "duty-deferment") mustBe Right(DutyDefermentStatement)
+      pathBinder.bind(emptyString, "adjustments") mustBe Right(SecurityStatement)
+      pathBinder.bind(emptyString, "authorities") mustBe Right(StandingAuthority)
+      pathBinder.bind(emptyString, "unknown") mustBe Left(s"unknown file role: unknown")
+    }
+
+    "unbind correct value for pathBinder" in {
+      import domain.FileRole.pathBinder
+
+      pathBinder.unbind(emptyString, C79Certificate) mustBe "import-vat"
+      pathBinder.unbind(emptyString, PostponedVATStatement) mustBe "postponed-vat"
+      pathBinder.unbind(emptyString, DutyDefermentStatement) mustBe "duty-deferment"
+      pathBinder.unbind(emptyString, SecurityStatement) mustBe "adjustments"
+      pathBinder.unbind(emptyString, StandingAuthority) mustBe "authorities"
     }
   }
 
@@ -71,7 +114,12 @@ class SdesFileSpec extends SpecBase {
     }
 
     "return correct value for unapply method" in new Setup {
-      DDStatementType.unapply(DDStatementType("Excise")) mustBe Some("Excise")
+      val exciseTypeName: String = DDStatementType("Excise") match {
+        case DDStatementType(name) => name
+        case _ => emptyString
+      }
+
+      exciseTypeName mustBe "Excise"
     }
 
     "provide correct output while comparing" in new Setup {
@@ -110,14 +158,18 @@ class SdesFileSpec extends SpecBase {
     }
 
     "return correct value for unapply method" in new Setup {
-      FileFormat.unapply(FileFormat("PDF")) mustBe Some("PDF")
+      val pdfFileFormatName: String = FileFormat("PDF") match {
+        case FileFormat(name) => name
+        case _ => emptyString
+      }
+
+      pdfFileFormatName mustBe "PDF"
     }
   }
 
   "VatCertificateFile" should {
     "return correct output for formattedSize" in new Setup {
       vatCertFile.formattedSize mustBe Formatters.fileSize(2164L)
-
     }
 
     "return correct output for formattedMonth" in new Setup {
@@ -142,6 +194,7 @@ class SdesFileSpec extends SpecBase {
       "test_eori")
 
     def randomInt(limit: Int) = Random.nextInt(limit)
+
     def randomString(length: Int): String = Random.alphanumeric.take(length).mkString
 
     def randomDutyDefermentStatementFile(size: Long): DutyDefermentStatementFile = DutyDefermentStatementFile(
