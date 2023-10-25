@@ -1,0 +1,46 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package domain
+
+import play.api.libs.json._
+import utils.SpecBase
+
+class AccountLinkWithoutDateSpec extends SpecBase {
+
+  "AccountLinkWithoutDate" should {
+    "be serializable and deserializable to/from JSON" in {
+      val accountLinkWithoutDate = AccountLinkWithoutDate("EORI123456", isNiAccount = true, "123456", "Active", Some(1), "linkId123")
+
+      // Serialize the AccountLinkWithoutDate object to JSON
+      val jsonAccountLinkWithoutDate: JsValue = Json.toJson(accountLinkWithoutDate)
+
+      // Verify the JSON structure and values
+      (jsonAccountLinkWithoutDate \ "eori").as[String] shouldBe "EORI123456"
+      (jsonAccountLinkWithoutDate \ "isNiAccount").as[Boolean] shouldBe true
+      (jsonAccountLinkWithoutDate \ "accountNumber").as[String] shouldBe "123456"
+      (jsonAccountLinkWithoutDate \ "accountStatus").as[String] shouldBe "Active"
+      (jsonAccountLinkWithoutDate \ "accountStatusId").asOpt[Int] shouldBe Some(1)
+      (jsonAccountLinkWithoutDate \ "linkId").as[String] shouldBe "linkId123"
+
+      // Deserialize the JSON back to AccountLinkWithoutDate object
+      val parsedAccountLinkWithoutDate = jsonAccountLinkWithoutDate.as[AccountLinkWithoutDate]
+
+      // Verify the deserialized AccountLinkWithoutDate object
+      parsedAccountLinkWithoutDate shouldBe accountLinkWithoutDate
+    }
+  }
+}

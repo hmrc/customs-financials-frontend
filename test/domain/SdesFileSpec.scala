@@ -16,12 +16,17 @@
 
 package domain
 
-import domain.DDStatementType.Weekly
-import domain.FileFormat.{Csv, Pdf}
-import domain.FileRole.DutyDefermentStatement
+import domain.DDStatementType.{Excise, Supplementary, UnknownStatementType, Weekly}
+import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
+import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.i18n.Messages
+import play.api.libs.json.{JsString, JsSuccess, Json}
+import play.api.test.Helpers.stubMessages
 import utils.SpecBase
+import views.helpers.Formatters
 
+import java.time.LocalDate
 import scala.util.Random
 
 class SdesFileSpec extends SpecBase {
@@ -34,14 +39,162 @@ class SdesFileSpec extends SpecBase {
       val pdf = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Pdf))
       val csv = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Csv))
 
-      List(csv,pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
-      List(pdf,csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
+      List(csv, pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
+      List(pdf, csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
+    }
+  }
+
+  "FileRole" should {
+    "return correct output for apply method" in new Setup {
+      FileRole("DutyDefermentStatement") mustBe DutyDefermentStatement
+      FileRole("C79Certificate") mustBe C79Certificate
+      FileRole("PostponedVATStatement") mustBe PostponedVATStatement
+      FileRole("PostponedVATAmendedStatement") mustBe PostponedVATAmendedStatement
+      FileRole("SecurityStatement") mustBe SecurityStatement
+      FileRole("StandingAuthority") mustBe StandingAuthority
+
+      intercept[Exception] {
+        FileRole("Unknown")
+      }
+    }
+
+    "return correct output for unapply method" in new Setup {
+      val fileRoleName: String = FileRole("DutyDefermentStatement") match {
+        case FileRole(name) => name
+        case _ => emptyString
+      }
+
+      fileRoleName mustBe "DutyDefermentStatement"
+    }
+
+    "return correct output for Reads" in new Setup {
+
+      import domain.FileRole.fileRoleFormat
+
+      Json.fromJson(JsString("C79Certificate")) mustBe JsSuccess(FileRole("C79Certificate"))
+      Json.fromJson(JsString("DutyDefermentStatement")) mustBe JsSuccess(FileRole("DutyDefermentStatement"))
+      Json.fromJson(JsString("PostponedVATStatement")) mustBe JsSuccess(FileRole("PostponedVATStatement"))
+      Json.fromJson(JsString("PostponedVATAmendedStatement")) mustBe JsSuccess(FileRole("PostponedVATAmendedStatement"))
+      Json.fromJson(JsString("SecurityStatement")) mustBe JsSuccess(FileRole("SecurityStatement"))
+      Json.fromJson(JsString("StandingAuthority")) mustBe JsSuccess(FileRole("StandingAuthority"))
+    }
+
+    "return correct output for Writes" in new Setup {
+      Json.toJson(FileRole("C79Certificate")) mustBe JsString("C79Certificate")
+    }
+
+    "bind correct value for pathBinder" in {
+      import domain.FileRole.pathBinder
+
+      pathBinder.bind(emptyString, "import-vat") mustBe Right(C79Certificate)
+      pathBinder.bind(emptyString, "postponed-vat") mustBe Right(PostponedVATStatement)
+      pathBinder.bind(emptyString, "duty-deferment") mustBe Right(DutyDefermentStatement)
+      pathBinder.bind(emptyString, "adjustments") mustBe Right(SecurityStatement)
+      pathBinder.bind(emptyString, "authorities") mustBe Right(StandingAuthority)
+      pathBinder.bind(emptyString, "unknown") mustBe Left(s"unknown file role: unknown")
+    }
+
+    "unbind correct value for pathBinder" in {
+      import domain.FileRole.pathBinder
+
+      pathBinder.unbind(emptyString, C79Certificate) mustBe "import-vat"
+      pathBinder.unbind(emptyString, PostponedVATStatement) mustBe "postponed-vat"
+      pathBinder.unbind(emptyString, DutyDefermentStatement) mustBe "duty-deferment"
+      pathBinder.unbind(emptyString, SecurityStatement) mustBe "adjustments"
+      pathBinder.unbind(emptyString, StandingAuthority) mustBe "authorities"
+    }
+  }
+
+  "DDStatementType" should {
+    "return correct value for apply method" in new Setup {
+      DDStatementType("Excise") mustBe Excise
+      DDStatementType("Supplementary") mustBe Supplementary
+      DDStatementType("Weekly") mustBe Weekly
+      DDStatementType("UNKNOWN STATEMENT TYPE") mustBe UnknownStatementType
+    }
+
+    "return correct value for unapply method" in new Setup {
+      val exciseTypeName: String = DDStatementType("Excise") match {
+        case DDStatementType(name) => name
+        case _ => emptyString
+      }
+
+      exciseTypeName mustBe "Excise"
+    }
+
+    "provide correct output while comparing" in new Setup {
+      List(DDStatementType("Excise"), DDStatementType("Supplementary")).min.name mustBe
+        "Excise"
+    }
+  }
+
+  "SecurityStatementFile" should {
+    "return correct output for startDate, endDate and formattedSize" in new Setup {
+
+      val secStatFile: SecurityStatementFile = SecurityStatementFile("test_file_name",
+        "test_url",
+        2064L,
+        secureMetaData)
+
+      secStatFile.startDate mustBe LocalDate.of(
+        secureMetaData.periodStartYear,
+        secureMetaData.periodStartMonth,
+        secureMetaData.periodStartDay)
+
+      secStatFile.endDate mustBe LocalDate.of(
+        secureMetaData.periodEndYear,
+        secureMetaData.periodEndMonth,
+        secureMetaData.periodEndDay)
+
+      secStatFile.formattedSize mustBe Formatters.fileSize(1234L)
+    }
+  }
+
+  "FileFormat" should {
+    "return correct value for apply method" in new Setup {
+      FileFormat("PDF") mustBe Pdf
+      FileFormat("CSV") mustBe Csv
+      FileFormat("UNKNOWN FILE FORMAT") mustBe UnknownFileFormat
+    }
+
+    "return correct value for unapply method" in new Setup {
+      val pdfFileFormatName: String = FileFormat("PDF") match {
+        case FileFormat(name) => name
+        case _ => emptyString
+      }
+
+      pdfFileFormatName mustBe "PDF"
+    }
+  }
+
+  "VatCertificateFile" should {
+    "return correct output for formattedSize" in new Setup {
+      vatCertFile.formattedSize mustBe Formatters.fileSize(2164L)
+    }
+
+    "return correct output for formattedMonth" in new Setup {
+      vatCertFile.formattedMonth mustBe "month.1"
     }
   }
 
   trait Setup {
+    implicit val msg: Messages = stubMessages()
+
+    val secureMetaData: SecurityStatementFileMetadata =
+      SecurityStatementFileMetadata(1972, 2, 20, 2010, 1, 2, FileFormat.Csv, FileRole.SecurityStatement,
+        "GB1234567890", 1234L, "check it", Some("thing"))
+
+    val vatCertificateFileMetadata: VatCertificateFileMetadata =
+      VatCertificateFileMetadata(2010, 1, FileFormat.Csv, FileRole.C79Certificate, None)
+
+    val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
+      "test_url",
+      2164L,
+      vatCertificateFileMetadata,
+      "test_eori")
 
     def randomInt(limit: Int) = Random.nextInt(limit)
+
     def randomString(length: Int): String = Random.alphanumeric.take(length).mkString
 
     def randomDutyDefermentStatementFile(size: Long): DutyDefermentStatementFile = DutyDefermentStatementFile(
