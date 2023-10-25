@@ -19,7 +19,6 @@ package views.helpers
 import utils.SpecBase
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
 
 class PageTitleSpec extends SpecBase {
 

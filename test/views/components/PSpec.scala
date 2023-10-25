@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
-import play.twirl.api.{HtmlFormat}
+import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.p
 
