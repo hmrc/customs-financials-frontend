@@ -634,9 +634,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       "SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, gbEORI)
 
     val xiStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000153_XI_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, xiEORI)
+      "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, xiEORI)
     val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, xiEORI)
+      "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, xiEORI)
 
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
