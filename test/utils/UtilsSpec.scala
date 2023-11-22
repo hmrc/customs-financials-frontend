@@ -47,9 +47,9 @@ class UtilsSpec extends SpecBase {
 
   "xiCsvFileNameRegEx" should {
     "return true when string matches the regex" in {
-      "SA_000000000154_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
-      "SA_00000005666666y153_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
-      "SA_avbncgg_XI_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_XI_000000000154_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_XI_00000005666666y153_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
+      "SA_XI_avbncgg_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
     }
 
     "return false when string does not match the regex" in {
@@ -73,8 +73,8 @@ class UtilsSpec extends SpecBase {
         StandingAuthorityFile("SA_000000000154_csv.csv", "", 500L, standAuthMetadata, "GB123456789012"))
 
       val xiAuthFiles =
-        Seq(StandingAuthorityFile("SA_000000000153_XI_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"),
-          StandingAuthorityFile("SA_000000000154_XI_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"))
+        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"),
+          StandingAuthorityFile("SA_XI_000000000154_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"))
 
       val csvFileForBothGBAndXI = gbAuthFiles ++ xiAuthFiles
 

@@ -28,7 +28,7 @@ object Utils {
   val danRegex = "^[0-9]{7}"
   val canRegex = "^[0-9]{11}"
   val ganRegex = "^[a-zA-Z0-9]{8,10}"
-  val xiCsvFileNameRegEx = "SA_[\\w]+_XI_csv.csv$"
+  val xiCsvFileNameRegEx = "SA_XI_[\\w]+_csv.csv$"
   val xiEoriRegex = "XI\\d{12}"
 
   /**
