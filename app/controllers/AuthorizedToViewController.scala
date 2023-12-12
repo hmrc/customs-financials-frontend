@@ -16,7 +16,7 @@
 
 package controllers
 
-import actionbuilders.{AuthenticatedRequest, IdentifierAction}
+import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
 import connectors.{CustomsFinancialsApiConnector, SdesConnector}
 import domain.FileRole.StandingAuthority
@@ -43,19 +43,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            val sdesConnector: SdesConnector,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
+                                           verifyEmail: EmailAction,
                                            financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
                                            authorisedToViewSearchNoResult: authorised_to_view_search_no_result,
                                            eoriNumberFormProvider: EoriNumberFormProvider)(
-                                           implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                            implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
   val form: Form[String] = eoriNumberFormProvider()
 
-  def onPageLoad(): Action[AnyContent] = authenticate async { implicit req =>
+  def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
     for {

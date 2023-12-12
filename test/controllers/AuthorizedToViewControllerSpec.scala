@@ -27,6 +27,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
+import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.SpecBase
 
@@ -37,6 +38,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
   "The Authorized to View page" should {
     "return OK" in new Setup {
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
@@ -109,10 +112,50 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
       }
     }
+
+    "return OK when correct email is returned from dataStoreService" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+
+      running(app) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(app, request).value
+
+        status(result) should be(OK)
+      }
+    }
+
+    "redirected to email undeliverable page when undeliverable email is returned from dataStoreService" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UndeliverableEmail(emailId))))
+
+      running(app) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(app, request).value
+
+        status(result) should be(SEE_OTHER)
+        redirectLocation(result) mustBe Some(controllers.routes.EmailController.showUndeliverable().url)
+      }
+    }
+
+    "redirected to email unverified page when unverified email is returned from dataStoreService" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
+
+      running(app) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(app, request).value
+
+        status(result) should be(SEE_OTHER)
+        redirectLocation(result) mustBe Some(controllers.routes.EmailController.showUnverified().url)
+      }
+    }
   }
 
   "The Authorized to View download CSV page" should {
     "return OK" in new Setup {
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
@@ -133,6 +176,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "getCsvFile() sort by file name" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
       val fileObj1 = File("CS_000000000154_csv.csv")
@@ -347,7 +392,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
@@ -563,6 +608,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
   "The header section" should {
     "have a back to accounts link on top" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
@@ -572,6 +620,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     }
 
     "have a heading field" in new Setup {
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
@@ -603,8 +654,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
         Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val cashAccount1 = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(100))))
-    val cashAccount2 = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(None))
+    val cashAccount1 = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable,
+      CDSCashBalance(Some(BigDecimal(100))))
+
+    val cashAccount2 = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable,
+      CDSCashBalance(None))
 
     val ggAccount1 = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
       DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(500), BigDecimal(300))))
@@ -637,6 +691,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, xiEORI)
     val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
       "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, xiEORI)
+
+    val emailId = "test@test.com"
 
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
