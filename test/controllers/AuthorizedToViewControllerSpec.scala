@@ -49,9 +49,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "show the search EORI view when the feature flag is enabled" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
@@ -154,6 +156,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
   "The Authorized to View download CSV page" should {
     "return OK" in new Setup {
+
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
@@ -165,9 +168,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
     "download authorities csv page when requests all accounts" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
+
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("microservice.services.sdes.context" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
@@ -276,8 +281,10 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
-        .andThenAnswer(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3",
+          Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .andThenAnswer(Future.successful(Right(SearchedAuthorities("3",
+          Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
@@ -285,9 +292,11 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> "GB123456789012")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe OK
         html.text().contains("Search results for GB123456789012") shouldBe true
       }
@@ -417,7 +426,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return BAD_REQUEST if an invalid payload sent" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> "ERROR")
+
         val result = route(app, request).value
         status(result) shouldBe BAD_REQUEST
       }
@@ -434,6 +445,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() mustBe
@@ -459,6 +471,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() mustBe
@@ -484,6 +497,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
 
         html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
@@ -533,6 +547,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() mustBe
@@ -556,6 +571,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() mustBe
@@ -580,6 +596,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
         html.text().contains("You cannot search your own account number") shouldBe true
       }
@@ -600,6 +617,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe BAD_REQUEST
         html.text().contains("You cannot search your own account number") shouldBe true
       }
@@ -615,6 +633,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         html.containsLinkWithText("/customs/payment-records", "link-back")
       }
     }
@@ -627,6 +646,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         html.getElementById("h1") must not be emptyString
       }
     }
