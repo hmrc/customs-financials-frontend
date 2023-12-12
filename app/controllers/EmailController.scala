@@ -38,16 +38,13 @@ class EmailController @Inject()(authenticate: IdentifierAction,
 
   val log: LoggerLike = Logger(this.getClass)
 
-  def showUnverified():Action[AnyContent] = authenticate async { implicit request =>
-
-    financialsApiConnector.isEmailUnverified.map {
-      case a => Ok(verifyEmailView(appConfig.emailFrontendUrl, a))
-    }
+  def showUnverified(): Action[AnyContent] = authenticate async { implicit request =>
+    financialsApiConnector.isEmailUnverified.map(email => Ok(verifyEmailView(appConfig.emailFrontendUrl, email)))
   }
 
-  def showUndeliverable():Action[AnyContent] = authenticate async { implicit request =>
-    financialsApiConnector.getEmailaddress.map {
-      case a => Ok(undeliverableEmail(appConfig.emailFrontendUrl, a.verifiedEmail.get)(request, request.messages , appConfig))
-    }
+  def showUndeliverable(): Action[AnyContent] = authenticate async { implicit request =>
+    financialsApiConnector.getEmailaddress.map(
+      verifiedEmailRes => Ok(undeliverableEmail(appConfig.emailFrontendUrl,
+        verifiedEmailRes.verifiedEmail)(request, request.messages, appConfig)))
   }
 }

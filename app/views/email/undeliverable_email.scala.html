@@ -26,14 +26,18 @@
         button: button,
         layout: Layout
 )
-@(nextPage: String, email: String)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(
+        nextPage: String,
+        emailAddress: Option[String] = None
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some(messages("cf.undeliverable.email.title"))) {
 
     @h1(msg = "cf.undeliverable.email.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
     @p("cf.undeliverable.email.p1")
-    @p(messages("cf.undeliverable.email.p2", email))
+
+    @emailAddress.map(mailId => p(messages("cf.undeliverable.email.p2", mailId)))
 
     @h2(msg = "cf.undeliverable.email.verify.heading", classes = "govuk-heading-m govuk-!-margin-bottom-4")
 
