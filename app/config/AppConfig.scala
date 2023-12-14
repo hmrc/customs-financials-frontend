@@ -27,6 +27,11 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
 
   lazy val appName: String = config.get[String]("appName")
 
+  lazy val emailFrontendService: String = s"${servicesConfig.baseUrl("customs-email-frontend")}${
+    config.get[String](
+      "microservice.services.customs-email-frontend.context")
+  }"
+
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
@@ -60,7 +65,7 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val cashAccountUrl: String = config.get[String]("microservice.services.customs-cash-account-frontend.url")
   lazy val manageAuthoritiesFrontendUrl: String = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
   lazy val guaranteeAccountUrl: String = config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
-  lazy val emailFrontendUrl: String = config.get[String]("microservice.services.customs-email-frontend.url")
+  lazy val emailFrontendUrl: String = s"$emailFrontendService/service/customs-finance"
   lazy val documentsUrl: String = config.get[String]("microservice.services.customs-financials-documents-frontend.url")
   lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"

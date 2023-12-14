@@ -47,6 +47,18 @@ class AppConfigSpec extends SpecBase {
         "https://www.tax.service.gov.uk/customs-enrolment-services/cds/subscribe"
     }
   }
+
+  "emailFrontendService" should {
+    "return the correct service address with context" in new Setup {
+      appConfig.emailFrontendService shouldBe "http://localhost:9898/manage-email-cds"
+    }
+  }
+
+  "emailFrontendUrl" should {
+    "return the correct url" in new Setup {
+      appConfig.emailFrontendUrl shouldBe "http://localhost:9898/manage-email-cds/service/customs-finance"
+    }
+  }
   trait Setup {
     val app: Application = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
