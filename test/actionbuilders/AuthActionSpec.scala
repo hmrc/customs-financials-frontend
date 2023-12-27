@@ -28,6 +28,8 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
+import play.api.test.FakeRequest
+import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
 import utils.SpecBase
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,115 +37,133 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase {
 
-  class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction { _ => Results.Ok }
-  }
-
-  implicit class Ops[A](a: A) {
-    def ~[B](b: B): A ~ B = new ~(a, b)
-  }
-
   "the action" should {
 
-    "redirect to the Government Gateway sign-in page when no authenticated user" in {
-      val mockAuditingService = mock[AuditingService]
-      val mockDataStoreService = mock[DataStoreService]
-
-      val app = application().overrides(
-        inject.bind[AuditingService].toInstance(mockAuditingService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
-      val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
-
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new MissingBearerToken), config, bodyParsers, mockDataStoreService)
+    "redirect to the Government Gateway sign-in page when no authenticated user" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new MissingBearerToken),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
       val controller = new Harness(authAction)
 
       running(app) {
-        val result = controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId"))
+        val result = controller.onPageLoad()(
+          fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")
+        )
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(config.loginUrl)
       }
     }
 
-    "redirect the user to login when the user's session has expired" in {
-      val mockAuditingService = mock[AuditingService]
-      val mockDataStoreService = mock[DataStoreService]
-
-      val app = application().overrides(
-        inject.bind[AuditingService].toInstance(mockAuditingService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
-      val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
-
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new BearerTokenExpired), config, bodyParsers, mockDataStoreService)
+    "redirect the user to login when the user's session has expired" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new BearerTokenExpired),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
       val controller = new Harness(authAction)
 
       running(app) {
-        val result = controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId"))
+        val result = controller.onPageLoad()(
+          fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")
+        )
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(config.loginUrl)
       }
     }
 
-    "redirect the user to login when the user has an unexpected Auth provider" in {
-      val mockAuditingService = mock[AuditingService]
-      val mockDataStoreService = mock[DataStoreService]
-
-      val app = application().overrides(
-        inject.bind[AuditingService].toInstance(mockAuditingService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
-      val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
-
-      val authAction = new AuthAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), config, bodyParsers, mockDataStoreService)
+    "redirect the user to login when the user has an unexpected Auth provider" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new UnsupportedAuthProvider),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
       val controller = new Harness(authAction)
 
       running(app) {
-        val result = controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId"))
+        val result = controller.onPageLoad()(
+          fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")
+        )
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must startWith("/customs/payment-records/not-subscribed-for-cds")
+        redirectLocation(result).get must startWith(
+          "/customs/payment-records/not-subscribed-for-cds"
+        )
       }
     }
 
-    "redirect the user to unauthorised controller when has insufficient enrolments" in {
-      val mockAuditingService = mock[AuditingService]
-      val mockDataStoreService = mock[DataStoreService]
-      val mockAuthConnector = mock[AuthConnector]
+    "redirect the user to unauthorised controller when has insufficient enrolments" in new Setup {
+      when(
+        mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[
+          Email
+        ] ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(
+          any,
+          any
+        )
+      )
+        .thenReturn(
+          Future.successful(
+            Some(Credentials("someProviderId", "someProviderType")) ~
+              Some(Name(Some("someName"), Some("someLastName"))) ~
+              Some(Email("some@email.com")) ~
+              Some(AffinityGroup.Individual) ~
+              Some("id") ~
+              Enrolments(Set.empty)
+          )
+        )
 
-      when(mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[Email] ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(any, any))
-        .thenReturn(Future.successful(
-          Some(Credentials("someProviderId", "someProviderType")) ~
-            Some(Name(Some("someName"), Some("someLastName"))) ~
-            Some(Email("some@email.com")) ~
-            Some(AffinityGroup.Individual) ~
-            Some("id") ~
-            Enrolments(Set.empty)))
-
-      val app = application().overrides(
-        inject.bind[AuditingService].toInstance(mockAuditingService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
-      val config = app.injector.instanceOf[AppConfig]
-      val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
-
-      val authAction = new AuthAction(mockAuthConnector, config, bodyParsers, mockDataStoreService)
+      val authAction = new AuthAction(
+        mockAuthConnector,
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
       val controller = new Harness(authAction)
 
       running(app) {
-        val result = controller.onPageLoad()(fakeRequest().withHeaders("X-Session-Id" -> "someSessionId"))
+        val result = controller.onPageLoad()(
+          fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")
+        )
         status(result) mustBe SEE_OTHER
-        redirectLocation(result).get must startWith("/customs/payment-records/not-subscribed-for-cds")
+        redirectLocation(result).get must startWith(
+          "/customs/payment-records/not-subscribed-for-cds"
+        )
       }
     }
   }
-}
 
-class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
-  val serviceUrl: String = ""
+  trait Setup {
 
-  override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
-    Future.failed(exceptionToReturn)
+    val mockAuditingService = mock[AuditingService]
+    val mockDataStoreService = mock[DataStoreService]
+    val mockAuthConnector = mock[AuthConnector]
+
+    val app = application()
+      .overrides(
+        inject.bind[AuditingService].toInstance(mockAuditingService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService)
+      )
+      .build()
+    val config = app.injector.instanceOf[AppConfig]
+    val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
+    class Harness(authAction: IdentifierAction) {
+      def onPageLoad() = authAction { _ => Results.Ok }
+    }
+    implicit class Ops[A](a: A) {
+      def ~[B](b: B): A ~ B = new ~(a, b)
+    }
+    class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable)
+        extends AuthConnector {
+      val serviceUrl: String = ""
+
+      override def authorise[A](
+          predicate: Predicate,
+          retrieval: Retrieval[A]
+      )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+        Future.failed(exceptionToReturn)
+    }
+  }
 }
