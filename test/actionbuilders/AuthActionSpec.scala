@@ -28,9 +28,9 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve._
 import uk.gov.hmrc.http.HeaderCarrier
-import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.{Enrolment, EnrolmentIdentifier, Enrolments}
+import uk.gov.hmrc.auth.core.Enrolments
 import utils.SpecBase
+import controllers.routes
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -131,6 +131,75 @@ class AuthActionSpec extends SpecBase {
         redirectLocation(result).get must startWith(
           "/customs/payment-records/not-subscribed-for-cds"
         )
+      }
+    }
+
+
+    "redirect the user to the unauthorised page when no sufficient enrolments" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new InsufficientEnrolments),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
+      
+      val controller = new Harness(authAction)
+      val result = controller.onPageLoad()(fakeRequest())
+
+      running(app) {
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+      }
+    }
+
+    "redirect the user to the unauthorised page when no sufficient confidence level" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
+      
+      val controller = new Harness(authAction)
+      val result = controller.onPageLoad()(fakeRequest())
+
+      running(app) {
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+      }
+    }
+
+    "redirect the user to the unauthorised page when no unsupported affinity group" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
+      
+      val controller = new Harness(authAction)
+      val result = controller.onPageLoad()(fakeRequest())
+
+      running(app) {
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+      }
+    }
+
+    "redirect the user to the unauthorised page when no unsupported credential role" in new Setup {
+      val authAction = new AuthAction(
+        new FakeFailingAuthConnector(new UnsupportedCredentialRole),
+        config,
+        bodyParsers,
+        mockDataStoreService
+      )
+      
+      val controller = new Harness(authAction)
+      val result = controller.onPageLoad()(fakeRequest())
+
+      running(app) {
+        status(result) mustBe SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
       }
     }
   }
