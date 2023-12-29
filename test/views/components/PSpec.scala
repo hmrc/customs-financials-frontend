@@ -29,7 +29,6 @@ class PSpec extends SpecBase {
     "P component" should {
         "render the default class name when classes is not defined" in new Setup {
             running(app) {
-                val pView = app.injector.instanceOf[p]
                 val output: HtmlFormat.Appendable = pView(
                     message = "Hello, world!",
                 )(messages(app))
@@ -41,7 +40,6 @@ class PSpec extends SpecBase {
 
         "render the message and classes correctly" in new Setup {
             running(app) {
-                val pView = app.injector.instanceOf[p]
                 val output: HtmlFormat.Appendable = pView(
                     message = "Hello, world!",
                     extraClasses = "custom-class"
@@ -56,5 +54,6 @@ class PSpec extends SpecBase {
 
     trait Setup {
         val app: Application = application().build()
+        val pView = app.injector.instanceOf[p]
     }
 }
