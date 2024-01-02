@@ -30,13 +30,16 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait IdentifierAction extends ActionBuilder[AuthenticatedRequest, AnyContent] with ActionRefiner[Request, AuthenticatedRequest]
+trait IdentifierAction extends ActionBuilder[AuthenticatedRequest, AnyContent]
+  with ActionRefiner[Request, AuthenticatedRequest]
 
 class AuthAction @Inject()(val authConnector: AuthConnector,
                            appConfig: AppConfig,
                            val parser: BodyParsers.Default,
                            dataStoreService: DataStoreService)
-                          (implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions {
+                          (implicit val executionContext: ExecutionContext)
+  extends IdentifierAction
+    with AuthorisedFunctions {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
@@ -50,14 +53,17 @@ class AuthAction @Inject()(val authConnector: AuthConnector,
               xiEori <- dataStoreService.getXiEori(eori.value)
               signedInUser = SignedInUser(eori.value, allEoriHistory, xiEori)
             } yield Right(AuthenticatedRequest(request, signedInUser))
+
           case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad)))
         }
     }
   } recover {
     case _: NoActiveSession =>
       Left(Redirect(appConfig.loginUrl, Map("continue_url" -> Seq(appConfig.loginContinueUrl))))
+
     case _: InsufficientEnrolments =>
       Left(Redirect(routes.UnauthorisedController.onPageLoad))
+
     case _ =>
       Left(Redirect(routes.UnauthorisedController.onPageLoad))
   }

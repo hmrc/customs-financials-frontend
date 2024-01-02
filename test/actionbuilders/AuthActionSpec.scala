@@ -20,8 +20,8 @@ import com.google.inject.Inject
 import config.AppConfig
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
-import play.api.mvc.{BodyParsers, Results}
+import play.api.{Application, inject}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Result, Results}
 import play.api.test.Helpers._
 import services.{AuditingService, DataStoreService}
 import uk.gov.hmrc.auth.core._
@@ -97,9 +97,8 @@ class AuthActionSpec extends SpecBase {
 
     "redirect the user to unauthorised controller when has insufficient enrolments" in new Setup {
       when(
-        mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[
-          Email
-        ] ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(
+        mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[Email]
+          ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(
           any,
           any
         )
@@ -142,9 +141,9 @@ class AuthActionSpec extends SpecBase {
         bodyParsers,
         mockDataStoreService
       )
-      
+
       val controller = new Harness(authAction)
-      val result = controller.onPageLoad()(fakeRequest())
+      val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
         status(result) mustBe SEE_OTHER
@@ -159,7 +158,7 @@ class AuthActionSpec extends SpecBase {
         bodyParsers,
         mockDataStoreService
       )
-      
+
       val controller = new Harness(authAction)
       val result = controller.onPageLoad()(fakeRequest())
 
@@ -176,9 +175,9 @@ class AuthActionSpec extends SpecBase {
         bodyParsers,
         mockDataStoreService
       )
-      
+
       val controller = new Harness(authAction)
-      val result = controller.onPageLoad()(fakeRequest())
+      val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
         status(result) mustBe SEE_OTHER
@@ -193,9 +192,9 @@ class AuthActionSpec extends SpecBase {
         bodyParsers,
         mockDataStoreService
       )
-      
+
       val controller = new Harness(authAction)
-      val result = controller.onPageLoad()(fakeRequest())
+      val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
         status(result) mustBe SEE_OTHER
@@ -205,33 +204,33 @@ class AuthActionSpec extends SpecBase {
   }
 
   trait Setup {
+    val mockAuditingService: AuditingService = mock[AuditingService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockAuthConnector: AuthConnector = mock[AuthConnector]
 
-    val mockAuditingService = mock[AuditingService]
-    val mockDataStoreService = mock[DataStoreService]
-    val mockAuthConnector = mock[AuthConnector]
-
-    val app = application()
+    val app: Application = application()
       .overrides(
         inject.bind[AuditingService].toInstance(mockAuditingService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      )
-      .build()
-    val config = app.injector.instanceOf[AppConfig]
-    val bodyParsers = application().injector().instanceOf[BodyParsers.Default]
+      ).build()
+
+    val config: AppConfig = app.injector.instanceOf[AppConfig]
+    val bodyParsers: BodyParsers.Default = application().injector().instanceOf[BodyParsers.Default]
+
     class Harness(authAction: IdentifierAction) {
-      def onPageLoad() = authAction { _ => Results.Ok }
+      def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
     }
+
     implicit class Ops[A](a: A) {
-      def ~[B](b: B): A ~ B = new ~(a, b)
+      def ~[B](b: B): A ~ B = new~(a, b)
     }
-    class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable)
-        extends AuthConnector {
+
+    class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
       val serviceUrl: String = ""
 
-      override def authorise[A](
-          predicate: Predicate,
-          retrieval: Retrieval[A]
-      )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+      override def authorise[A](predicate: Predicate,
+                                retrieval: Retrieval[A]
+                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
         Future.failed(exceptionToReturn)
     }
   }

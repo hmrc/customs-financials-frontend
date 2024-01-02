@@ -16,26 +16,45 @@
 
 package config
 
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Configuration
 import utils.SpecBase
 
 class ServiceSpec extends SpecBase {
 
-    "should be loaded from configuration correctly" in {
-      val config = Configuration(
-        "service.host" -> "localhost",
-        "service.port" -> "8080",
-        "service.protocol" -> "http"
-      )
+  "should be loaded from configuration correctly" in {
+    val config = Configuration(
+      "service.host" -> "localhost",
+      "service.port" -> "8080",
+      "service.protocol" -> "http"
+    )
 
-      val service = config.get[Service]("service")
-      service shouldEqual Service("localhost", "8080", "http")
-    }
+    val service = config.get[Service]("service")
+    service shouldEqual Service("localhost", "8080", "http")
+  }
 
-    "should convert to string correctly" in {
-      val service = Service("localhost", "8080", "http")
-      val expectedUrl = "http://localhost:8080"
-      service.toString shouldEqual expectedUrl
+  "should convert to string correctly" in {
+    val service = Service("localhost", "8080", "http")
+    val expectedUrl = "http://localhost:8080"
+
+    service.toString shouldEqual expectedUrl
+  }
+
+  "convertToString" should {
+    "return the correct output" in new Setup {
+
+      import Service.convertToString
+
+      convertToString(serviceOb) mustBe "http://localhost:8080"
     }
+  }
+
+  trait Setup {
+    val host = "localhost"
+    val port = "8080"
+    val protocol = "http"
+
+    val serviceOb: Service = Service(host, port, protocol)
+  }
 
 }
