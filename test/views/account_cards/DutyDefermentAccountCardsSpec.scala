@@ -91,7 +91,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         viewDoc(model).getElementsByTag("h3").text().contains(
           s"${msgs("cf.NiAccount")} $dan1 ${msgs("cf.account.status.aria.AccountStatusSuspended")}")
 
-        //duty_deferment_account_direct_debit_setup
+        //duty_deferment_account_direct_debit_setup checks
         val ddDirectDebitElementHtml: String = viewDoc(model).html()
 
         ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.warning"))
