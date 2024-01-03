@@ -16,8 +16,15 @@
 
 @this()
 
-@(accountNumber: String, accountLimit: Option[String], guaranteeLimit: Option[String], guaranteeLimitRemaining: Option[String], viewBalances: Boolean)(implicit messages: Messages)
-
+@(
+    accountNumber: String,
+    accountLimit: Option[String],
+    guaranteeLimit: Option[String],
+    guaranteeLimitRemaining: Option[String],
+    viewBalances: Boolean
+)(
+    implicit messages: Messages
+)
 
       @if(accountLimit.nonEmpty) {
           <p class="govuk-body govuk-!-margin-bottom-1" id="account-limit-@accountNumber">

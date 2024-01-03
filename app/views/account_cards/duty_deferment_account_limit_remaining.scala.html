@@ -17,6 +17,8 @@
 @import views.helpers.Formatters
 @import domain.DutyDefermentAccount
 
+@this()
+
 @(account: DutyDefermentAccount, periodAvailableBalance: Boolean)(implicit messages: Messages)
 <dl class="@if(periodAvailableBalance) { limit-remaining} results search-results">
     @account.balances.periodAvailableAccountBalance.map{balance =>

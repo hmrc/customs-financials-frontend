@@ -17,6 +17,7 @@
 package domain
 
 import domain.DDStatementType.{Excise, Supplementary, UnknownStatementType, Weekly}
+import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -148,6 +149,20 @@ class SdesFileSpec extends SpecBase {
 
       secStatFile.formattedSize mustBe Formatters.fileSize(1234L)
     }
+
+    "sort correctly" in new Setup {
+      val secStatFile1: SecurityStatementFile = SecurityStatementFile(fileName,
+        downloadUrl,
+        size,
+        secureMetaData)
+
+      val secStatFile2: SecurityStatementFile = SecurityStatementFile(fileName,
+        downloadUrl,
+        size,
+        secureMetaData.copy(periodStartYear = secureMetaData.periodStartYear + 1))
+
+      List(secStatFile2, secStatFile1).sorted mustBe List(secStatFile1, secStatFile2)
+    }
   }
 
   "FileFormat" should {
@@ -175,17 +190,102 @@ class SdesFileSpec extends SpecBase {
     "return correct output for formattedMonth" in new Setup {
       vatCertFile.formattedMonth mustBe "month.1"
     }
+
+    "sort the files correctly" in new Setup {
+      val vatCerFile1: VatCertificateFile = VatCertificateFile(fileName,
+        downloadUrl,
+        size,
+        vatCerMetaData,
+        eori)
+
+      val vatCerFile2: VatCertificateFile = VatCertificateFile(fileName,
+        downloadUrl,
+        size,
+        vatCerMetaData.copy(periodStartYear = secureMetaData.periodStartYear + 1, fileFormat = Csv),
+        eori)
+
+      List(vatCerFile1, vatCerFile2).sorted mustBe List(vatCerFile2, vatCerFile1)
+    }
+  }
+
+  "StandingAuthorityFile" should {
+    "sort the files correctly" in new Setup {
+      val standAuthFile1: StandingAuthorityFile = StandingAuthorityFile(fileName,
+        downloadUrl,
+        size,
+        standAuthMetaData,
+        eori)
+
+      val standAuthFile2: StandingAuthorityFile = StandingAuthorityFile(fileName,
+        downloadUrl,
+        size,
+        standAuthMetaData.copy(periodStartYear = standAuthMetaData.periodStartYear + 1),
+        eori)
+
+      List(standAuthFile2, standAuthFile1).sorted mustBe List(standAuthFile1, standAuthFile2)
+    }
+  }
+
+  "PostponedVatStatementFile" should {
+    "sort the files correctly" in new Setup {
+      val pVatStatFile1: PostponedVatStatementFile = PostponedVatStatementFile(fileName,
+        downloadUrl,
+        size,
+        pVatStataMetaData,
+        eori)
+
+      val pVatStatFile2: PostponedVatStatementFile = PostponedVatStatementFile(fileName,
+        downloadUrl,
+        size,
+        pVatStataMetaData.copy(periodStartYear = pVatStataMetaData.periodStartYear + 1, fileFormat = Csv),
+        eori)
+
+      List(pVatStatFile1, pVatStatFile2).sorted mustBe List(pVatStatFile2, pVatStatFile1)
+    }
+  }
+
+  "FileFormat" should {
+    "generate correct output" when {
+      "reads" in new Setup {
+
+        import FileFormat.fileFormatFormat
+
+        Json.fromJson(JsString("PDF")) mustBe JsSuccess(Pdf)
+      }
+
+      "writes" in new Setup {
+        Json.toJson[FileFormat](Pdf) mustBe JsString(Pdf.name)
+      }
+    }
   }
 
   trait Setup {
     implicit val msg: Messages = stubMessages()
 
+    val fileName = "test_file"
+    val downloadUrl = "test_url"
+    val size = 2064L
+
+    val startYear = 2021
+    val month = 10
+    val day = 2
+    val eori = "test_eori"
+
     val secureMetaData: SecurityStatementFileMetadata =
-      SecurityStatementFileMetadata(1972, 2, 20, 2010, 1, 2, FileFormat.Csv, FileRole.SecurityStatement,
+      SecurityStatementFileMetadata(1972, 2, 20, 2010, 1, 2, Csv, FileRole.SecurityStatement,
         "GB1234567890", 1234L, "check it", Some("thing"))
 
+    val standAuthMetaData: StandingAuthorityMetadata =
+      StandingAuthorityMetadata(startYear, month, day, Pdf, StandingAuthority)
+
+    val vatCerMetaData: VatCertificateFileMetadata =
+      VatCertificateFileMetadata(startYear, month, Pdf, C79Certificate, None)
+
+    val pVatStataMetaData: PostponedVatStatementFileMetadata =
+      PostponedVatStatementFileMetadata(startYear, month, Pdf, C79Certificate, CDS, None)
+
     val vatCertificateFileMetadata: VatCertificateFileMetadata =
-      VatCertificateFileMetadata(2010, 1, FileFormat.Csv, FileRole.C79Certificate, None)
+      VatCertificateFileMetadata(2010, 1, Csv, FileRole.C79Certificate, None)
 
     val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
       "test_url",

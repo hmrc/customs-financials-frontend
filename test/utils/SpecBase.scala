@@ -30,17 +30,17 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.api
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.{Application, inject}
 import play.api.inject.bind
 import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper.CSRFFRequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.{Application, inject}
 
 import scala.annotation.implicitNotFound
-import scala.reflect.ClassTag
 import scala.jdk.CollectionConverters._
+import scala.reflect.ClassTag
 
 class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry

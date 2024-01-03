@@ -1,6 +1,5 @@
 import play.core.PlayVersion.current
 import uk.gov.hmrc.DefaultBuildSettings.{integrationTestSettings, targetJvm}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "customs-financials-frontend"
 
@@ -16,7 +15,7 @@ lazy val microservice = Project(appName, file("."))
     retrieveManaged := true,
     majorVersion := 0
   )
-  .settings(scoverageSettings: _*)
+  .settings(scoverageSettings *)
   .settings(
     scalaVersion := "2.13.8",
     targetJvm := "jvm-11",
@@ -40,7 +39,7 @@ lazy val microservice = Project(appName, file("."))
     // ***************
   )
   .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
+  .settings(integrationTestSettings() *)
   .settings(
     resolvers += Resolver.jcenterRepo
   )
@@ -77,7 +76,8 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedPackages := List("<empty>"
       , "Reverse.*"
       , ".*(BuildInfo|Routes|testOnly).*").mkString(";"),
-    ScoverageKeys.coverageMinimum := 85,
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
+    ScoverageKeys.coverageMinimumBranchTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
