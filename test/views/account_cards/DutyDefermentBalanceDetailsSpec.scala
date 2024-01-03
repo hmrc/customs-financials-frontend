@@ -40,21 +40,20 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase {
         val accountLimitHintElement: String = view.getElementsByClass("govuk-hint").text()
 
         accountLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
+          msgs("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
 
-        accountLimitHintElement.contains(messages(app)(
-          "cf.duty-deferment.account.card.account.info-text")) mustBe true
+        accountLimitHintElement.contains(msgs("cf.duty-deferment.account.card.account.info-text")) mustBe true
 
         val guaranteeLimitElement: String = view.getElementById(s"guarantee-limit-$accountNumber").text()
 
         guaranteeLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
+          msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
 
         val guaranteeLimitRemainingElement: String =
           view.getElementById(s"guarantee-limit-remaining-$accountNumber").text()
 
         guaranteeLimitRemainingElement.contains(
-          messages(app)(
+          msgs(
             "cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining)) mustBe true
       }
 
@@ -69,15 +68,14 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase {
         val accountLimitHintElement: String = view.getElementsByClass("govuk-hint").text()
 
         accountLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
+          msgs("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
 
-        accountLimitHintElement.contains(messages(app)(
-          "cf.duty-deferment.account.card.account.info-text")) mustBe true
+        accountLimitHintElement.contains(msgs("cf.duty-deferment.account.card.account.info-text")) mustBe true
 
         val guaranteeLimitElement: String = view.getElementById(s"guarantee-limit-$accountNumber").text()
 
         guaranteeLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
+          msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
       }
 
       "only accountLimit has value and viewBalances is false" in new Setup {
@@ -86,11 +84,9 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase {
         val accountLimitElement: String = view.getElementById(s"account-limit-$accountNumber").text()
         val accountLimitHintElement: String = view.getElementsByClass("govuk-hint").text()
 
-        accountLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
+        accountLimitElement.contains(msgs("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe true
 
-        accountLimitHintElement.contains(messages(app)(
-          "cf.duty-deferment.account.card.account.info-text")) mustBe true
+        accountLimitHintElement.contains(msgs("cf.duty-deferment.account.card.account.info-text")) mustBe true
       }
 
       "only guaranteeLimit has value and viewBalances is false" in new Setup {
@@ -99,7 +95,7 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase {
         val guaranteeLimitElement: String = view.getElementById(s"guarantee-limit-$accountNumber").text()
 
         guaranteeLimitElement.contains(
-          messages(app)("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
+          msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe true
       }
 
       "only guaranteeLimitRemaining has value and viewBalances is true" in new Setup {
@@ -112,33 +108,29 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase {
           view.getElementById(s"guarantee-limit-remaining-$accountNumber").text()
 
         guaranteeLimitRemainingElement.contains(
-          messages(app)(
+          msgs(
             "cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining)) mustBe true
       }
 
       "accountLimit, guaranteeLimit, guaranteeLimitRemaining are None and viewBalances is false" in new Setup {
         val view: Document = viewDoc(accountNumber = accountNumber)
 
-        view.text().contains(messages(app)(
-          "cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe false
+        view.text().contains(msgs("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe false
 
-        view.text().contains(messages(app)(
-          "cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe false
+        view.text().contains(msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe false
 
-        view.text().contains(messages(app)(
+        view.text().contains(msgs(
           "cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining)) mustBe false
       }
 
       "accountLimit, guaranteeLimit, guaranteeLimitRemaining are None and viewBalances is true" in new Setup {
         val view: Document = viewDoc(accountNumber = accountNumber, viewBalances = true)
 
-        view.text().contains(messages(app)(
-          "cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe false
+        view.text().contains(msgs("cf.duty-deferment.account.card.account.limit", accountLimit)) mustBe false
 
-        view.text().contains(messages(app)(
-          "cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe false
+        view.text().contains(msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)) mustBe false
 
-        view.text().contains(messages(app)(
+        view.text().contains(msgs(
           "cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining)) mustBe false
       }
     }

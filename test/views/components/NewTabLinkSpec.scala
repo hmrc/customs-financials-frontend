@@ -31,14 +31,14 @@ class NewTabLinkSpec extends SpecBase {
   "view" should {
     "display correct contents" when {
       "preLinkMessage is available" in new Setup {
-        viewDoc.text().contains(messages(app)(preLinkMessage)) mustBe true
+        viewDoc.text().contains(msgs(preLinkMessage)) mustBe true
 
         val elementByClass: Elements = viewDoc.getElementsByClass("govuk-link")
         elementByClass.get(0).text() mustBe linkMessage
       }
 
       "preLinkMessage in None" in new Setup {
-        viewDocWithNoPreLinkMessage.text().contains(messages(app)(preLinkMessage)) mustBe false
+        viewDocWithNoPreLinkMessage.text().contains(msgs(preLinkMessage)) mustBe false
 
         val elementByClass: Elements = viewDoc.getElementsByClass("govuk-link")
         elementByClass.get(0).text() mustBe linkMessage

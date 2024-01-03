@@ -30,10 +30,10 @@ class ImportVatCardSpec extends SpecBase {
 
   "view" should {
     "display correct text and guidance" in new Setup {
-      viewDoc.text().contains(messages(app)("cf.import-vat.view-certificates.description")) mustBe true
+      viewDoc.text().contains(msgs("cf.import-vat.view-certificates.description")) mustBe true
 
       val linkElement: Elements = viewDoc.getElementsByClass("vat-link")
-      linkElement.get(0).text() mustBe messages(app)("cf.customs-financials-home.import-vat.title.link")
+      linkElement.get(0).text() mustBe msgs("cf.customs-financials-home.import-vat.title.link")
     }
   }
 

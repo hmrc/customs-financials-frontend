@@ -17,7 +17,10 @@
 package views.account_cards
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
+  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+}
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -30,8 +33,6 @@ import viewmodels.FinancialsHomeModel
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
-import scala.util.Random
-
 class DutyDefermentAccountCardsSpec extends SpecBase {
 
   "view" should {
@@ -40,27 +41,28 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         val model: FinancialsHomeModel = FinancialsHomeModel(eori1, None, accounts, Nil, accountLinks)
 
         viewDoc(model).getElementsByTag("h2").text() mustBe
-          messages(app)("cf.customs-financials-home.duty-deferment.title")
+          msgs("cf.customs-financials-home.duty-deferment.title")
 
         //duty_deferment_inaccurate_balances_message
         viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          messages(app)("cf.duty-deferment.outOfDateBalance.chiefText")
+          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
 
         viewDoc(model).getElementsByTag("h3").text() mustBe
-          s"${messages(app)("cf.account")} $dan1 ${messages(app)("cf.account.status.aria.AccountStatusClosed")}"
+          s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")}"
 
         viewDoc(model).getElementsByClass("card-header").text() mustBe
-          s"${messages(app)("cf.account")} $dan1 ${messages(app)("cf.account.status.aria.AccountStatusClosed")} ${
-            messages(app)("cf.account.status.AccountStatusClosed")}"
+          s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")} ${
+            msgs("cf.account.status.AccountStatusClosed")
+          }"
 
         val ddBalanceElem: Element = viewDoc(model).getElementById(s"duty-deferment-balance-$dan1")
 
         ddBalanceElem.text().contains(Formatters.formatCurrencyAmount(periodAccountLimit))
-        ddBalanceElem.text().contains(messages(app)("cf.available"))
+        ddBalanceElem.text().contains(msgs("cf.available"))
 
         val statementElement: Elements = viewDoc(model).getElementsByClass("card-footer__links")
-        statementElement.text().contains(messages(app)("cf.accounts.viewStatements"))
-        statementElement.text().contains(messages(app)("cf.accounts.label.dan", dan1))
+        statementElement.text().contains(msgs("cf.accounts.viewStatements"))
+        statementElement.text().contains(msgs("cf.accounts.label.dan", dan1))
 
       }
 
@@ -68,11 +70,11 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         val model: FinancialsHomeModel = FinancialsHomeModel(eori1, None, accountsWithEori1, Nil, accountLinks)
 
         viewDoc(model).getElementsByTag("h2").text() mustBe
-          messages(app)("cf.customs-financials-home.duty-deferment.title2")
+          msgs("cf.customs-financials-home.duty-deferment.title2")
 
         //duty_deferment_inaccurate_balances_message
         viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          messages(app)("cf.duty-deferment.outOfDateBalance.chiefText")
+          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
       }
 
       "model has one DutyDefermentAccount for the eori, with AccountStatusSuspended and NI account" in new Setup {
@@ -80,23 +82,23 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
           FinancialsHomeModel(eori1, None, accountsWithEori1WithNiAccount, Nil, accountLinksWithNiAccount)
 
         viewDoc(model).getElementsByTag("h2").text() mustBe
-          messages(app)("cf.customs-financials-home.duty-deferment.title2")
+          msgs("cf.customs-financials-home.duty-deferment.title2")
 
         //duty_deferment_inaccurate_balances_message
         viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          messages(app)("cf.duty-deferment.outOfDateBalance.chiefText")
+          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
 
         viewDoc(model).getElementsByTag("h3").text().contains(
-          s"${messages(app)("cf.NiAccount")} $dan1 ${messages(app)("cf.account.status.aria.AccountStatusSuspended")}")
+          s"${msgs("cf.NiAccount")} $dan1 ${msgs("cf.account.status.aria.AccountStatusSuspended")}")
 
         //duty_deferment_account_direct_debit_setup
         val ddDirectDebitElementHtml: String = viewDoc(model).html()
 
-        ddDirectDebitElementHtml.contains(messages(app)("cf.duty-deferment.warning"))
-        ddDirectDebitElementHtml.contains(messages(app)("cf.duty-deferment.dd.info"))
-        ddDirectDebitElementHtml.contains(messages(app)("cf.duty-deferment.dd.setup.text1"))
-        ddDirectDebitElementHtml.contains(messages(app)("cf.duty-deferment.dd.setup.new.account"))
-        ddDirectDebitElementHtml.contains(messages(app)("cf.duty-deferment.dd.setup.text2"))
+        ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.warning"))
+        ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.dd.info"))
+        ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.dd.setup.text1"))
+        ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.dd.setup.new.account"))
+        ddDirectDebitElementHtml.contains(msgs("cf.duty-deferment.dd.setup.text2"))
       }
     }
   }
@@ -112,9 +114,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
     val dan1 = "DAN01234"
     val dan2 = "DAN43210"
 
-    def randomFloat: Float = Random.nextFloat()
-    def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
-
     val periodGuaranteeLimit: BigDecimal = BigDecimal(100.0)
     val periodAccountLimit: BigDecimal = BigDecimal(100.0)
     val periodAvailableGuaranteeBalance: BigDecimal = BigDecimal(100.0)
@@ -122,14 +121,14 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
 
     val ddAccount1WithEori1: DutyDefermentAccount =
       DutyDefermentAccount(dan1, eori1, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
-      DutyDefermentBalance(
-        Some(periodGuaranteeLimit),
-        Some(periodAccountLimit),
-        Some(periodAvailableGuaranteeBalance),
-        Some(periodAvailableAccountBalance)
-      ),
-      viewBalanceIsGranted = true,
-      isIsleOfMan = false)
+        DutyDefermentBalance(
+          Some(periodGuaranteeLimit),
+          Some(periodAccountLimit),
+          Some(periodAvailableGuaranteeBalance),
+          Some(periodAvailableAccountBalance)
+        ),
+        viewBalanceIsGranted = true,
+        isIsleOfMan = false)
 
     val ddAccount1WithEori1WithNIAccountAndDirectDebitCancelled: DutyDefermentAccount =
       DutyDefermentAccount(dan1, eori1, isNiAccount = true, AccountStatusSuspended, DirectDebitMandateCancelled,
@@ -144,14 +143,14 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
 
     val ddAccount1WithEori2: DutyDefermentAccount =
       DutyDefermentAccount(dan2, eori2, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
-      DutyDefermentBalance(
-        Some(periodGuaranteeLimit),
-        Some(periodAccountLimit),
-        Some(periodAvailableGuaranteeBalance),
-        Some(periodAvailableAccountBalance)
-      ),
-      viewBalanceIsGranted = true,
-      isIsleOfMan = false)
+        DutyDefermentBalance(
+          Some(periodGuaranteeLimit),
+          Some(periodAccountLimit),
+          Some(periodAvailableGuaranteeBalance),
+          Some(periodAvailableAccountBalance)
+        ),
+        viewBalanceIsGranted = true,
+        isIsleOfMan = false)
 
     val accounts: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori2)))
     val accountsWithEori1: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori1)))

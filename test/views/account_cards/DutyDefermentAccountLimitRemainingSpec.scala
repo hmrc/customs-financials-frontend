@@ -37,7 +37,7 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase {
           periodAvailableBalance = false).getElementsByClass(
           "accountLimitRemaining search-results__item").text()
 
-        availableAccountBalanceText.contains(messages(app)("cf.account.authorized-to-view.account-limit-remaining"))
+        availableAccountBalanceText.contains(msgs("cf.account.authorized-to-view.account-limit-remaining"))
         availableAccountBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableAccountBalance))
       }
 
@@ -47,7 +47,7 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase {
           periodAvailableBalance = false).getElementsByClass(
           "guaranteeLimitRemaining search-results__item").text()
 
-        availableGuaranteeBalanceText.contains(messages(app)("cf.account.authorized-to-view.guarantee-limit-remaining"))
+        availableGuaranteeBalanceText.contains(msgs("cf.account.authorized-to-view.guarantee-limit-remaining"))
         availableGuaranteeBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableGuaranteeBalance))
       }
 
