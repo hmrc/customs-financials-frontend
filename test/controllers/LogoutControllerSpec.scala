@@ -17,17 +17,26 @@
 package controllers
 
 import config.AppConfig
+import connectors.CustomsFinancialsSessionCacheConnector
+import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.Application
 import play.api.test.Helpers._
+import play.api.{Application, inject}
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
 
 import java.net.URLEncoder
+import scala.concurrent.Future
 
 class LogoutControllerSpec extends SpecBase {
 
   "logout" should {
     "redirect to logout link with survey continue" in new Setup {
+      when(mockSessionCacheConnector.removeSession(any)(any)).thenReturn {
+        Future.successful(HttpResponse(NO_CONTENT, emptyString))
+      }
+
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logout.url)
         val result = route(app, request).value
@@ -39,6 +48,10 @@ class LogoutControllerSpec extends SpecBase {
     }
 
     "redirect to signOut page if session id is not present" in new Setup {
+      when(mockSessionCacheConnector.removeSession(any)(any)).thenReturn {
+        Future.successful(HttpResponse(NO_CONTENT, emptyString))
+      }
+
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logout.url)
         val result = route(app, request).value
@@ -47,12 +60,14 @@ class LogoutControllerSpec extends SpecBase {
         redirectLocation(result).value mustBe
           s"${config.signOutUrl}?continue=${URLEncoder.encode(config.feedbackService, "UTF-8")}"
       }
-
     }
   }
 
   "logoutNoSurvey" should {
     "redirect to logout link without survey continue" in new Setup {
+      when(mockSessionCacheConnector.removeSession(any)(any)).thenReturn(
+        Future.successful(HttpResponse(NO_CONTENT, emptyString)))
+
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url)
         val result = route(app, request).value
@@ -65,7 +80,15 @@ class LogoutControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector =
+      mock[CustomsFinancialsSessionCacheConnector]
+
+    val app: Application = application().overrides(
+      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
+      inject.bind[AuthConnector].toInstance(mockAuthConnector)
+    ).build()
+
     val config: AppConfig = app.injector.instanceOf[AppConfig]
   }
 }
