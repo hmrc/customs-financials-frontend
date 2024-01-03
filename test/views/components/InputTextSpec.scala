@@ -34,14 +34,14 @@ class InputTextSpec extends SpecBase {
       running(app) {
         val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
           form = validForm,
-          id = "value",
-          name = "value",
-          label = "cf.search.authorities",
+          id = id,
+          name = name,
+          label = labelMsgKey,
           isPageHeading = false,
           hint = None
         ).body)
 
-        view.getElementsByTag("label").html() mustBe messages(app)("cf.search.authorities")
+        view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
         view.getElementById("value").`val`() mustBe "GB123456789012"
 
         intercept[RuntimeException] {
@@ -53,9 +53,9 @@ class InputTextSpec extends SpecBase {
     "display the correct hint" in new Setup {
       val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
         form = validForm,
-        id = "value",
-        name = "value",
-        label = "cf.search.authorities",
+        id = id,
+        name = name,
+        label = labelMsgKey,
         isPageHeading = false,
         hint = Some(hintText)
       ).body)
@@ -67,9 +67,9 @@ class InputTextSpec extends SpecBase {
       running(app) {
         val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
           form = invalidForm,
-          id = "value",
-          name = "value",
-          label = "cf.search.authorities",
+          id = id,
+          name = name,
+          label = labelMsgKey,
           isPageHeading = false,
           hint = None
         ).body)
@@ -78,16 +78,35 @@ class InputTextSpec extends SpecBase {
         view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
       }
     }
+
+    "display label with govuk-label--xl class" in new Setup {
+      val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
+        form = validForm,
+        id = id,
+        name = name,
+        label = labelMsgKey,
+        isPageHeading = true,
+        hint = None
+      ).body
+      )
+
+      view.getElementsByClass("govuk-label--xl").text() mustBe msgs(labelMsgKey)
+      view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
+      view.getElementById("value").`val`() mustBe "GB123456789012"
+    }
   }
 
   trait Setup {
     val app: Application = application().build()
-    implicit val msg: Messages = messages(app)
+    implicit val msgs: Messages = messages(app)
+
+    val labelMsgKey = "cf.search.authorities"
+    val id = "value"
+    val name = "value"
 
     val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "GB123456789012"))
     val invalidForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "ABC"))
 
     val hintText = "hint text"
-
   }
 }
