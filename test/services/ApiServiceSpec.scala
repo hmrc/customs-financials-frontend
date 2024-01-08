@@ -30,7 +30,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, _}
 import utils.SpecBase
 import scala.concurrent.Future
 
-//noinspection TypeAnnotation
 class ApiServiceSpec extends SpecBase
   with FutureAwaits with DefaultAwaitTimeout with ScalaFutures {
 

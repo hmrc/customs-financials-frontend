@@ -37,7 +37,7 @@ class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val exe
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
         }
       case Right(_) => None
-    }.recover { case _ => None } //This will allow users to access the service if ETMP return an error via SUB09
+    }.recover { case _ => None }
   }
 }
 

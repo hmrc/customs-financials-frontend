@@ -122,16 +122,16 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
       (request.user.eori, isMyAcc, xiEORI) match {
         case (eori, _, _) if eori.equalsIgnoreCase(query) || (xiEORI.isDefined && xiEORI.get.equalsIgnoreCase(query)) =>
-          displayErrorView(query,"cf.account.authorized-to-view.search-own-eori", fileExists, gbAuthUrl, xiAuthUrl)(
+          displayErrorView(query, "cf.account.authorized-to-view.search-own-eori", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case (_, true, _) =>
-          displayErrorView(query,"cf.account.authorized-to-view.search-own-accountnumber", fileExists, gbAuthUrl, xiAuthUrl)(
+          displayErrorView(query, "cf.account.authorized-to-view.search-own-accountnumber", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
-          displayErrorView(query,"cf.search.authorities.error.register-xi-eori", fileExists, gbAuthUrl, xiAuthUrl)(
+          displayErrorView(query, "cf.search.authorities.error.register-xi-eori", fileExists, gbAuthUrl, xiAuthUrl)(
             request, messages, appConfig)
         case _ =>
-          if(xiEORI.nonEmpty) {
+          if (xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
           } else {
             searchAuthoritiesForValidInput(request, searchQuery)
