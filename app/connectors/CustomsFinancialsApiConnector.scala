@@ -38,7 +38,7 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: 
   }
 
   def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map( res => res.unVerifiedEmail)
+    httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/unverified-email-display").map(res => res.unVerifiedEmail)
   }
 
   def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {

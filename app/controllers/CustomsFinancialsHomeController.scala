@@ -67,8 +67,8 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
         allAccounts <- getAllAccounts(eori, xiEori)
         page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
       } yield page
-      result.recover{
-        case TimeoutResponse  =>
+      result.recover {
+        case TimeoutResponse =>
           Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
   }
@@ -85,7 +85,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     case _: GatewayTimeoutException =>
       log.warn(s"Request Timeout while fetching accounts")
       Future.failed(TimeoutResponse)
-    case NonFatal(e)=>
+    case NonFatal(e) =>
       log.warn(s"[GetAccounts API] Failed with error: ${e.getMessage}")
       Future.successful(Seq.empty[CDSAccounts])
   }
@@ -102,9 +102,11 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
-      sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
-      accountLinks = createAccountLinks(sessionId,cdsAccountsList)
-      _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
+      sessionId = hc.sessionId.getOrElse({
+        log.error("Missing SessionID"); SessionId("Missing Session ID")
+      })
+      accountLinks = createAccountLinks(sessionId, cdsAccountsList)
+      _ <- sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
       val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori)
       Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
@@ -121,7 +123,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       cdsAccount.number,
       cdsAccount.status,
       Option(cdsAccount.statusId),
-      UUID.randomUUID().toString.replaceAll("-",""),
+      UUID.randomUUID().toString.replaceAll("-", ""),
       DateTime.now()
     )
   } yield accountLink
@@ -150,11 +152,11 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>
-      val eori = req.user.eori
-      notificationService.fetchNotifications(eori)
-        .map(_.filterNot(_.fileRole == DutyDefermentStatement))
-        .map(getNotificationMessageKeys)
-        .map(keys => Ok(accountNotAvailable(eori, keys)))
+    val eori = req.user.eori
+    notificationService.fetchNotifications(eori)
+      .map(_.filterNot(_.fileRole == DutyDefermentStatement))
+      .map(getNotificationMessageKeys)
+      .map(keys => Ok(accountNotAvailable(eori, keys)))
   }
 
 }

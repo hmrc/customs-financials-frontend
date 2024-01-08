@@ -31,13 +31,13 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
-                                       override val messagesApi: MessagesApi,
-                                       dataStoreService: DataStoreService,
-                                       view: your_contact_details,
-                                       sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                       implicit val mcc: MessagesControllerComponents)
-                                       (implicit val appConfig: AppConfig, ec: ExecutionContext)
-                                       extends FrontendController(mcc) with I18nSupport {
+                                             override val messagesApi: MessagesApi,
+                                             dataStoreService: DataStoreService,
+                                             view: your_contact_details,
+                                             sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+                                             implicit val mcc: MessagesControllerComponents)
+                                            (implicit val appConfig: AppConfig, ec: ExecutionContext)
+  extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -51,12 +51,16 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   }
 
   private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent],
-    headerId: SessionId)(implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                       headerId: SessionId)(implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
 
     sessionCacheConnector.getSessionId(headerId.value).flatMap {
       case Some(cacheId) =>
-        if (cacheId.body == headerId.value) { generateView(request, headerId) }
-        else { redirectToHomePage() }
+        if (cacheId.body == headerId.value) {
+          generateView(request, headerId)
+        }
+        else {
+          redirectToHomePage()
+        }
       case _ =>
         log.error("Missing SessionID")
         redirectToHomePage()
@@ -65,8 +69,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
   private def generateView(request: AuthenticatedRequest[AnyContent],
                            localSessionId: SessionId)(implicit hc: HeaderCarrier,
-                           messages: Messages,
-                           appConfig: AppConfig): Future[Result] = {
+                                                      messages: Messages,
+                                                      appConfig: AppConfig): Future[Result] = {
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)

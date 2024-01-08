@@ -26,7 +26,7 @@ case class PostponedVatStatementGroup(startDate: LocalDate, files: Seq[Postponed
 
   private val periodName = Formatters.dateAsMonthAndYear(startDate).replace(" ", "-").toLowerCase
   val periodId: String = s"""period-$periodName"""
-  val noStatements: Boolean = PostponedVat.sources.flatMap(source => collectFiles(amended = false,source)).isEmpty
+  val noStatements: Boolean = PostponedVat.sources.flatMap(source => collectFiles(amended = false, source)).isEmpty
 
   def collectFiles(amended: Boolean, source: String): Seq[PostponedVatStatementFile] = {
     val amendedPred: PostponedVatStatementFileMetadata => Boolean = if (amended) {

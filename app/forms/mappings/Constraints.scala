@@ -37,7 +37,7 @@ trait Constraints {
       case str if stripWhitespace(str).matches(canRegex) => Valid
       case str if stripWhitespace(str).matches(ganRegex) => Valid
       case str if stripWhitespace(str).matches(xiEoriRegex) => Valid
-      case _ => Invalid(invalidFormatErrorKey,eoriRegex)
+      case _ => Invalid(invalidFormatErrorKey, eoriRegex)
     }
 
   protected def stripWhitespace(str: String): String =

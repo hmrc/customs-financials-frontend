@@ -29,7 +29,7 @@ case class EoriHistory(eori: EORI,
 
   val isHistoricEori: Boolean = validUntil.isDefined
 
-  def toLoggable():String = {
+  def toLoggable(): String = {
     s"EoriHistory(Eori: ${obfuscateEori(eori)}, validFrom: $validFrom, validUntil: $validUntil)"
   }
 }
@@ -37,11 +37,11 @@ case class EoriHistory(eori: EORI,
 object EoriHistory {
   val logger = Logger(this.getClass)
 
-  implicit val eoriHistoryFormat:Reads[EoriHistory] = (
+  implicit val eoriHistoryFormat: Reads[EoriHistory] = (
     (JsPath \ "eori").read[String] and
       (JsPath \ "validFrom").readNullable[String].map(asDate) and
       (JsPath \ "validUntil").readNullable[String].map(asDate)
-    )(EoriHistory.apply _ )
+    )(EoriHistory.apply _)
 
   implicit val eoriHistoryWrites: Writes[EoriHistory] = (o: EoriHistory) => {
     Json.obj(

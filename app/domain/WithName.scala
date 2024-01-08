@@ -16,6 +16,6 @@
 
 package domain
 
-class WithName (value: String) {
+class WithName(value: String) {
   override val toString: String = value
 }

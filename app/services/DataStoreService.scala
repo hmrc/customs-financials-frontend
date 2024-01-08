@@ -82,7 +82,7 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
     val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
 
-    if (isXiEoriEnabled){
+    if (isXiEoriEnabled) {
       metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
         http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
           response => if (response.xiEori.isEmpty) None else Some(response.xiEori))

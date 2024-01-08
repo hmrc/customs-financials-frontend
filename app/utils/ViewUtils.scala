@@ -23,11 +23,11 @@ object ViewUtils {
 
   def title(form: Form[_], titleStr: String, section: Option[String], titleMessageArgs: Seq[String])
            (implicit messages: Messages): String = {
-    titleNoForm(s"${errorPrefix(form)} ${messages(titleStr, titleMessageArgs:_*)}", section, Seq())
+    titleNoForm(s"${errorPrefix(form)} ${messages(titleStr, titleMessageArgs: _*)}", section, Seq())
   }
 
   def titleNoForm(title: String, section: Option[String], titleMessageArgs: Seq[String])(implicit messages: Messages): String =
-    s"${messages(title, titleMessageArgs:_*)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
+    s"${messages(title, titleMessageArgs: _*)} - ${section.fold("")(messages(_) + " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
     if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")}:" else ""

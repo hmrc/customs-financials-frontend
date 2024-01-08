@@ -19,7 +19,7 @@ package domain
 import play.api.libs.json.{Json, OWrites}
 
 case class AuditDisplayStandingAuths(eori: String, isHistoric: Boolean,
-  fileName: String, fileRole: FileRole, fileType: String)
+                                     fileName: String, fileRole: FileRole, fileType: String)
 
 object AuditDisplayStandingAuths {
   implicit val requestAuditDisplayStandingAuthsWrites: OWrites[AuditDisplayStandingAuths] =

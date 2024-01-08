@@ -19,7 +19,7 @@ package domain
 import play.api.libs.json.{Json, Reads}
 
 case class AccountsAndBalancesResponseContainer(accountsAndBalancesResponse: AccountsAndBalancesResponse) {
-  def toCdsAccounts(eori:String): domain.CDSAccounts = {
+  def toCdsAccounts(eori: String): domain.CDSAccounts = {
     val details: AccountResponseDetail = this.accountsAndBalancesResponse.responseDetail
     val dutyDefermentAccounts: Seq[domain.DutyDefermentAccount] = details.dutyDefermentAccount.fold(Seq.empty[domain.DutyDefermentAccount])(_.map(_.toDomain()))
     val generalGuaranteeAccounts: Seq[domain.GeneralGuaranteeAccount] = details.generalGuaranteeAccount.fold(Seq.empty[domain.GeneralGuaranteeAccount])(_.map(_.toDomain))

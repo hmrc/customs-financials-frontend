@@ -28,7 +28,7 @@ object DateConverters {
     def compare(that: LocalDate): Int = date.compareTo(that)
   }
 
-  implicit def toJodaTime(date: LocalDate): time.LocalDate  = {
+  implicit def toJodaTime(date: LocalDate): time.LocalDate = {
     new time.LocalDate(java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC)))
   }
 }

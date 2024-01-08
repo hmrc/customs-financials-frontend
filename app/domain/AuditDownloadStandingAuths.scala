@@ -19,8 +19,8 @@ package domain
 import play.api.libs.json.{Json, OWrites}
 
 case class AuditDownloadStandingAuths(eori: String, fileName: String,
-  periodStartYear: Int, periodStartMonth: Int, periodStartDay: Int,
-  fileType: String, fileRole: FileRole)
+                                      periodStartYear: Int, periodStartMonth: Int, periodStartDay: Int,
+                                      fileType: String, fileRole: FileRole)
 
 object AuditDownloadStandingAuths {
   implicit val requestAuditDownloadStandingAuthsWrites: OWrites[AuditDownloadStandingAuths] =

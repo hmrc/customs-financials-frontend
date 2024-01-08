@@ -26,7 +26,9 @@ case class UndeliverableInformation(subject: String,
                                     event: UndeliverableInformationEvent)
 
 object UndeliverableInformation {
+
   import play.api.libs.json.JodaReads._
   import play.api.libs.json.JodaWrites._
+
   implicit val format: OFormat[UndeliverableInformation] = Json.format[UndeliverableInformation]
 }
