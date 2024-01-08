@@ -31,14 +31,14 @@ class AppConfigSpec extends SpecBase {
       appConfig.cashAccountTopUpGuidanceUrl shouldBe
         "https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations"
 
-      appConfig.cashAccountWithdrawUrl shouldBe 
+      appConfig.cashAccountWithdrawUrl shouldBe
         "https://www.gov.uk/guidance/withdraw-funds-from-your-cash-account-for-cds-declarations"
 
-      appConfig.feedbackService shouldBe 
+      appConfig.feedbackService shouldBe
         "https://www.development.tax.service.gov.uk/feedback/CDS-FIN"
       appConfig.timeout shouldBe 900
       appConfig.countdown shouldBe 120
-    
+
       appConfig.helpMakeGovUkBetterUrl shouldBe
         "https://signup.take-part-in-research.service.gov.uk?" +
           "utm_campaign=CDSfinancials&utm_source=Other&utm_medium=other&t=HMRC&id=249"
@@ -59,6 +59,7 @@ class AppConfigSpec extends SpecBase {
       appConfig.emailFrontendUrl shouldBe "http://localhost:9898/manage-email-cds/service/customs-finance"
     }
   }
+
   trait Setup {
     val app: Application = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]

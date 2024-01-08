@@ -117,7 +117,7 @@ class YourContactDetailsControllerSpec extends SpecBase {
       DefermentAccountAvailable, CDSCashBalance(None))
 
     val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(n2*5), BigDecimal(n2*3))))
+      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(n2 * 5), BigDecimal(n2 * 3))))
 
     val ggAccount2: GeneralGuaranteeAccount = GeneralGuaranteeAccount(
       "2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
@@ -138,7 +138,7 @@ class YourContactDetailsControllerSpec extends SpecBase {
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(email)))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("companyName")))
     when(mockDataStoreService.getCompanyAddress(any)(any)).thenReturn(
-      Future.successful(Option(CompanyAddress("","",None, "GB"))))
+      Future.successful(Option(CompanyAddress("", "", None, "GB"))))
 
     val app: Application = application()
       .overrides(

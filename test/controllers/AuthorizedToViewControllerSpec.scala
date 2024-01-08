@@ -367,8 +367,8 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(
           Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).andThenAnswer(
-        Future.successful(Left(NoAuthorities))
-      )
+          Future.successful(Left(NoAuthorities))
+        )
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
@@ -401,7 +401,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(
-        Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))

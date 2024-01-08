@@ -33,7 +33,7 @@ import utils.SpecBase
 
 import scala.concurrent.Future
 
-class SdesConnectorSpec extends SpecBase  {
+class SdesConnectorSpec extends SpecBase {
 
   "HttpSdesConnector" should {
     "getAuthoritiesCsvFiles" should {

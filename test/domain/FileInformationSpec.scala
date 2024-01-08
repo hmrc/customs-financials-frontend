@@ -20,7 +20,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
 
-class FileInformationSpec extends SpecBase{
+class FileInformationSpec extends SpecBase {
 
   "FileInformation" should {
 

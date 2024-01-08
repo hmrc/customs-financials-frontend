@@ -250,7 +250,7 @@ class DataStoreServiceSpec extends SpecBase {
           .thenReturn(Future.failed(new NotFoundException("Not Found Xi EORI Information")))
 
         running(app) {
-          val response = await(service.getXiEori(eori ))
+          val response = await(service.getXiEori(eori))
           response mustBe None
         }
       }

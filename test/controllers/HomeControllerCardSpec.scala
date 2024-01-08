@@ -151,7 +151,7 @@ class HomeControllerCardSpec extends SpecBase {
     }
     "show the historic eori duty deferment cards" in {
 
-      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",false ,AccountStatusOpen, DefermentAccountAvailable,
+      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111", false, AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
       val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", false, AccountStatusOpen, DefermentAccountAvailable,
@@ -245,7 +245,7 @@ class HomeControllerCardSpec extends SpecBase {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)))
-          , viewBalanceIsGranted = true, isIsleOfMan = false )
+          , viewBalanceIsGranted = true, isIsleOfMan = false)
       }.toList
 
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
@@ -262,8 +262,8 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
 
-    val add = XiEoriAddressInformation("",Some(""),None,None,Some(""))
-    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)

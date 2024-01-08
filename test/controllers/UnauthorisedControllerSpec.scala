@@ -36,7 +36,7 @@ class UnauthorisedControllerSpec extends SpecBase {
       when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext]))
         .thenReturn(Future.successful({}))
 
-      running(app){
+      running(app) {
         val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
         val result = route(app, request).value
         status(result) mustBe OK
@@ -46,11 +46,11 @@ class UnauthorisedControllerSpec extends SpecBase {
     }
 
     "not load 'not subscribed to cds' page" when {
-      "user is not authorised with GG"  in new Setup {
+      "user is not authorised with GG" in new Setup {
         when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext]))
           .thenReturn(Future.failed(SessionRecordNotFound()))
 
-        running(app){
+        running(app) {
           val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER

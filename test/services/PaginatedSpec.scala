@@ -25,12 +25,13 @@ import utils.SpecBase
 import viewmodels.Paginated
 
 import scala.jdk.CollectionConverters._
+
 object PaginatorElement {
-  def apply(e: Element):List[PaginatorElement] = {
-    e.select("li").asScala.map( li => {
+  def apply(e: Element): List[PaginatorElement] = {
+    e.select("li").asScala.map(li => {
       val url = li.select("a").asScala.toList match {
         case Nil => ""
-        case head::tail => head.attr("href")
+        case head :: tail => head.attr("href")
       }
       PaginatorElement(url, li.text())
     }).toList
@@ -38,14 +39,15 @@ object PaginatorElement {
 }
 
 object PaginatorParser {
-  def apply(e: Element):PaginatorParser = {
+  def apply(e: Element): PaginatorParser = {
     val description = e.select(".pager-summary").text()
     PaginatorParser(description, PaginatorElement(e))
   }
 }
 
-case class PaginatorElement(url:String, linkText:String)
-case class PaginatorParser(description:String, links: Seq[PaginatorElement])
+case class PaginatorElement(url: String, linkText: String)
+
+case class PaginatorParser(description: String, links: Seq[PaginatorElement])
 
 case class ExamplePaginatedViewModel(allItems: Seq[Int],
                                      itemsPerPage: Int,

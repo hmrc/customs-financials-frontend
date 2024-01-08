@@ -32,11 +32,11 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
   "requestAuthoritiesCsv" should {
     "should be sent to authorisedToViewRequestReceived when request successful" in new Setup {
       running(app) {
-          val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
-          val result = route(app, request).value
-          val html = Jsoup.parse(contentAsString(result))
-          status(result) shouldBe OK
-          html.text().contains("Request received") shouldBe true
+        val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+        status(result) shouldBe OK
+        html.text().contains("Request received") shouldBe true
       }
     }
 
@@ -54,7 +54,7 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
     }
 
     "should be directed to InternalServerError page when error is returned from ACC41" in new Setup {
-      when(mockApiService.requestAuthoritiesCsv(any,any)(any))
+      when(mockApiService.requestAuthoritiesCsv(any, any)(any))
         .thenReturn(Future.successful(Left(RequestAuthoritiesCSVError)))
 
       running(app) {
@@ -71,9 +71,9 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
   trait Setup {
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val requestAuthorityCsvResponse: RequestAuthoritiesCsvResponse =  RequestAuthoritiesCsvResponse("date")
+    val requestAuthorityCsvResponse: RequestAuthoritiesCsvResponse = RequestAuthoritiesCsvResponse("date")
 
-    when(mockApiService.requestAuthoritiesCsv(any,any)(any))
+    when(mockApiService.requestAuthoritiesCsv(any, any)(any))
       .thenReturn(Future.successful(Right(requestAuthorityCsvResponse)))
 
     when(mockDataStoreService.getEmail(any)(any))

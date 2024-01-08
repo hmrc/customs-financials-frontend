@@ -36,7 +36,7 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
   "CustomsFinancialApiConnector" should {
     "return verified email" in new Setup {
 
-      running (app){
+      running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
         val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
@@ -46,7 +46,7 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
 
     "return unverified email" in new Setup {
 
-      running (app){
+      running(app) {
 
         when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
           .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))

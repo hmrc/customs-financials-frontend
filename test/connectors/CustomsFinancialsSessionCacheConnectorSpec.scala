@@ -65,7 +65,7 @@ class CustomsFinancialsSessionCacheConnectorSpec extends SpecBase
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
         val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl +
           "/account-links/" + sessionId.value
-        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl),any, any)(any, any, any))
+        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any, any)(any, any, any))
           .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
         val result = await(connector.getAccontLinks(sessionId.value))
         result mustBe None

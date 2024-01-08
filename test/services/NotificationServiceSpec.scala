@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class NotificationServiceSpec extends MockAuditingService  with FutureAwaits with DefaultAwaitTimeout with ScalaFutures with BeforeAndAfterEach {
+class NotificationServiceSpec extends MockAuditingService with FutureAwaits with DefaultAwaitTimeout with ScalaFutures with BeforeAndAfterEach {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -43,15 +43,15 @@ class NotificationServiceSpec extends MockAuditingService  with FutureAwaits wit
 
     "indicate that notifications are available" when {
       val collectionOfDocumentAttributes = List(
-          DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map.empty),
-          DocumentAttributes(eori, PostponedVATStatement, "new file", fileSize, Map.empty),
-          DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map.empty),
-          DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map.empty),
-          DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
-          DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
-          DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
-          DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty)
-        )
+        DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map.empty),
+        DocumentAttributes(eori, PostponedVATStatement, "new file", fileSize, Map.empty),
+        DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map.empty),
+        DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map.empty),
+        DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
+        DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
+        DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
+        DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty)
+      )
 
       "the given document type is present" in {
         when(mockApiService.getEnabledNotifications(eori)).thenReturn(Future.successful(collectionOfDocumentAttributes))

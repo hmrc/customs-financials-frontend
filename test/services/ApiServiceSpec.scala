@@ -140,7 +140,7 @@ class ApiServiceSpec extends SpecBase
 
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
-          result mustBe Right(SearchedAuthorities("1",List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some("10.0")))))
+          result mustBe Right(SearchedAuthorities("1", List(AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0")))))
         }
       }
     }
@@ -224,7 +224,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
         }
       }
@@ -234,7 +234,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Left(RequestAuthoritiesCSVError)
         }
       }

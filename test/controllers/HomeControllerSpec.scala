@@ -393,7 +393,7 @@ class HomeControllerSpec extends SpecBase {
         DefermentAccountAvailable,
         Some(GeneralGuaranteeBalance(BigDecimal(someGuaranteeLimit), BigDecimal(someAvailableGuaranteeBalance)))
       )
-      val someCashAccount = CashAccount("1000001", eoriNumber,AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
+      val someCashAccount = CashAccount("1000001", eoriNumber, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
@@ -421,7 +421,7 @@ class HomeControllerSpec extends SpecBase {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)))
-          , viewBalanceIsGranted = true, isIsleOfMan = false )
+          , viewBalanceIsGranted = true, isIsleOfMan = false)
       }.toList
 
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)

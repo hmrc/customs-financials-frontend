@@ -25,7 +25,7 @@ import utils.SpecBase
 class CustomsAccountsSpec extends SpecBase {
 
   private val traderEori = "12345678"
-  private val agentEori =  "09876543"
+  private val agentEori = "09876543"
 
   val guaranteeAccount = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(1000000), BigDecimal(200000))))
   val guaranteeAccountZeroLimit = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(200001))))
@@ -38,15 +38,15 @@ class CustomsAccountsSpec extends SpecBase {
 
   val dd2 = DutyDefermentAccount("7567567567", traderEori, false, AccountStatusOpen,
     DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-      None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
+      None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
   val dd3 = DutyDefermentAccount("7897897897", agentEori, false, AccountStatusOpen,
     DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
       Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-  val dd4 = DutyDefermentAccount("1112223334", agentEori,false, AccountStatusOpen,
+  val dd4 = DutyDefermentAccount("1112223334", agentEori, false, AccountStatusOpen,
     DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-      None,None), viewBalanceIsGranted = true, isIsleOfMan = false)
+      None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
   private val cashAccountNumber = "987654"
   val cashAccount = CashAccount(cashAccountNumber, traderEori, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999.99))))
@@ -66,56 +66,56 @@ class CustomsAccountsSpec extends SpecBase {
     "isAgent" should {
       "return false when user has no authority to view clients accounts" in {
         withClue("isAgent() must be false:") {
-          traderCdsAccounts.isAgent must be (false)
+          traderCdsAccounts.isAgent must be(false)
         }
       }
       "return true when user has authority to view clients accounts" in {
         withClue("isAgent() must be true:") {
-          agentCdsAccounts.isAgent must be (true)
+          agentCdsAccounts.isAgent must be(true)
         }
       }
     }
 
     "myAccounts" should {
       "return all accounts owned by the given EORI" in {
-        agentCdsAccounts.myAccounts must be (agentOwnAccounts)
+        agentCdsAccounts.myAccounts must be(agentOwnAccounts)
       }
     }
 
     "authorizedToView" should {
       "return all accounts not owned by the given EORI" in {
-        agentCdsAccounts.authorizedToView must be (agentClientsAccounts)
+        agentCdsAccounts.authorizedToView must be(agentClientsAccounts)
       }
     }
 
     "filterCashAccounts" should {
       "return any Cash Accounts" in {
-        filterCashAccounts(traderAccounts) must be (List(cashAccount))
+        filterCashAccounts(traderAccounts) must be(List(cashAccount))
       }
     }
 
     "filterDutyDefermentAccounts" should {
       "return just Duty Deferment Accounts" in {
-        filterDutyDefermentAccounts(traderAccounts) must be (List(dd1, dd2))
+        filterDutyDefermentAccounts(traderAccounts) must be(List(dd1, dd2))
       }
     }
 
     "filterGuaranteeAccounts" should {
       "return just Guarantee Accounts" in {
-        filterGuaranteeAccounts(traderAccounts) must be (List(guaranteeAccount))
+        filterGuaranteeAccounts(traderAccounts) must be(List(guaranteeAccount))
       }
     }
 
     "filterByAccountNumber" should {
       "return a function which returns any accounts which match the given account number" in {
         val func = filterByAccountNumber(cashAccountNumber)
-        func(traderAccounts) must be (List(cashAccount))
+        func(traderAccounts) must be(List(cashAccount))
       }
     }
 
     "DutyDefermentAccount" should {
-     val values = Table(
-        ("status","isleOfManFlag","expectedResult"),
+      val values = Table(
+        ("status", "isleOfManFlag", "expectedResult"),
         (DefermentAccountAvailable, false, false),
         (DefermentAccountAvailable, true, false),
         (ChangeOfLegalEntity, false, false),
@@ -139,8 +139,8 @@ class CustomsAccountsSpec extends SpecBase {
       )
       "return correct requiredDirectDebit status" in {
         forAll(values) {
-          (statusId: CDSAccountStatusId,isleOfManFlag:Boolean,expectedResult:Boolean) => {
-            val dd =  dd1.copy(statusId = statusId, isIsleOfMan = isleOfManFlag)
+          (statusId: CDSAccountStatusId, isleOfManFlag: Boolean, expectedResult: Boolean) => {
+            val dd = dd1.copy(statusId = statusId, isIsleOfMan = isleOfManFlag)
             dd.isDirectDebitSetupRequired mustBe expectedResult
           }
         }
@@ -152,27 +152,27 @@ class CustomsAccountsSpec extends SpecBase {
 
     "return correct used funds value" in {
       val expectedUsedFunds = 800000
-      guaranteeAccount.balances.get.usedFunds  must be (expectedUsedFunds)
+      guaranteeAccount.balances.get.usedFunds must be(expectedUsedFunds)
     }
 
     "return zero used funds when the guarantee limit is zero" in {
       val expectedUsedFunds = -200001
-      guaranteeAccountZeroLimit.balances.get.usedFunds  must be (expectedUsedFunds)
+      guaranteeAccountZeroLimit.balances.get.usedFunds must be(expectedUsedFunds)
     }
 
     "return correct used percentage value" in {
       val expectedUsedPercentage = 80
-      guaranteeAccount.balances.get.usedPercentage  must be (expectedUsedPercentage)
+      guaranteeAccount.balances.get.usedPercentage must be(expectedUsedPercentage)
     }
 
     "return used funds of 100 percent when available balance is zero" in {
       val expectedUsedPercentage = 100
-      guaranteeAccountZeroBalance.balances.get.usedPercentage  must be (expectedUsedPercentage)
+      guaranteeAccountZeroBalance.balances.get.usedPercentage must be(expectedUsedPercentage)
     }
 
     "return zero used percentage and funds when available balance and limit are both zero" in {
       val expectedUsedPercentage = 0
-      guaranteeAccountZeroLimitZeroBalance.balances.get.usedPercentage  must be (expectedUsedPercentage)
+      guaranteeAccountZeroLimitZeroBalance.balances.get.usedPercentage must be(expectedUsedPercentage)
     }
 
   }
@@ -181,74 +181,74 @@ class CustomsAccountsSpec extends SpecBase {
 
     "return correct used funds value" in {
       val expectedUsedFunds = 80
-      dd1.balances.usedFunds  must be (expectedUsedFunds)
+      dd1.balances.usedFunds must be(expectedUsedFunds)
     }
 
     "return correct used percentage value" in {
       val expectedUsedPercentage = 80
-      dd1.balances.usedPercentage  must be (expectedUsedPercentage)
+      dd1.balances.usedPercentage must be(expectedUsedPercentage)
     }
 
     "usedFunds" should {
       "return zero if periodAvailableAccountBalance or periodAccountLimit is not provided" in {
-        dd2.balances.usedFunds must be (0)
+        dd2.balances.usedFunds must be(0)
       }
 
       "return calculated funds if periodAccountLimit & periodAvailableAccountBalance are positives" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(50)))
-        balance.usedFunds must be (50)
+        balance.usedFunds must be(50)
       }
 
       "return calculated funds if periodAccountLimit is positive & periodAvailableAccountBalance is negative" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(-50)))
-        balance.usedFunds must be (150)
+        balance.usedFunds must be(150)
       }
 
       "return calculated funds if periodAccountLimit is positive & periodAvailableAccountBalance is zero" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(0)))
-        balance.usedFunds must be (100)
+        balance.usedFunds must be(100)
       }
 
       "return calculated funds if periodAccountLimit is zero & periodAvailableAccountBalance is negative" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(-100)))
-        balance.usedFunds must be (100)
+        balance.usedFunds must be(100)
       }
     }
 
     "usedPercentage" should {
       "return zero if periodAvailableAccountBalance or periodAccountLimit is not provided" in {
-        dd2.balances.usedPercentage must be (0)
+        dd2.balances.usedPercentage must be(0)
       }
 
       "return calculated value if periodAccountLimit & periodAvailableAccountBalance are positives" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(50)))
-        balance.usedPercentage must be (50)
+        balance.usedPercentage must be(50)
       }
 
       "return 100 if periodAccountLimit is positive & periodAvailableAccountBalance is zero" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(0)))
-        balance.usedPercentage must be (100)
+        balance.usedPercentage must be(100)
       }
     }
 
     "availableBalance" should {
       "return zero if periodAvailableAccountBalance is not provided" in {
-        dd2.balances.availableBalance must be (0)
+        dd2.balances.availableBalance must be(0)
       }
 
       "return the balance if periodAvailableAccountBalance is a positive value" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(50)))
-        balance.availableBalance must be (50)
+        balance.availableBalance must be(50)
       }
 
       "return the balance if periodAvailableAccountBalance is a zero value" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(0)))
-        balance.availableBalance must be (0)
+        balance.availableBalance must be(0)
       }
 
       "return the balance if periodAvailableAccountBalance is a negative value" in {
         val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(-50)))
-        balance.availableBalance must be (-50)
+        balance.availableBalance must be(-50)
       }
     }
 

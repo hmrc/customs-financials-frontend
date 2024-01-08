@@ -37,7 +37,9 @@ class DateTimeServiceSpec extends SpecBase {
     val service = app.injector.instanceOf[DateTimeService]
 
     val mockClock = mock[DateTimeService]
+
     def now = LocalDateTime.now()
+
     when(mockClock.systemDateTime()).thenReturn(now)
 
     running(app) {

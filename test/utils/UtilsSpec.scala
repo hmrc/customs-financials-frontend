@@ -24,20 +24,20 @@ import domain.StandingAuthorityFile
 import Utils._
 
 class UtilsSpec extends SpecBase {
-"isSearchQueryAnAccountNumber" should {
-  "return true when input string is Account number" in {
-    isSearchQueryAnAccountNumber("1234567") mustBe true
-    isSearchQueryAnAccountNumber("123456789") mustBe true
-    isSearchQueryAnAccountNumber("Ab34567890") mustBe true
-    isSearchQueryAnAccountNumber("Ab345678") mustBe true
-  }
+  "isSearchQueryAnAccountNumber" should {
+    "return true when input string is Account number" in {
+      isSearchQueryAnAccountNumber("1234567") mustBe true
+      isSearchQueryAnAccountNumber("123456789") mustBe true
+      isSearchQueryAnAccountNumber("Ab34567890") mustBe true
+      isSearchQueryAnAccountNumber("Ab345678") mustBe true
+    }
 
-  "return false when input string is an EORI" in {
-    isSearchQueryAnAccountNumber("GB1234567789") mustBe false
-    isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
-    isSearchQueryAnAccountNumber("XI12345670890") mustBe false
+    "return false when input string is an EORI" in {
+      isSearchQueryAnAccountNumber("GB1234567789") mustBe false
+      isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
+      isSearchQueryAnAccountNumber("XI12345670890") mustBe false
+    }
   }
-}
 
   "emptyString" should {
     "return correct value" in {

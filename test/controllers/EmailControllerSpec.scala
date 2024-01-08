@@ -33,7 +33,7 @@ class EmailControllerSpec extends SpecBase {
   "EmailController" should {
     "return unverified email" in new Setup {
 
-      running (app){
+      running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
         val result: Future[Option[String]] = connector.isEmailUnverified(hc)
@@ -54,11 +54,11 @@ class EmailControllerSpec extends SpecBase {
       ).build()
 
 
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
+      val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
 
-        await(result) mustBe expectedUndeliverabeResult
+      await(result) mustBe expectedUndeliverabeResult
 
     }
 
@@ -78,14 +78,14 @@ class EmailControllerSpec extends SpecBase {
       val response = EmailVerifiedResponse(Some("undeliverableEmail"))
 
       when[Future[EmailVerifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
-          .thenReturn(Future.successful(response))
-        val app = application().overrides(
-          bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-          bind[HttpClient].toInstance(mockHttpClient)
-        ).build()
-        val request = fakeRequest(GET, routes.EmailController.showUndeliverable().url)
-        val result = route(app, request).value
-        status(result) shouldBe OK
+        .thenReturn(Future.successful(response))
+      val app = application().overrides(
+        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        bind[HttpClient].toInstance(mockHttpClient)
+      ).build()
+      val request = fakeRequest(GET, routes.EmailController.showUndeliverable().url)
+      val result = route(app, request).value
+      status(result) shouldBe OK
 
     }
   }

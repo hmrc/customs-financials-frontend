@@ -34,7 +34,7 @@ class EmailActionSpec extends SpecBase {
 
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {
-      running (app) {
+      running(app) {
         when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
@@ -50,7 +50,7 @@ class EmailActionSpec extends SpecBase {
     }
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
-      running(app){
+      running(app) {
         when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.failed(new ServiceUnavailableException("")))
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
@@ -76,6 +76,6 @@ class EmailActionSpec extends SpecBase {
 
     val emailAction = app.injector.instanceOf[EmailAction]
 
-    val authenticatedRequest = AuthenticatedRequest(FakeRequest("GET","/"), newUser())
+    val authenticatedRequest = AuthenticatedRequest(FakeRequest("GET", "/"), newUser())
   }
 }

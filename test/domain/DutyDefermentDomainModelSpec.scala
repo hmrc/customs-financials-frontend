@@ -20,7 +20,7 @@ import utils.SpecBase
 import domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 
-class DutyDefermentDomainModelSpec extends SpecBase    {
+class DutyDefermentDomainModelSpec extends SpecBase {
 
   "DutyDefermentDomainModel" should {
 
@@ -34,13 +34,13 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
       val expectedDDBalance = DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20)))
       val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", false, AccountStatusOpen,
         DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
-      val account = AccountResponse("1231231231", "", "EORI12345678",accountStatus = None, None, viewBalanceIsGranted = false)
+      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None, None, viewBalanceIsGranted = false)
       val dda = DDA(account, Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
 
-      statusList.foreach { case(status) => {
+      statusList.foreach { case (status) => {
         val dd = dda.copy(account = account.copy(accountStatus = status))
         dd.toDomain() mustBe expectedDDA.copy(status = status.getOrElse(AccountStatusOpen))
-        }
+      }
       }
     }
 
@@ -53,10 +53,10 @@ class DutyDefermentDomainModelSpec extends SpecBase    {
       val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None, accountStatusID = None, viewBalanceIsGranted = false, isleOfManFlag = None)
       val dda = DDA(account, isIomAccount = Some(iomList.nonEmpty), isNiAccount = Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
 
-      iomList.foreach { case(iom) => {
+      iomList.foreach { case (iom) => {
         val dd = dda.copy(isIomAccount = Some(iom.getOrElse(false)))
         dd.toDomain().isIsleOfMan mustBe iom.getOrElse(false)
-        }
+      }
       }
     }
   }

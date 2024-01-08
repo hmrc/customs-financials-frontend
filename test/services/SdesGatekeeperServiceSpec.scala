@@ -29,7 +29,7 @@ class SdesGatekeeperServiceSpec extends SpecBase {
   implicit val messages: Messages = Helpers.stubMessages()
   "SdesGatekeeperService" should {
 
-    "create StandingAuthorityFile from FileInformation" in  {
+    "create StandingAuthorityFile from FileInformation" in {
       val sdesGatekeeperService = new SdesGatekeeperService()
 
       val standingAuthorityFileMetadata = List(
