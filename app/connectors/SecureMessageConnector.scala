@@ -36,7 +36,6 @@ class SecureMessageConnector @Inject()(http: HttpClient,
   private val log = Logger(this.getClass)
 
   def getMessageCountBanner(returnToUrl: String)(implicit request: RequestHeader): Future[Option[HtmlPartial]] = {
-    //Ensures the language cookie is forwarded
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
     http.GET[HtmlPartial](appConfig.customsSecureMessagingBannerEndpoint, Seq(("return_to", returnToUrl)))
       .map {

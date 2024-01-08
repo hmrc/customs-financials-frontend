@@ -24,7 +24,7 @@ case class AccountResponse(number: String,
                            accountStatus: Option[CDSAccountStatus],
                            accountStatusID: Option[CDSAccountStatusId],
                            viewBalanceIsGranted: Boolean,
-                           isleOfManFlag: Option[Boolean] = Some(false)    //Remove this flag once XI EORI feature is live
+                           isleOfManFlag: Option[Boolean] = Some(false)
                           )
 
 object AccountResponse {

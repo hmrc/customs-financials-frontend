@@ -31,37 +31,18 @@ object Utils {
   val xiCsvFileNameRegEx = "SA_XI_[\\w]+_csv.csv$"
   val xiEoriRegex = "XI\\d{12}"
 
-  /**
-   * Returns true if the input is a valid Account number otherwise false
-   * Returns false if the input is a EORI
-   *
-   * @param inputStr SearchQuery
-   * @return Boolean
-   */
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&
       !inputStr.startsWith(gbnEORIPrefix) &&
       !inputStr.startsWith(xiEORIPrefix) && (
       inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr.matches(ganRegex))
 
-  /**
-   * Partitions the Seq of StandingAuthorityFile into Seq of StandingAuthorityFile
-   * for GB and XI authority by provided file name pattern
-   *
-   * @param csvFiles Seq[StandingAuthorityFile]
-   * @return CsvFiles
-   */
   def partitionCsvFilesByFileNamePattern(csvFiles: Seq[StandingAuthorityFile],
                                          fileNamePattern: String = xiCsvFileNameRegEx): CsvFiles = {
     val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.matches(fileNamePattern))
     CsvFiles(partitionedList._2, partitionedList._1)
   }
 
-  /**
-   * Returns true if input string is XI EORI otherwise returns false
-   * Example: isXIEori("XI123456789012") = true
-   * Example: isXIEori("xi123456789012") = false
-   */
   def isXIEori(str: String): Boolean = str.trim.matches(xiEoriRegex)
 
   case class CsvFiles(gbCsvFiles: Seq[StandingAuthorityFile], xiCsvFiles: Seq[StandingAuthorityFile])

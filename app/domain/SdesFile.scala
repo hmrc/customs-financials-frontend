@@ -50,12 +50,14 @@ object FileFormat {
   // scalastyle:on magic.number
 
   val log: LoggerLike = Logger(this.getClass)
-
   val SdesFileFormats: SortedSet[FileFormat] = SortedSet(Pdf, Csv)
   val PvatFileFormats: SortedSet[FileFormat] = SortedSet(Pdf)
   val authorityFileFormats: SortedSet[FileFormat] = SortedSet(Csv)
 
-  def filterFileFormats[T <: SdesFile](allowedFileFormats: SortedSet[FileFormat])(files: Seq[T]): Seq[T] = files.filter(file => allowedFileFormats(file.metadata.fileFormat))
+  def filterFileFormats[T <: SdesFile](
+                                        allowedFileFormats: SortedSet[FileFormat])(
+                                        files: Seq[T]): Seq[T] = files.filter(
+    file => allowedFileFormats(file.metadata.fileFormat))
 
   def apply(name: String): FileFormat = name.toUpperCase match {
     case Pdf.name => Pdf
@@ -307,8 +309,8 @@ case class VatCertificateFileMetadata(periodStartYear: Int,
                                       statementRequestId: Option[String]) extends SdesFileMetadata
 
 case class PostponedVatStatementFileMetadata(periodStartYear: Int,
-                                               periodStartMonth: Int,
-                                               fileFormat: FileFormat,
-                                               fileRole: FileRole,
-                                               source: String,
-                                               statementRequestId: Option[String]) extends SdesFileMetadata
+                                             periodStartMonth: Int,
+                                             fileFormat: FileFormat,
+                                             fileRole: FileRole,
+                                             source: String,
+                                             statementRequestId: Option[String]) extends SdesFileMetadata

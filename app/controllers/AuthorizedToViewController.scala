@@ -37,6 +37,7 @@ import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+// scalastyle:off cyclomatic.complexity
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
@@ -148,10 +149,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  /**
-   * Displays the error view for the Business exceptions using
-   * relevant message key
-   */
   private def displayErrorView(query: EORI,
                                msgKey: String,
                                fileExists: Boolean,
@@ -168,9 +165,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       fileExists,
       appConfig.xiEoriEnabled)(request, messages, appConfig)))
 
-  /**
-   * Search and processes the Authorities for the valid input, further, displays the view accordingly
-   */
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
                                              searchQuery: EORI,
                                              xiEORI: Option[String] = None)
@@ -199,24 +193,12 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           processAuthAndViewResultPage(request, searchQuery, messages, appConfig, xiAuthorities, isGBAuth = false)
 
         case (Right(gbAuthorities), Right(xiAuthorities)) =>
-          //Currently below is processing authorities when search string is an account number
           processGBAndXIAuthAndViewResultPage(request, searchQuery, messages, appConfig, gbAuthorities, xiAuthorities)
-
-          //TODO: Need to be looked at
-        /*case (Left(SearchError), Left(NoAuthorities)) =>
-          if (isSearchQueryAnAccountNumber(searchQuery)) {
-            Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
-          } else {
-            Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
-          }*/
       }
     }
     result.flatten
   }
 
-  /**
-   * Processes the SearchedAuthorities for GB or XI EORI
-   */
   private def processAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
                                            searchQuery: EORI,
                                            messages: Messages,
@@ -244,10 +226,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  /**
-   * Processes the Authorities for both GB and XI EORI. It is only used when
-   * search string is a valid account number
-   */
   private def processGBAndXIAuthAndViewResultPage(request: AuthenticatedRequest[AnyContent],
                                                   searchQuery: EORI,
                                                   messages: Messages,
@@ -276,12 +254,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  /**
-   * Selects the SearchedAuthorities (out of GB and XI authorities) which has permission to show the balance.
-   * Selects gbAuthorities when both authorities have no balance
-   *
-   * It is used only when search string is a valid account number
-   */
   private def finalSearchAuthoritiesToShow(gbAuthorities: SearchedAuthorities,
                                            xiAuthorities: SearchedAuthorities): SearchedAuthorities = {
     val listOfEligibleAuthorities = List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth))

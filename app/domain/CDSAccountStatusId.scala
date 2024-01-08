@@ -37,10 +37,8 @@ case object AccountCancelled extends CDSAccountStatusId { val value: Int = 9 }
 object CDSAccountStatusId {
 
   import play.api.Logger
-
   val logger = Logger(this.getClass)
 
-  //N.B. maintain this list if adding new implementations of CDSAccountStatusId
   private val values: Set[CDSAccountStatusId] = Set(
     DefermentAccountAvailable,
     ChangeOfLegalEntity,
@@ -70,7 +68,6 @@ object CDSAccountStatusId {
             DefermentAccountAvailable
         }
       )
-
     }
   }
 }

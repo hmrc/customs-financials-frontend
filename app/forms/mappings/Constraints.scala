@@ -18,6 +18,7 @@ package forms.mappings
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
+
 trait Constraints {
 
   lazy val gbnEoriRegex: String = "GBN\\d{11}"
@@ -27,6 +28,7 @@ trait Constraints {
   lazy val canRegex: String = "^[0-9]{11}"
   lazy val ganRegex: String = "^[a-zA-Z0-9]{8,10}"
 
+  // scalastyle:off cyclomatic.complexity
   protected def checkEORI(invalidFormatErrorKey: String): Constraint[String] =
     Constraint {
       case str if stripWhitespace(str).matches(gbnEoriRegex) => Valid
@@ -40,5 +42,4 @@ trait Constraints {
 
   protected def stripWhitespace(str: String): String =
     str.replaceAll("\\s", "").toUpperCase
-
 }

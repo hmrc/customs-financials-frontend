@@ -106,15 +106,6 @@ trait SpecBase extends AnyWordSpecLike
   def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  /**
-   * Creates the FakeRequest with session with the supplied
-   * method, path and sessionIdValue
-   *
-   * @param method HTTP Method type
-   * @param path url for the Call
-   * @param sessionIdValue Session value that is to be matched
-   * @return
-   */
   def fakeRequestWithSession(method: String = emptyString,
                              path: String = emptyString,
                              sessionIdValue: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
