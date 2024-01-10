@@ -54,7 +54,8 @@ class SdesGatekeeperServiceSpec extends SpecBase {
         StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority), ""
       )
 
-      val standingAuthorityFile = sdesGatekeeperService.convertToStandingAuthoritiesFile(fileInformationForStandingAuthorityCSV)
+      val standingAuthorityFile = sdesGatekeeperService.convertToStandingAuthoritiesFile(
+        fileInformationForStandingAuthorityCSV)
 
       standingAuthorityFile must be(expectedStandingAuthorityFile)
     }

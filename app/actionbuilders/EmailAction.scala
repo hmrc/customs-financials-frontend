@@ -43,4 +43,3 @@ class EmailAction @Inject()(dataStoreService: DataStoreService)(
     }.recover { case _ => None }
   }
 }
-

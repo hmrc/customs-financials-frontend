@@ -17,7 +17,7 @@
 package forms.mappings
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
-
+import utils.Utils.emptyString
 
 trait Constraints {
 
@@ -41,5 +41,5 @@ trait Constraints {
     }
 
   protected def stripWhitespace(str: String): String =
-    str.replaceAll("\\s", "").toUpperCase
+    str.replaceAll("\\s", emptyString).toUpperCase
 }

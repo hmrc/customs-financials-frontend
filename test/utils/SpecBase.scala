@@ -16,7 +16,6 @@
 
 package utils
 
-
 import actionbuilders.{FakeIdentifierAction, IdentifierAction}
 import akka.stream.testkit.NoMaterializer
 import com.codahale.metrics.MetricRegistry
@@ -80,13 +79,16 @@ trait SpecBase extends AnyWordSpecLike
     }
   }
 
-  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty): GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
-    inject.bind[IdentifierAction].toInstance(new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
+  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty
+                 ): GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
+    inject.bind[IdentifierAction].toInstance(
+      new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
     api.inject.bind[Metrics].toInstance(new FakeMetrics)
   ).configure("auditing.enabled" -> "false")
 
   @implicitNotFound("Pass a type for the identifier action")
-  def applicationBuilder[IA <: IdentifierAction](disableAuth: Boolean = false)(implicit c: ClassTag[IA]): GuiceApplicationBuilder = {
+  def applicationBuilder[IA <: IdentifierAction](disableAuth: Boolean = false)(
+    implicit c: ClassTag[IA]): GuiceApplicationBuilder = {
 
     val overrides: List[GuiceableModule] = List(bind[Metrics].toInstance(new FakeMetrics))
     val optionalOverrides: List[GuiceableModule] = if (disableAuth) {

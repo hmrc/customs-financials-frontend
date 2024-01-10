@@ -19,7 +19,6 @@ package services
 import domain.{FileInformation, _}
 import javax.inject.Singleton
 
-
 @Singleton
 class SdesGatekeeperService() {
 
