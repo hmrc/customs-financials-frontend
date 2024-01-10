@@ -25,6 +25,7 @@ import views.helpers.Formatters
 import java.time.LocalDate
 import scala.collection.immutable.SortedSet
 
+// scalastyle:off number.of.types
 sealed abstract class FileFormat(val name: String) extends Ordered[FileFormat] {
   val order: Int
 
