@@ -22,7 +22,9 @@ import views.helpers.Formatters
 
 import java.time.LocalDate
 
-case class PostponedVatStatementGroup(startDate: LocalDate, files: Seq[PostponedVatStatementFile])(implicit messages: Messages) extends Ordered[PostponedVatStatementGroup] {
+case class PostponedVatStatementGroup(startDate: LocalDate,
+                                      files: Seq[PostponedVatStatementFile])(implicit messages: Messages)
+  extends Ordered[PostponedVatStatementGroup] {
 
   private val periodName = Formatters.dateAsMonthAndYear(startDate).replace(" ", "-").toLowerCase
   val periodId: String = s"""period-$periodName"""

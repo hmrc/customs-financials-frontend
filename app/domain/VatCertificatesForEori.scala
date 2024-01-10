@@ -18,5 +18,7 @@ package domain
 
 import controllers.OrderedByEoriHistory
 
-case class VatCertificatesForEori(eoriHistory: EoriHistory, currentCertificates: Seq[VatCertificatesByMonth], requestedCertificates: Seq[VatCertificatesByMonth])
+case class VatCertificatesForEori(eoriHistory: EoriHistory,
+                                  currentCertificates: Seq[VatCertificatesByMonth],
+                                  requestedCertificates: Seq[VatCertificatesByMonth])
   extends OrderedByEoriHistory[VatCertificatesForEori]

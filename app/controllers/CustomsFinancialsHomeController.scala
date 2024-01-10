@@ -138,16 +138,22 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   def getNotificationMessageKeys(collectionOfDocumentAttributes: Seq[Notification]): Seq[String] = {
-    val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
-    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(v => v.isRequested || v.fileRole == StandingAuthority)
+
+    val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(
+      v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
+
+    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(
+      v => v.isRequested || v.fileRole == StandingAuthority)
+
     val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
     val requestedMessages = requestedNotifications.map(notification => s"requested-${notification.fileRole.messageKey}")
+
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
       case (role, notifications) if notifications.size > 1 => s"multiple-${role.messageKey}"
       case (role, _) => role.messageKey
     }
-    val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
 
+    val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
     authorityMessage ++ requestedMessages ++ statementMessages
   }
 
@@ -158,7 +164,6 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       .map(getNotificationMessageKeys)
       .map(keys => Ok(accountNotAvailable(eori, keys)))
   }
-
 }
 
 case object TimeoutResponse extends Exception

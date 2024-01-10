@@ -21,11 +21,15 @@ import play.api.libs.json.{Json, Reads}
 case class AccountsAndBalancesResponseContainer(accountsAndBalancesResponse: AccountsAndBalancesResponse) {
   def toCdsAccounts(eori: String): domain.CDSAccounts = {
     val details: AccountResponseDetail = this.accountsAndBalancesResponse.responseDetail
-    val dutyDefermentAccounts: Seq[domain.DutyDefermentAccount] = details.dutyDefermentAccount.fold(Seq.empty[domain.DutyDefermentAccount])(_.map(_.toDomain()))
-    val generalGuaranteeAccounts: Seq[domain.GeneralGuaranteeAccount] = details.generalGuaranteeAccount.fold(Seq.empty[domain.GeneralGuaranteeAccount])(_.map(_.toDomain))
-    val cashAccounts: Seq[CashAccount] = details.cdsCashAccount.fold(Seq.empty[CashAccount])(_.map(_.toDomain()))
-    val isNiAccount = dutyDefermentAccounts.map(_.isNiAccount).headOption.getOrElse(false)
 
+    val dutyDefermentAccounts: Seq[domain.DutyDefermentAccount] = details.dutyDefermentAccount.fold(
+      Seq.empty[domain.DutyDefermentAccount])(_.map(_.toDomain()))
+
+    val generalGuaranteeAccounts: Seq[domain.GeneralGuaranteeAccount] = details.generalGuaranteeAccount.fold(
+      Seq.empty[domain.GeneralGuaranteeAccount])(_.map(_.toDomain))
+
+    val cashAccounts: Seq[CashAccount] = details.cdsCashAccount.fold(Seq.empty[CashAccount])(_.map(_.toDomain()))
+    val isNiAccount = dutyDefermentAccounts.map(_.isNiAccount).headOption.getOrElse(false)x
     domain.CDSAccounts(eori, Some(isNiAccount), dutyDefermentAccounts ++ generalGuaranteeAccounts ++ cashAccounts)
   }
 }

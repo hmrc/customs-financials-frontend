@@ -118,17 +118,23 @@ sealed abstract class FileRole(val name: String, val featureName: String, val tr
 
 object FileRole {
 
-  case object DutyDefermentStatement extends FileRole("DutyDefermentStatement", "duty-deferment", "Download duty deferment statement", "duty-deferment")
+  case object DutyDefermentStatement extends FileRole(
+    "DutyDefermentStatement", "duty-deferment", "Download duty deferment statement", "duty-deferment")
 
-  case object C79Certificate extends FileRole("C79Certificate", "import-vat", "Download import VAT statement", "c79")
+  case object C79Certificate extends FileRole(
+    "C79Certificate", "import-vat", "Download import VAT statement", "c79")
 
-  case object PostponedVATStatement extends FileRole("PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
+  case object PostponedVATStatement extends FileRole(
+    "PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
 
-  case object PostponedVATAmendedStatement extends FileRole("PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
+  case object PostponedVATAmendedStatement extends FileRole(
+    "PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
 
-  case object SecurityStatement extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
+  case object SecurityStatement extends FileRole(
+    "SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
 
-  case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
+  case object StandingAuthority extends FileRole(
+    "StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
   val log: LoggerLike = Logger(this.getClass)
 
