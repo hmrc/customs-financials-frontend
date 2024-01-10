@@ -22,7 +22,8 @@
 @(account: DutyDefermentAccount, model: FinancialsHomeModel)(implicit messages: Messages)
 <div class="govuk-!-margin-top-6 govuk-!-margin-bottom-2">
     @{
-        account.displayBalances(account.balances.periodAccountLimit, account.balances.periodGuaranteeLimit, account.balances.periodAvailableGuaranteeBalance) map { balances =>
+        account.displayBalances(account.balances.periodAccountLimit,
+            account.balances.periodGuaranteeLimit, account.balances.periodAvailableGuaranteeBalance) map { balances =>
                 balanceDetail(
                     account.number,
                     balances.accountLimit,

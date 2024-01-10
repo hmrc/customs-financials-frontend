@@ -32,6 +32,7 @@
         <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">
             @messages("cf.customs-financials-home.guarantee-account.title")
         </h2>
+
     @for(account <- accounts) {
         <div class="custom-card guarantee-account govuk-!-margin-bottom-7">
             <header class="card-header">
@@ -54,7 +55,6 @@
                 </a>
             </span>
             </div>
-
         </div>
     }
     </section>

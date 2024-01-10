@@ -18,16 +18,16 @@
 
 @(eori: Option[String] = None, companyName: Option[String] = None, xiEori: String)(implicit messages: Messages)
 
-    @eori.map { eoriNumber =>
-        <div class="govuk-phase-banner">
-            <p id="eori-company" class="govuk-phase-banner__content">
-                @companyName match {
-                    case Some(companyName) => {
-                        <span class="govuk-phase-banner__text">@messages("cf.header.companyName", companyName) @eoriNumber </span>
-                        @if(xiEori.contains("XI")) { <span>, @xiEori </span> }
-                    }
-                    case _ => { <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span> }
-                }
-            </p>
-        </div>
-    }
+@eori.map { eoriNumber =>
+<div class="govuk-phase-banner">
+    <p id="eori-company" class="govuk-phase-banner__content">
+        @companyName match {
+            case Some(companyName) => {
+                <span class="govuk-phase-banner__text">@messages("cf.header.companyName", companyName) @eoriNumber </span>
+                @if(xiEori.contains("XI")) { <span>, @xiEori </span> }
+            }
+            case _ => { <span id="eori" class="govuk-phase-banner__text">@messages("cf.header.eori") @eoriNumber</span> }
+        }
+    </p>
+</div>
+}

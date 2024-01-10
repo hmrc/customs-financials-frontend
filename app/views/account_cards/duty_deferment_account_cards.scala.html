@@ -119,10 +119,10 @@
                         </p>
                     }
 
-                   
                     @if(account.status != AccountStatusPending) {
                         @balances(account, model)
                     }
+
                     <span class="card-footer__links govuk-body">
                         @if(account.status != AccountStatusPending) {
                             <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
@@ -135,6 +135,7 @@
                                 </span>
                             </a>
                         }
+
                         @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
                             <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                             href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
@@ -146,6 +147,7 @@
                                 </span>
                             </a>
                         }
+
                         @if(account.status != AccountStatusPending) {
                             <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
                                 <span aria-hidden="true">
@@ -156,11 +158,12 @@
                                 </span>
                             </a>
                         }
+
                         @if(account.status == AccountStatusPending) {
                             @pendingTile()
                         }
+                        
                     </span>
-                    
                 </div>
             </div>
           }
