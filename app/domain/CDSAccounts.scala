@@ -28,6 +28,9 @@ object CDSAccounts {
   val filterGuaranteeAccounts: Seq[CDSAccount] => Seq[GeneralGuaranteeAccount] = _.collect {
     case guaranteeAccount: GeneralGuaranteeAccount => guaranteeAccount }
 
-  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect { case cashAccount: CashAccount => cashAccount }
-  val filterByAccountNumber: String => Seq[CDSAccount] => Seq[CDSAccount] = accountNumber => accounts => accounts.filter(_.number == accountNumber)
+  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect {
+    case cashAccount: CashAccount => cashAccount }
+
+  val filterByAccountNumber: String => Seq[CDSAccount] =>
+    Seq[CDSAccount] = accountNumber => accounts => accounts.filter(_.number == accountNumber)
 }

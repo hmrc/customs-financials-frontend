@@ -36,7 +36,6 @@ sealed abstract class FileFormat(val name: String) extends Ordered[FileFormat] {
 
 object FileFormat {
 
-  // scalastyle:off magic.number
   case object Pdf extends FileFormat("PDF") {
     val order = 1
   }
@@ -48,7 +47,6 @@ object FileFormat {
   case object UnknownFileFormat extends FileFormat("UNKNOWN FILE FORMAT") {
     val order = 99
   }
-  // scalastyle:on magic.number
 
   val log: LoggerLike = Logger(this.getClass)
   val SdesFileFormats: SortedSet[FileFormat] = SortedSet(Pdf, Csv)
@@ -114,7 +112,8 @@ object DDStatementType {
   def unapply(arg: DDStatementType): Option[String] = Some(arg.name)
 }
 
-sealed abstract class FileRole(val name: String, val featureName: String, val transactionName: String, val messageKey: String)
+sealed abstract class FileRole(val name: String, val featureName: String,
+                               val transactionName: String, val messageKey: String)
 
 object FileRole {
 
@@ -289,7 +288,8 @@ case class VatCertificateFile(filename: String,
                               downloadURL: String,
                               size: Long,
                               metadata: VatCertificateFileMetadata,
-                              eori: String)(implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
+                              eori: String)(
+  implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)

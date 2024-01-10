@@ -59,7 +59,7 @@ case class DutyDefermentAccount(number: String,
         )
       }
 
-      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit == 0 && guaranteeLimit > 0 => {
+      case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit == 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
             None,

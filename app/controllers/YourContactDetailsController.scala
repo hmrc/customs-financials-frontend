@@ -51,7 +51,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   }
 
   private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent],
-                                       headerId: SessionId)(implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                       headerId: SessionId)(
+    implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
 
     sessionCacheConnector.getSessionId(headerId.value).flatMap {
       case Some(cacheId) =>
