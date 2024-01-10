@@ -30,7 +30,6 @@ class CashAccountCardSpec extends SpecBase {
 
   "Cash Account Card" should {
 
-
     "be marked with class 'cash-account'" in new Setup {
       running(app) {
         content(cashAccount).getElementsByClass("cash-account").isEmpty mustBe false
@@ -84,9 +83,8 @@ class CashAccountCardSpec extends SpecBase {
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
     val cashAccount = CashAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999))))
+
     def content(cashAccount: CashAccount) = Jsoup.parse(app.injector.instanceOf[cash_account_cards].apply(Seq(cashAccount)).body)
-
-
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

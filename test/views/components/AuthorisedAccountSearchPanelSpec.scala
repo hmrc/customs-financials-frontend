@@ -43,13 +43,12 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase {
       elements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.account.type")
       elements.get(0).getElementsByTag("dd").html() mustBe
-        messages(app)("cf.search.authorities.accountType.DutyDeferment","").trim
+        messages(app)("cf.search.authorities.accountType.DutyDeferment", "").trim
 
       elements.get(1).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.account.number")
       elements.get(1).getElementsByTag("dd").html() mustBe accountNumber
     }
-
 
     "load correctly with correct guidance with using CDSCash" in new Setup {
       val view: Document = Jsoup.parse(
@@ -181,7 +180,6 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase {
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
     implicit val msg: Messages = messages(app)
-
     val accountNumber = "1234567"
   }
 }

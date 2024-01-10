@@ -32,12 +32,12 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import viewmodels.FinancialsHomeModel
 import views.html.dashboard.{customs_financials_home, customs_financials_partial_home}
 import views.html.error_states.account_not_available
+import utils.Utils.emptyString
 
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
-
 
 class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 checkEmailIsVerified: EmailAction,
@@ -74,7 +74,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   private def getAllAccounts(eori: EORI, xiEori: Option[String])(implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
-    val eoriList = Seq(eori, xiEori.getOrElse("")).filterNot(_ == "")
+    val eoriList = Seq(eori, xiEori.getOrElse("")).filterNot(_ == emptyString)
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
     for {

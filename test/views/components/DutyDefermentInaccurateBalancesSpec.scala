@@ -22,10 +22,9 @@ import play.api.test.Helpers
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.account_cards.duty_deferment_inaccurate_balances_message
+
 class DutyDefermentInaccurateBalancesSpec extends SpecBase {
-
   "Duty deferment inaccurate balances warning message" should {
-
     "have an id 'duty-deferment-balances-warning'" in new Setup {
       running(app) {
         view.containsElementById("duty-deferment-balances-warning")

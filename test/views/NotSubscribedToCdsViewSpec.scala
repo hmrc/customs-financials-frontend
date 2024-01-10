@@ -28,19 +28,19 @@ import views.html.error_states.not_subscribed_to_cds
 class NotSubscribedToCdsViewSpec extends SpecBase {
 
   "Not subscribed to cds view" should {
-    "display header as non-link text" in new Setup{
+    "display header as non-link text" in new Setup {
       running(app) {
         view.getElementsByClass("hmrc-header__service-name--linked").text mustBe "View your customs financial accounts"
       }
     }
 
-    "display page heading" in new Setup{
+    "display page heading" in new Setup {
       running(app) {
         view.getElementsByTag("h1").text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
       }
     }
 
-    "display get access to cds service links" in new Setup{
+    "display get access to cds service links" in new Setup {
       running(app) {
         view.containsLinkWithText("/customs/register-for-cds", "Economic Operator and Registration Identification (EORI) number (opens in a new window or tab)")
         view.containsLinkWithText(appConfig.subscribeCdsUrl, "get access to CDS (opens in a new window or tab)")
@@ -52,7 +52,6 @@ class NotSubscribedToCdsViewSpec extends SpecBase {
     implicit val request = FakeRequest("GET", "/some/resource/path")
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
-
     val view = Jsoup.parse(app.injector.instanceOf[not_subscribed_to_cds].apply().body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

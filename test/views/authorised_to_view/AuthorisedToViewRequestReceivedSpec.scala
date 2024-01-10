@@ -78,9 +78,9 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
     val email = "email@emailland.com"
 
     val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-      eori, false, "123","1",Some(1),"2345678")
+      eori, false, "123", "1", Some(1), "2345678")
 
-    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink,accountLink)
+    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink, accountLink)
 
     val companyAddress: CompanyAddress = new CompanyAddress(
       streetAndNumber = "123Street",

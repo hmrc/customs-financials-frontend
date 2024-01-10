@@ -31,14 +31,14 @@ class AccountNotAvailableSpec extends SpecBase {
 
   "AccountNotAvailable view" should {
     "render correctly" in new Setup {
-        view.text().contains(messages(app)("cf.customs-financials-home.partial.heading")) mustBe true
-        view.text().contains(messages(app)("cf.customs-financials-home.partial.text")) mustBe true
-        view.text().contains(messages(app)("cf.customs-financials-home.import-vat.title")) mustBe true
-        view.text().contains(messages(app)("cf.customs-financials-home.pvat.title")) mustBe true
-        view.text().contains(messages(app)("cf.customs-financials-home.securities.title")) mustBe true
-        view.text().contains(messages(app)("cf.import-vat.view-certificates.description")) mustBe true
-        view.text().contains(messages(app)("cf.postponed-vat.view-certificates.description")) mustBe true
-        view.text().contains(messages(app)("cf.securities.view-statements.description")) mustBe true
+      view.text().contains(messages(app)("cf.customs-financials-home.partial.heading")) mustBe true
+      view.text().contains(messages(app)("cf.customs-financials-home.partial.text")) mustBe true
+      view.text().contains(messages(app)("cf.customs-financials-home.import-vat.title")) mustBe true
+      view.text().contains(messages(app)("cf.customs-financials-home.pvat.title")) mustBe true
+      view.text().contains(messages(app)("cf.customs-financials-home.securities.title")) mustBe true
+      view.text().contains(messages(app)("cf.import-vat.view-certificates.description")) mustBe true
+      view.text().contains(messages(app)("cf.postponed-vat.view-certificates.description")) mustBe true
+      view.text().contains(messages(app)("cf.securities.view-statements.description")) mustBe true
     }
   }
 
