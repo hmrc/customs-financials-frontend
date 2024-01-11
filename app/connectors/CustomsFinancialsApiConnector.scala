@@ -26,7 +26,8 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig, httpClient: HttpClient, metricsReporter: MetricsReporterService)
+class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
+                                              httpClient: HttpClient, metricsReporter: MetricsReporterService)
                                              (implicit ec: ExecutionContext) {
 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {

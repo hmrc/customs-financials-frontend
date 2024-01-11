@@ -56,8 +56,10 @@
                     result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance, None)
 
                 case AuthorisedDutyDefermentAccount(account, balances)
-                    if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00"))=>
-                    result_panel(account.accountType, account.accountNumber, None, balances.map(_.periodAvailableGuaranteeBalance))
+                    if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (
+                        balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00")) =>
+                    result_panel(account.accountType, account.accountNumber, None, balances.map(
+                        _.periodAvailableGuaranteeBalance))
 
                 case AuthorisedDutyDefermentAccount(account, balances) =>
                     result_panel(account.accountType, account.accountNumber,

@@ -67,7 +67,6 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
         result mustBe true
       }
     }
-
   }
 
   trait Setup {
@@ -94,7 +93,5 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
       bind[MetricsReporterService].toInstance(mockMetricsReporterService),
       bind[HttpClient].toInstance(mockHttpClient)
     ).build()
-
-
   }
 }

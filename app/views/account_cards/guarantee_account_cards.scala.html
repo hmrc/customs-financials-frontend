@@ -26,8 +26,8 @@
 
 @(accounts: Seq[GeneralGuaranteeAccount])(implicit messages: Messages, appConfig: AppConfig)
 
-
 @if(accounts.nonEmpty) {
+
     <section id="guarantee-accounts" class="govuk-!-margin-bottom-9">
         <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">
             @messages("cf.customs-financials-home.guarantee-account.title")
@@ -35,7 +35,9 @@
 
     @for(account <- accounts) {
         <div class="custom-card guarantee-account govuk-!-margin-bottom-7">
+
             <header class="card-header">
+
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="gan-@{account.number}">
                     @messages("cf.account") @account.number
                     @hiddenStatus(account.status)
@@ -44,20 +46,21 @@
             </header>
 
             <div class="govuk-body govuk-!-margin-top-3">
-                 @balanceAvailable(account.status, "guarantee-account-limit-remaining", account.balances.fold(BigDecimal(0.0))(_.AvailableGuaranteeBalance))
+                 @balanceAvailable(account.status, "guarantee-account-limit-remaining",
+                     account.balances.fold(BigDecimal(0.0))(_.AvailableGuaranteeBalance))
                  <p class="govuk-!-margin-bottom-2" id="guarantee-limit-@{account.number}">
-                    @messages("cf.duty-deferment.account.card.guarantee.limit", Formatters.formatCurrencyAmount(account.balances.fold(BigDecimal(0.0))(_.GuaranteeLimit)))
+                    @messages("cf.duty-deferment.account.card.guarantee.limit",
+                        Formatters.formatCurrencyAmount(account.balances.fold(BigDecimal(0.0))(_.GuaranteeLimit)))
                  </p>
 
-            <span class="card-footer__links govuk-!-margin-top-1">
-                <a id="guarantee-account-@{s"${account.number}"}" class="govuk-link" href="@appConfig.guaranteeAccountUrl">
-                   @messages("cf.customs-financials-home.guarantee-account.link")
-                </a>
-            </span>
+                <span class="card-footer__links govuk-!-margin-top-1">
+                    <a id="guarantee-account-@{s"${account.number}"}" class="govuk-link" href="@appConfig.guaranteeAccountUrl">
+                       @messages("cf.customs-financials-home.guarantee-account.link")
+                    </a>
+                </span>
+
             </div>
         </div>
     }
     </section>
 }
-
-

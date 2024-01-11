@@ -50,6 +50,7 @@ case class DutyDefermentAccount(number: String,
             Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
         )
       }
+
       case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit > 0 && guaranteeLimit == 0 => {
         Some(
           DutyDefermentDisplayBalance(

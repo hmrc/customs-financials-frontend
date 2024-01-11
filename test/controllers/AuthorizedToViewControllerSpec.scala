@@ -210,20 +210,27 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return OK if there are authorities returned" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.0", "200.0")))
+        AuthorisedDutyDefermentAccount(Account(
+          "1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.0", "200.0")))
+
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(Future.successful(Right(SearchedAuthorities(
+          "3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
@@ -236,19 +243,26 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return OK if there are authorities returned with spaces in search string" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.0", "0.0")))
+        AuthorisedDutyDefermentAccount(Account(
+          "1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.0", "0.0")))
+
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(Future.successful(Right(SearchedAuthorities(
+          "3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
+
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK
@@ -263,7 +277,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
+
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
         status(result) shouldBe OK

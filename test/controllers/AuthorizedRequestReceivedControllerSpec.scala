@@ -88,5 +88,3 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
     val controller = app.injector.instanceOf[AuthorizedRequestReceivedController]
   }
 }
-
-

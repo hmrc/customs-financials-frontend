@@ -18,7 +18,7 @@ package actionbuilders
 
 import domain.{UndeliverableEmail, UnverifiedEmail}
 import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.{convertToAnyMustWrapper}
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

@@ -33,8 +33,10 @@
     backLink = Some(routes.AuthorizedToViewController.onPageLoad().url)
 ) {
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
+
     @p(messages("cf.search.authorities.result.no.result.p1", query), bold = true)
     @p(messages("cf.search.authorities.result.no.result.p2"))
+
     <ul class="govuk-list govuk-list--bullet">
         <li>@messages("cf.search.authorities.result.no.result.p3")</li>
         <li>@messages("cf.search.authorities.result.no.result.p4")</li>

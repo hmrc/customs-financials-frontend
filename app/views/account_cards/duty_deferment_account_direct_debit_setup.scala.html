@@ -17,16 +17,21 @@
 @import domain.DutyDefermentAccount
 @this()
 
-@(dutyDefermentAccount: DutyDefermentAccount,dutyDefermentAccountDDSetupLinks: Map[(String, String), String])(implicit messages: Messages)
+@(dutyDefermentAccount: DutyDefermentAccount,
+    dutyDefermentAccountDDSetupLinks: Map[(String, String), String])(
+    implicit messages: Messages)
 
     <div class="govuk-warning-text govuk-!-margin-top-3 govuk-!-margin-bottom-0">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+
         <strong class="govuk-warning-text__text">
             <span class="govuk-warning-text__assistive">@messages("cf.duty-deferment.warning")</span>
             @messages("cf.duty-deferment.dd.info")
         </strong>
+
         <p class="govuk-body govuk-!-margin-top-4 govuk-!-margin-bottom-0">@messages("cf.duty-deferment.dd.setup.text1")
-            <a class="govuk-link" href="@dutyDefermentAccountDDSetupLinks((dutyDefermentAccount.owner, dutyDefermentAccount.number))">
+            <a class="govuk-link" href="@dutyDefermentAccountDDSetupLinks((
+            dutyDefermentAccount.owner, dutyDefermentAccount.number))">
                 @messages("cf.duty-deferment.dd.setup.new.account")
             </a>
             @messages("cf.duty-deferment.dd.setup.text2")

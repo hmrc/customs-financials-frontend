@@ -29,7 +29,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsReporterService)(implicit appConfig: AppConfig, ec: ExecutionContext) {
+class DataStoreService @Inject()(http: HttpClient,
+                                 metricsReporter: MetricsReporterService)(
+  implicit appConfig: AppConfig, ec: ExecutionContext) {
 
   val log = Logger(this.getClass)
 
@@ -61,7 +63,8 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
   def getCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => if (response.consent == "1") Some(response.name) else None)
+      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(
+        response => if (response.consent == "1") Some(response.name) else None)
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
@@ -106,7 +109,8 @@ class DataStoreService @Inject()(http: HttpClient, metricsReporter: MetricsRepor
   }
 }
 
-case class EmailResponse(address: Option[String], timestamp: Option[String], undeliverable: Option[UndeliverableInformation])
+case class EmailResponse(address: Option[String],
+                         timestamp: Option[String], undeliverable: Option[UndeliverableInformation])
 
 object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]
