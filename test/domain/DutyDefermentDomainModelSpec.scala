@@ -18,7 +18,7 @@ package domain
 
 import utils.SpecBase
 import domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapperYourContactDetailsController
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 
 //scalastyle:off magic.number
 class DutyDefermentDomainModelSpec extends SpecBase {
