@@ -30,16 +30,12 @@ import java.time.OffsetDateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 class MetricsReporterServiceSpec extends SpecBase {
 
-
   "MetricsReporterService" should {
-
     "withResponseTimeLogging" should {
 
       "log successful call metrics" in new Setup {
-
         running(app) {
           await {
             service.withResponseTimeLogging("foo") {
@@ -63,7 +59,6 @@ class MetricsReporterServiceSpec extends SpecBase {
           verify(mockRegistry).histogram("responseTimes.bar.500")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
-
       }
 
       "log not found call metrics" in new Setup {
@@ -126,7 +121,7 @@ class MetricsReporterServiceSpec extends SpecBase {
     val mockDateTimeService = mock[DateTimeService]
     val startTimestamp = OffsetDateTime.parse("2018-11-09T17:15:30+01:00")
     val endTimestamp = OffsetDateTime.parse("2018-11-09T17:15:35+01:00")
-    val elapsedTimeInMillis = 5000L // endTimestamp - startTimestamp
+    val elapsedTimeInMillis = 5000L
     when(mockDateTimeService.getTimeStamp())
       .thenReturn(startTimestamp, endTimestamp)
 
@@ -151,4 +146,3 @@ class MetricsReporterServiceSpec extends SpecBase {
     val service: MetricsReporterService = app.injector.instanceOf[MetricsReporterService]
   }
 }
-

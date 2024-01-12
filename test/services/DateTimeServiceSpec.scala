@@ -24,26 +24,36 @@ import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 class DateTimeServiceSpec extends SpecBase {
 
-  "return the fixed date if fixedDateTime is enabled" in {
+  "return the fixed date if fixedDateTime is enabled" in new Setup {
     val app = application().configure("features.fixed-system-time" -> true).build()
     val service = app.injector.instanceOf[DateTimeService]
+
     running(app) {
-      service.systemDateTime() mustBe LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12, 30))
+      service.systemDateTime() mustBe
+        LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute))
     }
   }
 
-  "return local time .now if fixedDateTime is disabled" in {
+  "return local time .now if fixedDateTime is disabled" in new Setup {
     val app = application().configure("features.fixed-system-time" -> false).build()
     val service = app.injector.instanceOf[DateTimeService]
-
     val mockClock = mock[DateTimeService]
-
     def now = LocalDateTime.now()
 
     when(mockClock.systemDateTime()).thenReturn(now)
 
     running(app) {
-      service.systemDateTime().withNano(0) mustBe now.withNano(0)
+      service.systemDateTime().withNano(zero) mustBe now.withNano(zero)
     }
+  }
+
+  trait Setup {
+    val year: Int = 2027
+    val month: Int = 12
+    val day: Int = 20
+
+    val hour: Int = 12
+    val minute: Int = 30
+    val zero: Int = 0
   }
 }
