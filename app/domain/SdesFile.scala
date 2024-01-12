@@ -49,8 +49,6 @@ object FileFormat {
   }
 
   val log: LoggerLike = Logger(this.getClass)
-  val SdesFileFormats: SortedSet[FileFormat] = SortedSet(Pdf, Csv)
-  val PvatFileFormats: SortedSet[FileFormat] = SortedSet(Pdf)
   val authorityFileFormats: SortedSet[FileFormat] = SortedSet(Csv)
 
   def filterFileFormats[T <: SdesFile](
@@ -296,8 +294,6 @@ case class VatCertificateFile(filename: String,
 
   def compare(that: VatCertificateFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
-
-case class SdesFileWithId[A <: SdesFile](sdesFile: A, id: String)
 
 case class PostponedVatStatementFile(filename: String,
                                      downloadURL: String,

@@ -268,17 +268,17 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
   private def getClientEori(searchedAuthorities: SearchedAuthorities) = {
     searchedAuthorities.authorities.map {
-      case AuthorisedDutyDefermentAccount(account, balances) => account.accountOwner
-      case AuthorisedCashAccount(account, availableAccountBalance) => account.accountOwner
-      case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => account.accountOwner
+      case AuthorisedDutyDefermentAccount(account, _) => account.accountOwner
+      case AuthorisedCashAccount(account, _) => account.accountOwner
+      case AuthorisedGeneralGuaranteeAccount(account, _) => account.accountOwner
     }.head
   }
 
   private def getDisplayLink(searchedAuthorities: SearchedAuthorities) = {
     searchedAuthorities.authorities.exists {
-      case AuthorisedDutyDefermentAccount(account, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
-      case AuthorisedCashAccount(account, availableAccountBalance) => availableAccountBalance.isEmpty
-      case AuthorisedGeneralGuaranteeAccount(account, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
+      case AuthorisedDutyDefermentAccount(_, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
+      case AuthorisedCashAccount(_, availableAccountBalance) => availableAccountBalance.isEmpty
+      case AuthorisedGeneralGuaranteeAccount(_, availableGuaranteeBalance) => availableGuaranteeBalance.isEmpty
     }
   }
 
