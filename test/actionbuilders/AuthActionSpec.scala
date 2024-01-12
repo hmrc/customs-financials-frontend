@@ -133,7 +133,6 @@ class AuthActionSpec extends SpecBase {
       }
     }
 
-
     "redirect the user to the unauthorised page when no sufficient enrolments" in new Setup {
       val authAction = new AuthAction(
         new FakeFailingAuthConnector(new InsufficientEnrolments),
@@ -226,7 +225,7 @@ class AuthActionSpec extends SpecBase {
     }
 
     class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
-      val serviceUrl: String = ""
+      val serviceUrl: String = emptyString
 
       override def authorise[A](predicate: Predicate,
                                 retrieval: Retrieval[A]

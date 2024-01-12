@@ -21,11 +21,9 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
 
-
-class AccountsAndBalanceSpec extends SpecBase  {
+class AccountsAndBalanceSpec extends SpecBase {
 
   "AccountsAndBalances" should {
-
     "be able parse account status from json" in {
 
       val statusAndCode = List(
@@ -38,49 +36,58 @@ class AccountsAndBalanceSpec extends SpecBase  {
         "Unknown" -> AccountStatusOpen
       )
 
-      statusAndCode.foreach { case(statusCode, status) =>
-        val json = s"""{
-                      |  "number": "123456",
-                      |  "type": "GeneralGuarantee",
-                      |  "owner": "EORI1234",
-                      |  "accountStatus": "$statusCode",
-                      |  "viewBalanceIsGranted": true
-                      |}""".stripMargin
+      statusAndCode.foreach { case (statusCode, status) =>
+        val json =
+          s"""{
+             |  "number": "123456",
+             |  "type": "GeneralGuarantee",
+             |  "owner": "EORI1234",
+             |  "accountStatus": "$statusCode",
+             |  "viewBalanceIsGranted": true
+             |}""".stripMargin
 
         val account = Json.parse(json).as[AccountResponse]
 
         val expectedAccount = AccountResponse("123456",
-          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true,
+          accountStatusID = None, isleOfManFlag = None)
+
         account mustBe expectedAccount
       }
     }
 
     "be parse account when status is none from json" in {
-      val json = s"""{
-                    |  "number": "123456",
-                    |  "type": "DutyDeferment",
-                    |  "owner": "EORI1234",
-                    |  "viewBalanceIsGranted": true
-                    |}""".stripMargin
+      val json =
+        s"""{
+           |  "number": "123456",
+           |  "type": "DutyDeferment",
+           |  "owner": "EORI1234",
+           |  "viewBalanceIsGranted": true
+           |}""".stripMargin
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234",
+        None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+
       account mustBe expectedAccount
     }
 
     "be able parse account when isleOfManFlag is set for json" in {
-      val json = s"""{
-                    |  "number": "123456",
-                    |  "type": "DutyDeferment",
-                    |  "owner": "EORI1234",
-                    |  "viewBalanceIsGranted": true,
-                    |  "isleOfManFlag": true
-                    |}""".stripMargin
+      val json =
+        s"""{
+           |  "number": "123456",
+           |  "type": "DutyDeferment",
+           |  "owner": "EORI1234",
+           |  "viewBalanceIsGranted": true,
+           |  "isleOfManFlag": true
+           |}""".stripMargin
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true , accountStatusID = None, isleOfManFlag = Some(true))
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None,
+        viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = Some(true))
+
       account mustBe expectedAccount
     }
 

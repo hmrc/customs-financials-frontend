@@ -32,17 +32,17 @@ class DocumentAttributesSpec extends SpecBase {
       metadata = Map.empty)
 
     "return true" when {
-
       "there is a statement request id" in {
-        val documentWithStatementRequestId = documentAttributes.copy(metadata = Map("statementRequestID" -> "12345-98765-333"))
+        val documentWithStatementRequestId = documentAttributes.copy(
+          metadata = Map("statementRequestID" -> "12345-98765-333"))
 
-        documentWithStatementRequestId.isRequested must be (true)
+        documentWithStatementRequestId.isRequested must be(true)
       }
     }
 
     "return false" when {
       "there is no statement request id" in {
-        documentAttributes.isRequested must be (false)
+        documentAttributes.isRequested must be(false)
       }
     }
   }

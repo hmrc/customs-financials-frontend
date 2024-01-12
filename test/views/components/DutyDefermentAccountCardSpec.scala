@@ -65,7 +65,9 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include a link to the duty deferment payment details page" in new Setup {
       running(app) {
-        val expectedUrl = "https://www.gov.uk/guidance/top-up-your-duty-deferment-account-using-the-customs-declaration-service"
+        val expectedUrl =
+          "https://www.gov.uk/guidance/top-up-your-duty-deferment-account-using-the-customs-declaration-service"
+
         content().containsLink(expectedUrl) mustBe true
       }
     }
@@ -77,14 +79,14 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       }
     }
 
-    "not include a link to the duty deferment contact details page when status is suspended and status id is 4" in new Setup {
+    "not include a link to duty deferment contact details when status is suspended & status id is 4" in new Setup {
       running(app) {
         val expectedUrl = contactDetailsLink1
         content(dutyDefermentAccountSuspendedWithStatusId4).containsLink(expectedUrl) mustBe false
       }
     }
 
-    "include a link to the duty deferment contact details page when status is suspended and status id is other than 4" in new Setup {
+    "include a link to the duty deferment contact details when status is suspended & statusid is not 4" in new Setup {
       running(app) {
         val expectedUrl = ddSetupLink
         content(dutyDefermentAccountSuspendedWithStatusId7).containsLink(expectedUrl) mustBe true
@@ -140,7 +142,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "include account limit remaining with negative account balance added" in new Setup {
       running(app) {
-        content(accountWithNegativeBalance).getElementById("account-limit-123456").text mustBe "Your Account limit: £500"
+        content(accountWithNegativeBalance).getElementById(
+          "account-limit-123456").text mustBe "Your Account limit: £500"
       }
     }
   }
@@ -170,37 +173,43 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "display pending warning if accountStatus is 'Pending'" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementsContainingText("You cannot use this account on CDS yet").isEmpty mustBe false
+          content(dutyDefermentAccountPending).getElementsContainingText(
+            "You cannot use this account on CDS yet").isEmpty mustBe false
         }
       }
 
       "not display pending warning if accountStatus is not 'Pending'" in new Setup {
         running(app) {
-          content(dutyDefermentAccountOpen).getElementsContainingText("You cannot use this account on CDS yet").isEmpty mustBe true
+          content(dutyDefermentAccountOpen).getElementsContainingText(
+            "You cannot use this account on CDS yet").isEmpty mustBe true
         }
       }
 
       "not display set up direct debit if accountStatus is 'Pending'" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountPending).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
 
-      "not display set up direct debit if accountStatus is not 'Pending' and accountStatusId is not 'DirectDebitMandateCancelled'" in new Setup {
+      "not show direct debit if accountStatus & accountStatusId are invalid" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountPending).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
 
       "display will be available if account balance is not 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementById("duty-deferment-balance-123456").text mustBe "£99.01 will be available"
+          content(dutyDefermentAccountPending).getElementById(
+            "duty-deferment-balance-123456").text mustBe "£99.01 will be available"
         }
       }
 
       "not display will be available if account balance is 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPendingZeroBalance).getElementById("duty-deferment-balance-123456").text mustBe "£0"
+          content(dutyDefermentAccountPendingZeroBalance).getElementById(
+            "duty-deferment-balance-123456").text mustBe "£0"
         }
       }
 
@@ -209,14 +218,14 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     "account is suspended" should {
       "not display limit bar" in new Setup {
         running(app) {
-
           content(dutyDefermentAccountSuspended).getElementsByClass("progress-bar").isEmpty mustBe true
         }
       }
 
       "display direct debit setup link if accountStatusId is DirectDebitMandateCancelled" in new Setup {
         running(app) {
-          content(dutyDefermentAccountSuspendedWithStatusId4).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe true
+          content(dutyDefermentAccountSuspendedWithStatusId4).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe true
         }
       }
 
@@ -228,44 +237,52 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "not display direct debit setup link if accountStatusId is ChangeOfLegalEntity" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID1).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID1).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
 
       "not display direct debit setup link if accountStatusId is GuaranteeCancelledGuarantorsRequest" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID2).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID2).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
 
       "not display direct debit setup link if accountStatusId is GuaranteeCancelledTradersRequest" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID3).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID3).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is DebitRejectedAccountClosedOrTransferred" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID5).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID5).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is DebitRejectedReferToDrawer" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID6).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID6).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is ReturnedMailOther" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID7).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID7).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is GuaranteeExceeded" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID8).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID8).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is AccountCancelled" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusID9).containsLinkWithText(ddSetupLink, "set up a new Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusID9).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit") mustBe false
         }
       }
     }
@@ -279,7 +296,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
-          content(dutyDefermentAccountClosed).containsLinkWithText(ddSetupLink, "set up a new Direct Debit.") mustBe false
+          content(dutyDefermentAccountClosed).containsLinkWithText(
+            ddSetupLink, "set up a new Direct Debit.") mustBe false
         }
       }
     }
@@ -287,7 +305,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     "DutyDefermentAccount account is suspended and isleOfMan flag set true" should {
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
-          content(dutyDefermentAccountSuspendedIsleOfMan).containsLinkWithText(ddSetupLink, "set up a Direct Debit") mustBe false
+          content(dutyDefermentAccountSuspendedIsleOfMan).containsLinkWithText(
+            ddSetupLink, "set up a Direct Debit") mustBe false
         }
       }
     }
@@ -295,14 +314,16 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     "DutyDefermentAccount account is open and isleOfMan flag set true" should {
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
-          content(dutyDefermentAccountStatusOpenIsleOfMan).containsLinkWithText(ddSetupLink, "set up a Direct Debit") mustBe false
+          content(dutyDefermentAccountStatusOpenIsleOfMan).containsLinkWithText(
+            ddSetupLink, "set up a Direct Debit") mustBe false
         }
       }
 
       "DutyDefermentAccount account is closed and isleOfMan flag set true" should {
         "not include a a link to the duty deferment direct debit setup details" in new Setup {
           running(app) {
-            content(dutyDefermentAccountStatusClosedIsleOfMan).containsLinkWithText(ddSetupLink, "set up a Direct Debit") mustBe false
+            content(dutyDefermentAccountStatusClosedIsleOfMan).containsLinkWithText(
+              ddSetupLink, "set up a Direct Debit") mustBe false
           }
         }
       }
@@ -319,12 +340,16 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
 
-    val dutyDefermentAccount = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), // scalastyle:ignore magic.number
+    val dutyDefermentAccount = DutyDefermentAccount(dan, eori, false,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)),
+        Some(BigDecimal(299)), // scalastyle:ignore magic.number
         Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
 
-    val accountWithNegativeBalance = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(500)), Some(BigDecimal(299)), // scalastyle:ignore magic.number
+    val accountWithNegativeBalance = DutyDefermentAccount(dan, eori, false,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(500)),
+        Some(BigDecimal(299)), // scalastyle:ignore magic.number
         Some(BigDecimal(-100))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
 
     val dutyDefermentAccountWithoutBalances = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
@@ -334,9 +359,15 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val dutyDefermentAccountSuspended = dutyDefermentAccount.copy(status = AccountStatusSuspended)
     val dutyDefermentAccountClosed = dutyDefermentAccount.copy(status = AccountStatusClosed)
     val dutyDefermentAccountPending = dutyDefermentAccount.copy(status = AccountStatusPending)
-    val dutyDefermentAccountSuspendedIsleOfMan = dutyDefermentAccount.copy(status = AccountStatusSuspended, isIsleOfMan = true)
-    val dutyDefermentAccountStatusOpenIsleOfMan = dutyDefermentAccount.copy(status = AccountStatusOpen, isIsleOfMan = true)
-    val dutyDefermentAccountStatusClosedIsleOfMan = dutyDefermentAccount.copy(status = AccountStatusClosed, isIsleOfMan = true)
+
+    val dutyDefermentAccountSuspendedIsleOfMan = dutyDefermentAccount.copy(
+      status = AccountStatusSuspended, isIsleOfMan = true)
+
+    val dutyDefermentAccountStatusOpenIsleOfMan = dutyDefermentAccount.copy(
+      status = AccountStatusOpen, isIsleOfMan = true)
+
+    val dutyDefermentAccountStatusClosedIsleOfMan = dutyDefermentAccount.copy(
+      status = AccountStatusClosed, isIsleOfMan = true)
 
     val dutyDefermentAccountStatusID1 = dutyDefermentAccount.copy(statusId = ChangeOfLegalEntity)
     val dutyDefermentAccountStatusID2 = dutyDefermentAccount.copy(statusId = GuaranteeCancelledGuarantorsRequest)
@@ -348,16 +379,19 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val dutyDefermentAccountStatusID8 = dutyDefermentAccount.copy(statusId = GuaranteeExceeded)
     val dutyDefermentAccountStatusID9 = dutyDefermentAccount.copy(statusId = AccountCancelled)
 
-    val dutyDefermentAccountSuspendedWithStatusId4 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
-    val dutyDefermentAccountSuspendedWithStatusId7 = dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = ReturnedMailOther)
+    val dutyDefermentAccountSuspendedWithStatusId4 = dutyDefermentAccount.copy(
+      status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
+
+    val dutyDefermentAccountSuspendedWithStatusId7 = dutyDefermentAccount.copy(
+      status = AccountStatusSuspended, statusId = ReturnedMailOther)
 
     val dutyDefermentAccountPendingZeroBalance = dutyDefermentAccountPending.copy(balances =
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)), Some(BigDecimal(299)), Some(BigDecimal(00.00)))) // scalastyle:ignore magic.number
+      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)),
+        Some(BigDecimal(299)), Some(BigDecimal(00.00)))) // scalastyle:ignore magic.number
 
     implicit val request = FakeRequest("GET", "/some/resource/path")
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
-
 
     val accounts: Seq[CDSAccounts] = Seq(
       CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances)))
@@ -367,7 +401,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       linkId = "0123456789", accountStatus = AccountStatusOpen,
       accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now))
 
-    val model = FinancialsHomeModel(eori, companyName, accounts = accounts, accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
+    val model = FinancialsHomeModel(eori, companyName, accounts = accounts,
+      accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(
       app.injector.instanceOf[duty_deferment_account_cards].apply(
@@ -375,5 +410,4 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }
-
 }

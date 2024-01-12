@@ -17,6 +17,7 @@
 package forms.mappings
 
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import utils.Utils.emptyString
 
 trait Constraints {
 
@@ -27,6 +28,7 @@ trait Constraints {
   lazy val canRegex: String = "^[0-9]{11}"
   lazy val ganRegex: String = "^[a-zA-Z0-9]{8,10}"
 
+  // scalastyle:off cyclomatic.complexity
   protected def checkEORI(invalidFormatErrorKey: String): Constraint[String] =
     Constraint {
       case str if stripWhitespace(str).matches(gbnEoriRegex) => Valid
@@ -35,10 +37,9 @@ trait Constraints {
       case str if stripWhitespace(str).matches(canRegex) => Valid
       case str if stripWhitespace(str).matches(ganRegex) => Valid
       case str if stripWhitespace(str).matches(xiEoriRegex) => Valid
-      case _ => Invalid(invalidFormatErrorKey,eoriRegex)
+      case _ => Invalid(invalidFormatErrorKey, eoriRegex)
     }
 
   protected def stripWhitespace(str: String): String =
-    str.replaceAll("\\s", "").toUpperCase
-
+    str.replaceAll("\\s", emptyString).toUpperCase
 }

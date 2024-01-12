@@ -24,6 +24,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.dashboard.customs_financials_partial_home
+
 class PartialHomeViewSpec extends SpecBase {
 
   "Customs Financials Partial Home View" should {
@@ -69,7 +70,6 @@ class PartialHomeViewSpec extends SpecBase {
   trait Setup extends I18nSupport {
     val eori: String = "EORI0123"
     val notificationsKeys: Seq[String] = Seq("c79")
-
     implicit val request = FakeRequest("GET", "/some/resource/path")
     val app = application().build()
     implicit val appConfig = app.injector.instanceOf[AppConfig]
@@ -78,5 +78,4 @@ class PartialHomeViewSpec extends SpecBase {
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }
-
 }

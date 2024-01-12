@@ -25,12 +25,13 @@ import utils.SpecBase
 import viewmodels.Paginated
 
 import scala.jdk.CollectionConverters._
+
 object PaginatorElement {
-  def apply(e: Element):List[PaginatorElement] = {
-    e.select("li").asScala.map( li => {
+  def apply(e: Element): List[PaginatorElement] = {
+    e.select("li").asScala.map(li => {
       val url = li.select("a").asScala.toList match {
         case Nil => ""
-        case head::tail => head.attr("href")
+        case head :: tail => head.attr("href")
       }
       PaginatorElement(url, li.text())
     }).toList
@@ -38,14 +39,15 @@ object PaginatorElement {
 }
 
 object PaginatorParser {
-  def apply(e: Element):PaginatorParser = {
+  def apply(e: Element): PaginatorParser = {
     val description = e.select(".pager-summary").text()
     PaginatorParser(description, PaginatorElement(e))
   }
 }
 
-case class PaginatorElement(url:String, linkText:String)
-case class PaginatorParser(description:String, links: Seq[PaginatorElement])
+case class PaginatorElement(url: String, linkText: String)
+
+case class PaginatorParser(description: String, links: Seq[PaginatorElement])
 
 case class ExamplePaginatedViewModel(allItems: Seq[Int],
                                      itemsPerPage: Int,
@@ -57,15 +59,11 @@ class PaginatedSpec extends SpecBase {
 
   val app = application().build()
   val messagesApi = app.injector.instanceOf[MessagesApi]
-
   implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
-
   private def getUriForPage(page: Int) = s"/foo/bar?foo=bar&page=$page"
-
   private val someDescription = "approved accounts"
 
   // scalastyle:off magic.number
-
   def somePaginatedViewModel(numberOfItems: Int, requestedPage: Int): ExamplePaginatedViewModel = {
     val allItems = List.range(1, numberOfItems + 1)
     val itemsPerPage = 25
@@ -84,10 +82,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (1 to 25)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val paginatorParser = PaginatorParser(html)
+
       paginatorParser.description mustBe "Showing 1 – 25 of 40 approved accounts"
       paginatorParser.links.length mustBe 3
-      paginatorParser.links(0).linkText mustBe "1"
-      paginatorParser.links(0).url mustBe ""
+      paginatorParser.links.head.linkText mustBe "1"
+      paginatorParser.links.head.url mustBe ""
       paginatorParser.links(1).linkText mustBe "2"
       paginatorParser.links(1).url mustBe getUriForPage(2)
       paginatorParser.links(2).linkText mustBe "Next"
@@ -99,10 +98,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (26 to 45)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 26 – 45 of 45 approved accounts"
       parsed.links.length mustBe 3
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(1)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(1)
       parsed.links(1).linkText mustBe "1"
       parsed.links(1).url mustBe getUriForPage(1)
       parsed.links(2).linkText mustBe "2"
@@ -114,10 +114,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (1 to 25)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 1 – 25 of 245 approved accounts"
       parsed.links.length mustBe 6
-      parsed.links(0).linkText mustBe "1"
-      parsed.links(0).url mustBe ""
+      parsed.links.head.linkText mustBe "1"
+      parsed.links.head.url mustBe ""
       parsed.links(1).linkText mustBe "2"
       parsed.links(1).url mustBe getUriForPage(2)
       parsed.links(2).linkText mustBe "3"
@@ -135,10 +136,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (26 to 50)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 26 – 50 of 245 approved accounts"
       parsed.links.length mustBe 7
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(1)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(1)
       parsed.links(1).linkText mustBe "1"
       parsed.links(1).url mustBe getUriForPage(1)
       parsed.links(2).linkText mustBe "2"
@@ -158,10 +160,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (51 to 75)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 51 – 75 of 245 approved accounts"
       parsed.links.length mustBe 7
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(2)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(2)
       parsed.links(1).linkText mustBe "1"
       parsed.links(1).url mustBe getUriForPage(1)
       parsed.links(2).linkText mustBe "2"
@@ -181,10 +184,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (101 to 125)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 101 – 125 of 245 approved accounts"
       parsed.links.length mustBe 7
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(4)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(4)
       parsed.links(1).linkText mustBe "3"
       parsed.links(1).url mustBe getUriForPage(3)
       parsed.links(2).linkText mustBe "4"
@@ -204,10 +208,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (176 to 200)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 176 – 200 of 245 approved accounts"
       parsed.links.length mustBe 7
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(7)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(7)
       parsed.links(1).linkText mustBe "6"
       parsed.links(1).url mustBe getUriForPage(6)
       parsed.links(2).linkText mustBe "7"
@@ -227,10 +232,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (201 to 225)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 201 – 225 of 245 approved accounts"
       parsed.links.length mustBe 7
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(8)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(8)
       parsed.links(1).linkText mustBe "6"
       parsed.links(1).url mustBe getUriForPage(6)
       parsed.links(2).linkText mustBe "7"
@@ -250,10 +256,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (226 to 245)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 226 – 245 of 245 approved accounts"
       parsed.links.length mustBe 6
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(9)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(9)
       parsed.links(1).linkText mustBe "6"
       parsed.links(1).url mustBe getUriForPage(6)
       parsed.links(2).linkText mustBe "7"
@@ -271,10 +278,11 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (226 to 250)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.description mustBe "Showing 226 – 250 of 250 approved accounts"
       parsed.links.length mustBe 6
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(9)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(9)
       parsed.links(1).linkText mustBe "6"
       parsed.links(1).url mustBe getUriForPage(6)
       parsed.links(2).linkText mustBe "7"
@@ -292,9 +300,10 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (1 to 25)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.links.length mustBe 3
-      parsed.links(0).linkText mustBe "1"
-      parsed.links(0).url mustBe ""
+      parsed.links.head.linkText mustBe "1"
+      parsed.links.head.url mustBe ""
       parsed.links(1).linkText mustBe "2"
       parsed.links(1).url mustBe getUriForPage(2)
       parsed.links(2).linkText mustBe "Next"
@@ -306,9 +315,10 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (1 to 25)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.links.length mustBe 3
-      parsed.links(0).linkText mustBe "1"
-      parsed.links(0).url mustBe ""
+      parsed.links.head.linkText mustBe "1"
+      parsed.links.head.url mustBe ""
       parsed.links(1).linkText mustBe "2"
       parsed.links(1).url mustBe getUriForPage(2)
       parsed.links(2).linkText mustBe "Next"
@@ -320,17 +330,15 @@ class PaginatedSpec extends SpecBase {
       model.visibleItems mustBe (26 to 40)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
+
       parsed.links.length mustBe 3
-      parsed.links(0).linkText mustBe "Prev"
-      parsed.links(0).url mustBe getUriForPage(1)
+      parsed.links.head.linkText mustBe "Prev"
+      parsed.links.head.url mustBe getUriForPage(1)
       parsed.links(1).linkText mustBe "1"
       parsed.links(1).url mustBe getUriForPage(1)
       parsed.links(2).linkText mustBe "2"
       parsed.links(2).url mustBe ""
     }
-
   }
-
   // scalastyle:on magic.number
-
 }

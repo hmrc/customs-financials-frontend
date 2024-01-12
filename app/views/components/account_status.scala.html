@@ -21,7 +21,6 @@
 @(status: CDSAccountStatus, accountType: String)(implicit messages: Messages)
 
 @if(!status.isOpen) {
-
     @if((accountType eq "duty-deferment") && (status.isSuspended || status.isPending )) {
         <span class="@{status.statusAttribute} card-header__status @accountType-status" aria-hidden="true">
             @messages(s"cf.duty-deferment.status.$status")
@@ -32,4 +31,3 @@
         </span>
     }
 }
-

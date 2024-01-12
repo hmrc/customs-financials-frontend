@@ -16,7 +16,6 @@
 
 package services
 
-
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
 import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA, _}
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
@@ -30,7 +29,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, _}
 import utils.SpecBase
 import scala.concurrent.Future
 
-//noinspection TypeAnnotation
 class ApiServiceSpec extends SpecBase
   with FutureAwaits with DefaultAwaitTimeout with ScalaFutures {
 
@@ -56,9 +54,15 @@ class ApiServiceSpec extends SpecBase
         ).build()
 
         val traderEori = "12345678"
-        val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, viewBalanceIsGranted = false), Some("1000000"), Some("200000"))
-        val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false), Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
-        val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false), Some(false), Some(false), Some(Limits("200", "100")), None)
+        val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None,
+          viewBalanceIsGranted = false), Some("1000000"), Some("200000"))
+
+        val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false),
+          Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
+
+        val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false),
+          Some(false), Some(false), Some(Limits("200", "100")), None)
+
         val cashAccountNumber = "987654"
         val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false), Some("999.99"))
 
@@ -82,10 +86,10 @@ class ApiServiceSpec extends SpecBase
         running(appTest) {
           val service = appTest.injector.instanceOf[ApiService]
           await(service.getAccounts(traderEori))
-          verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.accounts"))(any)(any)
+          verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
+            "customs-financials-api.get.accounts"))(any)(any)
         }
       }
-
 
       "return all accounts available for the given EORI from the API service for Acc27" in new Setup() {
         when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
@@ -141,7 +145,8 @@ class ApiServiceSpec extends SpecBase
 
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
-          result mustBe Right(SearchedAuthorities("1",List(AuthorisedGeneralGuaranteeAccount(Account("1234","GeneralGuarantee","GB000000000000"),Some("10.0")))))
+          result mustBe Right(SearchedAuthorities("1", List(AuthorisedGeneralGuaranteeAccount(Account(
+            "1234", "GeneralGuarantee", "GB000000000000"), Some("10.0")))))
         }
       }
     }
@@ -164,25 +169,34 @@ class ApiServiceSpec extends SpecBase
       implicit val hc: HeaderCarrier = HeaderCarrier()
       val traderEori = "12345678"
       val mockMetricsReporterService = mock[MetricsReporterService]
+
       val notification = List(
         DocumentAttributes(traderEori, C79Certificate, "new file", 1000, Map.empty),
         DocumentAttributes(traderEori, DutyDefermentStatement, "new file", 1000, Map.empty),
         DocumentAttributes(traderEori, SecurityStatement, "new file", 1000, Map.empty),
         DocumentAttributes(traderEori, PostponedVATStatement, "new file", 1000, Map.empty))
+
       val notifications = SdesNotificationsForEori(traderEori, notification)
       val mockHttpClient = mock[HttpClient]
+
       val appTest = application().overrides(
         inject.bind[HttpClient].toInstance(mockHttpClient),
         inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
       ).build()
+
       when[Future[Seq[DocumentAttributes]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
         .thenReturn(Future.successful(notification))
+
       when[Future[SdesNotificationsForEori]](mockHttpClient.GET(any, any, any)(any, any, any))
         .thenReturn(Future.successful(notifications))
+
       val service = appTest.injector.instanceOf[ApiService]
+
       running(appTest) {
         await(service.getEnabledNotifications(traderEori))
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.notifications"))(any)(any)
+
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
+          "customs-financials-api.get.notifications"))(any)(any)
       }
     }
 
@@ -203,18 +217,25 @@ class ApiServiceSpec extends SpecBase
       val traderEori = "12345678"
       val mockHttpClient = mock[HttpClient]
       val mockMetricsReporterService = mock[MetricsReporterService]
+
       val appTest = application().overrides(
         inject.bind[HttpClient].toInstance(mockHttpClient),
         inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
       ).build()
+
       when(mockHttpClient.DELETE[HttpResponse](any, any)(any, any, any))
         .thenReturn(Future.successful(HttpResponse.apply(OK, "")))
+
       when[Future[Boolean]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
         .thenReturn(Future.successful(true))
+
       val service = appTest.injector.instanceOf[ApiService]
+
       running(appTest) {
         await(service.deleteNotification(traderEori, C79Certificate))
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.delete.notification"))(any)(any)
+
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
+          "customs-financials-api.delete.notification"))(any)(any)
       }
     }
 
@@ -225,7 +246,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
         }
       }
@@ -235,7 +256,7 @@ class ApiServiceSpec extends SpecBase
           .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
 
         running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI",Some("someAltEori")))
+          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
           response mustBe Left(RequestAuthoritiesCSVError)
         }
       }
@@ -265,15 +286,22 @@ class ApiServiceSpec extends SpecBase
 
   trait Setup {
     val mockHttpClient = mock[HttpClient]
-
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val traderEori = "12345678"
     val agentEori = "09876543"
-    val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, false), Some("1000000"), Some("200000"))
-    val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false), Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
-    val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false), Some(false), Some(false), Some(Limits("200", "100")), None)
+
+    val guaranteeAccount = GGA(AccountResponse("G123456", "", traderEori, None, None, false)
+      , Some("1000000"), Some("200000"))
+
+    val dd1 = DDA(AccountResponse("1231231231", "", traderEori, None, None, false),
+      Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
+
+    val dd2 = DDA(AccountResponse("7567567567", "", traderEori, None, None, false),
+      Some(false), Some(false), Some(Limits("200", "100")), None)
+
     val cashAccountNumber = "987654"
     val cashAccount = CA(AccountResponse(cashAccountNumber, "", traderEori, None, None, false), Some("999.99"))
+
     val traderAccounts = AccountsAndBalancesResponseContainer(
       domain.AccountsAndBalancesResponse(
         Some(domain.AccountResponseCommon("", Some(""), "", None)),
@@ -286,6 +314,7 @@ class ApiServiceSpec extends SpecBase
         )
       )
     )
+
     val traderAccountsWithNoCommonResponse = AccountsAndBalancesResponseContainer(
       domain.AccountsAndBalancesResponse(
         None,

@@ -42,7 +42,6 @@
     helpAndSupport = false,
     backLink = Some(routes.AuthorizedToViewController.onPageLoad().url)
 ) {
-
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
     @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities,
             if(searchedAuthorities.numberOfAuthorities == "1") {""} else { "s" }
@@ -57,8 +56,10 @@
                     result_panel(account.accountType, account.accountNumber, availableGuaranteeBalance, None)
 
                 case AuthorisedDutyDefermentAccount(account, balances)
-                    if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00"))=>
-                    result_panel(account.accountType, account.accountNumber, None, balances.map(_.periodAvailableGuaranteeBalance))
+                    if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (
+                        balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00")) =>
+                    result_panel(account.accountType, account.accountNumber, None, balances.map(
+                        _.periodAvailableGuaranteeBalance))
 
                 case AuthorisedDutyDefermentAccount(account, balances) =>
                     result_panel(account.accountType, account.accountNumber,
@@ -68,6 +69,5 @@
                     result_panel(account.accountType, account.accountNumber, availableAccountBalance, None)
             }
         }
-
     </div>
 }

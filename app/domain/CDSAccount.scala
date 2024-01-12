@@ -42,7 +42,8 @@ case class DutyDefermentAccount(number: String,
                      ): Option[DutyDefermentDisplayBalance] = {
 
     (periodAccountLimit, periodGuaranteeLimit, periodGuaranteeLimitRemaining) match {
-      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit > 0 && guaranteeLimit > 0 => {
+      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance))
+        if accountLimit > 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
             Some(Formatters.formatCurrencyAmount(accountLimit)),
@@ -50,6 +51,7 @@ case class DutyDefermentAccount(number: String,
             Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
         )
       }
+
       case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit > 0 && guaranteeLimit == 0 => {
         Some(
           DutyDefermentDisplayBalance(
@@ -58,8 +60,8 @@ case class DutyDefermentAccount(number: String,
             None)
         )
       }
-      //this one
-      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit == 0 && guaranteeLimit > 0 => {
+
+      case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit == 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
             None,

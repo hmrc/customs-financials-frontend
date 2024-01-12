@@ -26,34 +26,33 @@ import utils.SpecBase
 import views.html.components.p
 
 class PSpec extends SpecBase {
-    "P component" should {
-        "render the default class name when classes is not defined" in new Setup {
-            running(app) {
-                val output: HtmlFormat.Appendable = pView(
-                    message = "Hello, world!",
-                )(messages(app))
-                val html: Document = Jsoup.parse(contentAsString(output))
+  "P component" should {
+    "render the default class name when classes is not defined" in new Setup {
+      running(app) {
+        val output: HtmlFormat.Appendable = pView(
+          message = "Hello, world!",
+        )(messages(app))
 
-                html.getElementsByTag("p").attr("class") must include("govuk-body")
-            }
-        }
-
-        "render the message and classes correctly" in new Setup {
-            running(app) {
-                val output: HtmlFormat.Appendable = pView(
-                    message = "Hello, world!",
-                    extraClasses = "custom-class"
-                )(messages(app))
-                val html: Document = Jsoup.parse(contentAsString(output))
-
-                html.getElementsByClass("custom-class").text() must include("Hello, world!")
-            }
-        }
-
+        val html: Document = Jsoup.parse(contentAsString(output))
+        html.getElementsByTag("p").attr("class") must include("govuk-body")
+      }
     }
 
-    trait Setup {
-        val app: Application = application().build()
-        val pView = app.injector.instanceOf[p]
+    "render the message and classes correctly" in new Setup {
+      running(app) {
+        val output: HtmlFormat.Appendable = pView(
+          message = "Hello, world!",
+          extraClasses = "custom-class"
+        )(messages(app))
+        val html: Document = Jsoup.parse(contentAsString(output))
+
+        html.getElementsByClass("custom-class").text() must include("Hello, world!")
+      }
     }
+  }
+
+  trait Setup {
+    val app: Application = application().build()
+    val pView = app.injector.instanceOf[p]
+  }
 }

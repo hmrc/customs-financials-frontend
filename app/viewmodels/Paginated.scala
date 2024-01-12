@@ -16,25 +16,6 @@
 
 package viewmodels
 
-/**
-  * This Paginated trait should be mixed into any ViewModels that require pagination.
-  * Views that require pagination can then simply include
-  *   '@pager(viewModel)'
-  * to render the paginator controls, and use viewModel.visibleItems to reference the items visible on the current page.
-  *
-  * It will always display FixedWidth number of links plus Previous and Next buttons if they are applicable
-  * -if you are on the 1st page, you will see pages: 1,2,3,4,5,Next   (here you can jump 5 pages ahead)
-  * -if you are on the 6th page, you will see pages: Prev,4,5,6,7,8,Next  (here you can jump just 2 pages back or forward)
-  * -if you are on the last page (e.g. 9) you will see: Prev,5,6,7,8,9  (here you can jump 5 pages back)
-  *
-  * @param T the type of items to be paginated
-  * @param items the sequence of items to be paginated
-  * @param itemsPerPage the number of items to display per page
-  * @param requestedPage the page number requested by the user (via query param)
-  * @param urlForPage a function which takes a target page number and returns a URL to navigate to that page
-  * @param itemsDescription a description of what the items are - eg. accounts, transactions, etc.
-  */
-
 trait Paginated[T] {
 
   val allItems: Seq[T]
@@ -51,7 +32,7 @@ trait Paginated[T] {
 
   private lazy val lastPage = totalNumberOfItems % itemsPerPage match {
     case 0 => totalNumberOfItems / itemsPerPage
-    case _ => totalNumberOfItems / itemsPerPage + 1  //We need an additional page for the remainder items
+    case _ => totalNumberOfItems / itemsPerPage + 1
   }
 
   lazy val currentPage: Int = requestedPage.max(FirstPage).min(lastPage)
@@ -76,5 +57,4 @@ trait Paginated[T] {
     }
     range.filter(n => n >= FirstPage && n <= lastPage)
   }
-
 }

@@ -17,7 +17,7 @@
 package views
 
 import config.AppConfig
-import domain.{CompanyAddress,AccountLinkWithoutDate}
+import domain.{CompanyAddress, AccountLinkWithoutDate}
 import org.jsoup.Jsoup
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -34,12 +34,12 @@ class YourContactDetailsViewSpec extends SpecBase {
         view.getElementsByTag("h1").text mustBe "Your contact details"
       }
     }
+
     "display second header text" in new Setup {
       running(app) {
         view.getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
           "Company details Primary email address Duty deferment contact details Support links"
-        //view.getElementsByTag("h2").text must include("Company details Primary email address Duty deferment contact details Support links")
-      }
+        }
     }
 
     "display the govlink" in new Setup {
@@ -68,9 +68,9 @@ class YourContactDetailsViewSpec extends SpecBase {
     val companyName = Some("CompanyName")
 
     val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-      eori, false, "123","1",Some(1),"2345678")
+      eori, false, "123", "1", Some(1), "2345678")
 
-    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink,accountLink)
+    val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink, accountLink)
 
     val companyAddress: CompanyAddress = new CompanyAddress(
       streetAndNumber = "123Street",
@@ -84,7 +84,7 @@ class YourContactDetailsViewSpec extends SpecBase {
     implicit val appConfig = app.injector.instanceOf[AppConfig]
 
     def view = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
-      eori,accountNumbers,companyName,companyAddress,email).body)
+      eori, accountNumbers, companyName, companyAddress, email).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

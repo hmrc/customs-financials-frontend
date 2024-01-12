@@ -19,8 +19,6 @@ package domain
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
 
-
-
 //scalastyle:off magic.number
 class DownloadStatementAuditDataSpec extends SpecBase {
 

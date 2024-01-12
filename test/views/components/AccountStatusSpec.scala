@@ -23,57 +23,56 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
 import play.twirl.api.{HtmlFormat}
 import utils.SpecBase
-import domain.{AccountStatusClosed,AccountStatusPending,AccountStatusSuspended,AccountStatusOpen}
+import domain.{AccountStatusClosed, AccountStatusPending, AccountStatusSuspended, AccountStatusOpen}
 import views.html.components.account_status
 
 class AccountStatusSpec extends SpecBase {
 
-    "render correct status message for pending status" in new Setup {
-       val view = app.injector.instanceOf[account_status]
-       val output: HtmlFormat.Appendable = view(
-            status = AccountStatusPending,
-            accountType = "duty-deferment"
-        )(messages(app))
+  "render correct status message for pending status" in new Setup {
+    val view = app.injector.instanceOf[account_status]
+    val output: HtmlFormat.Appendable = view(
+      status = AccountStatusPending,
+      accountType = "duty-deferment"
+    )(messages(app))
 
-        val html: Document = Jsoup.parse(contentAsString(output))
-        html.getElementsByClass("duty-deferment-status").text() must include("Pending Opening On CDS")
-    }
+    val html: Document = Jsoup.parse(contentAsString(output))
+    html.getElementsByClass("duty-deferment-status").text() must include("Pending Opening On CDS")
+  }
 
-    "render correct status message for closed status" in new Setup {
-       val view = app.injector.instanceOf[account_status]
-       val output: HtmlFormat.Appendable = view(
-            status = AccountStatusClosed,
-            accountType = "duty-deferment"
-        )(messages(app))
+  "render correct status message for closed status" in new Setup {
+    val view = app.injector.instanceOf[account_status]
+    val output: HtmlFormat.Appendable = view(
+      status = AccountStatusClosed,
+      accountType = "duty-deferment"
+    )(messages(app))
 
-        val html: Document = Jsoup.parse(contentAsString(output))
-        html.getElementsByClass("duty-deferment-status").text() must include("Closed")
-    }
+    val html: Document = Jsoup.parse(contentAsString(output))
+    html.getElementsByClass("duty-deferment-status").text() must include("Closed")
+  }
 
-    "render correct status message for suspended status" in new Setup {
-       val view = app.injector.instanceOf[account_status]
-       val output: HtmlFormat.Appendable = view(
-            status = AccountStatusSuspended,
-            accountType = "duty-deferment"
-        )(messages(app))
+  "render correct status message for suspended status" in new Setup {
+    val view = app.injector.instanceOf[account_status]
+    val output: HtmlFormat.Appendable = view(
+      status = AccountStatusSuspended,
+      accountType = "duty-deferment"
+    )(messages(app))
 
-        val html: Document = Jsoup.parse(contentAsString(output))
-        html.getElementsByClass("duty-deferment-status").text() must include("Action Required")
-    }
+    val html: Document = Jsoup.parse(contentAsString(output))
+    html.getElementsByClass("duty-deferment-status").text() must include("Action Required")
+  }
 
-    "not render status message for open duty-deferment status" in new Setup {
-       val view = app.injector.instanceOf[account_status]
-       val output: HtmlFormat.Appendable = view(
-            status = AccountStatusOpen,
-            accountType = "duty-deferment"
-        )(messages(app))
+  "not render status message for open duty-deferment status" in new Setup {
+    val view = app.injector.instanceOf[account_status]
+    val output: HtmlFormat.Appendable = view(
+      status = AccountStatusOpen,
+      accountType = "duty-deferment"
+    )(messages(app))
 
-        val html: Document = Jsoup.parse(contentAsString(output))
-        html.getElementsByTag("body").text() mustNot include("Open Status Message")
-    }
+    val html: Document = Jsoup.parse(contentAsString(output))
+    html.getElementsByTag("body").text() mustNot include("Open Status Message")
+  }
 
-    
-    trait Setup {
-        val app: Application = application().build()
-    } 
+  trait Setup {
+    val app: Application = application().build()
+  }
 }

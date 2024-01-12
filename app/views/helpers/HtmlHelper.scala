@@ -33,5 +33,4 @@ object HtmlHelper {
     val isSuspended: Boolean = status == AccountStatusSuspended
     val isPending: Boolean = status == AccountStatusPending
   }
-
 }

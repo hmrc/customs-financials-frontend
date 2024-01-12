@@ -25,6 +25,7 @@ import views.helpers.Formatters
 import java.time.LocalDate
 import scala.collection.immutable.SortedSet
 
+// scalastyle:off number.of.types
 sealed abstract class FileFormat(val name: String) extends Ordered[FileFormat] {
   val order: Int
 
@@ -35,7 +36,6 @@ sealed abstract class FileFormat(val name: String) extends Ordered[FileFormat] {
 
 object FileFormat {
 
-  // scalastyle:off magic.number
   case object Pdf extends FileFormat("PDF") {
     val order = 1
   }
@@ -47,15 +47,14 @@ object FileFormat {
   case object UnknownFileFormat extends FileFormat("UNKNOWN FILE FORMAT") {
     val order = 99
   }
-  // scalastyle:on magic.number
 
   val log: LoggerLike = Logger(this.getClass)
-
-  val SdesFileFormats: SortedSet[FileFormat] = SortedSet(Pdf, Csv)
-  val PvatFileFormats: SortedSet[FileFormat] = SortedSet(Pdf)
   val authorityFileFormats: SortedSet[FileFormat] = SortedSet(Csv)
 
-  def filterFileFormats[T <: SdesFile](allowedFileFormats: SortedSet[FileFormat])(files: Seq[T]): Seq[T] = files.filter(file => allowedFileFormats(file.metadata.fileFormat))
+  def filterFileFormats[T <: SdesFile](
+                                        allowedFileFormats: SortedSet[FileFormat])(
+                                        files: Seq[T]): Seq[T] = files.filter(
+    file => allowedFileFormats(file.metadata.fileFormat))
 
   def apply(name: String): FileFormat = name.toUpperCase match {
     case Pdf.name => Pdf
@@ -111,21 +110,28 @@ object DDStatementType {
   def unapply(arg: DDStatementType): Option[String] = Some(arg.name)
 }
 
-sealed abstract class FileRole(val name: String, val featureName: String, val transactionName: String, val messageKey: String)
+sealed abstract class FileRole(val name: String, val featureName: String,
+                               val transactionName: String, val messageKey: String)
 
 object FileRole {
 
-  case object DutyDefermentStatement extends FileRole("DutyDefermentStatement", "duty-deferment", "Download duty deferment statement", "duty-deferment")
+  case object DutyDefermentStatement extends FileRole(
+    "DutyDefermentStatement", "duty-deferment", "Download duty deferment statement", "duty-deferment")
 
-  case object C79Certificate extends FileRole("C79Certificate", "import-vat", "Download import VAT statement", "c79")
+  case object C79Certificate extends FileRole(
+    "C79Certificate", "import-vat", "Download import VAT statement", "c79")
 
-  case object PostponedVATStatement extends FileRole("PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
+  case object PostponedVATStatement extends FileRole(
+    "PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
 
-  case object PostponedVATAmendedStatement extends FileRole("PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
+  case object PostponedVATAmendedStatement extends FileRole(
+    "PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
 
-  case object SecurityStatement extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
+  case object SecurityStatement extends FileRole(
+    "SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
 
-  case object StandingAuthority extends FileRole("StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
+  case object StandingAuthority extends FileRole(
+    "StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -280,15 +286,14 @@ case class VatCertificateFile(filename: String,
                               downloadURL: String,
                               size: Long,
                               metadata: VatCertificateFileMetadata,
-                              eori: String)(implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
+                              eori: String)(
+  implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
 
   def compare(that: VatCertificateFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
-
-case class SdesFileWithId[A <: SdesFile](sdesFile: A, id: String)
 
 case class PostponedVatStatementFile(filename: String,
                                      downloadURL: String,
@@ -307,8 +312,8 @@ case class VatCertificateFileMetadata(periodStartYear: Int,
                                       statementRequestId: Option[String]) extends SdesFileMetadata
 
 case class PostponedVatStatementFileMetadata(periodStartYear: Int,
-                                               periodStartMonth: Int,
-                                               fileFormat: FileFormat,
-                                               fileRole: FileRole,
-                                               source: String,
-                                               statementRequestId: Option[String]) extends SdesFileMetadata
+                                             periodStartMonth: Int,
+                                             fileFormat: FileFormat,
+                                             fileRole: FileRole,
+                                             source: String,
+                                             statementRequestId: Option[String]) extends SdesFileMetadata

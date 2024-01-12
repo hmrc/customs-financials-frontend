@@ -27,7 +27,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi) extends ActionFilter[AuthenticatedRequest] with I18nSupport {
+class EmailAction @Inject()(dataStoreService: DataStoreService)(
+  implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi)
+  extends ActionFilter[AuthenticatedRequest] with I18nSupport {
+
   def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     dataStoreService.getEmail(request.user.eori).map {
@@ -37,7 +40,6 @@ class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val exe
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
         }
       case Right(_) => None
-    }.recover { case _ => None } //This will allow users to access the service if ETMP return an error via SUB09
+    }.recover { case _ => None }
   }
 }
-

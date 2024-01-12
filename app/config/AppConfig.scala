@@ -38,29 +38,20 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
   lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
   lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
-  lazy val sessionCacheExpiryInSeconds: Int = config.get[Int]("microservice.services.customs-financials-frontend.sessionCache.expirySeconds")
-  lazy val serviceNameSdes: String = config.get[String]("microservice.services.sdes.circuit-breaker.serviceName")
-  lazy val numberOfCallsToSwitchCircuitBreakerSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.numberOfCallsToTriggerStateChange")
-  lazy val unavailablePeriodDurationSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.unavailablePeriodDuration")
-  lazy val unstablePeriodDurationSdes: Int = config.get[Int]("microservice.services.sdes.circuit-breaker.unstablePeriodDuration")
 
   lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
   lazy val reportChangeCdsUrl: String = config.get[String]("external-urls.reportChangeUrl")
   lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
-  lazy val applicationStatusCdsUrl: String = config.get[String]("external-urls.applicationStatusUrl")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
   lazy val cashAccountWithdrawUrl: String = config.get[String]("external-urls.cashAccountWithdrawUrl")
   lazy val dutyDefermentSchemeContactLink: String = config.get[String]("external-urls.dutyDefermentSchemeContactLink")
   lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
   lazy val loginUrl: String = config.get[String]("external-urls.login")
   lazy val loginContinueUrl: String = config.get[String]("external-urls.loginContinue")
-  lazy val pvatLoginContinueUrl: String = config.get[String]("external-urls.pvatLoginContinue")
   lazy val signOutUrl: String = config.get[String]("external-urls.signOut")
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("external-urls.helpMakeGovUkBetterUrl")
   lazy val govukHome: String = config.get[String]("external-urls.govUkHome")
 
-  lazy val registerCdsUrl: String = config.get[String]("microservice.services.customs-financials-frontend.cdsRegisterUrl")
-  lazy val feedbackService: String = config.get[String]("microservice.services.feedback.url") + config.get[String]("microservice.services.feedback.source")
   lazy val financialsFrontendUrl: String = config.get[String]("microservice.services.customs-financials-frontend.url")
   lazy val cashAccountUrl: String = config.get[String]("microservice.services.customs-cash-account-frontend.url")
   lazy val manageAuthoritiesFrontendUrl: String = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
@@ -70,8 +61,10 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
   lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
-  lazy val csvAccountUrl: String = s"$documentsUrl/csv-statement"
   lazy val changeEmailUrl: String = config.get[String]("external-urls.changeEmailAddressUrl")
+
+  lazy val feedbackService: String = config.get[String]("microservice.services.feedback.url") +
+    config.get[String]("microservice.services.feedback.source")
 
   lazy val customsFinancialsSessionCacheUrl: String = servicesConfig.baseUrl("customs-financials-session-cache") +
     config.get[String]("microservice.services.customs-financials-session-cache.context")

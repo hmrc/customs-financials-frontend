@@ -16,14 +16,21 @@
 
 package domain
 
-case class CDSAccounts(eori: String, isNiAccount:Option[Boolean], accounts: Seq[CDSAccount]) {
+case class CDSAccounts(eori: String, isNiAccount: Option[Boolean], accounts: Seq[CDSAccount]) {
   lazy val (myAccounts, authorizedToView) = accounts.partition(_.owner == eori)
   lazy val isAgent: Boolean = authorizedToView.nonEmpty
 }
 
 object CDSAccounts {
-  val filterDutyDefermentAccounts: Seq[CDSAccount] => Seq[DutyDefermentAccount] = _.collect { case dutyDefermentAccount: DutyDefermentAccount => dutyDefermentAccount }
-  val filterGuaranteeAccounts: Seq[CDSAccount] => Seq[GeneralGuaranteeAccount] = _.collect { case guaranteeAccount: GeneralGuaranteeAccount => guaranteeAccount }
-  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect { case cashAccount: CashAccount => cashAccount }
-  val filterByAccountNumber: String => Seq[CDSAccount] => Seq[CDSAccount] = accountNumber => accounts => accounts.filter(_.number == accountNumber)
+  val filterDutyDefermentAccounts: Seq[CDSAccount] => Seq[DutyDefermentAccount] = _.collect {
+    case dutyDefermentAccount: DutyDefermentAccount => dutyDefermentAccount }
+
+  val filterGuaranteeAccounts: Seq[CDSAccount] => Seq[GeneralGuaranteeAccount] = _.collect {
+    case guaranteeAccount: GeneralGuaranteeAccount => guaranteeAccount }
+
+  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect {
+    case cashAccount: CashAccount => cashAccount }
+
+  val filterByAccountNumber: String => Seq[CDSAccount] =>
+    Seq[CDSAccount] = accountNumber => accounts => accounts.filter(_.number == accountNumber)
 }

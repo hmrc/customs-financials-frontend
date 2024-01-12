@@ -27,6 +27,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+
 case class AccountLinksRequest(sessionId: String,
                                accountLinks: Seq[SessionCacheAccountLink])
 
@@ -55,7 +56,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
   def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] =
     httpClient.GET[HttpResponse](
       appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId").map(
-      Some(_)).recover { case _ => None}
+      Some(_)).recover { case _ => None }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id
@@ -64,7 +65,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
     }
   }
 
-  private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for{
+  private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for {
     accountLink <- accountLinks
     sessionAccountLink = SessionCacheAccountLink(accountLink.eori, accountLink.isNiAccount, accountLink.accountNumber,
       accountLink.accountStatus, accountLink.accountStatusId, accountLink.linkId)

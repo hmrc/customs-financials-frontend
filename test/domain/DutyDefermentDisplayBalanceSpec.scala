@@ -24,7 +24,7 @@ class DutyDefermentDisplayBalanceSpec extends SpecBase {
 
     "correctly handle None values for accountLimit, guaranteeLimit, and guaranteeLimitRemaining" in {
       val balance = DutyDefermentDisplayBalance(None, None, None)
-      
+
       balance.accountLimit shouldBe None
       balance.guaranteeLimit shouldBe None
       balance.guaranteeLimitRemaining shouldBe None
@@ -36,7 +36,7 @@ class DutyDefermentDisplayBalanceSpec extends SpecBase {
       val guaranteeLimitRemaining = Some("200.00")
 
       val balance = DutyDefermentDisplayBalance(accountLimit, guaranteeLimit, guaranteeLimitRemaining)
-      
+
       balance.accountLimit shouldBe accountLimit
       balance.guaranteeLimit shouldBe guaranteeLimit
       balance.guaranteeLimitRemaining shouldBe guaranteeLimitRemaining

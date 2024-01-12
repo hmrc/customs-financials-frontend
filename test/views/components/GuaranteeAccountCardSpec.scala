@@ -27,8 +27,7 @@ import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.account_cards.guarantee_account_cards
 
-
-class GuaranteeAccountCardSpec extends SpecBase  {
+class GuaranteeAccountCardSpec extends SpecBase {
 
   "Guarantee Account Card" should {
 
@@ -62,7 +61,6 @@ class GuaranteeAccountCardSpec extends SpecBase  {
         content().getElementById("guarantee-limit-123456").text mustBe "Guarantee limit: £999"
       }
     }
-
   }
 
   "Guarantee Account Card with no gurantee balances" should {
@@ -79,7 +77,6 @@ class GuaranteeAccountCardSpec extends SpecBase  {
         content(newGuaranteeAccount).notContainElementById("overall-guarantee-limit")
       }
     }
-
 
     "account is open" should {
       val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
@@ -132,8 +129,6 @@ class GuaranteeAccountCardSpec extends SpecBase  {
     implicit val appConfig = app.injector.instanceOf[AppConfig]
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-
 
     val guaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
 

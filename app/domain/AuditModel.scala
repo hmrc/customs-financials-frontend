@@ -29,6 +29,6 @@ object DownloadStatementAuditData {
     DownloadStatementAuditData(auditData + ("eori" -> eori))
   }
 
-  implicit val downloadStatementAuditDataWrites: Writes[DownloadStatementAuditData] =  Json.writes[DownloadStatementAuditData]
+  implicit val downloadStatementAuditDataWrites: Writes[DownloadStatementAuditData] = Json.writes[DownloadStatementAuditData]
 
 }

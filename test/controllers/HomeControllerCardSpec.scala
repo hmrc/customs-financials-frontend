@@ -37,11 +37,8 @@ import scala.util.Random
 
 class HomeControllerCardSpec extends SpecBase {
 
-
   "CustomsFinancialsHomeController" should {
-
     "the landing page" should {
-
       "show the duty deferment account cards" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -50,6 +47,7 @@ class HomeControllerCardSpec extends SpecBase {
           html.getElementsByClass("duty-deferment-account").isEmpty mustBe false
         }
       }
+
       "show the cash account card" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -58,6 +56,7 @@ class HomeControllerCardSpec extends SpecBase {
           html.getElementsByClass("cash-account").isEmpty mustBe false
         }
       }
+
       "show the guarantee account card" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -66,6 +65,7 @@ class HomeControllerCardSpec extends SpecBase {
           html.getElementsByClass("guarantee-account").isEmpty mustBe false
         }
       }
+
       "show the import vat card" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -79,18 +79,26 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/adjustments", "View notification of adjustment statements") mustBe true
+
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/adjustments",
+            "View notification of adjustment statements") mustBe true
         }
       }
+
       "show the postponed vat card" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
+
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
+            "View postponed import VAT statements") mustBe true
         }
       }
     }
+
     "display vat card" should {
       "work with only actual eori statements and no historic Eoris in the eori store" in new Setup {
         running(app) {
@@ -98,34 +106,44 @@ class HomeControllerCardSpec extends SpecBase {
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
 
-          html.containsLinkWithText("http://localhost:9398/customs/documents/import-vat", "View import VAT certificates (C79)") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/import-vat",
+            "View import VAT certificates (C79)") mustBe true
         }
       }
+
       "work with actual and historic eori statements" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/import-vat", "View import VAT certificates (C79)") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/import-vat",
+            "View import VAT certificates (C79)") mustBe true
         }
       }
     }
+
     "display securities card" should {
       "work with only actual eori statements and no historic Eoris in the eori store" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/adjustments", "View notification of adjustment statements") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/adjustments",
+            "View notification of adjustment statements") mustBe true
         }
       }
 
-      "work with only actual eori statements and historic Eoris in the eori store, but no historic statements" in new Setup {
+      "work with only eori statements and historic Eoris in the store, but not historic statements" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/adjustments", "View notification of adjustment statements") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/adjustments",
+            "View notification of adjustment statements") mustBe true
         }
       }
     }
@@ -136,26 +154,34 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
+            "View postponed import VAT statements") mustBe true
         }
       }
 
-      "work with only actual eori statements and historic Eoris in the eori store, but no historic statements" in new Setup {
+      "work with only eori statements and historic Eoris in the store, but not historic statements" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
-          html.containsLinkWithText("http://localhost:9398/customs/documents/postponed-vat?location=CDS", "View postponed import VAT statements") mustBe true
+          html.containsLinkWithText(
+            "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
+            "View postponed import VAT statements") mustBe true
         }
       }
     }
     "show the historic eori duty deferment cards" in {
 
-      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",false ,AccountStatusOpen, DefermentAccountAvailable,
-        DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",
+        false, AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00),
+          Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222", false, AccountStatusOpen, DefermentAccountAvailable,
-        DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222",
+        false, AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00),
+          Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
       val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
       val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
@@ -175,10 +201,16 @@ class HomeControllerCardSpec extends SpecBase {
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(accounts))
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(
+        Future.successful(Right(Email("last.man@standing.co.uk"))))
+
       when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
       when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
-      when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+
+      when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(
+        Future.successful(Some("Test Own Company Name")))
+
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
       val app = application().overrides(
@@ -193,8 +225,12 @@ class HomeControllerCardSpec extends SpecBase {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByClass("duty-deferment-account").tagName("h3").asScala.exists(_.text.contains("Account: 678910")) mustBe true
-        html.getElementsByClass("duty-deferment-account").tagName("h3").asScala.exists(_.text.contains("Account: 12345")) mustBe true
+
+        html.getElementsByClass("duty-deferment-account").tagName(
+          "h3").asScala.exists(_.text.contains("Account: 678910")) mustBe true
+
+        html.getElementsByClass("duty-deferment-account").tagName(
+          "h3").asScala.exists(_.text.contains("Account: 12345")) mustBe true
       }
     }
   }
@@ -216,7 +252,9 @@ class HomeControllerCardSpec extends SpecBase {
         DefermentAccountAvailable,
         Some(GeneralGuaranteeBalance(BigDecimal(someGuaranteeLimit), BigDecimal(someAvailableGuaranteeBalance)))
       )
-      val someCashAccount = CashAccount("1000001", eoriNumber, AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
+      val someCashAccount = CashAccount("1000001", eoriNumber,
+        AccountStatusOpen, DefermentAccountAvailable,
+        CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
@@ -245,7 +283,7 @@ class HomeControllerCardSpec extends SpecBase {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)))
-          , viewBalanceIsGranted = true, isIsleOfMan = false )
+          , viewBalanceIsGranted = true, isIsleOfMan = false)
       }.toList
 
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
@@ -262,8 +300,8 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
 
-    val add = XiEoriAddressInformation("",Some(""),None,None,Some(""))
-    val xi = XiEoriInformationReponse("Some XiEori","yes", add)
+    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)
@@ -273,7 +311,9 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
-    when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(Status.OK, "")))
+
+    when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(
+      Future.successful(HttpResponse(Status.OK, "")))
 
     val app = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),

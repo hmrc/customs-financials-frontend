@@ -142,9 +142,6 @@ class AuditingServiceSpec extends SpecBase {
     val AUDIT_SECURITY_STATEMENTS = "DisplaySecurityStatements"
     val AUDIT_POSTPONED_VAT_STATEMENTS = "DisplayPostponedVATStatements"
     val AUDIT_AUTHORISED_TRANSACTION = "View account"
-    val AUDIT_EORI = "EORI"
-    val AUDIT_HISTORIC_EORIS = "HISTORIC_EORI"
-
 
     val mockConfig = mock[AppConfig]
     when(mockConfig.appName).thenReturn("customs-financials-frontend")

@@ -32,12 +32,12 @@ import uk.gov.hmrc.play.partials.HtmlPartial
 import viewmodels.FinancialsHomeModel
 import views.html.dashboard.{customs_financials_home, customs_financials_partial_home}
 import views.html.error_states.account_not_available
+import utils.Utils.emptyString
 
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
-
 
 class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 checkEmailIsVerified: EmailAction,
@@ -67,14 +67,14 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
         allAccounts <- getAllAccounts(eori, xiEori)
         page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
       } yield page
-      result.recover{
-        case TimeoutResponse  =>
+      result.recover {
+        case TimeoutResponse =>
           Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable)
       }
   }
 
   private def getAllAccounts(eori: EORI, xiEori: Option[String])(implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
-    val eoriList = Seq(eori, xiEori.getOrElse("")).filterNot(_ == "")
+    val eoriList = Seq(eori, xiEori.getOrElse("")).filterNot(_ == emptyString)
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
     for {
@@ -85,7 +85,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     case _: GatewayTimeoutException =>
       log.warn(s"Request Timeout while fetching accounts")
       Future.failed(TimeoutResponse)
-    case NonFatal(e)=>
+    case NonFatal(e) =>
       log.warn(s"[GetAccounts API] Failed with error: ${e.getMessage}")
       Future.successful(Seq.empty[CDSAccounts])
   }
@@ -102,9 +102,11 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
-      sessionId = hc.sessionId.getOrElse({log.error("Missing SessionID"); SessionId("Missing Session ID")})
-      accountLinks = createAccountLinks(sessionId,cdsAccountsList)
-      _ <-  sessionCacheConnector.storeSession(sessionId.value, accountLinks)
+      sessionId = hc.sessionId.getOrElse({
+        log.error("Missing SessionID"); SessionId("Missing Session ID")
+      })
+      accountLinks = createAccountLinks(sessionId, cdsAccountsList)
+      _ <- sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
       val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori)
       Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
@@ -121,7 +123,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       cdsAccount.number,
       cdsAccount.status,
       Option(cdsAccount.statusId),
-      UUID.randomUUID().toString.replaceAll("-",""),
+      UUID.randomUUID().toString.replaceAll("-", ""),
       DateTime.now()
     )
   } yield accountLink
@@ -136,27 +138,32 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   }
 
   def getNotificationMessageKeys(collectionOfDocumentAttributes: Seq[Notification]): Seq[String] = {
-    val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
-    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(v => v.isRequested || v.fileRole == StandingAuthority)
+
+    val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(
+      v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
+
+    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(
+      v => v.isRequested || v.fileRole == StandingAuthority)
+
     val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
     val requestedMessages = requestedNotifications.map(notification => s"requested-${notification.fileRole.messageKey}")
+
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
       case (role, notifications) if notifications.size > 1 => s"multiple-${role.messageKey}"
       case (role, _) => role.messageKey
     }
-    val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
 
+    val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
     authorityMessage ++ requestedMessages ++ statementMessages
   }
 
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>
-      val eori = req.user.eori
-      notificationService.fetchNotifications(eori)
-        .map(_.filterNot(_.fileRole == DutyDefermentStatement))
-        .map(getNotificationMessageKeys)
-        .map(keys => Ok(accountNotAvailable(eori, keys)))
+    val eori = req.user.eori
+    notificationService.fetchNotifications(eori)
+      .map(_.filterNot(_.fileRole == DutyDefermentStatement))
+      .map(getNotificationMessageKeys)
+      .map(keys => Ok(accountNotAvailable(eori, keys)))
   }
-
 }
 
 case object TimeoutResponse extends Exception

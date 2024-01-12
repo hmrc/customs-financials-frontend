@@ -24,24 +24,36 @@ import domain.StandingAuthorityFile
 import Utils._
 
 class UtilsSpec extends SpecBase {
-"isSearchQueryAnAccountNumber" should {
-  "return true when input string is Account number" in {
-    isSearchQueryAnAccountNumber("1234567") mustBe true
-    isSearchQueryAnAccountNumber("123456789") mustBe true
-    isSearchQueryAnAccountNumber("Ab34567890") mustBe true
-    isSearchQueryAnAccountNumber("Ab345678") mustBe true
-  }
+  "isSearchQueryAnAccountNumber" should {
+    "return true when input string is Account number" in new Setup {
+      isSearchQueryAnAccountNumber(seven) mustBe true
+      isSearchQueryAnAccountNumber(nine) mustBe true
+      isSearchQueryAnAccountNumber("Ab34567890") mustBe true
+      isSearchQueryAnAccountNumber("Ab345678") mustBe true
+    }
 
-  "return false when input string is an EORI" in {
-    isSearchQueryAnAccountNumber("GB1234567789") mustBe false
-    isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
-    isSearchQueryAnAccountNumber("XI12345670890") mustBe false
+    "return false when input string is an EORI" in {
+      isSearchQueryAnAccountNumber("GB1234567789") mustBe false
+      isSearchQueryAnAccountNumber("GBN1234567234") mustBe false
+      isSearchQueryAnAccountNumber("XI12345670890") mustBe false
+    }
   }
-}
 
   "emptyString" should {
     "return correct value" in {
       emptyString mustBe empty
+    }
+  }
+
+  "singleSpace" should {
+    "return correct value" in {
+      singleSpace mustBe " "
+    }
+  }
+
+  "hyphen" should {
+    "return correct value" in {
+      hyphen mustBe "-"
     }
   }
 
@@ -64,17 +76,17 @@ class UtilsSpec extends SpecBase {
   }
 
   "partitionCsvFilesByFileNamePattern" should {
-    "return correct list of GB and XI authorities partitioned by the file name pattern" in {
+    "return correct list of GB and XI authorities partitioned by the file name pattern" in new Setup {
       val standAuthMetadata: StandingAuthorityMetadata =
-        StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+        StandingAuthorityMetadata(year, month, day, Csv, StandingAuthority)
 
       val gbAuthFiles = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", "", 500L, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", "", 500L, standAuthMetadata, "GB123456789012"))
+        StandingAuthorityFile("SA_000000000153_csv.csv", "", size, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", "", size, standAuthMetadata, "GB123456789012"))
 
       val xiAuthFiles =
-        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"),
-          StandingAuthorityFile("SA_XI_000000000154_csv.csv", "", 500L, standAuthMetadata, "XI123456789012"))
+        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", "", size, standAuthMetadata, "XI123456789012"),
+          StandingAuthorityFile("SA_XI_000000000154_csv.csv", "", size, standAuthMetadata, "XI123456789012"))
 
       val csvFileForBothGBAndXI = gbAuthFiles ++ xiAuthFiles
 
@@ -89,7 +101,6 @@ class UtilsSpec extends SpecBase {
     }
 
     "return empty list of GB and XI authorities partitioned when input list is empty" in {
-
       partitionCsvFilesByFileNamePattern(Seq.empty) mustBe CsvFiles(Seq.empty, Seq.empty)
     }
   }
@@ -143,5 +154,16 @@ class UtilsSpec extends SpecBase {
       isXIEori("GBN12345678901") mustBe false
       isXIEori("GBN123456789") mustBe false
     }
+  }
+
+  trait Setup {
+    val seven: String = "1234567"
+    val nine: String = "123456789"
+
+    val year: Int = 2022
+    val month: Int = 6
+    val day: Int = 1
+
+    val size = 500L
   }
 }

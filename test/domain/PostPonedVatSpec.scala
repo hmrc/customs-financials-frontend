@@ -24,7 +24,7 @@ class PostPonedVatSpec extends SpecBase {
   "PostPonedVat" should {
     "parse sequence of CDS and Chief String from DutyPaymentMethod" in {
       val sources = PostponedVat.sources
-      sources mustBe Seq("CDS","CHIEF")
+      sources mustBe Seq("CDS", "CHIEF")
     }
   }
 }

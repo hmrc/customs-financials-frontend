@@ -47,13 +47,20 @@ class SdesConnector @Inject()(httpClient: HttpClient,
     )
   }
 
-  def getSdesFiles[A, B <: SdesFile](url: String, key: String, metricsName: String, transform: Seq[A] => Seq[B])
-                                    (implicit reads: HttpReads[HttpResponse], readSeq: HttpReads[Seq[A]], hc: HeaderCarrier): Future[Seq[B]] = {
+  def getSdesFiles[A, B <: SdesFile](url: String,
+                                     key: String,
+                                     metricsName: String,
+                                     transform: Seq[A] => Seq[B])
+                                    (implicit reads: HttpReads[HttpResponse],
+                                     readSeq: HttpReads[Seq[A]],
+                                     hc: HeaderCarrier): Future[Seq[B]] = {
+
     metricsReporterService.withResponseTimeLogging(metricsName) {
-      httpClient.GET[HttpResponse](url, headers = Seq("x-client-id" -> appConfig.xClientIdHeader, "X-SDES-Key" -> key))(reads, HeaderCarrier(), implicitly)
+      httpClient.GET[HttpResponse](url, headers = Seq("x-client-id" -> appConfig.xClientIdHeader,
+          "X-SDES-Key" -> key))(reads, HeaderCarrier(), implicitly)
         .map(readSeq.read("GET", url, _))
         .map(transform)
-        .map{ files =>
+        .map { files =>
           auditingService.auditFiles(files, key)
           files
         }

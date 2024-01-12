@@ -45,8 +45,10 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
       running(app) {
         view.title() mustBe
-          s"${messages(app)(
-            "cf.search.authorities.result.title", "1100001")} - ${messages(app)("service.name")} - GOV.UK"
+          s"${
+            messages(app)(
+              "cf.search.authorities.result.title", "1100001")
+          } - ${messages(app)("service.name")} - GOV.UK"
 
         view.getElementsByTag("h1").html() mustBe
           (messages(app)("cf.search.authorities.result.title", "1100001"))
