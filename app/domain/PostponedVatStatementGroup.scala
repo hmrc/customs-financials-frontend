@@ -19,7 +19,7 @@ package domain
 import domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import play.api.i18n.Messages
 import views.helpers.Formatters
-import utils.Utils.{singleSpace, hypen}
+import utils.Utils.{singleSpace, hyphen}
 
 import java.time.LocalDate
 
@@ -27,7 +27,7 @@ case class PostponedVatStatementGroup(startDate: LocalDate,
                                       files: Seq[PostponedVatStatementFile])(implicit messages: Messages)
   extends Ordered[PostponedVatStatementGroup] {
 
-  private val periodName = Formatters.dateAsMonthAndYear(startDate).replace(singleSpace, hypen).toLowerCase
+  private val periodName = Formatters.dateAsMonthAndYear(startDate).replace(singleSpace, hyphen).toLowerCase
   val periodId: String = s"""period-$periodName"""
   val noStatements: Boolean = PostponedVat.sources.flatMap(source => collectFiles(amended = false, source)).isEmpty
 

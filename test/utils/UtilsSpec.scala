@@ -51,9 +51,9 @@ class UtilsSpec extends SpecBase {
     }
   }
 
-  "hypen" should {
+  "hyphen" should {
     "return correct value" in {
-      hypen mustBe "-"
+      hyphen mustBe "-"
     }
   }
 

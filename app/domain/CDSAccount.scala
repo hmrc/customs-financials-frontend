@@ -42,7 +42,8 @@ case class DutyDefermentAccount(number: String,
                      ): Option[DutyDefermentDisplayBalance] = {
 
     (periodAccountLimit, periodGuaranteeLimit, periodGuaranteeLimitRemaining) match {
-      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance)) if accountLimit > 0 && guaranteeLimit > 0 => {
+      case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance))
+        if accountLimit > 0 && guaranteeLimit > 0 => {
         Some(
           DutyDefermentDisplayBalance(
             Some(Formatters.formatCurrencyAmount(accountLimit)),

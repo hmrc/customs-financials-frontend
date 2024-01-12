@@ -33,6 +33,7 @@ import utils.SpecBase
 
 import scala.concurrent.Future
 
+//scalastyle:off magic.number
 class SdesConnectorSpec extends SpecBase {
 
   "HttpSdesConnector" should {

@@ -31,7 +31,7 @@ object Utils {
   val xiCsvFileNameRegEx = "SA_XI_[\\w]+_csv.csv$"
   val xiEoriRegex = "XI\\d{12}"
   val singleSpace = " "
-  val hypen = "-"
+  val hyphen = "-"
 
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&
