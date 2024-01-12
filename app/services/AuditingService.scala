@@ -35,8 +35,6 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   val log: LoggerLike = Logger(this.getClass)
 
   val AUDIT_AUTHORISED_TRANSACTION = "View account"
-  val AUDIT_EORI = "EORI"
-  val AUDIT_HISTORIC_EORIS = "HISTORIC_EORI"
   val AUDIT_TYPE = "ViewAccount"
 
   val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold("-")(_._2)

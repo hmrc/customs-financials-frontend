@@ -57,14 +57,19 @@ class DataStoreServiceSpec extends SpecBase {
 
   "Data store service" should {
     "return json response" in new Setup {
-      implicit def stringToOptionLocalDate: String => Option[LocalDate] = in => Some(LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
+      implicit def stringToOptionLocalDate: String => Option[LocalDate] = in => Some(
+        LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
 
-      val expectedEoriHistory = List(EoriHistory("GB11111", "2019-03-01", None), EoriHistory("GB22222", "2018-01-01", "2019-02-28"))
+      val expectedEoriHistory = List(EoriHistory("GB11111", "2019-03-01", None), EoriHistory(
+        "GB22222", "2018-01-01", "2019-02-28"))
+
       val eoriHistory1 = EoriHistory("GB11111", validFrom = "2019-03-01", None)
       val eoriHistory2 = EoriHistory("GB22222", validFrom = "2018-01-01", validUntil = "2019-02-28")
-
       val eoriHistoryResponse = EoriHistoryResponse(Seq(eoriHistory1, eoriHistory2))
-      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(Future.successful(eoriHistoryResponse))
+
+      when[Future[EoriHistoryResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(eoriHistoryResponse))
+
       running(app) {
         val response = service.getAllEoriHistory(eori)
         val result = await(response)

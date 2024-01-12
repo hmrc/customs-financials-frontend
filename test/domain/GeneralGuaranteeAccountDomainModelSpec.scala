@@ -25,22 +25,21 @@ class GeneralGuaranteeAccountDomainModelSpec extends SpecBase {
   "General Guarantee Account Domain Model" should {
 
     "correctly generate a domain model when a account, limit and balance are available" in {
-
       val account = AccountResponse("number", "type", "owner", Some(AccountStatusClosed), Some(AccountCancelled), true)
       val generalGuaranteeAccount = onwireGGA(account, guaranteeLimit = Some("1"), availableGuaranteeBalance = Some("2"))
-      val expectedGGA = domainGGA("number", "owner", AccountStatusClosed, AccountCancelled, Some(GeneralGuaranteeBalance(BigDecimal(1), BigDecimal(2))))
+
+      val expectedGGA = domainGGA("number", "owner", AccountStatusClosed, AccountCancelled, Some(
+        GeneralGuaranteeBalance(BigDecimal(1), BigDecimal(2))))
 
       generalGuaranteeAccount.toDomain must be(expectedGGA)
     }
 
     "correctly generate a domain model when limit and balance are not available" in {
-
       val account = AccountResponse("number", "type", "owner", Some(AccountStatusClosed), Some(AccountCancelled), false)
       val generalGuaranteeAccount = onwireGGA(account, guaranteeLimit = None, availableGuaranteeBalance = None)
       val expectedGGA = domainGGA("number", "owner", AccountStatusClosed, AccountCancelled, None)
 
       generalGuaranteeAccount.toDomain must be(expectedGGA)
     }
-
   }
 }

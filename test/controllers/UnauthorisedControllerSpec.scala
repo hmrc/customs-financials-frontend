@@ -33,28 +33,38 @@ class UnauthorisedControllerSpec extends SpecBase {
 
   "UnauthorisedController" should {
     "load 'not subscribed to cds' page" in new Setup {
-      when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext]))
-        .thenReturn(Future.successful({}))
+      when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)),
+        meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext])).thenReturn(Future.successful({}))
 
       running(app) {
-        val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
+        val request = fakeRequest(GET,
+          routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
+
         val result = route(app, request).value
         status(result) mustBe OK
         val html = Jsoup.parse(contentAsString(result))
-        html.getElementsByTag("h1").text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
+
+        html.getElementsByTag("h1").text mustBe
+          "To continue you need to subscribe to the Customs Declaration Service (CDS)"
       }
     }
 
     "not load 'not subscribed to cds' page" when {
       "user is not authorised with GG" in new Setup {
-        when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)), meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext]))
-          .thenReturn(Future.failed(SessionRecordNotFound()))
+        when(mockAuthConnector.authorise(meq(AuthProviders(GovernmentGateway)),
+          meq(EmptyRetrieval))(any[HeaderCarrier], any[ExecutionContext])).thenReturn(
+          Future.failed(SessionRecordNotFound()))
 
         running(app) {
-          val request = fakeRequest(GET, routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
+          val request = fakeRequest(GET,
+            routes.UnauthorisedController.onPageLoad.url).withHeaders("X-Session-Id" -> "someSession")
+
           val result = route(app, request).value
           status(result) mustBe SEE_OTHER
-          redirectLocation(result).value mustBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
+
+          redirectLocation(result).value mustBe
+            "http://localhost:9553/bas-gateway/sign-in?continue_url" +
+              "=http%3A%2F%2Flocalhost%3A9876%2Fcustoms%2Fpayment-records"
         }
       }
     }

@@ -21,11 +21,9 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
 
-
 class AccountsAndBalanceSpec extends SpecBase {
 
   "AccountsAndBalances" should {
-
     "be able parse account status from json" in {
 
       val statusAndCode = List(
@@ -51,7 +49,9 @@ class AccountsAndBalanceSpec extends SpecBase {
         val account = Json.parse(json).as[AccountResponse]
 
         val expectedAccount = AccountResponse("123456",
-          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true,
+          accountStatusID = None, isleOfManFlag = None)
+
         account mustBe expectedAccount
       }
     }
@@ -67,7 +67,9 @@ class AccountsAndBalanceSpec extends SpecBase {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234",
+        None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+
       account mustBe expectedAccount
     }
 
@@ -83,7 +85,9 @@ class AccountsAndBalanceSpec extends SpecBase {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = Some(true))
+      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None,
+        viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = Some(true))
+
       account mustBe expectedAccount
     }
 

@@ -49,7 +49,3 @@ class SecureMessageConnector @Inject()(http: HttpClient,
       }
   }
 }
-
-object SecureMessageConnector {
-  case class MessageBannerPartial(body: String)
-}

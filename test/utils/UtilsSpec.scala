@@ -45,6 +45,18 @@ class UtilsSpec extends SpecBase {
     }
   }
 
+  "singleSpace" should {
+    "return correct value" in {
+      singleSpace mustBe " "
+    }
+  }
+
+  "hypen" should {
+    "return correct value" in {
+      hypen mustBe "-"
+    }
+  }
+
   "xiCsvFileNameRegEx" should {
     "return true when string matches the regex" in {
       "SA_XI_000000000154_csv.csv".matches(xiCsvFileNameRegEx) mustBe true

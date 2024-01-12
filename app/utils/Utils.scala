@@ -30,6 +30,8 @@ object Utils {
   val ganRegex = "^[a-zA-Z0-9]{8,10}"
   val xiCsvFileNameRegEx = "SA_XI_[\\w]+_csv.csv$"
   val xiEoriRegex = "XI\\d{12}"
+  val singleSpace = " "
+  val hypen = "-"
 
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&

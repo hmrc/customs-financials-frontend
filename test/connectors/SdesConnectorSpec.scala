@@ -39,10 +39,13 @@ class SdesConnectorSpec extends SpecBase {
     "getAuthoritiesCsvFiles" should {
       "make a GET request to sdesStandingAuthorityFilesUrl" in new Setup {
         val url = sdesStandingAuthorityFileUrl
+
         val app = application().overrides(
           inject.bind[HttpClient].toInstance(mockHttp)
         ).build()
+
         val sdesService = app.injector.instanceOf[SdesConnector]
+
         when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
           .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
 
@@ -53,6 +56,7 @@ class SdesConnectorSpec extends SpecBase {
       "converts Sdes response to List[StandingAuthorityFile]" in new Setup {
         val url = sdesStandingAuthorityFileUrl
         val numberOfStatements = standingAuthoritiesFilesSdesResponse.length
+
         when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
           .thenReturn(Future.successful(HttpResponse(Status.OK,
             Json.toJson(standingAuthoritiesFilesSdesResponse).toString())))
@@ -63,6 +67,7 @@ class SdesConnectorSpec extends SpecBase {
           inject.bind[HttpClient].toInstance(mockHttp),
           inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
         ).build()
+
         val sdesService = app.injector.instanceOf[SdesConnector]
 
         await(sdesService.getAuthoritiesCsvFiles(someEori)(hc))
@@ -72,10 +77,13 @@ class SdesConnectorSpec extends SpecBase {
 
       "filter out unknown file types" in new Setup {
         val url = sdesStandingAuthorityFileUrl
+
         val app = application().overrides(
           inject.bind[HttpClient].toInstance(mockHttp)
         ).build()
+
         val sdesService = app.injector.instanceOf[SdesConnector]
+
         when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
           .thenReturn(Future.successful(HttpResponse(Status.OK,
             Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString())))
@@ -95,7 +103,9 @@ class SdesConnectorSpec extends SpecBase {
     val xClientId = "TheClientId"
     val xClientIdHeader = "x-client-id"
     val xSDESKey = "X-SDES-Key"
-    val sdesStandingAuthorityFileUrl = "http://localhost:9754/customs-financials-sdes-stub/files-available/list/StandingAuthority"
+
+    val sdesStandingAuthorityFileUrl =
+      "http://localhost:9754/customs-financials-sdes-stub/files-available/list/StandingAuthority"
 
     val standingAuthorityFiles = List(
       StandingAuthorityFile("name_01", "download_url_01", 111L,
