@@ -17,7 +17,6 @@
 package viewmodels
 
 import config.AppConfig
-import domain.{AccountLink, CDSAccount, CDSAccounts, CashAccount}
 import domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
 import domain._
 
@@ -52,4 +51,6 @@ case class FinancialsHomeModel(eori: EORI,
       (accountLink.eori, accountLink.accountNumber) -> accountLink.isNiAccount
     }.toMap
   }
+
+  def populateDDAccountsViewModel:DutyDefermentAccountsViewModel = ???
 }

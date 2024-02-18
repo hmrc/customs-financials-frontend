@@ -60,113 +60,111 @@
                         </h3>
                         @accountStatus(account.status, "duty-deferment")
                     </header>
+
                     @if(account.status == AccountStatusSuspended && account.isDirectDebitSetupRequired) {
                         @directDebitSetup(account, model.dutyDefermentAccountDDSetupLinks)
-                      </div>
-                    </div>
                     } else {
-                    @if(account.balances.availableBalance >= 0) {
-                        <p id="duty-deferment-balance-@{s"${account.number}"}" class="available-account-balance govuk-body custom-card__balance">
-                        @if(messages.lang == Lang("cy")) {
-                            @if(account.status == AccountStatusPending) {
-                                @if(account.balances.availableBalance > 0){
-                                    <span class="custom-card__balance-text">
-                                        @messages("cf.pending.available.pre")
+                        @if(account.balances.availableBalance >= 0) {
+                            <p id="duty-deferment-balance-@{s"${account.number}"}" class="available-account-balance govuk-body custom-card__balance">
+                            @if(messages.lang == Lang("cy")) {
+                                @if(account.status == AccountStatusPending) {
+                                    @if(account.balances.availableBalance > 0) {
+                                        <span class="custom-card__balance-text">
+                                            @messages("cf.pending.available.pre")
+                                        </span>
+                                    }
+                                    <span class="custom-card__balance-amount">
+                                        @Formatters.formatCurrencyAmount(account.balances.availableBalance)
                                     </span>
-                                }
-                                <span class="custom-card__balance-amount">
-                                    @Formatters.formatCurrencyAmount(account.balances.availableBalance)
-                                </span>
-                                @if(account.balances.availableBalance > 0){
-                                    <span class="custom-card__balance-text">
-                                        @messages("cf.pending.available.post")
+                                    @if(account.balances.availableBalance > 0) {
+                                        <span class="custom-card__balance-text">
+                                            @messages("cf.pending.available.post")
+                                        </span>
+                                    }
+                                } else {
+                                    <span class="custom-card__balance-amount">
+                                        @Formatters.formatCurrencyAmount(account.balances.availableBalance)
                                     </span>
+                                    @if(account.balances.availableBalance > 0) {
+                                        <span class="custom-card__balance-text">
+                                            @messages("cf.available")
+                                        </span>
+                                    }
                                 }
                             } else {
                                 <span class="custom-card__balance-amount">
                                     @Formatters.formatCurrencyAmount(account.balances.availableBalance)
                                 </span>
-                                @if(account.balances.availableBalance > 0) {
-                                    <span class="custom-card__balance-text">
+                                <span class="custom-card__balance-text">
+                                @if(account.status == AccountStatusPending) {
+                                    @if(account.balances.availableBalance > 0) {
+                                        @messages("cf.pending.available")
+                                    }
+                                } else {
+                                    @if(account.balances.availableBalance > 0) {
                                         @messages("cf.available")
-                                    </span>
+                                    }
                                 }
+                                </span>
                             }
+                            </p>
                         } else {
-                            <span class="custom-card__balance-amount">
-                                @Formatters.formatCurrencyAmount(account.balances.availableBalance)
-                            </span>
-                            <span class="custom-card__balance-text">
-                            @if(account.status == AccountStatusPending) {
-                                @if(account.balances.availableBalance > 0){
-                                    @messages("cf.pending.available")
-                                }
-                            } else {
-                                @if(account.balances.availableBalance > 0) {
-                                    @messages("cf.available")
-                                }
+                            <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
+                                <span class="govuk-visually-hidden">minus</span>
+                                <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
+                                <span class="custom-card__balance-amount custom-card__balance-amount--negative">
+                                    @Formatters.formatCurrencyAmount(account.balances.availableBalance.abs)
+                                </span>
+                            </p>
+                        }
+
+                        @if(account.status != AccountStatusPending) {
+                            @balances(account, model)
+                        }
+
+                        <span class="card-footer__links govuk-body">
+                            @if(account.status != AccountStatusPending) {
+                                <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
+                                href="@model.dutyDefermentAccountDetailsLinks()(appConfig)(account.owner, account.number)">
+                                    <span aria-hidden="true">
+                                        @messages("cf.accounts.viewStatements")
+                                    </span>
+                                    <span class="govuk-visually-hidden">
+                                        @messages("cf.accounts.label.dan", account.number)
+                                    </span>
+                                </a>
                             }
-                            </span>
-                        }
-                        </p>
-                    } else {
-                        <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
-                            <span class="govuk-visually-hidden">minus</span>
-                            <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
-                            <span class="custom-card__balance-amount custom-card__balance-amount--negative">
-                                @Formatters.formatCurrencyAmount(account.balances.availableBalance.abs)
-                            </span>
-                        </p>
+
+                            @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
+                                <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
+                                href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
+                                      <span aria-hidden="true">
+                                        @messages("cf.accounts.contact.details")
+                                      </span>
+                                    <span class="govuk-visually-hidden">
+                                        @messages("cf.accounts.label.contact.details", account.number)
+                                    </span>
+                                </a>
+                            }
+
+                            @if(account.status != AccountStatusPending) {
+                                <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
+                                    <span aria-hidden="true">
+                                        @messages("cf.accounts.topUp")
+                                    </span>
+                                    <span class="govuk-visually-hidden">
+                                        @messages("cf.accounts.label.topUp", account.number)
+                                    </span>
+                                </a>
+                            }
+
+                            @if(account.status == AccountStatusPending) {
+                                @pendingTile()
+                            }
+                        </span>
                     }
-
-                    @if(account.status != AccountStatusPending) {
-                        @balances(account, model)
-                    }
-
-                    <span class="card-footer__links govuk-body">
-                        @if(account.status != AccountStatusPending) {
-                            <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
-                            href="@model.dutyDefermentAccountDetailsLinks()(appConfig)(account.owner, account.number)">
-                                <span aria-hidden="true">
-                                    @messages("cf.accounts.viewStatements")
-                                </span>
-                                <span class="govuk-visually-hidden">
-                                    @messages("cf.accounts.label.dan", account.number)
-                                </span>
-                            </a>
-                        }
-
-                        @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
-                            <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
-                            href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
-                                  <span aria-hidden="true">
-                                    @messages("cf.accounts.contact.details")
-                                  </span>
-                                <span class="govuk-visually-hidden">
-                                    @messages("cf.accounts.label.contact.details", account.number)
-                                </span>
-                            </a>
-                        }
-
-                        @if(account.status != AccountStatusPending) {
-                            <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
-                                <span aria-hidden="true">
-                                    @messages("cf.accounts.topUp")
-                                </span>
-                                <span class="govuk-visually-hidden">
-                                    @messages("cf.accounts.label.topUp", account.number)
-                                </span>
-                            </a>
-                        }
-
-                        @if(account.status == AccountStatusPending) {
-                            @pendingTile()
-                        }
-                        
-                    </span>
                 </div>
             </div>
-          }
         }
     </section>
 }
