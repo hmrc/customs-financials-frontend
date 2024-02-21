@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
-import viewmodels.FinancialsHomeModel
+import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.html.account_cards.duty_deferment_account_cards
 
 class DutyDefermentAccountCardSpec extends SpecBase {
@@ -406,7 +406,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(
       app.injector.instanceOf[duty_deferment_account_cards].apply(
-        model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount))))).body)
+        DutyDefermentAccountsViewModel(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount)))))
+      ).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

@@ -64,7 +64,7 @@
 
     @cashAccountCards(model.cashAccounts)
 
-    @if(model.dutyDefermentAccounts.nonEmpty) { dutyDefermentCards(DutyDefermentAccountsViewModel(model)) }
+    @if(model.dutyDefermentAccounts.nonEmpty) { @dutyDefermentCards(DutyDefermentAccountsViewModel(model)) }
 
     @guaranteeAccountCards(model.guaranteeAccountViewModels)
 

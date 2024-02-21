@@ -62,8 +62,9 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
     }
   }
 
-  private def shouldContainInaccurateBalancesMsg(viewModel: DutyDefermentAccountsViewModel): Assertion = {
-    val expectedBalanceMsg = new duty_deferment_inaccurate_balances_message()
+  private def shouldContainInaccurateBalancesMsg(viewModel: DutyDefermentAccountsViewModel)
+                                                (implicit msgs: Messages, appConfig: AppConfig): Assertion = {
+    val expectedBalanceMsg = new duty_deferment_inaccurate_balances_message().apply()
 
     viewModel.inaccurateBalancesMsg mustBe expectedBalanceMsg
   }
@@ -91,14 +92,14 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
         Some(
           FooterLinkModel(
             id = "duty-deferment-account-DAN01234",
-            href = finHomeModel.dutyDefermentAccountDetailsLinks()(appConfig)("test_eori", "DAN01234"),
+            href = finHomeModel.dutyDefermentAccountDetailsLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
             displayValue = msgs("cf.accounts.viewStatements"),
             hiddenMsg = msgs("cf.accounts.label.dan", "DAN01234"))),
 
       paymentDetails = Some(
         FooterLinkModel(
           id = "payment-details-DAN01234",
-          href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)("test_eori", "DAN01234"),
+          href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
           displayValue = msgs("cf.accounts.contact.details"),
           hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234"),
         )
@@ -131,7 +132,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
 
     val ddSetupComponent = Some(
       new duty_deferment_account_direct_debit_setup().apply(
-        finHomeModel.dutyDefermentAccounts.head, finHomeModel.dutyDefermentAccountDDSetupLinks))
+        finHomeModel.dutyDefermentAccounts.head, finHomeModel.dutyDefermentAccountDDSetupLinks()))
 
     val contentRowModel = ContentRowModel(directDebitSetupComponent = ddSetupComponent, nonDirectDebitContent = None)
 

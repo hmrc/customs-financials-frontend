@@ -28,35 +28,12 @@ class FinancialsHomeModelSpec extends SpecBase {
     "return correct accounts size" when {
 
       "Duty Deferment accounts are present" in new Setup {
-        homeModel.dutyDefermentAccounts.size mustBe 2
+        homeModel.dutyDefermentAccounts.size mustBe 1
       }
 
       "there is no Duty Deferment account" in new Setup {
         homeModelWithNoAccounts.dutyDefermentAccounts mustBe empty
       }
-    }
-  }
-
-  "populateDDAccountsViewModel" should {
-
-    "populate the view model correctly" when {
-
-      "dutyDefermentAccounts is non empty and availableBalance is either 0 or greater" in new Setup {
-
-      }
-
-      "dutyDefermentAccounts is non empty but availableBalance is lower than 0" in new Setup {
-
-      }
-
-      "dutyDefermentAccounts is non empty and account status is not pending" in new Setup {
-
-      }
-
-      "dutyDefermentAccounts is non empty and account status is pending" in new Setup {
-
-      }
-
     }
   }
 

@@ -17,10 +17,7 @@
 package views.account_cards
 
 import config.AppConfig
-import domain.{
-  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
-  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
-}
+import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -29,7 +26,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import viewmodels.FinancialsHomeModel
+import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
@@ -55,6 +52,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
           }"
 
         val ddBalanceElem: Element = viewDoc(model).getElementById(s"duty-deferment-balance-$dan1")
+        println("============== ::: "+viewDoc(model))
 
         ddBalanceElem.text().contains(Formatters.formatCurrencyAmount(periodAccountLimit))
         ddBalanceElem.text().contains(msgs("cf.available"))
@@ -187,6 +185,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
     )
 
     def viewDoc(model: FinancialsHomeModel): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(model).body)
+      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(DutyDefermentAccountsViewModel(model)).body)
   }
 }

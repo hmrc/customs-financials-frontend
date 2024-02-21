@@ -63,7 +63,7 @@ case class DutyDefermentAccountRowModel(headerRow: HeaderRowModel,
                                         contentRow: ContentRowModel)
 
 case class DutyDefermentAccountsViewModel(titleMsg: String,
-                                          inaccurateBalancesMsg: duty_deferment_inaccurate_balances_message,
+                                          inaccurateBalancesMsg: HtmlFormat.Appendable,
                                           accountSectionRows: Seq[DutyDefermentAccountRowModel] = Nil)
 
 object DutyDefermentAccountsViewModel {
@@ -72,7 +72,7 @@ object DutyDefermentAccountsViewModel {
 
     DutyDefermentAccountsViewModel(
       titleMsg(finHomeModel.dutyDefermentAccounts),
-      new duty_deferment_inaccurate_balances_message(),
+      new duty_deferment_inaccurate_balances_message().apply(),
       populateAccountSectionRows(finHomeModel)
     )
   }

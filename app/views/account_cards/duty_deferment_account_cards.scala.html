@@ -33,8 +33,6 @@
 
 @(model: DutyDefermentAccountsViewModel)(implicit messages: Messages, appConfig: AppConfig)
 
-@if(true) {
-
 <section id="duty-deferment-accounts" class="govuk-!-margin-bottom-9">
 
         <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">
@@ -57,41 +55,41 @@
                     @accountRow.contentRow.directDebitSetupComponent.map(identity)
 
                     @accountRow.contentRow.nonDirectDebitContent.map { nonDDContent =>
-                            nonDDContent.accountLimit.positiveBalanceValue.map { positiveBal =>
-                                    <p id=s"${positiveBal.pId}" class="available-account-balance govuk-body custom-card__balance">
-                                        positiveBal.cyAvailableBalancePreMsg.map { cyAvailBalPreMsg =>
+                            @nonDDContent.accountLimit.positiveBalanceValue.map { positiveBal =>
+                                    <p id="@positiveBal.pId" class="available-account-balance govuk-body custom-card__balance">
+                                        @positiveBal.cyAvailableBalancePreMsg.map { cyAvailBalPreMsg =>
                                                 <span class="custom-card__balance-text">
-                                                    cyAvailBalPreMsg
+                                                    @cyAvailBalPreMsg
                                                 </span>
                                         }
 
-                                        positiveBal.cyAvailableBalanceValue.map { cyAvailBal =>
+                                        @positiveBal.cyAvailableBalanceValue.map { cyAvailBal =>
                                                 <span class="custom-card__balance-amount">
-                                                    cyAvailBal
+                                                    @cyAvailBal
                                                 </span>
                                         }
 
-                                        positiveBal.cyAvailableBalancePostMsg.map { cyAvailPostMsg =>
+                                        @positiveBal.cyAvailableBalancePostMsg.map { cyAvailPostMsg =>
                                                 <span class="custom-card__balance-text">
-                                                    cyAvailPostMsg
+                                                    @cyAvailPostMsg
                                                 </span>
                                         }
 
-                                        positiveBal.cyAvailableBalanceMsg.map { cyAvailBalMsg =>
+                                        @positiveBal.cyAvailableBalanceMsg.map { cyAvailBalMsg =>
                                                 <span class="custom-card__balance-text">
-                                                    cyAvailBalMsg
+                                                    @cyAvailBalMsg
                                                 </span>
                                         }
 
-                                        positiveBal.availableBalanceValue.map { availBal =>
+                                        @positiveBal.availableBalanceValue.map { availBal =>
                                                 <span class="custom-card__balance-amount">
-                                                    availBal
+                                                    @availBal
                                                 </span>
                                         }
 
-                                        positiveBal.availableBalanceMsg.map { availBalMsg =>
+                                        @positiveBal.availableBalanceMsg.map { availBalMsg =>
                                                 <span class="custom-card__balance-text">
-                                                    availBalMsg
+                                                    @availBalMsg
                                                 </span>
                                         }
                                     </p>
@@ -102,43 +100,43 @@
                                         <span class="govuk-visually-hidden">minus</span>
                                         <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
                                         <span class="custom-card__balance-amount custom-card__balance-amount--negative">
-                                            negBal
+                                            @negBal
                                         </span>
                                     </p>
                             }
                     }
 
-                    @accountRow.contentRow.nonDirectDebitContent.map { nonDD => nonDD.balances.get }
+                    @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
+                            @if(nonDD.balances.nonEmpty) { @nonDD.balances.get }
+                    }
 
-                    <span class="card-footer__links govuk-body">
-                        @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
-                                nonDD.viewStatements.map { viewStat =>
-                                        <a id=s"${viewStat.id}" class=s"${viewStat.classValue}" href=s"${viewStat.href}">
-                                            <span aria-hidden="true">viewStat.displayValue</span>
-                                            <span class="govuk-visually-hidden">viewStat.hiddenMsg</span>
-                                        </a>
-                                }
+                    @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
+                        <span class="card-footer__links govuk-body">
+                            @nonDD.viewStatements.map { viewStat =>
+                                    <a id="@viewStat.id" class="@viewStat.classValue" href="@viewStat.href">
+                                        <span aria-hidden="true">@viewStat.displayValue</span>
+                                        <span class="govuk-visually-hidden">@viewStat.hiddenMsg</span>
+                                    </a>
+                            }
 
-                                nonDD.paymentDetails.map { payment =>
-                                        <a id=s"${payment.id}" class=s"${payment.classValue}" href=s"${payment.href}">
-                                            <span aria-hidden="true">payment.displayValue</span>
-                                            <span class="govuk-visually-hidden">payment.hiddenMsg</span>
-                                        </a>
-                                }
+                            @nonDD.paymentDetails.map { payment =>
+                                    <a id="@payment.id" class="@payment.classValue" href="@payment.href">
+                                        <span aria-hidden="true">@payment.displayValue</span>
+                                        <span class="govuk-visually-hidden">@payment.hiddenMsg</span>
+                                    </a>
+                            }
 
-                                nonDD.topUp.map { topUp =>
-                                        <a id=s"${topUp.id}" class=s"${topUp.classValue}" href=s"${topUp.href}">
-                                            <span aria-hidden="true">topUp.displayValue</span>
-                                            <span class="govuk-visually-hidden">topUp.hiddenMsg</span>
-                                        </a>
-                                }
+                            @nonDD.topUp.map { topUp =>
+                                    <a id="@topUp.id" class="@topUp.classValue" href="@topUp.href">
+                                        <span aria-hidden="true">@topUp.displayValue</span>
+                                        <span class="govuk-visually-hidden">@topUp.hiddenMsg</span>
+                                    </a>
+                            }
 
-                                nonDD.pendingAccountGuidance.get
-                        }
-                    </span>
-
+                            @if(nonDD.pendingAccountGuidance.nonEmpty) { @nonDD.pendingAccountGuidance.get }
+                        </span>
+                    }
                 </div>
             </div>
         }
 </section>
-}
