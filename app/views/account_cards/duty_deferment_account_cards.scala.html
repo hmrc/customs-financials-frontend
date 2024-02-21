@@ -55,59 +55,60 @@
                     @accountRow.contentRow.directDebitSetupComponent.map(identity)
 
                     @accountRow.contentRow.nonDirectDebitContent.map { nonDDContent =>
-                            @nonDDContent.accountLimit.positiveBalanceValue.map { positiveBal =>
-                                    <p id="@positiveBal.pId" class="available-account-balance govuk-body custom-card__balance">
-                                        @positiveBal.cyAvailableBalancePreMsg.map { cyAvailBalPreMsg =>
-                                                <span class="custom-card__balance-text">
-                                                    @cyAvailBalPreMsg
-                                                </span>
-                                        }
+                        @nonDDContent.accountLimit.positiveBalanceValue.map { positiveBal =>
+                            <p id="@positiveBal.pId" class="available-account-balance govuk-body custom-card__balance">
 
-                                        @positiveBal.cyAvailableBalanceValue.map { cyAvailBal =>
-                                                <span class="custom-card__balance-amount">
-                                                    @cyAvailBal
-                                                </span>
-                                        }
+                                @positiveBal.cyAvailableBalancePreMsg.map { cyAvailBalPreMsg =>
+                                    <span class="custom-card__balance-text">
+                                        @cyAvailBalPreMsg
+                                    </span>
+                                }
 
-                                        @positiveBal.cyAvailableBalancePostMsg.map { cyAvailPostMsg =>
-                                                <span class="custom-card__balance-text">
-                                                    @cyAvailPostMsg
-                                                </span>
-                                        }
+                                @positiveBal.cyAvailableBalanceValue.map { cyAvailBal =>
+                                    <span class="custom-card__balance-amount">
+                                        @cyAvailBal
+                                    </span>
+                                }
 
-                                        @positiveBal.cyAvailableBalanceMsg.map { cyAvailBalMsg =>
-                                                <span class="custom-card__balance-text">
-                                                    @cyAvailBalMsg
-                                                </span>
-                                        }
+                                @positiveBal.cyAvailableBalancePostMsg.map { cyAvailPostMsg =>
+                                    <span class="custom-card__balance-text">
+                                        @cyAvailPostMsg
+                                    </span>
+                                }
 
-                                        @positiveBal.availableBalanceValue.map { availBal =>
-                                                <span class="custom-card__balance-amount">
-                                                    @availBal
-                                                </span>
-                                        }
+                                @positiveBal.cyAvailableBalanceMsg.map { cyAvailBalMsg =>
+                                    <span class="custom-card__balance-text">
+                                        @cyAvailBalMsg
+                                    </span>
+                                }
 
-                                        @positiveBal.availableBalanceMsg.map { availBalMsg =>
-                                                <span class="custom-card__balance-text">
-                                                    @availBalMsg
-                                                </span>
-                                        }
-                                    </p>
-                            }
+                                @positiveBal.availableBalanceValue.map { availBal =>
+                                    <span class="custom-card__balance-amount">
+                                        @availBal
+                                    </span>
+                                }
 
-                            @nonDDContent.accountLimit.negativeBalanceValue.map { negBal =>
-                                    <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
-                                        <span class="govuk-visually-hidden">minus</span>
-                                        <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
-                                        <span class="custom-card__balance-amount custom-card__balance-amount--negative">
-                                            @negBal
-                                        </span>
-                                    </p>
-                            }
+                                @positiveBal.availableBalanceMsg.map { availBalMsg =>
+                                    <span class="custom-card__balance-text">
+                                        @availBalMsg
+                                    </span>
+                                }
+                            </p>
+                        }
+
+                        @nonDDContent.accountLimit.negativeBalanceValue.map { negBal =>
+                            <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
+                                <span class="govuk-visually-hidden">minus</span>
+                                <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
+                                <span class="custom-card__balance-amount custom-card__balance-amount--negative">
+                                    @negBal
+                                </span>
+                            </p>
+                        }
                     }
 
                     @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
-                            @if(nonDD.balances.nonEmpty) { @nonDD.balances.get }
+                        @if(nonDD.balances.nonEmpty) { @nonDD.balances.get }
                     }
 
                     @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
