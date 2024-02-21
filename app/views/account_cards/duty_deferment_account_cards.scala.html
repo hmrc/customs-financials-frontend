@@ -14,21 +14,11 @@
  * limitations under the License.
  *@
 
-@import domain.{AccountStatusClosed, AccountStatusPending, AccountStatusSuspended, DefermentAccountAvailable, DutyDefermentAccount}
-@import views.helpers.HtmlHelper._
-@import views.helpers.Formatters
 @import config.AppConfig
 @import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel, DutyDefermentAccountRowModel, ContentRowModel, HeaderRowModel, NonDirectDebitContent, AccountAvailableModel, FooterLinkModel, PositiveBalanceModel}
-@import views.html.account_cards.duty_deferment_inaccurate_balances_message
 
 @this(
-        accountStatus: views.html.components.account_status,
-        directDebitSetup: views.html.account_cards.duty_deferment_account_direct_debit_setup,
-        pendingTile: views.html.account_cards.duty_deferment_account_pending,
-        balances: views.html.account_cards.duty_deferment_balances,
-        duty_deferment_inaccurate_balances_message: duty_deferment_inaccurate_balances_message,
-        h2: components.h2,
-        hiddenStatus: views.html.components.hidden_status
+    h2: components.h2
 )
 
 @(model: DutyDefermentAccountsViewModel)(implicit messages: Messages, appConfig: AppConfig)
