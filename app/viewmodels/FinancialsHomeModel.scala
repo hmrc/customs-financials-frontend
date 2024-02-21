@@ -52,5 +52,4 @@ case class FinancialsHomeModel(eori: EORI,
     }.toMap
   }
 
-  def populateDDAccountsViewModel:DutyDefermentAccountsViewModel = ???
 }

@@ -15,7 +15,7 @@
  *@
 
 @import views.html.components._
-@import viewmodels.FinancialsHomeModel
+@import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel}
 @import views.html.account_cards._
 @import views.html.Layout
 
@@ -64,7 +64,7 @@
 
     @cashAccountCards(model.cashAccounts)
 
-    @dutyDefermentCards(model)
+    @if(model.dutyDefermentAccounts.nonEmpty) { dutyDefermentCards(DutyDefermentAccountsViewModel(model)) }
 
     @guaranteeAccountCards(model.guaranteeAccountViewModels)
 

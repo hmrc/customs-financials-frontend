@@ -18,7 +18,7 @@
 @import views.helpers.HtmlHelper._
 @import views.helpers.Formatters
 @import config.AppConfig
-@import viewmodels.FinancialsHomeModel
+@import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel, DutyDefermentAccountRowModel, ContentRowModel, HeaderRowModel, NonDirectDebitContent, AccountAvailableModel, FooterLinkModel, PositiveBalanceModel}
 @import views.html.account_cards.duty_deferment_inaccurate_balances_message
 
 @this(
@@ -31,140 +31,114 @@
         hiddenStatus: views.html.components.hidden_status
 )
 
-@(model: FinancialsHomeModel)(implicit messages: Messages, appConfig: AppConfig)
+@(model: DutyDefermentAccountsViewModel)(implicit messages: Messages, appConfig: AppConfig)
 
-@if(model.dutyDefermentAccounts.nonEmpty) {
-    <section id="duty-deferment-accounts" class="govuk-!-margin-bottom-9">
+@if(true) {
+
+<section id="duty-deferment-accounts" class="govuk-!-margin-bottom-9">
 
         <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">
-        @if(model.dutyDefermentAccounts.length > 1) {
-            @messages("cf.customs-financials-home.duty-deferment.title2")
-        } else {
-            @messages("cf.customs-financials-home.duty-deferment.title")
-        }
+            @model.titleMsg
         </h2>
 
-        @duty_deferment_inaccurate_balances_message()
+        @model.inaccurateBalancesMsg
 
-        @for(account <- model.dutyDefermentAccounts) {
+        @for(accountRow <- model.accountSectionRows) {
             <div class="custom-card duty-deferment-account govuk-!-margin-bottom-7 govuk-!-margin-top-2">
                 <div class="card-main">
                     <header class="card-header">
-                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="dan-@{account.number}">
-                            @if(model.isNiAccountIndicator(account.owner, account.number)) {
-                                 @messages("cf.NiAccount") @account.number
-                            } else {
-                                 @messages("cf.account") @account.number
-                            }
-                            @hiddenStatus(account.status)
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@accountRow.headerRow.id">
+                            @accountRow.headerRow.accountHeadingMsg
+                            @accountRow.headerRow.hiddenStatus
                         </h3>
-                        @accountStatus(account.status, "duty-deferment")
+                        @accountRow.headerRow.accountStatus
                     </header>
 
-                    @if(account.status == AccountStatusSuspended && account.isDirectDebitSetupRequired) {
-                        @directDebitSetup(account, model.dutyDefermentAccountDDSetupLinks)
-                    } else {
-                        @if(account.balances.availableBalance >= 0) {
-                            <p id="duty-deferment-balance-@{s"${account.number}"}" class="available-account-balance govuk-body custom-card__balance">
-                            @if(messages.lang == Lang("cy")) {
-                                @if(account.status == AccountStatusPending) {
-                                    @if(account.balances.availableBalance > 0) {
-                                        <span class="custom-card__balance-text">
-                                            @messages("cf.pending.available.pre")
+                    @accountRow.contentRow.directDebitSetupComponent.map(identity)
+
+                    @accountRow.contentRow.nonDirectDebitContent.map { nonDDContent =>
+                            nonDDContent.accountLimit.positiveBalanceValue.map { positiveBal =>
+                                    <p id=s"${positiveBal.pId}" class="available-account-balance govuk-body custom-card__balance">
+                                        positiveBal.cyAvailableBalancePreMsg.map { cyAvailBalPreMsg =>
+                                                <span class="custom-card__balance-text">
+                                                    cyAvailBalPreMsg
+                                                </span>
+                                        }
+
+                                        positiveBal.cyAvailableBalanceValue.map { cyAvailBal =>
+                                                <span class="custom-card__balance-amount">
+                                                    cyAvailBal
+                                                </span>
+                                        }
+
+                                        positiveBal.cyAvailableBalancePostMsg.map { cyAvailPostMsg =>
+                                                <span class="custom-card__balance-text">
+                                                    cyAvailPostMsg
+                                                </span>
+                                        }
+
+                                        positiveBal.cyAvailableBalanceMsg.map { cyAvailBalMsg =>
+                                                <span class="custom-card__balance-text">
+                                                    cyAvailBalMsg
+                                                </span>
+                                        }
+
+                                        positiveBal.availableBalanceValue.map { availBal =>
+                                                <span class="custom-card__balance-amount">
+                                                    availBal
+                                                </span>
+                                        }
+
+                                        positiveBal.availableBalanceMsg.map { availBalMsg =>
+                                                <span class="custom-card__balance-text">
+                                                    availBalMsg
+                                                </span>
+                                        }
+                                    </p>
+                            }
+
+                            @nonDDContent.accountLimit.negativeBalanceValue.map { negBal =>
+                                    <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
+                                        <span class="govuk-visually-hidden">minus</span>
+                                        <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
+                                        <span class="custom-card__balance-amount custom-card__balance-amount--negative">
+                                            negBal
                                         </span>
-                                    }
-                                    <span class="custom-card__balance-amount">
-                                        @Formatters.formatCurrencyAmount(account.balances.availableBalance)
-                                    </span>
-                                    @if(account.balances.availableBalance > 0) {
-                                        <span class="custom-card__balance-text">
-                                            @messages("cf.pending.available.post")
-                                        </span>
-                                    }
-                                } else {
-                                    <span class="custom-card__balance-amount">
-                                        @Formatters.formatCurrencyAmount(account.balances.availableBalance)
-                                    </span>
-                                    @if(account.balances.availableBalance > 0) {
-                                        <span class="custom-card__balance-text">
-                                            @messages("cf.available")
-                                        </span>
-                                    }
-                                }
-                            } else {
-                                <span class="custom-card__balance-amount">
-                                    @Formatters.formatCurrencyAmount(account.balances.availableBalance)
-                                </span>
-                                <span class="custom-card__balance-text">
-                                @if(account.status == AccountStatusPending) {
-                                    @if(account.balances.availableBalance > 0) {
-                                        @messages("cf.pending.available")
-                                    }
-                                } else {
-                                    @if(account.balances.availableBalance > 0) {
-                                        @messages("cf.available")
-                                    }
-                                }
-                                </span>
+                                    </p>
                             }
-                            </p>
-                        } else {
-                            <p id="duty-deferment-balance" class="available-account-balance govuk-body custom-card__balance">
-                                <span class="govuk-visually-hidden">minus</span>
-                                <span class="custom-card__balance-amount custom-card__balance-amount--negative" aria-hidden="true">&minus;</span>
-                                <span class="custom-card__balance-amount custom-card__balance-amount--negative">
-                                    @Formatters.formatCurrencyAmount(account.balances.availableBalance.abs)
-                                </span>
-                            </p>
-                        }
-
-                        @if(account.status != AccountStatusPending) {
-                            @balances(account, model)
-                        }
-
-                        <span class="card-footer__links govuk-body">
-                            @if(account.status != AccountStatusPending) {
-                                <a id="duty-deferment-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
-                                href="@model.dutyDefermentAccountDetailsLinks()(appConfig)(account.owner, account.number)">
-                                    <span aria-hidden="true">
-                                        @messages("cf.accounts.viewStatements")
-                                    </span>
-                                    <span class="govuk-visually-hidden">
-                                        @messages("cf.accounts.label.dan", account.number)
-                                    </span>
-                                </a>
-                            }
-
-                            @if(!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
-                                <a id="payment-details-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
-                                href="@model.dutyDefermentAccountDDSetupLinks()(appConfig)(account.owner, account.number)">
-                                      <span aria-hidden="true">
-                                        @messages("cf.accounts.contact.details")
-                                      </span>
-                                    <span class="govuk-visually-hidden">
-                                        @messages("cf.accounts.label.contact.details", account.number)
-                                    </span>
-                                </a>
-                            }
-
-                            @if(account.status != AccountStatusPending) {
-                                <a class="govuk-link" href=@appConfig.dutyDefermentTopUpLink>
-                                    <span aria-hidden="true">
-                                        @messages("cf.accounts.topUp")
-                                    </span>
-                                    <span class="govuk-visually-hidden">
-                                        @messages("cf.accounts.label.topUp", account.number)
-                                    </span>
-                                </a>
-                            }
-
-                            @if(account.status == AccountStatusPending) {
-                                @pendingTile()
-                            }
-                        </span>
                     }
+
+                    @accountRow.contentRow.nonDirectDebitContent.map { nonDD => nonDD.balances.get }
+
+                    <span class="card-footer__links govuk-body">
+                        @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
+                                nonDD.viewStatements.map { viewStat =>
+                                        <a id=s"${viewStat.id}" class=s"${viewStat.classValue}" href=s"${viewStat.href}">
+                                            <span aria-hidden="true">viewStat.displayValue</span>
+                                            <span class="govuk-visually-hidden">viewStat.hiddenMsg</span>
+                                        </a>
+                                }
+
+                                nonDD.paymentDetails.map { payment =>
+                                        <a id=s"${payment.id}" class=s"${payment.classValue}" href=s"${payment.href}">
+                                            <span aria-hidden="true">payment.displayValue</span>
+                                            <span class="govuk-visually-hidden">payment.hiddenMsg</span>
+                                        </a>
+                                }
+
+                                nonDD.topUp.map { topUp =>
+                                        <a id=s"${topUp.id}" class=s"${topUp.classValue}" href=s"${topUp.href}">
+                                            <span aria-hidden="true">topUp.displayValue</span>
+                                            <span class="govuk-visually-hidden">topUp.hiddenMsg</span>
+                                        </a>
+                                }
+
+                                nonDD.pendingAccountGuidance.get
+                        }
+                    </span>
+
                 </div>
             </div>
         }
-    </section>
+</section>
 }
