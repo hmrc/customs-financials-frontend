@@ -69,7 +69,6 @@ case class DutyDefermentAccountsViewModel(titleMsg: String,
 object DutyDefermentAccountsViewModel {
   def apply(finHomeModel: FinancialsHomeModel)(implicit messages: Messages,
                                                appConfig: AppConfig): DutyDefermentAccountsViewModel = {
-
     DutyDefermentAccountsViewModel(
       titleMsg(finHomeModel.dutyDefermentAccounts),
       new duty_deferment_inaccurate_balances_message().apply(),
@@ -195,7 +194,8 @@ object DutyDefermentAccountsViewModel {
       Some(
         FooterLinkModel(
           id = s"duty-deferment-account-${account.number}",
-          href = finHomeModel.dutyDefermentAccountDetailsLinks()(appConfig)((account.owner, account.number): (String, String)),
+          href = finHomeModel
+            .dutyDefermentAccountDetailsLinks()(appConfig)((account.owner, account.number): (String, String)),
           displayValue = messages("cf.accounts.viewStatements"),
           hiddenMsg = messages("cf.accounts.label.dan", account.number))
       )
@@ -211,7 +211,8 @@ object DutyDefermentAccountsViewModel {
       Some(
         FooterLinkModel(
           id = s"payment-details-${account.number}",
-          href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)((account.owner, account.number): (String, String)),
+          href = finHomeModel
+            .dutyDefermentAccountDDSetupLinks()(appConfig)((account.owner, account.number): (String, String)),
           displayValue = messages("cf.accounts.contact.details"),
           hiddenMsg = messages("cf.accounts.label.contact.details", account.number))
       )
@@ -236,53 +237,81 @@ object DutyDefermentAccountsViewModel {
   private def positiveBalanceValue(account: DutyDefermentAccount)
                                   (implicit messages: Messages): Option[PositiveBalanceModel] = {
     if (account.balances.availableBalance >= 0) {
-      if (messages.lang == Lang("cy")) {
+      populatePositiveBalanceModel(account, messages)
+    } else {
+      None
+    }
+  }
 
-        if (account.status == AccountStatusPending) {
+  private def populatePositiveBalanceModel(account: DutyDefermentAccount,
+                                           messages: Messages): Option[PositiveBalanceModel] = {
+    if (messages.lang == Lang("cy")) {
+      positiveBalanceModelForWelsh(account, messages)
+    } else {
+      positiveBalanceModelForEnglish(account, messages)
+    }
+  }
 
-          val cyAvailableBalancePreMsg: Option[String] = if (account.balances.availableBalance > 0) {
-            Some(messages("cf.pending.available.pre"))
-          } else { None }
+  private def positiveBalanceModelForWelsh(account: DutyDefermentAccount,
+                                           messages: Messages): Option[PositiveBalanceModel] = {
+    if (account.status == AccountStatusPending) {
 
-          val cyAvailableBalancePostMsg: Option[String] = if (account.balances.availableBalance > 0) {
-            Some(messages("cf.pending.available.post"))
-          } else { None }
-
-          val cyAvailableBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
-
-          Some(
-            PositiveBalanceModel(
-              pId = s"duty-deferment-balance-${account.number}",
-              cyAvailableBalancePreMsg = cyAvailableBalancePreMsg,
-              cyAvailableBalancePostMsg = cyAvailableBalancePostMsg,
-              cyAvailableBalanceValue = cyAvailableBalanceValue))
-
-        } else {
-          val cyAvailableBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
-          val cyAvailableBalanceMsg = if (account.balances.availableBalance > 0) {
-            Some(messages("cf.available"))
-          } else { None }
-
-          Some(PositiveBalanceModel(
-            pId = s"duty-deferment-balance-${account.number}",
-            cyAvailableBalanceValue = cyAvailableBalanceValue,
-            cyAvailableBalanceMsg = cyAvailableBalanceMsg))
-        }
+      val cyAvailableBalancePreMsg: Option[String] = if (account.balances.availableBalance > 0) {
+        Some(messages("cf.pending.available.pre"))
       } else {
-
-        val availBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
-        val availBalanceMsg =
-          Some(if (account.status == AccountStatusPending && account.balances.availableBalance > 0) {
-            messages("cf.pending.available")
-          } else {
-            if (account.balances.availableBalance > 0) messages("cf.available") else emptyString
-          })
-
-        Some(
-          PositiveBalanceModel(pId = s"duty-deferment-balance-${account.number}",
-            availableBalanceValue = availBalanceValue, availableBalanceMsg = availBalanceMsg))
+        None
       }
 
-    } else { None }
+      val cyAvailableBalancePostMsg: Option[String] = if (account.balances.availableBalance > 0) {
+        Some(messages("cf.pending.available.post"))
+      } else {
+        None
+      }
+
+      val cyAvailableBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
+
+      Some(
+        PositiveBalanceModel(
+          pId = s"duty-deferment-balance-${account.number}",
+          cyAvailableBalancePreMsg = cyAvailableBalancePreMsg,
+          cyAvailableBalancePostMsg = cyAvailableBalancePostMsg,
+          cyAvailableBalanceValue = cyAvailableBalanceValue)
+      )
+
+    } else {
+      val cyAvailableBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
+
+      val cyAvailableBalanceMsg = if (account.balances.availableBalance > 0) {
+        Some(messages("cf.available"))
+      } else {
+        None
+      }
+
+      Some(
+        PositiveBalanceModel(
+          pId = s"duty-deferment-balance-${account.number}",
+          cyAvailableBalanceValue = cyAvailableBalanceValue,
+          cyAvailableBalanceMsg = cyAvailableBalanceMsg)
+      )
+    }
+  }
+
+  private def positiveBalanceModelForEnglish(account: DutyDefermentAccount,
+                                             messages: Messages): Option[PositiveBalanceModel] = {
+    val availBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
+
+    val availBalanceMsg =
+      Some(if (account.status == AccountStatusPending && account.balances.availableBalance > 0) {
+        messages("cf.pending.available")
+      } else {
+        if (account.balances.availableBalance > 0) messages("cf.available") else emptyString
+      })
+
+    Some(
+      PositiveBalanceModel(
+        pId = s"duty-deferment-balance-${account.number}",
+        availableBalanceValue = availBalanceValue,
+        availableBalanceMsg = availBalanceMsg)
+    )
   }
 }
