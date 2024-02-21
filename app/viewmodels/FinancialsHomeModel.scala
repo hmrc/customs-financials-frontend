@@ -51,5 +51,4 @@ case class FinancialsHomeModel(eori: EORI,
       (accountLink.eori, accountLink.accountNumber) -> accountLink.isNiAccount
     }.toMap
   }
-
 }
