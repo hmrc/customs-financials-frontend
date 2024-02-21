@@ -17,7 +17,10 @@
 package views.account_cards
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
+  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+}
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -52,7 +55,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
           }"
 
         val ddBalanceElem: Element = viewDoc(model).getElementById(s"duty-deferment-balance-$dan1")
-        println("============== ::: "+viewDoc(model))
 
         ddBalanceElem.text().contains(Formatters.formatCurrencyAmount(periodAccountLimit))
         ddBalanceElem.text().contains(msgs("cf.available"))
