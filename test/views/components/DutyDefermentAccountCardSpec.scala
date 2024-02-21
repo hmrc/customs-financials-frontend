@@ -20,6 +20,7 @@ import config.AppConfig
 import domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.test.FakeRequest
@@ -404,7 +405,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val model = FinancialsHomeModel(eori, companyName, accounts = accounts,
       accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
 
-    def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount) = Jsoup.parse(
+    def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount): Document = Jsoup.parse(
       app.injector.instanceOf[duty_deferment_account_cards].apply(
         DutyDefermentAccountsViewModel(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount)))))
       ).body)
