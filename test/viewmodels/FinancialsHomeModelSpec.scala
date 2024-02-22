@@ -16,7 +16,10 @@
 
 package viewmodels
 
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable,
+  DutyDefermentAccount, DutyDefermentBalance
+}
 import org.joda.time.DateTime
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase

@@ -206,7 +206,7 @@ object DutyDefermentAccountsViewModel {
 
   private def paymentDetails(account: DutyDefermentAccount,
                              finHomeModel: FinancialsHomeModel)
-                            (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] =
+                            (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
     if (!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
       Some(
         FooterLinkModel(
@@ -219,9 +219,10 @@ object DutyDefermentAccountsViewModel {
     } else {
       None
     }
+  }
 
   private def topUp(account: DutyDefermentAccount)
-                   (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] =
+                   (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
     if (account.status != AccountStatusPending) {
       Some(
         FooterLinkModel(
@@ -233,6 +234,7 @@ object DutyDefermentAccountsViewModel {
     } else {
       None
     }
+  }
 
   private def positiveBalanceValue(account: DutyDefermentAccount)
                                   (implicit messages: Messages): Option[PositiveBalanceModel] = {
