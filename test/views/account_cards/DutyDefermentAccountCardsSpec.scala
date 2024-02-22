@@ -29,7 +29,7 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import viewmodels.FinancialsHomeModel
+import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
@@ -187,6 +187,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
     )
 
     def viewDoc(model: FinancialsHomeModel): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(model).body)
+      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(DutyDefermentAccountsViewModel(model)).body)
   }
 }

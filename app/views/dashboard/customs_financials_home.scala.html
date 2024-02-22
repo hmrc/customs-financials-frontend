@@ -15,36 +15,57 @@
  *@
 
 @import views.html.components._
-@import viewmodels.FinancialsHomeModel
+@import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel}
 @import views.html.account_cards._
 @import views.html.Layout
 
 @this(
-        cashAccountCards: cash_account_cards,
-        dutyDefermentCards: duty_deferment_account_cards,
-        guaranteeAccountCards: guarantee_account_cards,
-        h1: components.h1,
-        link: components.link,
-        layout: Layout,
-        card: account_cards.default_card
+    cashAccountCards: cash_account_cards,
+    dutyDefermentCards: duty_deferment_account_cards,
+    guaranteeAccountCards: guarantee_account_cards,
+    h1: components.h1,
+    link: components.link,
+    layout: Layout,
+    card: account_cards.default_card
 )
-@(model: FinancialsHomeModel, maybeMessageBannerPartial: Option[HtmlFormat.Appendable])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.accounts.title")), maybeMessageBannerPartial = maybeMessageBannerPartial,
-        eori = Some(model.eori), companyName = model.companyName, xiEori = model.xiEori) {
+@(
+    model: FinancialsHomeModel,
+    maybeMessageBannerPartial: Option[HtmlFormat.Appendable]
+)(
+    implicit request: Request[_],
+    messages: Messages,
+    appConfig: config.AppConfig
+)
+
+@layout(pageTitle = Some(messages("cf.accounts.title")),
+        maybeMessageBannerPartial = maybeMessageBannerPartial,
+        eori = Some(model.eori),
+        companyName = model.companyName,
+        xiEori = model.xiEori) {
+
     @h1("cf.customs-financials-home.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
-    @link("cf.account.manage-account-authorities.title", appConfig.manageAuthoritiesFrontendUrl, pWrapped = false, linkId = Some("manage-account-authorities-link"), linkClass = "govuk-link govuk-!-margin-right-2")
 
-        @link(
+    @link("cf.account.manage-account-authorities.title",
+            appConfig.manageAuthoritiesFrontendUrl,
+            pWrapped = false,
+            linkId = Some("manage-account-authorities-link"),
+            linkClass = "govuk-link govuk-!-margin-right-2"
+    )
+
+    @link(
             "cf.account.authorized-to-view.title",
             controllers.routes.AuthorizedToViewController.onPageLoad().url,
             linkId = Some("authorised-to-view-link"),
             pWrapped = false
-        )
+    )
 
     @notification_panel(model.notificationMessageKeys)
+
     @cashAccountCards(model.cashAccounts)
-    @dutyDefermentCards(model)
+
+    @if(model.dutyDefermentAccounts.nonEmpty) { @dutyDefermentCards(DutyDefermentAccountsViewModel(model)) }
+
     @guaranteeAccountCards(model.guaranteeAccountViewModels)
 
     @card(
@@ -55,6 +76,7 @@
         "cf.import-vat.view-certificates.description",
         "cf.customs-financials-home.import-vat.title.link"
     )
+
     @card(
         "postponed-vat",
         "postponed-vat-statements",
@@ -63,6 +85,7 @@
         "cf.postponed-vat.view-certificates.description",
         "cf.customs-financials-home.pvat.link"
     )
+
     @card(
         "import-adjustments",
         "securities-statements",

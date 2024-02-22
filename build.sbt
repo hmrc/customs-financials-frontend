@@ -1,10 +1,20 @@
 import play.core.PlayVersion.current
-import uk.gov.hmrc.DefaultBuildSettings.{integrationTestSettings, targetJvm}
+import uk.gov.hmrc.DefaultBuildSettings.{targetJvm, itSettings}
 
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.17.13"
 val bootstrapVersion = "7.22.0"
+val scala2_13_8 = "2.13.8"
+
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := scala2_13_8
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test")
+  .settings(itSettings())
+  .settings(libraryDependencies ++= Seq("uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % Test))
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -13,14 +23,12 @@ lazy val microservice = Project(appName, file("."))
     PlayKeys.playDefaultPort := 9876,
     libraryDependencies ++= compileDependencies ++ testDependencies,
     retrieveManaged := true,
-    majorVersion := 0
   )
   .settings(scoverageSettings *)
   .settings(
-    scalaVersion := "2.13.8",
     targetJvm := "jvm-11",
-    fork in Test := false,
-    parallelExecution in Test := false,
+    Test / fork := false,
+    Test/ parallelExecution := false,
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",
@@ -29,17 +37,13 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    // ***************
-    // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
     scalacOptions += "-P:silencer:pathFilters=views;routes",
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
     )
-    // ***************
   )
   .configs(IntegrationTest)
-  .settings(integrationTestSettings() *)
   .settings(
     resolvers += Resolver.jcenterRepo
   )
@@ -67,8 +71,8 @@ val testDependencies = Seq(
 )
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
-compileScalastyle := scalastyle.in(Compile).toTask("").value
-(compile in Compile) := ((compile in Compile) dependsOn compileScalastyle).value
+compileScalastyle := (Compile / scalastyle).toTask("").value
+(Compile / compile) := ((Compile / compile) dependsOn compileScalastyle).value
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys

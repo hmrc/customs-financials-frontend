@@ -17,7 +17,6 @@
 package viewmodels
 
 import config.AppConfig
-import domain.{AccountLink, CDSAccount, CDSAccounts, CashAccount}
 import domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
 import domain._
 
