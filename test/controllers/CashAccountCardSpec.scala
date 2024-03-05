@@ -38,15 +38,21 @@ class CashAccountCardSpec extends SpecBase {
   "the landing page" should {
     "show cash account card details" in new Setup {
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-
-        val appConfig = app.injector.instanceOf[AppConfig]
 
         val expectedUrl = appConfig.cashAccountUrl
         html.containsLink(expectedUrl)
         html.getElementsByClass("available-account-balance").text mustBe "£98,765 available"
+      }
+    }
+
+    "should render correct ID" in new Setup {
+      running(app) {
+        val result = route(app, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        html.getElementById(s"cash-account-$someCashAccountNumber").attr("id") mustBe "cash-account-123456789"
       }
     }
   }
@@ -78,6 +84,9 @@ class CashAccountCardSpec extends SpecBase {
       inject.bind[DataStoreService].toInstance(mockDataStoreService),
       inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
     ).build()
+
+    val appConfig = app.injector.instanceOf[AppConfig]
+    val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))
