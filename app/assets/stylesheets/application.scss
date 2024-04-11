@@ -1,14 +1,10 @@
 $govuk-assets-path: "/customs/payment-records/assets/lib/govuk-frontend/govuk/assets/";
 $hmrc-assets-path: "/customs/payment-records/assets/lib/hmrc-frontend/hmrc/";
 
-@import "lib/govuk-frontend/govuk/base";
+@import "lib/govuk-frontend/dist/govuk/base";
 
 @import "components/notifications-bar";
 @import "utils/custom";
 @import "components/progress-bar";
 @import "components/pager";
 @import "components/custom-card";
-
-
-
-
