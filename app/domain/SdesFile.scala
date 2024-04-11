@@ -66,10 +66,10 @@ object FileFormat {
 
   def unapply(arg: FileFormat): Option[String] = Some(arg.name)
 
-  implicit val fileFormatFormat = new Format[FileFormat] {
-    def reads(json: JsValue) = JsSuccess(apply(json.as[String]))
+  implicit val fileFormatFormat: Format[FileFormat] = new Format[FileFormat] {
+    def reads(json: JsValue): JsSuccess[FileFormat] = JsSuccess(apply(json.as[String]))
 
-    def writes(obj: FileFormat) = JsString(obj.name)
+    def writes(obj: FileFormat): JsString = JsString(obj.name)
   }
 }
 

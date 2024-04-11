@@ -19,7 +19,8 @@ package services
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.i18n.MessagesApi
+import play.api.Application
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
 import utils.SpecBase
 import viewmodels.Paginated
@@ -57,9 +58,9 @@ case class ExamplePaginatedViewModel(allItems: Seq[Int],
 
 class PaginatedSpec extends SpecBase {
 
-  val app = application().build()
-  val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messages = messagesApi.preferred(FakeRequest("GET", "/"))
+  val app: Application = application().build()
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
   private def getUriForPage(page: Int) = s"/foo/bar?foo=bar&page=$page"
   private val someDescription = "approved accounts"
 

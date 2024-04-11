@@ -18,11 +18,12 @@ package services
 
 import config.AppConfig
 import domain._
-import play.api.libs.json.{JsResultException, Json}
+import play.api.libs.json.{JsResultException, Json, OFormat}
 import play.api.{Logger, LoggerLike}
 import play.mvc.Http.Status
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,8 +40,8 @@ case class DocumentAttributes(eori: String,
 }
 
 object SdesNotificationsForEori {
-  implicit val sdesNotificationFormat = Json.format[DocumentAttributes]
-  implicit val sdesNotificationsFormat = Json.format[SdesNotificationsForEori]
+  implicit val sdesNotificationFormat: OFormat[DocumentAttributes] = Json.format[DocumentAttributes]
+  implicit val sdesNotificationsFormat: OFormat[SdesNotificationsForEori] = Json.format[SdesNotificationsForEori]
 
   val requested = true
   val regular = false
