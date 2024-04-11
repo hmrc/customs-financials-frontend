@@ -16,8 +16,8 @@
 
 package services
 
+import com.codahale.metrics.MetricRegistry
 import com.google.inject.Inject
-import com.kenshoo.play.metrics.Metrics
 import play.api.http.Status
 import uk.gov.hmrc.http.{BadRequestException, NotFoundException, UpstreamErrorResponse}
 
@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 @Singleton
-class MetricsReporterService @Inject()(val metrics: Metrics, dateTimeService: DateTimeService) {
+class MetricsReporterService @Inject()(val metrics: MetricRegistry, dateTimeService: DateTimeService) {
 
   def withResponseTimeLogging[T](resourceName: String)(future: Future[T])
                                 (implicit ec: ExecutionContext): Future[T] = {
@@ -49,6 +49,6 @@ class MetricsReporterService @Inject()(val metrics: Metrics, dateTimeService: Da
     val RESPONSE_TIMES_METRIC = "responseTimes"
     val histogramName = s"$RESPONSE_TIMES_METRIC.$resourceName.$httpResponseCode"
     val elapsedTimeInMillis = endTimestamp.toInstant.toEpochMilli - startTimestamp.toInstant.toEpochMilli
-    metrics.defaultRegistry.histogram(histogramName).update(elapsedTimeInMillis)
+    metrics.histogram(histogramName).update(elapsedTimeInMillis)
   }
 }

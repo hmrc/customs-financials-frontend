@@ -17,10 +17,10 @@
 package utils
 
 import actionbuilders.{FakeIdentifierAction, IdentifierAction}
-import akka.stream.testkit.NoMaterializer
+import org.apache.pekko.stream.testkit.NoMaterializer
 import com.codahale.metrics.MetricRegistry
-import com.kenshoo.play.metrics.Metrics
 import domain.{EoriHistory, SignedInUser}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.jsoup.nodes.Document
 import org.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -43,7 +43,6 @@ import scala.reflect.ClassTag
 
 class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry
-  override val toJson: String = "{}"
 }
 
 trait SpecBase extends AnyWordSpecLike

@@ -1,20 +1,21 @@
+import uk.gov.hmrc.DefaultBuildSettings.{itSettings, targetJvm}
 import play.core.PlayVersion.current
-import uk.gov.hmrc.DefaultBuildSettings.{targetJvm, itSettings}
 
 val appName = "customs-financials-frontend"
 
-val silencerVersion = "1.17.13"
-val bootstrapVersion = "7.22.0"
-val scala2_13_8 = "2.13.8"
+val silencerVersion = "1.7.16"
+val bootstrapVersion = "8.5.0"
+val scala2_13_12 = "2.13.12"
+val play30Version = "3.0.2"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := scala2_13_8
+ThisBuild / scalaVersion := scala2_13_12
 
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
   .settings(itSettings())
-  .settings(libraryDependencies ++= Seq("uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % Test))
+  .settings(libraryDependencies ++= Seq("uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion % Test))
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin)
@@ -42,32 +43,28 @@ lazy val microservice = Project(appName, file("."))
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
     )
-  )
-  .configs(IntegrationTest)
-  .settings(
-    resolvers += Resolver.jcenterRepo
-  )
+  ).settings(resolvers += Resolver.jcenterRepo)
 
 val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
-  "uk.gov.hmrc" %% "play-partials" % "8.4.0-play-28",
-  "uk.gov.hmrc" %% "play-frontend-hmrc" % "7.23.0-play-28",
+  "uk.gov.hmrc" %% "bootstrap-frontend-play-30" % bootstrapVersion,
+  "uk.gov.hmrc" %% "play-partials-play-30"      % "9.1.0",
+  "uk.gov.hmrc" %% "play-frontend-hmrc-play-30" % "9.4.0",
   ws,
-  "org.typelevel" %% "cats-core" % "2.9.0",
-  "uk.gov.hmrc" %% "tax-year" % "3.3.0",
-  "org.webjars.npm" % "moment" % "2.29.4",
-  "com.typesafe.play" %% "play-json-joda" % "2.9.4"
+  "org.typelevel" %% "cats-core" % "2.10.0",
+  "uk.gov.hmrc" %% "tax-year" % "4.0.0",
+  "org.webjars.npm" % "moment" % "2.30.1",
+  "com.typesafe.play" %% "play-json-joda" % "2.10.4"
 )
 
 val testDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.2.16" % Test,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "5.1.0" % "test, it",
-  "org.jsoup" % "jsoup" % "1.16.1" % Test,
-  "com.typesafe.play" %% "play-test" % current % Test,
+  "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion % Test,
+  "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % "test, it",
+  "org.jsoup" % "jsoup" % "1.17.2" % Test,
+  "org.playframework" %% "play-test" % current % Test,
   "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % "test, it",
-  "org.mockito" %% "mockito-scala-scalatest" % "1.17.14" % "test, it",
-  "uk.gov.hmrc" %% "tax-year" % "3.3.0" % Test
+  "org.mockito" %% "mockito-scala-scalatest" % "1.17.31" % "test, it",
+  "uk.gov.hmrc" %% "tax-year" % "4.0.0" % Test
 )
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
