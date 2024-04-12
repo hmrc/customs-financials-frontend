@@ -18,6 +18,7 @@ package utils
 
 import play.api.data.Form
 import play.api.i18n.Messages
+import utils.Utils.emptyString
 
 object ViewUtils {
 
@@ -28,10 +29,10 @@ object ViewUtils {
 
   def titleNoForm(title: String, section: Option[String],
                   titleMessageArgs: Seq[String])(implicit messages: Messages): String =
-    s"${messages(title, titleMessageArgs: _*)} - ${section.fold("")(messages(_) +
+    s"${messages(title, titleMessageArgs: _*)} - ${section.fold(emptyString)(messages(_) +
       " - ")}${messages("service.name")} - ${messages("site.govuk")}"
 
   def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
-    if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")}:" else ""
+    if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")}:" else emptyString
   }
 }

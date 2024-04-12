@@ -26,7 +26,7 @@ class DownloadStatementAuditDataSpec extends SpecBase {
 
     "correctly map DutyDefermentStatementFileMetadata and include the eori" in {
       val dutyDefermentStatementFileMetadata = DutyDefermentStatementFileMetadata(
-        YEAR_1972, MONTH_2, DAY_2, YEAR_2010, MONTH_1, DAY_2,
+        YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2,
         FileFormat.Pdf, FileRole.DutyDefermentStatement, DDStatementType.Weekly,
         Some(true), Some("GreenShieldStamps"), "12345678", Some("some request id")
       )

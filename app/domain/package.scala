@@ -15,6 +15,7 @@
  */
 
 import play.api.mvc.PathBindable
+import utils.Utils.{asterisk, emptyString}
 
 package object domain {
   type EORI = String
@@ -23,10 +24,10 @@ package object domain {
   type GAN = String
   type CAN = String
 
-  val lengthToReveal = 4
-  val maxMonths = 6
+  private val lengthToReveal = 4
+
   def obfuscateEori(eori: EORI): String =
-    List.fill(eori.length - lengthToReveal)("*").mkString("") + eori.takeRight(lengthToReveal)
+    List.fill(eori.length - lengthToReveal)(asterisk).mkString(emptyString) + eori.takeRight(lengthToReveal)
 
   implicit def optionBindable: PathBindable[Option[LinkId]] = new PathBindable[Option[LinkId]] {
     def bind(key: String, value: String): Either[String, Option[LinkId]] =
@@ -37,6 +38,6 @@ package object domain {
           right => Right(Some(right))
         )
 
-    def unbind(key: String, value: Option[LinkId]): String = value map (_.toString) getOrElse ""
+    def unbind(key: String, value: Option[LinkId]): String = value map (_.toString) getOrElse emptyString
   }
 }

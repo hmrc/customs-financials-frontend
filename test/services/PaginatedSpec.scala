@@ -247,7 +247,7 @@ class PaginatedSpec extends SpecBase {
     }
 
     "In case of 10 pages and 250 elements, and we are on the 10th, display: Prev,6,7,8,9,10, no 11th page" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_10)
+      val model = somePaginatedViewModel(ITEMS_250, PAGE_10)
       model.visibleItems mustBe (226 to 250)
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)

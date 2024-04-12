@@ -22,6 +22,7 @@ object TestData {
   val ITEMS_40 = 40
   val ITEMS_45 = 45
   val ITEMS_245 = 245
+  val ITEMS_250 = 250
 
   val PAGINATOR_ELEMENT_1 = 1
   val PAGINATOR_ELEMENT_3 = 3
