@@ -18,8 +18,11 @@ package views
 
 import config.AppConfig
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
@@ -30,13 +33,15 @@ class PartialHomeViewSpec extends SpecBase {
   "Customs Financials Partial Home View" should {
     "display header as a link text" in new Setup {
       running(app) {
-        view.getElementsByClass("hmrc-header__service-name--linked").text mustBe "View your customs financial accounts"
+        view.getElementsByClass("hmrc-header__service-name--linked")
+          .text mustBe "View your customs financial accounts"
       }
     }
 
     "display a heading" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-heading-xl").text mustBe "Sorry, some parts of the service are unavailable at the moment"
+        view.getElementsByClass("govuk-heading-xl")
+          .text mustBe "Sorry, some parts of the service are unavailable at the moment"
       }
     }
 
@@ -70,11 +75,13 @@ class PartialHomeViewSpec extends SpecBase {
   trait Setup extends I18nSupport {
     val eori: String = "EORI0123"
     val notificationsKeys: Seq[String] = Seq("c79")
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
 
-    def view = Jsoup.parse(app.injector.instanceOf[customs_financials_partial_home].apply(eori, notificationsKeys).body)
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+
+    def view: Document =
+      Jsoup.parse(app.injector.instanceOf[customs_financials_partial_home].apply(eori, notificationsKeys).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

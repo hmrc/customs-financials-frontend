@@ -26,21 +26,20 @@ import utils.SpecBase
 import views.html.components.progress_bar
 
 class ProgressBarSpec extends SpecBase {
+
   "ProgressBar" should {
-    "should generate correct HTML" in new Setup {
+
+    "should generate correct HTML" in {
+      val usedPercentage = 90
+      val app: Application = application().build()
+
       running(app) {
         val view = app.injector.instanceOf[progress_bar]
-        val output: HtmlFormat.Appendable = view(
-          usedPercentage = 90,
-        )
+        val output: HtmlFormat.Appendable = view(usedPercentage)
         val html: Document = Jsoup.parse(contentAsString(output))
 
         html.getElementsByTag("span").attr("class") must include("graph-90")
       }
     }
-  }
-
-  trait Setup {
-    val app: Application = application().build()
   }
 }

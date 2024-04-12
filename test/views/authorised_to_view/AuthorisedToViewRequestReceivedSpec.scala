@@ -19,8 +19,11 @@ package views.authorised_to_view
 import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
@@ -29,6 +32,7 @@ import views.html.authorised_to_view.authorised_to_view_request_received
 class AuthorisedToViewRequestReceivedSpec extends SpecBase {
 
   "Customs Financials Authorised to View request received" should {
+
     "display by h tags" should {
       "display header" in new Setup {
         running(app) {
@@ -88,11 +92,11 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase {
       postalCode = Some("postcode"),
       countryCode = "CountryCode")
 
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    def view = Jsoup.parse(
+    def view: Document = Jsoup.parse(
       app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
 
     implicit val msg: Messages = messages(app)

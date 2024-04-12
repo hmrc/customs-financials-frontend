@@ -19,19 +19,21 @@ package views.components
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class NotificationPanelSpec extends SpecBase {
-  implicit val messages = Helpers.stubMessages()
+  implicit val messages: Messages = Helpers.stubMessages()
 
   "Notification Panel" should {
     "not be displayed when there are no messages" in {
       val messageKeys = List()
       val content: Element = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
-      content.getElementById("notification-panel") mustBe null
+
+      Option(content.getElementById("notification-panel")) mustBe empty
     }
 
     "display C79 certificate notification" when {
@@ -63,7 +65,8 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.getElementsContainingText("You have a new Import VAT (C79) certificate").isEmpty mustBe true
-        content.getElementsContainingText("Your requested import VAT certificates (C79) are available to view").isEmpty mustBe true
+        content.getElementsContainingText(
+          "Your requested import VAT certificates (C79) are available to view").isEmpty mustBe true
       }
 
     }
@@ -81,7 +84,9 @@ class NotificationPanelSpec extends SpecBase {
 
       "new requested duty deferment statement is available " in {
         val messageKeys = List("cf.customs-financials-home.notification.requested-duty-deferment")
-        val expected = List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.requested-duty-deferment")
+        val expected =
+          List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.requested-duty-deferment")
+
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         expected.map(message =>
@@ -96,7 +101,8 @@ class NotificationPanelSpec extends SpecBase {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.getElementsContainingText("You have a new Duty Deferment statement").isEmpty mustBe true
-        content.getElementsContainingText("Your requested Duty Deferment statements are available to view").isEmpty mustBe true
+        content.getElementsContainingText(
+          "Your requested Duty Deferment statements are available to view").isEmpty mustBe true
       }
 
     }
@@ -105,7 +111,8 @@ class NotificationPanelSpec extends SpecBase {
       "new Postponed VAT Statement is available" in {
         val messageKeys = List("cf.customs-financials-home.notification.postponed-vat")
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
-        val expected = List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.postponed-vat")
+        val expected =
+          List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.postponed-vat")
 
         content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
       }
@@ -144,7 +151,9 @@ class NotificationPanelSpec extends SpecBase {
       "there is no new Securities statement" in {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
-        content.getElementsContainingText("cf.customs-financials-home.notification.adjustments").isEmpty mustBe true
+
+        content.getElementsContainingText(
+          "cf.customs-financials-home.notification.adjustments").isEmpty mustBe true
       }
     }
 
@@ -153,6 +162,7 @@ class NotificationPanelSpec extends SpecBase {
         val messageKeys = List("authorities")
         val expected = List("cf.customs-financials-home.notification.authorities")
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
+
         content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
       }
     }
@@ -161,7 +171,9 @@ class NotificationPanelSpec extends SpecBase {
       "there is no new Standing authorities csv file" in {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
-        content.getElementsContainingText("cf.customs-financials-home.notification.authorities").isEmpty mustBe true
+
+        content.getElementsContainingText(
+          "cf.customs-financials-home.notification.authorities").isEmpty mustBe true
       }
     }
   }

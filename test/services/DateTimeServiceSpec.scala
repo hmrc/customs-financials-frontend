@@ -17,43 +17,37 @@
 package services
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.test.Helpers._
 import utils.SpecBase
+import utils.TestData.{DAY_20, HOUR_12, MINUTES_30, MONTH_12, YEAR_2027}
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 class DateTimeServiceSpec extends SpecBase {
 
-  "return the fixed date if fixedDateTime is enabled" in new Setup {
-    val app = application().configure("features.fixed-system-time" -> true).build()
-    val service = app.injector.instanceOf[DateTimeService]
+  "return the fixed date if fixedDateTime is enabled" in {
+    val app: Application = application().configure("features.fixed-system-time" -> true).build()
+    val service: DateTimeService = app.injector.instanceOf[DateTimeService]
 
     running(app) {
       service.systemDateTime() mustBe
-        LocalDateTime.of(LocalDate.of(year, month, day), LocalTime.of(hour, minute))
+        LocalDateTime.of(LocalDate.of(YEAR_2027, MONTH_12, DAY_20), LocalTime.of(HOUR_12, MINUTES_30))
     }
   }
 
-  "return local time .now if fixedDateTime is disabled" in new Setup {
-    val app = application().configure("features.fixed-system-time" -> false).build()
-    val service = app.injector.instanceOf[DateTimeService]
-    val mockClock = mock[DateTimeService]
-    def now = LocalDateTime.now()
+  "return local time .now if fixedDateTime is disabled" in {
+    val app: Application = application().configure("features.fixed-system-time" -> false).build()
+    val service: DateTimeService = app.injector.instanceOf[DateTimeService]
+    val mockClock: DateTimeService = mock[DateTimeService]
+    val zero: Int = 0
 
-    when(mockClock.systemDateTime()).thenReturn(now)
+    def now: LocalDateTime = LocalDateTime.now()
+
+    when(mockClock.systemDateTime()).thenReturn(LocalDateTime.now())
 
     running(app) {
       service.systemDateTime().withNano(zero) mustBe now.withNano(zero)
     }
-  }
-
-  trait Setup {
-    val year: Int = 2027
-    val month: Int = 12
-    val day: Int = 20
-
-    val hour: Int = 12
-    val minute: Int = 30
-    val zero: Int = 0
   }
 }

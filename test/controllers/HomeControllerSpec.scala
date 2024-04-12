@@ -218,6 +218,7 @@ class HomeControllerSpec extends SpecBase {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
       val result = route(app, request).value
       val html = Jsoup.parse(contentAsString(result))
+
       html.containsElementById("notification-panel")
     }
   }
@@ -232,8 +233,9 @@ class HomeControllerSpec extends SpecBase {
       val app = application().overrides(
         inject.bind[CDSAccounts].toInstance(mockAccounts),
         inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
+        inject.bind[NotificationService].toInstance(mockNotificationService)
       ).build()
+
       val eoriNumber = newUser(Seq.empty).eori
 
       when(mockNotificationService.fetchNotifications(
@@ -283,8 +285,7 @@ class HomeControllerSpec extends SpecBase {
 
         notificationsText mustBe List("You have a new import adjustments statement",
           "You have a new import VAT (C79) certificate",
-          "You have a new postponed import VAT statement",
-        )
+          "You have a new postponed import VAT statement")
       }
     }
 

@@ -26,11 +26,12 @@ import utils.SpecBase
 import views.html.components.p
 
 class PSpec extends SpecBase {
+
   "P component" should {
     "render the default class name when classes is not defined" in new Setup {
       running(app) {
         val output: HtmlFormat.Appendable = pView(
-          message = "Hello, world!",
+          message = "Hello, world!"
         )(messages(app))
 
         val html: Document = Jsoup.parse(contentAsString(output))
@@ -53,6 +54,6 @@ class PSpec extends SpecBase {
 
   trait Setup {
     val app: Application = application().build()
-    val pView = app.injector.instanceOf[p]
+    val pView: p = app.injector.instanceOf[p]
   }
 }

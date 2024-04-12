@@ -25,6 +25,8 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.test.Helpers.stubMessages
 import utils.SpecBase
+import utils.TestData.{DAY_2, DAY_20, FILE_SIZE_2064, FILE_SIZE_2164, FILE_SIZE_DEFAULT, LENGTH_11, LENGTH_27, LENGTH_8,
+  MONTH_1, MONTH_2, YEAR_1972, YEAR_2010, YEAR_2017}
 import views.helpers.Formatters
 
 import java.time.LocalDate
@@ -36,9 +38,12 @@ class SdesFileSpec extends SpecBase {
 
     "be correctly ordered" in new Setup() {
 
-      val metadata = randomDutyDefermentStatementFile(1).metadata
-      val pdf = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Pdf))
-      val csv = randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Csv))
+      val metadata: DutyDefermentStatementFileMetadata = randomDutyDefermentStatementFile(1).metadata
+      val pdf: DutyDefermentStatementFile =
+        randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Pdf))
+
+      val csv: DutyDefermentStatementFile =
+        randomDutyDefermentStatementFile(1).copy(metadata = metadata.copy(fileFormat = Csv))
 
       List(csv, pdf).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
       List(pdf, csv).sorted.map(_.metadata).map(_.fileFormat) mustBe List(Pdf, Csv)
@@ -134,7 +139,7 @@ class SdesFileSpec extends SpecBase {
 
       val secStatFile: SecurityStatementFile = SecurityStatementFile("test_file_name",
         "test_url",
-        2064L,
+        FILE_SIZE_2064,
         secureMetaData)
 
       secStatFile.startDate mustBe LocalDate.of(
@@ -147,7 +152,7 @@ class SdesFileSpec extends SpecBase {
         secureMetaData.periodEndMonth,
         secureMetaData.periodEndDay)
 
-      secStatFile.formattedSize mustBe Formatters.fileSize(1234L)
+      secStatFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_DEFAULT)
     }
 
     "sort correctly" in new Setup {
@@ -184,7 +189,7 @@ class SdesFileSpec extends SpecBase {
 
   "VatCertificateFile" should {
     "return correct output for formattedSize" in new Setup {
-      vatCertFile.formattedSize mustBe Formatters.fileSize(2164L)
+      vatCertFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_2164)
     }
 
     "return correct output for formattedMonth" in new Setup {
@@ -272,8 +277,8 @@ class SdesFileSpec extends SpecBase {
     val eori = "test_eori"
 
     val secureMetaData: SecurityStatementFileMetadata =
-      SecurityStatementFileMetadata(1972, 2, 20, 2010, 1, 2, Csv, FileRole.SecurityStatement,
-        "GB1234567890", 1234L, "check it", Some("thing"))
+      SecurityStatementFileMetadata(YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2, Csv,
+        FileRole.SecurityStatement, "GB1234567890", FILE_SIZE_DEFAULT, "check it", Some("thing"))
 
     val standAuthMetaData: StandingAuthorityMetadata =
       StandingAuthorityMetadata(startYear, month, day, Pdf, StandingAuthority)
@@ -285,25 +290,25 @@ class SdesFileSpec extends SpecBase {
       PostponedVatStatementFileMetadata(startYear, month, Pdf, C79Certificate, CDS, None)
 
     val vatCertificateFileMetadata: VatCertificateFileMetadata =
-      VatCertificateFileMetadata(2010, 1, Csv, FileRole.C79Certificate, None)
+      VatCertificateFileMetadata(YEAR_2010, MONTH_1, Csv, FileRole.C79Certificate, None)
 
     val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
       "test_url",
-      2164L,
+      FILE_SIZE_2164,
       vatCertificateFileMetadata,
       "test_eori")
 
-    def randomInt(limit: Int) = Random.nextInt(limit)
+    def randomInt(limit: Int): Int = Random.nextInt(limit)
 
     def randomString(length: Int): String = Random.alphanumeric.take(length).mkString
 
     def randomDutyDefermentStatementFile(size: Long): DutyDefermentStatementFile = DutyDefermentStatementFile(
-      s"${randomString(8)}.${randomString(3)}",
-      s"http://${randomString(8)}.com/",
+      s"${randomString(LENGTH_8)}.${randomString(3)}",
+      s"http://${randomString(LENGTH_8)}.com/",
       size,
-      DutyDefermentStatementFileMetadata(randomInt(2017) + 1, randomInt(11) + 1, randomInt(27) + 1,
-        randomInt(2017) + 1, randomInt(11) + 1, randomInt(27) + 1, Pdf, DutyDefermentStatement,
-        Weekly, Some(true), Some("BACS"), s"${randomInt(8)}", None)
+      DutyDefermentStatementFileMetadata(randomInt(YEAR_2017) + 1, randomInt(LENGTH_11) + 1, randomInt(LENGTH_27) + 1,
+        randomInt(YEAR_2017) + 1, randomInt(LENGTH_11) + 1, randomInt(LENGTH_27) + 1, Pdf, DutyDefermentStatement,
+        Weekly, Some(true), Some("BACS"), s"${randomInt(LENGTH_8)}", None)
     )
   }
 

@@ -22,6 +22,7 @@ import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.inject.bind
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
@@ -31,7 +32,11 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 
 import scala.concurrent.Future
 
-class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with FutureAwaits with DefaultAwaitTimeout {
+class CustomsFinancialApiConnectorSpec
+  extends SpecBase
+    with ScalaFutures
+    with FutureAwaits
+    with DefaultAwaitTimeout {
 
   "CustomsFinancialApiConnector" should {
     "return verified email" in new Setup {
@@ -71,12 +76,12 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
 
   trait Setup {
 
-    val expectedResult = EmailVerifiedResponse(Some("verifiedEmail"))
+    val expectedResult: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    val mockHttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClient = mock[HttpClient]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
-    val response = EmailVerifiedResponse(Some("verifiedEmail"))
+    val response: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
 
     when[Future[EmailVerifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
       .thenReturn(Future.successful(response))
@@ -87,9 +92,9 @@ class CustomsFinancialApiConnectorSpec extends SpecBase with ScalaFutures with F
       })
 
     when[Future[HttpResponse]](mockHttpClient.DELETE(any, any)(any, any, any))
-      .thenReturn(Future.successful(HttpResponse(200, "")))
+      .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
-    val app = application().overrides(
+    val app: Application = application().overrides(
       bind[MetricsReporterService].toInstance(mockMetricsReporterService),
       bind[HttpClient].toInstance(mockHttpClient)
     ).build()

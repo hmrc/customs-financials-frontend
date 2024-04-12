@@ -159,7 +159,7 @@ class AuthActionSpec extends SpecBase {
       )
 
       val controller = new Harness(authAction)
-      val result = controller.onPageLoad()(fakeRequest())
+      val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
         status(result) mustBe SEE_OTHER
@@ -221,7 +221,7 @@ class AuthActionSpec extends SpecBase {
     }
 
     implicit class Ops[A](a: A) {
-      def ~[B](b: B): A ~ B = new~(a, b)
+      def ~[B](b: B): A ~ B = new~(a, b) //scalastyle:off
     }
 
     class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {

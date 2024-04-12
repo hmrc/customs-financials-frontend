@@ -17,7 +17,10 @@
 package controllers
 
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation}
+import domain.{
+  AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
+  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
+}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper

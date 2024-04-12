@@ -17,20 +17,16 @@
 package viewmodels
 
 import config.AppConfig
-import domain.{
-  AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
-  DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
-}
+import domain.{AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
+  DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
 import org.joda.time.DateTime
 import org.scalatest.Assertion
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import views.html.account_cards.{
-  duty_deferment_account_direct_debit_setup, duty_deferment_balance_details,
-  duty_deferment_balances, duty_deferment_inaccurate_balances_message
-}
+import views.html.account_cards.{duty_deferment_account_direct_debit_setup, duty_deferment_balance_details,
+  duty_deferment_balances, duty_deferment_inaccurate_balances_message}
 import views.html.components.{account_status, hidden_status}
 
 class DutyDefermentAccountsViewModelSpec extends SpecBase {
@@ -108,7 +104,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
           id = "payment-details-DAN01234",
           href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
           displayValue = msgs("cf.accounts.contact.details"),
-          hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234"),
+          hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234")
         )
       ),
 
@@ -118,7 +114,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
           classValue = "govuk-link",
           href = appConfig.dutyDefermentTopUpLink,
           displayValue = msgs("cf.accounts.topUp"),
-          hiddenMsg = msgs("cf.accounts.label.topUp", "DAN01234"),
+          hiddenMsg = msgs("cf.accounts.label.topUp", "DAN01234")
         )
       ),
       pendingAccountGuidance = None)

@@ -17,10 +17,13 @@
 package views
 
 import config.AppConfig
-import domain.{CompanyAddress, AccountLinkWithoutDate}
+import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
@@ -65,7 +68,7 @@ class YourContactDetailsViewSpec extends SpecBase {
   trait Setup extends I18nSupport {
     val eori: String = "EORI0123"
     val email = "email@emailland.com"
-    val companyName = Some("CompanyName")
+    val companyName: Some[String] = Some("CompanyName")
 
     val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
       eori, false, "123", "1", Some(1), "2345678")
@@ -79,11 +82,11 @@ class YourContactDetailsViewSpec extends SpecBase {
       countryCode = "CountryCode"
     )
 
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    def view = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
+    def view: Document = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
       eori, accountNumbers, companyName, companyAddress, email).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

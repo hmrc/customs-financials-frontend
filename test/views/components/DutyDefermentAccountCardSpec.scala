@@ -17,15 +17,24 @@
 package views.components
 
 import config.AppConfig
-import domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
+import domain.{
+  AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending,
+  AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred,
+  DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount,
+  DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded,
+  ReturnedMailOther
+}
 import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
+import utils.TestData.{BALANCE_299, BALANCE_499, BALANCE_500, BALANCE_999, NEGATIVE_BALANCE_100}
 import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.html.account_cards.duty_deferment_account_cards
 
@@ -334,75 +343,87 @@ class DutyDefermentAccountCardSpec extends SpecBase {
   trait Setup extends I18nSupport {
     val eori = "owner"
     val dan = "123456"
-    val companyName = Some("Company Name 1")
+    val companyName: Option[String] = Some("Company Name 1")
     val topUpLink1 = "/topup-link/0123456789"
     val topUpLink2 = "/topup-link/1111111111"
     val ddSetupLink = "http://localhost:9397/customs/duty-deferment/0123456789/direct-debit"
     val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
 
-    val dutyDefermentAccount = DutyDefermentAccount(dan, eori, false,
+    val dutyDefermentAccount: DutyDefermentAccount = DutyDefermentAccount(dan, eori, isNiAccount = false,
       AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)),
-        Some(BigDecimal(299)), // scalastyle:ignore magic.number
-        Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_499)),
+        Some(BigDecimal(BALANCE_299)),
+        Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val accountWithNegativeBalance = DutyDefermentAccount(dan, eori, false,
+    val accountWithNegativeBalance: DutyDefermentAccount = DutyDefermentAccount(dan, eori, isNiAccount = false,
       AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(500)),
-        Some(BigDecimal(299)), // scalastyle:ignore magic.number
-        Some(BigDecimal(-100))), viewBalanceIsGranted = true, isIsleOfMan = false) // scalastyle:ignore magic.number
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_500)),
+        Some(BigDecimal(BALANCE_299)),
+        Some(BigDecimal(NEGATIVE_BALANCE_100))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dutyDefermentAccountWithoutBalances = DutyDefermentAccount(dan, eori, false, AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(None, None, None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dutyDefermentAccountWithoutBalances: DutyDefermentAccount =
+      DutyDefermentAccount(dan, eori, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentBalance(None, None, None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dutyDefermentAccountOpen = dutyDefermentAccount.copy(status = AccountStatusOpen)
-    val dutyDefermentAccountSuspended = dutyDefermentAccount.copy(status = AccountStatusSuspended)
-    val dutyDefermentAccountClosed = dutyDefermentAccount.copy(status = AccountStatusClosed)
-    val dutyDefermentAccountPending = dutyDefermentAccount.copy(status = AccountStatusPending)
+    val dutyDefermentAccountOpen: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusOpen)
+    val dutyDefermentAccountSuspended: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusSuspended)
+    val dutyDefermentAccountClosed: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusClosed)
+    val dutyDefermentAccountPending: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusPending)
 
-    val dutyDefermentAccountSuspendedIsleOfMan = dutyDefermentAccount.copy(
+    val dutyDefermentAccountSuspendedIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
       status = AccountStatusSuspended, isIsleOfMan = true)
 
-    val dutyDefermentAccountStatusOpenIsleOfMan = dutyDefermentAccount.copy(
+    val dutyDefermentAccountStatusOpenIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
       status = AccountStatusOpen, isIsleOfMan = true)
 
-    val dutyDefermentAccountStatusClosedIsleOfMan = dutyDefermentAccount.copy(
+    val dutyDefermentAccountStatusClosedIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
       status = AccountStatusClosed, isIsleOfMan = true)
 
-    val dutyDefermentAccountStatusID1 = dutyDefermentAccount.copy(statusId = ChangeOfLegalEntity)
-    val dutyDefermentAccountStatusID2 = dutyDefermentAccount.copy(statusId = GuaranteeCancelledGuarantorsRequest)
-    val dutyDefermentAccountStatusID3 = dutyDefermentAccount.copy(statusId = GuaranteeCancelledTradersRequest)
-    val dutyDefermentAccountStatusID4 = dutyDefermentAccount.copy(statusId = DirectDebitMandateCancelled)
-    val dutyDefermentAccountStatusID5 = dutyDefermentAccount.copy(statusId = DebitRejectedAccountClosedOrTransferred)
-    val dutyDefermentAccountStatusID6 = dutyDefermentAccount.copy(statusId = DebitRejectedReferToDrawer)
-    val dutyDefermentAccountStatusID7 = dutyDefermentAccount.copy(statusId = ReturnedMailOther)
-    val dutyDefermentAccountStatusID8 = dutyDefermentAccount.copy(statusId = GuaranteeExceeded)
-    val dutyDefermentAccountStatusID9 = dutyDefermentAccount.copy(statusId = AccountCancelled)
+    val dutyDefermentAccountStatusID1: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = ChangeOfLegalEntity)
 
-    val dutyDefermentAccountSuspendedWithStatusId4 = dutyDefermentAccount.copy(
+    val dutyDefermentAccountStatusID2: DutyDefermentAccount =
+      dutyDefermentAccount.copy(statusId = GuaranteeCancelledGuarantorsRequest)
+
+    val dutyDefermentAccountStatusID3: DutyDefermentAccount =
+      dutyDefermentAccount.copy(statusId = GuaranteeCancelledTradersRequest)
+
+    val dutyDefermentAccountStatusID4: DutyDefermentAccount =
+      dutyDefermentAccount.copy(statusId = DirectDebitMandateCancelled)
+
+    val dutyDefermentAccountStatusID5: DutyDefermentAccount =
+      dutyDefermentAccount.copy(statusId = DebitRejectedAccountClosedOrTransferred)
+
+    val dutyDefermentAccountStatusID6: DutyDefermentAccount =
+      dutyDefermentAccount.copy(statusId = DebitRejectedReferToDrawer)
+
+    val dutyDefermentAccountStatusID7: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = ReturnedMailOther)
+    val dutyDefermentAccountStatusID8: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = GuaranteeExceeded)
+    val dutyDefermentAccountStatusID9: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = AccountCancelled)
+
+    val dutyDefermentAccountSuspendedWithStatusId4: DutyDefermentAccount = dutyDefermentAccount.copy(
       status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
 
-    val dutyDefermentAccountSuspendedWithStatusId7 = dutyDefermentAccount.copy(
+    val dutyDefermentAccountSuspendedWithStatusId7: DutyDefermentAccount = dutyDefermentAccount.copy(
       status = AccountStatusSuspended, statusId = ReturnedMailOther)
 
-    val dutyDefermentAccountPendingZeroBalance = dutyDefermentAccountPending.copy(balances =
-      DutyDefermentBalance(Some(BigDecimal(999)), Some(BigDecimal(499)),
-        Some(BigDecimal(299)), Some(BigDecimal(00.00)))) // scalastyle:ignore magic.number
+    val dutyDefermentAccountPendingZeroBalance: DutyDefermentAccount = dutyDefermentAccountPending.copy(balances =
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_499)),
+        Some(BigDecimal(BALANCE_299)), Some(BigDecimal(00.00))))
 
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
     val accounts: Seq[CDSAccounts] = Seq(
       CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances)))
 
-    val accountLinks = Seq(AccountLink(
-      sessionId = "sessionId", eori, false, accountNumber = dan,
+    val accountLinks: Seq[AccountLink] = Seq(AccountLink(
+      sessionId = "sessionId", eori, isNiAccount = false, accountNumber = dan,
       linkId = "0123456789", accountStatus = AccountStatusOpen,
       accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now))
 
-    val model = FinancialsHomeModel(eori, companyName, accounts = accounts,
+    val model: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts = accounts,
       accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount): Document = Jsoup.parse(
