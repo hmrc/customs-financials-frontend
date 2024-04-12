@@ -6,10 +6,16 @@ val appName = "customs-financials-frontend"
 val silencerVersion = "1.7.16"
 val bootstrapVersion = "8.5.0"
 val scala2_13_12 = "2.13.12"
-val play30Version = "3.0.2"
+
+val scalaStyleConfigFile = "scalastyle-config.xml"
+val testScalaStyleConfigFile = "test-scalastyle-config.xml"
+val testDirectory = "test"
 
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := scala2_13_12
+
+lazy val scalastyleSettings = Seq(scalastyleConfig := baseDirectory.value /  scalaStyleConfigFile,
+  (Test / scalastyleConfig) := baseDirectory.value/ testDirectory /  testScalaStyleConfigFile)
 
 lazy val it = project
   .enablePlugins(PlayScala)
@@ -38,7 +44,23 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    scalacOptions += "-P:silencer:pathFilters=views;routes",
+    scalacOptions ++= Seq(
+      "-Wunused:imports",
+      "-Wunused:patvars",
+      "-Wunused:implicits",
+      "-Wunused:explicits",
+      "-Wunused:privates",
+      "-P:silencer:pathFilters=target/.*",
+      "-P:silencer:pathFilters=routes",
+      "-P:silencer:pathFilters=views;routes"),
+
+    Test / scalacOptions ++= Seq(
+      "-Wunused:imports",
+      "-Wunused:params",
+      "-Wunused:patvars",
+      "-Wunused:implicits",
+      "-Wunused:explicits",
+      "-Wunused:privates"),
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full

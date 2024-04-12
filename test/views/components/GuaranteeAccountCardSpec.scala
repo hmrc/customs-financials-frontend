@@ -17,14 +17,20 @@
 package views.components
 
 import config.AppConfig
-import domain.{AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, DefermentAccountAvailable, DirectDebitMandateCancelled, GeneralGuaranteeAccount, GeneralGuaranteeBalance}
+import domain.{
+  AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended,
+  DefermentAccountAvailable, DirectDebitMandateCancelled, GeneralGuaranteeAccount, GeneralGuaranteeBalance
+}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
+import utils.TestData.{BALANCE_499, BALANCE_999}
 import views.html.account_cards.guarantee_account_cards
 
 class GuaranteeAccountCardSpec extends SpecBase {
@@ -46,7 +52,8 @@ class GuaranteeAccountCardSpec extends SpecBase {
     "include a link to the guarantee account details page when guarantee account details" in new Setup {
       running(app) {
         content().getElementsByTag("a").text mustBe "View general guarantee account"
-        content().getElementsByTag("a").attr("href") mustBe "http://localhost:9395/customs/guarantee-account"
+        content().getElementsByTag("a")
+          .attr("href") mustBe "http://localhost:9395/customs/guarantee-account"
       }
     }
 
@@ -64,7 +71,11 @@ class GuaranteeAccountCardSpec extends SpecBase {
   }
 
   "Guarantee Account Card with no gurantee balances" should {
-    val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, None) // scalastyle:ignore magic.number
+    val newGuaranteeAccount = GeneralGuaranteeAccount("123456",
+      "owner",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      None)
 
     "include guarantee limit remaining" in new Setup {
       running(app) {
@@ -79,7 +90,12 @@ class GuaranteeAccountCardSpec extends SpecBase {
     }
 
     "account is open" should {
-      val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
+      val newGuaranteeAccount = GeneralGuaranteeAccount(
+        "123456",
+        "owner",
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
 
       "not display open account status" in new Setup {
         running(app) {
@@ -89,7 +105,12 @@ class GuaranteeAccountCardSpec extends SpecBase {
     }
 
     "account is suspended" should {
-      val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusSuspended, DirectDebitMandateCancelled, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
+      val newGuaranteeAccount = GeneralGuaranteeAccount(
+        "123456",
+        "owner",
+        AccountStatusSuspended,
+        DirectDebitMandateCancelled,
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
 
       "hidden status-description for screen readers" in new Setup {
         running(app) {
@@ -106,7 +127,11 @@ class GuaranteeAccountCardSpec extends SpecBase {
     }
 
     "account is closed" should {
-      val newGuaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusClosed, AccountCancelled, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
+      val newGuaranteeAccount = GeneralGuaranteeAccount("123456",
+        "owner",
+        AccountStatusClosed,
+        AccountCancelled,
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
 
       "not display limit bar" in new Setup {
         running(app) {
@@ -125,14 +150,18 @@ class GuaranteeAccountCardSpec extends SpecBase {
 
   trait Setup extends I18nSupport {
     implicit val csrfRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
-    val guaranteeAccount = GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(999), BigDecimal(499)))) // scalastyle:ignore magic.number
+    val guaranteeAccount: GeneralGuaranteeAccount = GeneralGuaranteeAccount("123456",
+      "owner",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
 
-    def content(guaranteeAccount: GeneralGuaranteeAccount = guaranteeAccount) = Jsoup.parse(app.injector.instanceOf[guarantee_account_cards]
-      .apply(Seq(guaranteeAccount)).body)
+    def content(guaranteeAccount: GeneralGuaranteeAccount = guaranteeAccount): Document =
+      Jsoup.parse(app.injector.instanceOf[guarantee_account_cards].apply(Seq(guaranteeAccount)).body)
   }
 }

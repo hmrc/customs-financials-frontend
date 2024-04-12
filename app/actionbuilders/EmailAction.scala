@@ -36,7 +36,7 @@ class EmailAction @Inject()(dataStoreService: DataStoreService)(
     dataStoreService.getEmail(request.user.eori).map {
       case Left(value) =>
         value match {
-          case UndeliverableEmail(email) => Some(Redirect(controllers.routes.EmailController.showUndeliverable()))
+          case UndeliverableEmail(_) => Some(Redirect(controllers.routes.EmailController.showUndeliverable()))
           case UnverifiedEmail => Some(Redirect(controllers.routes.EmailController.showUnverified()))
         }
       case Right(_) => None

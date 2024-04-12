@@ -23,13 +23,14 @@ import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.test.Helpers
 import play.api.test.Helpers._
 import services.{ApiService, DataStoreService, NotificationService, XiEoriInformationReponse}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
+import utils.TestData.{FILE_SIZE_888, LENGTH_8}
 
 import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
@@ -38,12 +39,14 @@ import scala.util.Random
 class HomeControllerCardSpec extends SpecBase {
 
   "CustomsFinancialsHomeController" should {
+
     "the landing page" should {
       "show the duty deferment account cards" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.getElementsByClass("duty-deferment-account").isEmpty mustBe false
         }
       }
@@ -53,6 +56,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.getElementsByClass("cash-account").isEmpty mustBe false
         }
       }
@@ -62,6 +66,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.getElementsByClass("guarantee-account").isEmpty mustBe false
         }
       }
@@ -71,9 +76,11 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText("http://localhost:9398/customs/documents/import-vat", "View certificates")
         }
       }
+
       "show the securities card" in new Setup {
         running(app) {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -117,6 +124,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/import-vat",
             "View import VAT certificates (C79)") mustBe true
@@ -130,6 +138,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/adjustments",
             "View notification of adjustment statements") mustBe true
@@ -141,6 +150,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/adjustments",
             "View notification of adjustment statements") mustBe true
@@ -154,6 +164,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
             "View postponed import VAT statements") mustBe true
@@ -165,6 +176,7 @@ class HomeControllerCardSpec extends SpecBase {
           val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
           val result = route(app, request).value
           val html = Jsoup.parse(contentAsString(result))
+
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
             "View postponed import VAT statements") mustBe true
@@ -174,12 +186,12 @@ class HomeControllerCardSpec extends SpecBase {
     "show the historic eori duty deferment cards" in {
 
       val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",
-        false, AccountStatusOpen, DefermentAccountAvailable,
+        isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00),
           Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
       val historicEoriDDAccount = DutyDefermentAccount("12345", "22222",
-        false, AccountStatusOpen, DefermentAccountAvailable,
+        isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
         DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00),
           Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
@@ -254,13 +266,13 @@ class HomeControllerCardSpec extends SpecBase {
       )
       val someCashAccount = CashAccount("1000001", eoriNumber,
         AccountStatusOpen, DefermentAccountAvailable,
-        CDSCashBalance(Some(BigDecimal(888)))) // checkstyle:ignore magic.number
+        CDSCashBalance(Some(BigDecimal(FILE_SIZE_888))))
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
-          Random.alphanumeric.take(8).mkString,
+          Random.alphanumeric.take(LENGTH_8).mkString,
           eoriNumber,
-          false,
+          isNiAccount = false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(
@@ -273,9 +285,9 @@ class HomeControllerCardSpec extends SpecBase {
 
       val authorizedToViewAccounts = (1 until 2).map { _ =>
         DutyDefermentAccount(
-          Random.alphanumeric.take(8).mkString,
-          Random.alphanumeric.take(8).mkString,
-          false,
+          Random.alphanumeric.take(LENGTH_8).mkString,
+          Random.alphanumeric.take(LENGTH_8).mkString,
+          isNiAccount = false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(
@@ -289,19 +301,19 @@ class HomeControllerCardSpec extends SpecBase {
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
     }
 
-    val mockAccounts = mock[CDSAccounts]
-    val mockApiService = mock[ApiService]
-    val mockNotificationService = mock[NotificationService]
-    val mockDataStoreService = mock[DataStoreService]
-    val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
+    val mockAccounts: CDSAccounts = mock[CDSAccounts]
+    val mockApiService: ApiService = mock[ApiService]
+    val mockNotificationService: NotificationService = mock[NotificationService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
 
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
 
-    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
-    val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
+    val add: XiEoriAddressInformation = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val xi: XiEoriInformationReponse = XiEoriInformationReponse("Some XiEori", "yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)
@@ -315,7 +327,7 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(
       Future.successful(HttpResponse(Status.OK, "")))
 
-    val app = application().overrides(
+    val app: Application = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),
       inject.bind[ApiService].toInstance(mockApiService),
       inject.bind[NotificationService].toInstance(mockNotificationService),

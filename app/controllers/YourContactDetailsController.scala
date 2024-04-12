@@ -81,7 +81,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
-      companyAddress: CompanyAddress = dataStoreAddress.getOrElse(
+      companyAddress = dataStoreAddress.getOrElse(
         new CompanyAddress("", "", Some(""), ""))
 
       address = CompanyAddress(
