@@ -44,7 +44,6 @@ object SdesNotificationsForEori {
   implicit val sdesNotificationsFormat: OFormat[SdesNotificationsForEori] = Json.format[SdesNotificationsForEori]
 
   val requested = true
-  val regular = false
 }
 
 @Singleton

@@ -110,8 +110,10 @@ object DDStatementType {
   def unapply(arg: DDStatementType): Option[String] = Some(arg.name)
 }
 
-sealed abstract class FileRole(val name: String, val featureName: String,
-                               val transactionName: String, val messageKey: String)
+sealed abstract class FileRole(val name: String,
+                               val featureName: String,
+                               val transactionName: String,
+                               val messageKey: String)
 
 object FileRole {
 

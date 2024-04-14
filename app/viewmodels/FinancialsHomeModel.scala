@@ -43,12 +43,6 @@ case class FinancialsHomeModel(eori: EORI,
       (accountLink.eori, accountLink.accountNumber) -> appConfig.directDebitUrl(accountLink.linkId)
     }.toMap
 
-  def dutyDefermentContactDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = {
-    accountLinks.map { accountLink =>
-      (accountLink.eori, accountLink.accountNumber) -> appConfig.contactDetailsUrl(accountLink.linkId)
-    }.toMap
-  }
-
   def isNiAccountIndicator: Map[(EORI, String), Boolean] = {
     accountLinks.map { accountLink =>
       (accountLink.eori, accountLink.accountNumber) -> accountLink.isNiAccount
