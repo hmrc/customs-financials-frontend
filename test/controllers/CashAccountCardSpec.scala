@@ -19,12 +19,15 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, XiEoriAddressInformation}
+import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
+  XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import play.api.{Application, inject}
 import play.api.test.Helpers._
 import services.{ApiService, DataStoreService, NotificationService, XiEoriInformationReponse}
 import uk.gov.hmrc.auth.core.retrieve.Email
@@ -52,7 +55,8 @@ class CashAccountCardSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById(s"cash-account-$someCashAccountNumber").attr("id") mustBe "cash-account-123456789"
+        html.getElementById(s"cash-account-$someCashAccountNumber")
+          .attr("id") mustBe "cash-account-123456789"
       }
     }
   }
@@ -60,7 +64,7 @@ class CashAccountCardSpec extends SpecBase {
   trait Setup {
     val someCashAccountNumber = "123456789"
     val someAvailableCashBalance = 98765
-    val someCashAccount = CashAccount(
+    val someCashAccount: CashAccount = CashAccount(
       someCashAccountNumber,
       newUser().eori,
       AccountStatusOpen,
@@ -68,16 +72,18 @@ class CashAccountCardSpec extends SpecBase {
       CDSCashBalance(Some(BigDecimal(someAvailableCashBalance)))
     )
 
-    val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
-    val xi = XiEoriInformationReponse("SomeXiEori", "yes", add)
+    val add: XiEoriAddressInformation =
+      XiEoriAddressInformation(emptyString, Some(emptyString), None, None, Some(emptyString))
 
-    val mockAccounts = mock[CDSAccounts]
-    val mockApiService = mock[ApiService]
-    val mockNotificationService = mock[NotificationService]
-    val mockDataStoreService = mock[DataStoreService]
-    val mockSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
+    val xi: XiEoriInformationReponse = XiEoriInformationReponse("SomeXiEori", "yes", add)
 
-    val app = application().overrides(
+    val mockAccounts: CDSAccounts = mock[CDSAccounts]
+    val mockApiService: ApiService = mock[ApiService]
+    val mockNotificationService: NotificationService = mock[NotificationService]
+    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
+
+    val app: Application = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),
       inject.bind[ApiService].toInstance(mockApiService),
       inject.bind[NotificationService].toInstance(mockNotificationService),
@@ -85,8 +91,10 @@ class CashAccountCardSpec extends SpecBase {
       inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
     ).build()
 
-    val appConfig = app.injector.instanceOf[AppConfig]
-    val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
+    val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val request: FakeRequest[AnyContentAsEmpty.type] =
+      fakeRequest(GET,
+        routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))
@@ -100,7 +108,9 @@ class CashAccountCardSpec extends SpecBase {
       .thenReturn(Future.successful(List()))
     when(mockDataStoreService.getEmail(ArgumentMatchers.any())(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
-    when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
+    when(mockSessionCacheConnector.storeSession(any, any)(any))
+      .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
+
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))

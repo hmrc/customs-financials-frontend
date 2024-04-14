@@ -94,20 +94,20 @@ class YourContactDetailsControllerSpec extends SpecBase {
     val n3 = 50
     val n4 = 10
 
-    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", newUser().eori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
+    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", newUser().eori, isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
         Some(BigDecimal(n3)), Some(BigDecimal(n4))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", newUser().eori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
+    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", newUser().eori, isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", "testEori10", false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
+    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", "testEori10", isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
         Some(BigDecimal(n3)), Some(BigDecimal(n4))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", "testEori11", false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
+    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", "testEori11", isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
     val cashAccount1: CashAccount = CashAccount("1000000", "testEori10", AccountStatusOpen,
@@ -138,7 +138,7 @@ class YourContactDetailsControllerSpec extends SpecBase {
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(email)))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("companyName")))
     when(mockDataStoreService.getCompanyAddress(any)(any)).thenReturn(
-      Future.successful(Option(CompanyAddress("", "", None, "GB"))))
+      Future.successful(Option(CompanyAddress(emptyString, emptyString, None, "GB"))))
 
     val app: Application = application()
       .overrides(

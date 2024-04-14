@@ -30,8 +30,8 @@ class DutyDefermentDomainModelSpec extends SpecBase {
         Some(AccountStatusOpen),
         Some(AccountStatusSuspended),
         Some(AccountStatusClosed),
-        None
-      )
+        None)
+
       val expectedDDBalance = DutyDefermentBalance(
         Some(BigDecimal(BALANCE_200)),
         Some(BigDecimal(BALANCE_100)),
@@ -41,7 +41,7 @@ class DutyDefermentDomainModelSpec extends SpecBase {
       val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", isNiAccount = false, AccountStatusOpen,
         DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
 
-      val account = AccountResponse("1231231231", "", "EORI12345678",
+      val account = AccountResponse("1231231231", emptyString, "EORI12345678",
         accountStatus = None, None, viewBalanceIsGranted = false)
 
       val dda = DDA(account, Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
@@ -55,7 +55,7 @@ class DutyDefermentDomainModelSpec extends SpecBase {
     "correctly set DutyDefermentAccount domain model based isleOfManFlag" in {
       val iomList = List(Some(true), Some(false), None)
 
-      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None,
+      val account = AccountResponse("1231231231", emptyString, "EORI12345678", accountStatus = None,
         accountStatusID = None, viewBalanceIsGranted = false, isleOfManFlag = None)
 
       val dda = DDA(

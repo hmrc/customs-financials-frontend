@@ -43,7 +43,7 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase {
       elements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.account.type")
       elements.get(0).getElementsByTag("dd").html() mustBe
-        messages(app)("cf.search.authorities.accountType.DutyDeferment", "").trim
+        messages(app)("cf.search.authorities.accountType.DutyDeferment", emptyString).trim
 
       elements.get(1).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.account.number")

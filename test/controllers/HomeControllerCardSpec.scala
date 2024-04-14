@@ -198,7 +198,7 @@ class HomeControllerCardSpec extends SpecBase {
         DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00),
           Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-      val add = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+      val add = XiEoriAddressInformation(emptyString, Some(emptyString), None, None, Some(emptyString))
       val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
 
       val mockAccounts = mock[CDSAccounts]
@@ -220,7 +220,9 @@ class HomeControllerCardSpec extends SpecBase {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(
         Future.successful(Right(Email("last.man@standing.co.uk"))))
 
-      when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockSessionCacheConnector.storeSession(any, any)(any))
+        .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
+
       when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
       when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(
@@ -315,7 +317,9 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
 
-    val add: XiEoriAddressInformation = XiEoriAddressInformation("", Some(""), None, None, Some(""))
+    val add: XiEoriAddressInformation =
+      XiEoriAddressInformation(emptyString, Some(emptyString), None, None, Some(emptyString))
+
     val xi: XiEoriInformationReponse = XiEoriInformationReponse("Some XiEori", "yes", add)
 
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
@@ -328,7 +332,7 @@ class HomeControllerCardSpec extends SpecBase {
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
     when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(
-      Future.successful(HttpResponse(Status.OK, "")))
+      Future.successful(HttpResponse(Status.OK, emptyString)))
 
     val app: Application = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),

@@ -70,6 +70,7 @@ class AuthActionSpec extends SpecBase {
         val result = controller.onPageLoad()(
           fakeRequest().withHeaders("X-Session-Id" -> "someSessionId")
         )
+
         status(result) mustBe SEE_OTHER
         redirectLocation(result).get must startWith(config.loginUrl)
       }
@@ -102,8 +103,7 @@ class AuthActionSpec extends SpecBase {
           any,
           any
         )
-      )
-        .thenReturn(
+      ).thenReturn(
           Future.successful(
             Some(Credentials("someProviderId", "someProviderType")) ~
               Some(Name(Some("someName"), Some("someLastName"))) ~

@@ -71,6 +71,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
@@ -99,6 +100,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value

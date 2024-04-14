@@ -27,8 +27,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class NotificationServiceSpec extends MockAuditingService
-  with FutureAwaits with DefaultAwaitTimeout with ScalaFutures with BeforeAndAfterEach {
+class NotificationServiceSpec
+  extends MockAuditingService
+    with FutureAwaits
+    with DefaultAwaitTimeout
+    with ScalaFutures
+    with BeforeAndAfterEach {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

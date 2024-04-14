@@ -47,12 +47,14 @@ class PaginatedSpec extends SpecBase {
     "Be empty if less than one page of items are available" in {
       val model = somePaginatedViewModel(ITEMS_20, PAGE_1)
       val html = views.html.components.pager(model).toString()
+
       html.trim must be(emptyString)
     }
 
     "In case of 2 pages, and we are on the 1st, display: 1,2,Next" in {
       val model = somePaginatedViewModel(ITEMS_40, PAGE_1)
       model.visibleItems mustBe (1 to 25)
+
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val paginatorParser = PaginatorParser(html)
 
@@ -85,6 +87,7 @@ class PaginatedSpec extends SpecBase {
     "In case of 10 pages, and we are on the 1st, display: 1,2,3,4,5,Next" in {
       val model = somePaginatedViewModel(ITEMS_245, PAGE_1)
       model.visibleItems mustBe (1 to 25)
+
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
@@ -131,6 +134,7 @@ class PaginatedSpec extends SpecBase {
     "In case of 10 pages, and we are on the 3rd, display: Prev,1,2,3,4,5,Next" in {
       val model = somePaginatedViewModel(ITEMS_245, PAGE_3)
       model.visibleItems mustBe (51 to 75)
+
       val html = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 

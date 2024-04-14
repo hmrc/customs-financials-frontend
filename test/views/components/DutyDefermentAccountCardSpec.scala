@@ -424,7 +424,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
       accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now))
 
     val model: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts = accounts,
-      accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(""))
+      accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(emptyString))
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount): Document = Jsoup.parse(
       app.injector.instanceOf[duty_deferment_account_cards].apply(

@@ -41,6 +41,7 @@ class ApiServiceSpec
     with ScalaFutures {
 
   "ApiService" should {
+
     "getAccounts" should {
       "return all accounts available to the given EORI from the API service" in new Setup() {
         when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
@@ -145,7 +146,6 @@ class ApiServiceSpec
       }
 
       "return SearchedAuthorities if the API returns 200" in new Setup {
-
         val responseGuarantee: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 

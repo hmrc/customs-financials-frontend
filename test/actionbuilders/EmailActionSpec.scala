@@ -19,7 +19,8 @@ package actionbuilders
 import domain.{UndeliverableEmail, UnverifiedEmail}
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
+import play.api.{Application, inject}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.DataStoreService
@@ -46,7 +47,8 @@ class EmailActionSpec extends SpecBase {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(
         Future.successful(Left(UndeliverableEmail("some@email.com"))))
 
-      val response = await(emailAction.filter(authenticatedRequest))
+      val response: Option[Result] = await(emailAction.filter(authenticatedRequest))
+
       response.get.header.status mustBe SEE_OTHER
       response.get.header.headers(LOCATION) must include("/undeliverable-email")
     }
@@ -54,7 +56,7 @@ class EmailActionSpec extends SpecBase {
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
       running(app) {
         when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-          Future.failed(new ServiceUnavailableException("")))
+          Future.failed(new ServiceUnavailableException(emptyString)))
 
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
@@ -76,11 +78,12 @@ class EmailActionSpec extends SpecBase {
   trait Setup {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
-    val app = application().overrides(
+    val app: Application = application().overrides(
       inject.bind[DataStoreService].toInstance(mockDataStoreService)
     ).build()
 
-    val emailAction = app.injector.instanceOf[EmailAction]
-    val authenticatedRequest = AuthenticatedRequest(FakeRequest("GET", "/"), newUser())
+    val emailAction: EmailAction = app.injector.instanceOf[EmailAction]
+    val authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] =
+      AuthenticatedRequest(FakeRequest("GET", "/"), newUser())
   }
 }
