@@ -15,6 +15,7 @@
  *@
 
 @import uk.gov.hmrc.govukfrontend.views.html.components._
+@import utils.Utils.emptyString
 
 @this(govukInput: GovukInput)
 
@@ -38,11 +39,11 @@
     @govukInput(Input(
         id,
         name,
-        classes = classes.fold("")(x => x),
+        classes = classes.fold(emptyString)(x => x),
         label = Label(
             content = Text(messages(label, headingMessageArgs:_*)),
             isPageHeading = isPageHeading,
-            classes = if(isPageHeading) "govuk-label--xl " + labelClasses.getOrElse("") else labelClasses.getOrElse("")
+            classes = if(isPageHeading) "govuk-label--xl " + labelClasses.getOrElse(emptyString) else labelClasses.getOrElse(emptyString)
         ),
         hint = hint.map(hintKey => Hint(
         content = HtmlContent(messages(hintKey))

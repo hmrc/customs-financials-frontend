@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
 @import views.html.Layout
+@import utils.Utils.emptyString
 
 @this(
         h1: components.h1,
@@ -59,7 +60,7 @@
                     content = Text(messages("cf.contact-details.name"))
                 ),
                 value = Value(
-                    content = Text(companyName.getOrElse(""))
+                    content = Text(companyName.getOrElse(emptyString))
                 )
             ),
             SummaryListRow(
@@ -73,7 +74,7 @@
                             <br/>
                             ${companyAddress.city}
                             <br/>
-                            ${companyAddress.postalCode.getOrElse("")}
+                            ${companyAddress.postalCode.getOrElse(emptyString)}
                             <br/>
                             ${companyAddress.countryCode}
                             <br/>

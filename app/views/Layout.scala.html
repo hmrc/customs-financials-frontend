@@ -26,6 +26,7 @@
 @import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.components.help_and_support_message
+@import utils.Utils.emptyString
 
 @this(appConfig: AppConfig,
         hmrcLayout: HmrcLayout,
@@ -63,7 +64,7 @@
 
 @beforeContent = {
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori.getOrElse(""))}
+    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString))}
     @hmrcLanguageSelectHelper()
 }
 
