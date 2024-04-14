@@ -16,12 +16,17 @@
 
 @this()
 
-@(h1: String, body: Option[String] = None, id: Option[String] = None)(implicit messages: Messages)
+@(
+    h1: String,
+    body: Option[String] = None,
+    id: Option[String] = None
+)(implicit messages: Messages)
 
 <div class="govuk-panel govuk-panel--confirmation">
   <h1 class="govuk-panel__title">
     @messages(h1)
   </h1>
+
   @if(body.nonEmpty) {
     <div class="govuk-panel__body">
       @messages(body.get)

@@ -29,13 +29,13 @@ case class EoriHistory(eori: EORI,
 
   val isHistoricEori: Boolean = validUntil.isDefined
 
-  def toLoggable(): String = {
+  def toLoggable: String = {
     s"EoriHistory(Eori: ${obfuscateEori(eori)}, validFrom: $validFrom, validUntil: $validUntil)"
   }
 }
 
 object EoriHistory {
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
   implicit val eoriHistoryFormat: Reads[EoriHistory] = (
     (JsPath \ "eori").read[String] and

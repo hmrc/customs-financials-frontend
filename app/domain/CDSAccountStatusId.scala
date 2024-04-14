@@ -92,6 +92,7 @@ object CDSAccountStatusId {
               logger.warn(s"Invalid account status id: $statusId")
               DefermentAccountAvailable
             })
+
           case None =>
             logger.warn(s"No account status id in JSON")
             DefermentAccountAvailable

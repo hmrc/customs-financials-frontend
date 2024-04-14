@@ -17,6 +17,7 @@
 @this()
 
 @(msg: String*)(implicit messages: Messages)
+
 <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
     @msg.map { listItem =>
         <li>@messages(listItem)</li>

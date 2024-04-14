@@ -148,9 +148,9 @@ object FileRole {
   def unapply(fileRole: FileRole): Option[String] = Some(fileRole.name)
 
   implicit val fileRoleFormat: Format[FileRole] = new Format[FileRole] {
-    def reads(json: JsValue) = JsSuccess(apply(json.as[String]))
+    def reads(json: JsValue): JsSuccess[FileRole] = JsSuccess(apply(json.as[String]))
 
-    def writes(obj: FileRole) = JsString(obj.name)
+    def writes(obj: FileRole): JsString = JsString(obj.name)
   }
 
   implicit val pathBinder: PathBindable[FileRole] = new PathBindable[FileRole] {
@@ -286,8 +286,8 @@ case class VatCertificateFile(filename: String,
                               downloadURL: String,
                               size: Long,
                               metadata: VatCertificateFileMetadata,
-                              eori: String)(
-  implicit messages: Messages) extends Ordered[VatCertificateFile] with SdesFile {
+                              eori: String)(implicit messages: Messages) extends Ordered[VatCertificateFile]
+  with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
@@ -299,9 +299,7 @@ case class PostponedVatStatementFile(filename: String,
                                      downloadURL: String,
                                      size: Long,
                                      metadata: PostponedVatStatementFileMetadata,
-                                     eori: String)
-  extends Ordered[PostponedVatStatementFile] with SdesFile {
-
+                                     eori: String) extends Ordered[PostponedVatStatementFile] with SdesFile {
   def compare(that: PostponedVatStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
 

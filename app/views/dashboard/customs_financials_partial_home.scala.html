@@ -25,13 +25,21 @@
     card: account_cards.default_card
 )
 
-@(eori: EORI, notificationMessageKeys: Seq[String])(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+@(
+    eori: EORI,
+    notificationMessageKeys: Seq[String]
+)(
+    implicit request: Request[_],
+    messages: Messages,
+    appConfig: config.AppConfig
+)
 
 @layout(pageTitle = Some(messages("cf.customs-financials-home.partial.heading"))) {
 
     @h1("cf.customs-financials-home.partial.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
     @p("cf.customs-financials-home.partial.text")
     @notification_panel(notificationMessageKeys)
+
     @card(
         "import-vat",
         "import-vat-certificates",
@@ -40,6 +48,7 @@
         "cf.import-vat.view-certificates.description",
         "cf.customs-financials-home.import-vat.title.link"
     )
+
     @card(
         "postponed-vat",
         "postponed-vat-statements",
@@ -48,6 +57,7 @@
         "cf.postponed-vat.view-certificates.description",
         "cf.customs-financials-home.pvat.link"
     )
+
     @card(
         "import-adjustments",
         "securities-statements",

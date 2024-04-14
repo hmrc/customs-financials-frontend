@@ -50,8 +50,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
                                            authorisedToViewSearchNoResult: authorised_to_view_search_no_result,
-                                           eoriNumberFormProvider: EoriNumberFormProvider)(
-                                            implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                           eoriNumberFormProvider: EoriNumberFormProvider)
+                                          (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
@@ -100,9 +100,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   private def processSearchQuery(request: AuthenticatedRequest[AnyContent],
-                                 query: EORI)(
-                                  implicit hc: HeaderCarrier,
-                                  messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                 query: EORI)
+                                (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
     val searchQuery = stripWithWhitespace(query)
 
     val result = for {
@@ -111,38 +110,48 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
       csvFiles <- getCsvFile()(request)
     } yield {
-      val isMyAcc = gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
+      val isMyAcc =
+        gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
 
       val viewModel = csvFiles
       val fileExists = csvFiles.nonEmpty
       val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
-
       val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
       val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
 
       (request.user.eori, isMyAcc, xiEORI) match {
         case (eori, _, _) if eori.equalsIgnoreCase(query) || (xiEORI.isDefined && xiEORI.get.equalsIgnoreCase(query)) =>
-          displayErrorView(query, "cf.account.authorized-to-view.search-own-eori", fileExists, gbAuthUrl, xiAuthUrl)(
-            request, messages, appConfig)
-        case (_, true, _) =>
-          displayErrorView(query, "cf.account.authorized-to-view.search-own-accountnumber", fileExists, gbAuthUrl, xiAuthUrl)(
-            request, messages, appConfig)
-        case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
-          displayErrorView(query, "cf.search.authorities.error.register-xi-eori", fileExists, gbAuthUrl, xiAuthUrl)(
-            request, messages, appConfig)
-        case _ =>
-          if (xiEORI.nonEmpty) {
+          displayErrorView(query,
+            "cf.account.authorized-to-view.search-own-eori",
+            fileExists,
+            gbAuthUrl,
+            xiAuthUrl)(request, messages, appConfig)
+
+        case (_, true, _) => displayErrorView(query,
+            "cf.account.authorized-to-view.search-own-accountnumber",
+            fileExists,
+            gbAuthUrl,
+            xiAuthUrl)(request, messages, appConfig)
+
+        case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) => displayErrorView(query,
+            "cf.search.authorities.error.register-xi-eori",
+            fileExists,
+            gbAuthUrl,
+            xiAuthUrl)(request, messages, appConfig)
+
+        case _ => if (xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
           } else {
             searchAuthoritiesForValidInput(request, searchQuery)
           }
       }
     }
+
     result.flatten
   }
 
   private def getXiEoriCdsAccounts(request: AuthenticatedRequest[AnyContent], xiEORI: Option[String])
-                                  (implicit hc: HeaderCarrier) = {
+                                  (implicit hc: HeaderCarrier): Future[CDSAccounts] = {
     xiEORI match {
       case Some(x) => apiService.getAccounts(x)
       case None => Future.successful(CDSAccounts(request.user.eori, None, Seq.empty[CDSAccount]))
@@ -153,10 +162,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                msgKey: String,
                                fileExists: Boolean,
                                gbAuthUrl: Option[String],
-                               xiAuthUrl: Option[String])(
-                                implicit request: Request[_],
-                                messages: Messages,
-                                appConfig: AppConfig): Future[Result] =
+                               xiAuthUrl: Option[String])
+                              (implicit request: Request[_], messages: Messages, appConfig: AppConfig): Future[Result] =
     Future.successful(BadRequest(authorisedToViewSearch(
       form.withError("value", msgKey).fill(query),
       gbAuthUrl,
@@ -169,7 +176,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                              searchQuery: EORI,
                                              xiEORI: Option[String] = None)
                                             (implicit hc: HeaderCarrier,
-                                             messages: Messages, appConfig: AppConfig): Future[Result] = {
+                                             messages: Messages,
+                                             appConfig: AppConfig): Future[Result] = {
     val result = for {
       authForGBEORI <- apiService.searchAuthorities(request.user.eori, searchQuery)
       authForXIEORI <- if (xiEORI.isDefined) {
@@ -274,7 +282,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }.head
   }
 
-  private def getDisplayLink(searchedAuthorities: SearchedAuthorities) = {
+  private def getDisplayLink(searchedAuthorities: SearchedAuthorities): Boolean = {
     searchedAuthorities.authorities.exists {
       case AuthorisedDutyDefermentAccount(_, balances) => balances.map(_.periodAvailableAccountBalance).isEmpty
       case AuthorisedCashAccount(_, availableAccountBalance) => availableAccountBalance.isEmpty
@@ -282,6 +290,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  protected def stripWithWhitespace(str: String): String =
+  private def stripWithWhitespace(str: String): String =
     str.replaceAll("\\s", emptyString).toUpperCase
 }

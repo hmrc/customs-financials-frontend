@@ -73,7 +73,9 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       }
   }
 
-  private def getAllAccounts(eori: EORI, xiEori: Option[String])(implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
+  private def getAllAccounts(eori: EORI,
+                             xiEori: Option[String])
+                            (implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
     val eoriList = Seq(eori, xiEori.getOrElse(emptyString)).filterNot(_ == emptyString)
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
@@ -81,10 +83,12 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       accounts <- Future.sequence(eoriList.map(eachEori => apiService.getAccounts(eachEori)))
       historicAccounts <- Future.sequence(seqOfEoriHistory.map(each => apiService.getAccounts(each.eori)))
     } yield historicAccounts ++ accounts
+
   } recoverWith {
     case _: GatewayTimeoutException =>
       log.warn(s"Request Timeout while fetching accounts")
       Future.failed(TimeoutResponse)
+
     case NonFatal(e) =>
       log.warn(s"[GetAccounts API] Failed with error: ${e.getMessage}")
       Future.successful(Seq.empty[CDSAccounts])
@@ -97,8 +101,8 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   private def pageWithAccounts(eori: EORI,
                                xiEori: Option[String],
                                cdsAccountsList: Seq[CDSAccounts],
-                               maybeBannerPartial: Option[HtmlPartial]
-                              )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
+                               maybeBannerPartial: Option[HtmlPartial])
+                              (implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
@@ -131,6 +135,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   def pageWithoutAccounts: Action[AnyContent] = authenticate.async {
     implicit request =>
       val eori = request.user.eori
+
       notificationService.fetchNotifications(eori)
         .map(_.filterNot(v => (v.fileRole == DutyDefermentStatement) || (v.fileRole == StandingAuthority)))
         .map(getNotificationMessageKeys)
@@ -145,7 +150,9 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(
       v => v.isRequested || v.fileRole == StandingAuthority)
 
-    val authoritiesNotification: Seq[Notification] = collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
+    val authoritiesNotification: Seq[Notification] =
+      collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
+
     val requestedMessages = requestedNotifications.map(notification => s"requested-${notification.fileRole.messageKey}")
 
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
@@ -159,6 +166,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
 
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>
     val eori = req.user.eori
+
     notificationService.fetchNotifications(eori)
       .map(_.filterNot(_.fileRole == DutyDefermentStatement))
       .map(getNotificationMessageKeys)

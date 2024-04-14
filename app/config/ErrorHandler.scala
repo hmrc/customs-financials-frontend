@@ -29,8 +29,7 @@ import javax.inject.{Inject, Singleton}
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              implicit val appConfig: AppConfig,
                              notFoundView: not_found_template,
-                             errorTemplate: error_template
-                            ) extends FrontendErrorHandler {
+                             errorTemplate: error_template) extends FrontendErrorHandler {
   override def standardErrorTemplate(pageTitle: String,
                                      heading: String,
                                      message: String)(implicit request: Request[_]): Html =

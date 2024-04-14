@@ -16,7 +16,6 @@
 
 @import views.html.Layout
 
-
 @this(
         layout: Layout,
         h1: components.h1,
@@ -25,14 +24,16 @@
         link: components.link
 )
 
-
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
 @layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
     @h1("cf.not-subscribed-to-cds.detail.heading",id = None, classes = "govuk-heading-l")
     @h2("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds", id = None)
+
     @p("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds-guidance-text")
+
     @h2("cf.not-subscribed-to-cds.detail.subscribe-cds.title")
+
     <p class="govuk-body govuk-!-margin-bottom-7">
         @link(
             "cf.not-subscribed-to-cds.detail.subscribe-cds.link",

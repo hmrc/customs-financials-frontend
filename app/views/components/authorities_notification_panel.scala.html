@@ -15,14 +15,15 @@
  *@
 
 @this(
-        link: components.link
+    link: components.link
 )
 
 @(
-  gbAuthCsvUrl: Option[String] = None,
-  xiAuthCsvUrl: Option[String] = None,
-  date: String,
-  fileExists: Boolean)(implicit messages: Messages)
+    gbAuthCsvUrl: Option[String] = None,
+    xiAuthCsvUrl: Option[String] = None,
+    date: String,
+    fileExists: Boolean
+)(implicit messages: Messages)
 
 @if(fileExists) {
 <div id="notification-panel" class="notifications-panel govuk-!-margin-top-8">
@@ -38,6 +39,7 @@
             )
         </li>
         }
+
         @xiAuthCsvUrl.map { url =>
         <li>
             @link("cf.authorities.notification-panel.a.xi-authority",

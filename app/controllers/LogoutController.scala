@@ -33,7 +33,7 @@ class LogoutController @Inject()(override val authConnector: AuthConnector,
   extends FrontendController(mcc)
     with AuthorisedFunctions {
 
-  val feedbackLink: String = appConfig.feedbackService
+  private val feedbackLink: String = appConfig.feedbackService
   val log: LoggerLike = Logger(this.getClass)
 
   def logout: Action[AnyContent] = Action async { implicit request => {

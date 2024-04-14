@@ -23,28 +23,28 @@ trait Balances
 case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
                                 periodAccountLimit: Option[BigDecimal],
                                 periodAvailableGuaranteeBalance: Option[BigDecimal],
-                                periodAvailableAccountBalance: Option[BigDecimal]
-                               ) extends Balances {
-  val MAX = BigDecimal(100.00)
-  val MIN = BigDecimal(0)
+                                periodAvailableAccountBalance: Option[BigDecimal]) extends Balances {
+  private val MAX = BigDecimal(100.00)
+  private val MIN = BigDecimal(0)
 
   val (usedFunds, usedPercentage) = (periodAccountLimit, periodAvailableAccountBalance) match {
-    case (Some(limit), Some(balance)) if limit <= MIN => {
+    case (Some(limit), Some(balance)) if limit <= MIN =>
       val fundsUsed = limit - balance
       (fundsUsed, MAX)
-    }
-    case (Some(limit), Some(balance)) => {
+
+    case (Some(limit), Some(balance)) =>
       val fundsUsed = limit - balance
       val percentage = fundsUsed / limit * MAX
       (fundsUsed, percentage)
-    }
+
     case _ => (MIN, MIN)
   }
 
-  val availableBalance = (periodAccountLimit, periodAvailableAccountBalance, periodAvailableGuaranteeBalance) match {
-    case (Some(MIN), Some(MIN), _) => periodAvailableGuaranteeBalance.getOrElse(MIN)
-    case _ => periodAvailableAccountBalance.getOrElse(MIN)
-  }
+  val availableBalance: BigDecimal =
+    (periodAccountLimit, periodAvailableAccountBalance, periodAvailableGuaranteeBalance) match {
+      case (Some(MIN), Some(MIN), _) => periodAvailableGuaranteeBalance.getOrElse(MIN)
+      case _ => periodAvailableAccountBalance.getOrElse(MIN)
+    }
 }
 
 case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,

@@ -31,9 +31,17 @@
         layout: Layout
 )
 
-@(eori: String, accountLinks: Seq[AccountLinkWithoutDate], companyName: Option[String],
-  companyAddress: CompanyAddress, email: String)(
-    implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(
+    eori: String,
+    accountLinks: Seq[AccountLinkWithoutDate],
+    companyName: Option[String],
+    companyAddress: CompanyAddress,
+    email: String
+)(
+    implicit request: Request[_],
+    messages: Messages,
+    appConfig: AppConfig
+)
 
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
@@ -74,6 +82,7 @@
             )
         )
     ))
+
     <p class="govuk-body govuk-!-padding-bottom-9" id="contact-report-change-link">
         @hmrcNewTabLink(
             NewTabLink(
@@ -128,4 +137,3 @@
         </div>
     }
 }
-

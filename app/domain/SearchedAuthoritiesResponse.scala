@@ -18,12 +18,10 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class SearchedAuthoritiesResponse(
-                                        numberOfAuthorities: String,
-                                        dutyDefermentAccounts: Option[Seq[AuthorisedDutyDefermentAccount]],
-                                        generalGuaranteeAccounts: Option[Seq[AuthorisedGeneralGuaranteeAccount]],
-                                        cdsCashAccounts: Option[Seq[AuthorisedCashAccount]]
-                                      ) {
+case class SearchedAuthoritiesResponse(numberOfAuthorities: String,
+                                       dutyDefermentAccounts: Option[Seq[AuthorisedDutyDefermentAccount]],
+                                       generalGuaranteeAccounts: Option[Seq[AuthorisedGeneralGuaranteeAccount]],
+                                       cdsCashAccounts: Option[Seq[AuthorisedCashAccount]]) {
   def toSearchAuthorities: SearchedAuthorities =
     SearchedAuthorities(
       numberOfAuthorities,
@@ -38,5 +36,3 @@ case class SearchedAuthoritiesResponse(
 object SearchedAuthoritiesResponse {
   implicit val format: OFormat[SearchedAuthoritiesResponse] = Json.format[SearchedAuthoritiesResponse]
 }
-
-

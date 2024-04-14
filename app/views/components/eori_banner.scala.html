@@ -16,7 +16,11 @@
 
 @this()
 
-@(eori: Option[String] = None, companyName: Option[String] = None, xiEori: String)(implicit messages: Messages)
+@(
+    eori: Option[String] = None,
+    companyName: Option[String] = None,
+    xiEori: String
+)(implicit messages: Messages)
 
 @eori.map { eoriNumber =>
 <div class="govuk-phase-banner">

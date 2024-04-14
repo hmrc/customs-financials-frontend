@@ -23,8 +23,7 @@ case class AccountLinkWithoutDate(eori: String,
                                   accountNumber: String,
                                   accountStatus: String,
                                   accountStatusId: Option[Int],
-                                  linkId: String
-                                 )
+                                  linkId: String)
 
 object AccountLinkWithoutDate {
   implicit val format: OFormat[AccountLinkWithoutDate] = Json.format[AccountLinkWithoutDate]

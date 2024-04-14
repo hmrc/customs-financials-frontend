@@ -26,9 +26,10 @@ object DownloadStatementAuditData {
 
   def apply(metadata: SdesFileMetadata, eori: EORI): DownloadStatementAuditData = {
     val auditData = metadata.toMap
+
     DownloadStatementAuditData(auditData + ("eori" -> eori))
   }
 
-  implicit val downloadStatementAuditDataWrites: Writes[DownloadStatementAuditData] = Json.writes[DownloadStatementAuditData]
-
+  implicit val downloadStatementAuditDataWrites: Writes[DownloadStatementAuditData] =
+    Json.writes[DownloadStatementAuditData]
 }

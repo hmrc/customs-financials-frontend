@@ -25,8 +25,7 @@ case class AccountLink(sessionId: String,
                        accountStatus: CDSAccountStatus,
                        accountStatusId: Option[CDSAccountStatusId],
                        linkId: String,
-                       lastUpdated: DateTime
-                      ) {
+                       lastUpdated: DateTime) {
 
   def this(id: String, sessionCacheAccountLink: SessionCacheAccountLink) = {
     this(id,

@@ -17,13 +17,13 @@
 package config
 
 import domain.FileRole
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(val config: Configuration, val environment: Environment, servicesConfig: ServicesConfig) {
+class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesConfig) {
 
   lazy val appName: String = config.get[String]("appName")
 
@@ -44,20 +44,29 @@ class AppConfig @Inject()(val config: Configuration, val environment: Environmen
   lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
   lazy val cashAccountWithdrawUrl: String = config.get[String]("external-urls.cashAccountWithdrawUrl")
-  lazy val dutyDefermentSchemeContactLink: String = config.get[String]("external-urls.dutyDefermentSchemeContactLink")
+  lazy val dutyDefermentSchemeContactLink: String =
+    config.get[String]("external-urls.dutyDefermentSchemeContactLink")
+
   lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
   lazy val loginUrl: String = config.get[String]("external-urls.login")
   lazy val loginContinueUrl: String = config.get[String]("external-urls.loginContinue")
   lazy val signOutUrl: String = config.get[String]("external-urls.signOut")
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("external-urls.helpMakeGovUkBetterUrl")
-  lazy val govukHome: String = config.get[String]("external-urls.govUkHome")
 
-  lazy val financialsFrontendUrl: String = config.get[String]("microservice.services.customs-financials-frontend.url")
+  lazy val financialsFrontendUrl: String =
+    config.get[String]("microservice.services.customs-financials-frontend.url")
+
   lazy val cashAccountUrl: String = config.get[String]("microservice.services.customs-cash-account-frontend.url")
-  lazy val manageAuthoritiesFrontendUrl: String = config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
-  lazy val guaranteeAccountUrl: String = config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
+  lazy val manageAuthoritiesFrontendUrl: String =
+    config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
+
+  lazy val guaranteeAccountUrl: String =
+    config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
+
   lazy val emailFrontendUrl: String = s"$emailFrontendService/service/customs-finance"
-  lazy val documentsUrl: String = config.get[String]("microservice.services.customs-financials-documents-frontend.url")
+  lazy val documentsUrl: String =
+    config.get[String]("microservice.services.customs-financials-documents-frontend.url")
+
   lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
   lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"

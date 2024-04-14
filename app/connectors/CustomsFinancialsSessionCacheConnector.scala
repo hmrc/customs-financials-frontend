@@ -38,12 +38,15 @@ object AccountLinksRequest {
 
 class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
                                                        appConfig: AppConfig,
-                                                       metricsReporter: MetricsReporterService)(implicit executionContext: ExecutionContext) {
+                                                       metricsReporter: MetricsReporterService)
+                                                      (implicit executionContext: ExecutionContext) {
 
   def storeSession(id: String, accountLinks: Seq[AccountLink])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/update-links"
+
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.update-links") {
       val request: AccountLinksRequest = AccountLinksRequest(id, toSessionCacheAccountLinks(accountLinks))
+
       httpClient.POST[AccountLinksRequest, HttpResponse](sessionCacheUrl, request)
     }
   }
@@ -60,6 +63,7 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id
+
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.remove") {
       httpClient.DELETE[HttpResponse](sessionCacheUrl)
     }
@@ -67,7 +71,11 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
 
   private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for {
     accountLink <- accountLinks
-    sessionAccountLink = SessionCacheAccountLink(accountLink.eori, accountLink.isNiAccount, accountLink.accountNumber,
-      accountLink.accountStatus, accountLink.accountStatusId, accountLink.linkId)
+    sessionAccountLink = SessionCacheAccountLink(accountLink.eori,
+      accountLink.isNiAccount,
+      accountLink.accountNumber,
+      accountLink.accountStatus,
+      accountLink.accountStatusId,
+      accountLink.linkId)
   } yield sessionAccountLink
 }

@@ -24,11 +24,11 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DateTimeService @Inject()(appConfig: AppConfig) {
 
-  def getTimeStamp(): OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
+  def getTimeStamp: OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
 
   def systemDateTime(): LocalDateTime = {
     if (appConfig.fixedDateTime) {
-      LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12, 30)) // scalastyle:ignore
+      LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12, 30))
     } else {
       LocalDateTime.now()
     }

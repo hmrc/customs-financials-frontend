@@ -16,7 +16,14 @@
 
 @this()
 
-@(sectionId: String, cardId: String, heading: String, url: String, preUrlMessage: String, urlMessage: String)(implicit messages: Messages)
+@(
+    sectionId: String,
+    cardId: String,
+    heading: String,
+    url: String,
+    preUrlMessage: String,
+    urlMessage: String
+)(implicit messages: Messages)
 
 <section id="@{sectionId}" class="govuk-!-margin-bottom-9">
     <h2 class="govuk-heading-l govuk-!-margin-bottom-1 govuk-!-margin-top-9">

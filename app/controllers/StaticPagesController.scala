@@ -23,10 +23,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 
-class StaticPagesController @Inject()(
-                                       implicit val appConfig: AppConfig,
-                                       mcc: MessagesControllerComponents
-                                     ) extends FrontendController(mcc) with I18nSupport {
+class StaticPagesController @Inject()(implicit val appConfig: AppConfig,
+                                      mcc: MessagesControllerComponents) extends FrontendController(mcc)
+  with I18nSupport {
 
   def accessibility: Action[AnyContent] = Action {
     Redirect(appConfig.accessibilityLinkUrl)

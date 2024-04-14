@@ -17,14 +17,17 @@
 @import views.helpers.PageTitle.fullPageTitle
 @import views.html.Layout
 
-
 @this(
         layout: Layout,
         h1: components.h1,
         p: components.p
 )
 
-@(pageTitle: String, heading: String, details: String*)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
+@(
+    pageTitle: String,
+    heading: String,
+    details: String*
+)(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
 @layout(pageTitle = Some(pageTitle), helpAndSupport = false) {
 
@@ -34,4 +37,3 @@
         @p(detail)
     }
 }
-

@@ -45,7 +45,6 @@ object SdesNotificationsForEori {
 
   val requested = true
   val regular = false
-
 }
 
 @Singleton
@@ -62,11 +61,14 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
       domain.AccountsAndBalancesRequest(AccountsRequestCommon.generate, requestDetail)
     )
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.accounts") {
-      http.POST[AccountsAndBalancesRequestContainer, AccountsAndBalancesResponseContainer](apiEndpoint, accountsAndBalancesRequest).map(_.toCdsAccounts(eori))
+      http.POST[AccountsAndBalancesRequestContainer, AccountsAndBalancesResponseContainer](
+        apiEndpoint, accountsAndBalancesRequest).map(_.toCdsAccounts(eori))
     }
   }
 
-  def searchAuthorities(eori: String, searchID: String)(implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
+  def searchAuthorities(eori: String,
+                        searchID: String)
+                       (implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
     val request = SearchAuthoritiesRequest(searchID, eori)
 
@@ -84,6 +86,7 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
 
   def getEnabledNotifications(eori: String)(implicit hc: HeaderCarrier): Future[Seq[DocumentAttributes]] = {
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications"
+
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.notifications") {
       http.GET[SdesNotificationsForEori](apiEndpoint).map(_.notifications)
     }
@@ -91,6 +94,7 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
 
   def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
+
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
       http.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
     }
@@ -108,9 +112,11 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
           Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
             case value => Right(value)
           }
+
         case response =>
           log.error(s"requestAuthoritiesCsv failed with ${response.status} ${response.body}")
           Left(RequestAuthoritiesCSVError)
+
       }.recover {
         case ex: JsResultException =>
           log.error(s"requestAuthoritiesCsv threw an JS exception - ${ex.getMessage}")

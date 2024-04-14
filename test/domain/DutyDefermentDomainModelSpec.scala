@@ -48,7 +48,7 @@ class DutyDefermentDomainModelSpec extends SpecBase {
 
       statusList.foreach { status =>
         val dd = dda.copy(account = account.copy(accountStatus = status))
-        dd.toDomain() mustBe expectedDDA.copy(status = status.getOrElse(AccountStatusOpen))
+        dd.toDomain mustBe expectedDDA.copy(status = status.getOrElse(AccountStatusOpen))
       }
     }
 
@@ -67,7 +67,7 @@ class DutyDefermentDomainModelSpec extends SpecBase {
 
       iomList.foreach { iom =>
         val dd = dda.copy(isIomAccount = Some(iom.getOrElse(false)))
-        dd.toDomain().isIsleOfMan mustBe iom.getOrElse(false)
+        dd.toDomain.isIsleOfMan mustBe iom.getOrElse(false)
       }
     }
   }

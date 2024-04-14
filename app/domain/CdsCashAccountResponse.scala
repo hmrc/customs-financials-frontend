@@ -19,7 +19,7 @@ package domain
 import play.api.libs.json.{Json, Reads}
 
 case class CdsCashAccountResponse(account: AccountResponse, availableAccountBalance: Option[String]) {
-  def toDomain(): domain.CashAccount = {
+  def toDomain: domain.CashAccount = {
     val balance = domain.CDSCashBalance(availableAccountBalance.map(BigDecimal(_)))
     domain.CashAccount(account.number, account.owner, account.accountStatus.getOrElse(AccountStatusOpen),
       account.accountStatusID.getOrElse(DefermentAccountAvailable), balance)

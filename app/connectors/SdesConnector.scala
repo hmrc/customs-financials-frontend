@@ -31,8 +31,7 @@ class SdesConnector @Inject()(httpClient: HttpClient,
                               appConfig: AppConfig,
                               metricsReporterService: MetricsReporterService,
                               sdesGatekeeperService: SdesGatekeeperService,
-                              auditingService: AuditingService
-                             )(implicit executionContext: ExecutionContext) {
+                              auditingService: AuditingService)(implicit executionContext: ExecutionContext) {
 
   import sdesGatekeeperService._
 

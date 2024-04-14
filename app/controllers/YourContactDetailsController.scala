@@ -65,6 +65,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         else {
           redirectToHomePage()
         }
+
       case _ =>
         log.error("Missing SessionID")
         redirectToHomePage()
@@ -72,9 +73,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   }
 
   private def generateView(request: AuthenticatedRequest[AnyContent],
-                           localSessionId: SessionId)(implicit hc: HeaderCarrier,
-                                                      messages: Messages,
-                                                      appConfig: AppConfig): Future[Result] = {
+                           localSessionId: SessionId)
+                          (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)
@@ -83,8 +83,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
-      companyAddress = dataStoreAddress.getOrElse(
-        new CompanyAddress(emptyString, emptyString, Some(emptyString), emptyString))
+      companyAddress =
+        dataStoreAddress.getOrElse(new CompanyAddress(emptyString, emptyString, Some(emptyString), emptyString))
 
       address = CompanyAddress(
         streetAndNumber = companyAddress.streetAndNumber,

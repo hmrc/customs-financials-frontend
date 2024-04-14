@@ -122,7 +122,7 @@ class MetricsReporterServiceSpec extends SpecBase {
     val startTimestamp = OffsetDateTime.parse("2018-11-09T17:15:30+01:00")
     val endTimestamp = OffsetDateTime.parse("2018-11-09T17:15:35+01:00")
     val elapsedTimeInMillis = 5000L
-    when(mockDateTimeService.getTimeStamp())
+    when(mockDateTimeService.getTimeStamp)
       .thenReturn(startTimestamp, endTimestamp)
 
     val mockHistogram = mock[Histogram]

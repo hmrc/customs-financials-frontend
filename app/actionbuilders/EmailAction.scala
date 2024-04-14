@@ -27,12 +27,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EmailAction @Inject()(dataStoreService: DataStoreService)(
-  implicit val executionContext: ExecutionContext, val messagesApi: MessagesApi)
+class EmailAction @Inject()(dataStoreService: DataStoreService)(implicit val executionContext: ExecutionContext,
+                                                                val messagesApi: MessagesApi)
   extends ActionFilter[AuthenticatedRequest] with I18nSupport {
 
   def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
+
     dataStoreService.getEmail(request.user.eori).map {
       case Left(value) =>
         value match {

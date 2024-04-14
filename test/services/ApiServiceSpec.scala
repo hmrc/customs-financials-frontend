@@ -90,7 +90,7 @@ class ApiServiceSpec
         )
 
         when[Future[Seq[DutyDefermentAccount]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
-          .thenReturn(Future.successful(Seq(dd1.toDomain())))
+          .thenReturn(Future.successful(Seq(dd1.toDomain)))
         when[Future[AccountsAndBalancesResponseContainer]](mockHttpClient.POST(any, any, any)(any, any, any, any))
           .thenReturn(Future.successful(accounts))
 

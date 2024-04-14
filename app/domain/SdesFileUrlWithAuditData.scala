@@ -20,4 +20,3 @@ case class SdesFileUrlWithAuditData(id: String,
                                     sdesDownloadUrl: String,
                                     downloadStatementAuditData: DownloadStatementAuditData,
                                     transactionName: String)
-
