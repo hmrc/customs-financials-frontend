@@ -23,7 +23,7 @@ import utils.SpecBase
 class CDSAccountStatusSpec extends SpecBase {
 
   "CDSAccountStatusReads" should {
-    "read correctly" in new Setup {
+    "read correctly" in {
 
       import CDSAccountStatus.CDSAccountStatusReads
 
@@ -41,7 +41,7 @@ class CDSAccountStatusSpec extends SpecBase {
       Json.fromJson(JsString("unknown")) mustBe JsSuccess(AccountStatusOpen)
     }
 
-    "write correctly" in new Setup {
+    "write correctly" in {
 
       import CDSAccountStatus.CDSAccountStatusReads
 
@@ -50,9 +50,5 @@ class CDSAccountStatusSpec extends SpecBase {
       Json.toJson[CDSAccountStatus](AccountStatusClosed) mustBe JsString("closed")
       Json.toJson[CDSAccountStatus](AccountStatusPending) mustBe JsString("pending")
     }
-  }
-
-  trait Setup {
-    //Common val/methods should be written here
   }
 }
