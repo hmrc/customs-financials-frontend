@@ -99,9 +99,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     )
   }
 
-  private def processSearchQuery(request: AuthenticatedRequest[AnyContent],
-                                 query: EORI)
-                                (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
+  private def processSearchQuery(request: AuthenticatedRequest[AnyContent], query: EORI)
+                                (implicit hc: HeaderCarrier, messages: Messages,
+                                 appConfig: AppConfig): Future[Result] = {
     val searchQuery = stripWithWhitespace(query)
 
     val result = for {
@@ -290,6 +290,5 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  private def stripWithWhitespace(str: String): String =
-    str.replaceAll("\\s", emptyString).toUpperCase
+  private def stripWithWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase
 }

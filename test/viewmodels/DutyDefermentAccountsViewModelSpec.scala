@@ -17,13 +17,19 @@
 package viewmodels
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
+  DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+}
 import org.scalatest.Assertion
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import views.html.account_cards.{duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances, duty_deferment_inaccurate_balances_message}
+import views.html.account_cards.{
+  duty_deferment_account_direct_debit_setup, duty_deferment_balance_details,
+  duty_deferment_balances, duty_deferment_inaccurate_balances_message
+}
 import views.html.components.{account_status, hidden_status}
 
 import java.time.LocalDateTime

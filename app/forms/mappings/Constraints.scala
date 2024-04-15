@@ -40,6 +40,5 @@ trait Constraints {
       case _ => Invalid(invalidFormatErrorKey, eoriRegex)
     }
 
-  protected def stripWhitespace(str: String): String =
-    str.replaceAll("\\s", emptyString).toUpperCase
+  protected def stripWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase
 }

@@ -17,7 +17,10 @@
 package views.account_cards
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
+  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements

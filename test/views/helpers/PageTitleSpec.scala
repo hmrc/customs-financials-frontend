@@ -30,7 +30,6 @@ class PageTitleSpec extends SpecBase {
       val messages: Messages = messagesApi.preferred(Seq.empty)
       val title = Some("Page Title")
       val fullTitle = PageTitle.fullPageTitle(title)(messages)
-      
       fullTitle shouldBe Some("Page Title - View your customs financial accounts - GOV.UK")
     }
 

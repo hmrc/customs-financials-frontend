@@ -25,7 +25,6 @@ trait CDSAccount {
   val statusId: CDSAccountStatusId
 }
 
-// scalastyle:off cyclomatic.complexity
 case class DutyDefermentAccount(number: String,
                                 owner: String,
                                 isNiAccount: Boolean,

@@ -17,7 +17,13 @@
 package views.components
 
 import config.AppConfig
-import domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
+import domain.{
+  AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending,
+  AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred,
+  DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount,
+  DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded,
+  ReturnedMailOther
+}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper

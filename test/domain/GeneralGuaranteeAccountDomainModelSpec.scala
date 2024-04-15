@@ -39,7 +39,6 @@ class GeneralGuaranteeAccountDomainModelSpec extends SpecBase {
     "correctly generate a domain model when limit and balance are not available" in {
       val account = AccountResponse("number", "type", "owner", Some(AccountStatusClosed), Some(AccountCancelled),
         viewBalanceIsGranted = false)
-      
       val generalGuaranteeAccount = onwireGGA(account, guaranteeLimit = None, availableGuaranteeBalance = None)
       val expectedGGA = domainGGA("number", "owner", AccountStatusClosed, AccountCancelled, None)
 
