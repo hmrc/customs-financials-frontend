@@ -27,6 +27,7 @@ import views.html.components.authorised_account_search_inset
 class AuthorisedAccountSearchInsetSpec extends SpecBase {
 
   "view" should {
+
     "display correct contents" when {
       "firstLine and secondLine have some value" in new Setup {
         val view: Document = viewDoc(firstLineMsg, Some(secondLineMsg))
@@ -56,5 +57,4 @@ class AuthorisedAccountSearchInsetSpec extends SpecBase {
                 secondLine: Option[String] = None): Document =
       Jsoup.parse(app.injector.instanceOf[authorised_account_search_inset].apply(firstLine, secondLine).body)
   }
-
 }

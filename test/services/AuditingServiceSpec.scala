@@ -20,12 +20,13 @@ import config.AppConfig
 import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.captor.{ArgCaptor, Captor}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector._
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
 import utils.SpecBase
+
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,16 +36,18 @@ class AuditingServiceSpec extends SpecBase {
   "AuditingService" should {
 
     "create the correct audit event for view account" in new Setup {
-      val validFrom: LocalDate = LocalDate.now().minusDays(30)
-      val validTo: LocalDate = LocalDate.now().plusDays(30)
+      val thirtyDays = 30
 
-      val eoriHistory = Seq(
+      val validFrom: LocalDate = LocalDate.now().minusDays(thirtyDays)
+      val validTo: LocalDate = LocalDate.now().plusDays(thirtyDays)
+
+      val eoriHistory: Seq[EoriHistory] = Seq(
         EoriHistory("testEori1", validFrom = Some(validFrom), validUntil = Some(validTo)),
         EoriHistory("testEori2", validFrom = Some(validFrom), validUntil = Some(validTo))
       )
-      val user = SignedInUser("testEori3", eoriHistory, Some("someAltEori"))
+      val user: SignedInUser = SignedInUser("testEori3", eoriHistory, Some("someAltEori"))
 
-      val expectedAuditEvent = Json.arr(
+      val expectedAuditEvent: JsArray = Json.arr(
         Json.obj(
           "eori" -> "testEori3",
           "isHistoric" -> false
@@ -71,12 +74,15 @@ class AuditingServiceSpec extends SpecBase {
     }
 
     "create the correct data event for a user requesting duty deferment statements" in new Setup {
-      val model = AuditModel(AUDIT_TYPE, AUDIT_DUTY_DEFERMENT_TRANSACTION, Json.toJson(AuditEori(eori, false)))
+      val model: AuditModel =
+        AuditModel(AUDIT_TYPE, AUDIT_DUTY_DEFERMENT_TRANSACTION, Json.toJson(AuditEori(eori, isHistoric = false)))
+
       await(auditingService.audit(model))
 
-      val dataEventCaptor = ArgCaptor[ExtendedDataEvent]
+      val dataEventCaptor: Captor[ExtendedDataEvent] = ArgCaptor[ExtendedDataEvent]
       verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-      val dataEvent = dataEventCaptor.value
+
+      val dataEvent: ExtendedDataEvent = dataEventCaptor.value
 
       dataEvent.auditSource should be(expectedAuditSource)
       dataEvent.auditType should be(AUDIT_TYPE)
@@ -85,12 +91,16 @@ class AuditingServiceSpec extends SpecBase {
     }
 
     "create the correct data event for a user requesting VAT certificates" in new Setup {
-      val model = AuditModel(AUDIT_VAT_CERTIFICATES, AUDIT_VAT_CERTIFICATES_TRANSACTION, Json.toJson(AuditEori(eori, true)))
+      val model: AuditModel =
+        AuditModel(AUDIT_VAT_CERTIFICATES, AUDIT_VAT_CERTIFICATES_TRANSACTION,
+          Json.toJson(AuditEori(eori, isHistoric = true)))
+
       await(auditingService.audit(model))
 
-      val dataEventCaptor = ArgCaptor[ExtendedDataEvent]
+      val dataEventCaptor: Captor[ExtendedDataEvent] = ArgCaptor[ExtendedDataEvent]
       verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-      val dataEvent = dataEventCaptor.value
+
+      val dataEvent: ExtendedDataEvent = dataEventCaptor.value
 
       dataEvent.auditSource should be(expectedAuditSource)
       dataEvent.auditType should be(AUDIT_VAT_CERTIFICATES)
@@ -99,12 +109,15 @@ class AuditingServiceSpec extends SpecBase {
     }
 
     "create the correct data event for a user requesting postponed VAT certificates" in new Setup {
-      val model = AuditModel(AUDIT_POSTPONED_VAT_STATEMENTS, AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false)))
+      val model: AuditModel = AuditModel(AUDIT_POSTPONED_VAT_STATEMENTS, AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION,
+        Json.toJson(AuditEori(eori, isHistoric = false)))
+
       await(auditingService.audit(model))
 
-      val dataEventCaptor = ArgCaptor[ExtendedDataEvent]
+      val dataEventCaptor: Captor[ExtendedDataEvent] = ArgCaptor[ExtendedDataEvent]
       verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-      val dataEvent = dataEventCaptor.value
+
+      val dataEvent: ExtendedDataEvent = dataEventCaptor.value
 
       dataEvent.auditSource should be(expectedAuditSource)
       dataEvent.auditType should be(AUDIT_POSTPONED_VAT_STATEMENTS)
@@ -113,12 +126,15 @@ class AuditingServiceSpec extends SpecBase {
     }
 
     "create the correct data event for a user requesting security statements" in new Setup {
-      val model = AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION, Json.toJson(AuditEori(eori, false)))
+      val model = AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION,
+        Json.toJson(AuditEori(eori, isHistoric = false)))
+
       await(auditingService.audit(model))
 
-      val dataEventCaptor = ArgCaptor[ExtendedDataEvent]
+      val dataEventCaptor: Captor[ExtendedDataEvent] = ArgCaptor[ExtendedDataEvent]
       verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-      val dataEvent = dataEventCaptor.value
+
+      val dataEvent: ExtendedDataEvent = dataEventCaptor.value
 
       dataEvent.auditSource should be(expectedAuditSource)
       dataEvent.auditType should be(AUDIT_SECURITY_STATEMENTS)
@@ -143,10 +159,10 @@ class AuditingServiceSpec extends SpecBase {
     val AUDIT_POSTPONED_VAT_STATEMENTS = "DisplayPostponedVATStatements"
     val AUDIT_AUTHORISED_TRANSACTION = "View account"
 
-    val mockConfig = mock[AppConfig]
+    val mockConfig: AppConfig = mock[AppConfig]
     when(mockConfig.appName).thenReturn("customs-financials-frontend")
 
-    val mockAuditConnector = mock[AuditConnector]
+    val mockAuditConnector: AuditConnector = mock[AuditConnector]
     when(mockAuditConnector.sendExtendedEvent(any)(any, any)).thenReturn(Future.successful(AuditResult.Success))
 
     val auditingService = new AuditingService(mockConfig, mockAuditConnector)

@@ -27,6 +27,7 @@ import utils.SpecBase
 import views.html.components.authorised_account_search_company_name
 
 class AuthorisedAccountSearchCompanyNameSpec extends SpecBase {
+
   "AuthorisedAccountSearchCompanyName view" should {
     "load correctly and display correct guidance" in new Setup {
 

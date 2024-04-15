@@ -28,8 +28,10 @@
 @layout(pageTitle = Some(messages("cf.error.not-found.title")), helpAndSupport = false) {
 
     @h1("cf.error.not-found.heading", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
+
     @p("cf.error.not-found.message.address-typed-wrong")
     @p("cf.error.not-found.message.address-pasted-wrong")
+
     @link(
         "cf.accounts.view-customs-account",
         controllers.routes.CustomsFinancialsHomeController.index.url,

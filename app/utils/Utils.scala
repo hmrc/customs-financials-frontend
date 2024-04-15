@@ -32,6 +32,7 @@ object Utils {
   val xiEoriRegex = "XI\\d{12}"
   val singleSpace = " "
   val hyphen = "-"
+  val asterisk = "*"
 
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&

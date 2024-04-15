@@ -18,9 +18,11 @@ package views
 
 import config.AppConfig
 import domain.{AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
-import org.joda.time.DateTime
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import play.twirl.api.{Html, HtmlFormat}
@@ -29,6 +31,7 @@ import utils.SpecBase
 import viewmodels.FinancialsHomeModel
 import views.html.dashboard.customs_financials_home
 
+import java.time.LocalDateTime
 import scala.util.Random
 
 class HomeViewSpec extends SpecBase {
@@ -69,6 +72,7 @@ class HomeViewSpec extends SpecBase {
 
       "display the message banner partial" in new Setup {
         private val bannerHtmlPartial = HtmlPartial.Success(None, Html("<b id='banner-html'>Banner html</b>"))
+
         running(app) {
           page(modelWithAgentAccess, Some(bannerHtmlPartial.content)).containsElementById("banner-html")
         }
@@ -100,7 +104,9 @@ class HomeViewSpec extends SpecBase {
     }
 
     "display only EORI in banner when none returned for company name" in new Setup {
-      override val modelWithAgentAccess = FinancialsHomeModel(eori, None, accounts, Nil, accountLinks)
+      override val modelWithAgentAccess: FinancialsHomeModel =
+        FinancialsHomeModel(eori, None, accounts, Nil, accountLinks)
+
       running(app) {
         page(modelWithAgentAccess, None).containsElementById("eori")
       }
@@ -108,13 +114,13 @@ class HomeViewSpec extends SpecBase {
   }
 
   trait Setup extends I18nSupport {
-    implicit val request = FakeRequest("GET", "/some/resource/path")
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
-    val app = application().build()
+    val app: Application = application().build()
 
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    val companyName = Some("Company Name 1")
+    val companyName: Option[String] = Some("Company Name 1")
     val eori = "EORI0123"
     val eori1 = "EORI01234"
     val dan1 = "DAN01234"
@@ -125,30 +131,40 @@ class HomeViewSpec extends SpecBase {
     def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, false, AccountStatusOpen,
+      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, isNiAccount = false, AccountStatusOpen,
         DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
           Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
 
-        DutyDefermentAccount(dan2, eori1, false, AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentAccount(dan2, eori1, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
           DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
             Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
     )
 
     val accountsWithNoAgent: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, false, AccountStatusOpen,
+      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, isNiAccount = false, AccountStatusOpen,
         DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
           Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
 
-        DutyDefermentAccount(dan2, eori, false, AccountStatusOpen, DefermentAccountAvailable,
+        DutyDefermentAccount(dan2, eori, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
           DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
             Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
     )
 
-    val accountLinks = Seq(AccountLink(sessionId = "sessionId", eori, false, accountNumber = dan1, linkId = "linkId", accountStatus = AccountStatusOpen, accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now()))
+    val accountLinks: Seq[AccountLink] = Seq(
+      AccountLink(sessionId = "sessionId",
+        eori,
+        isNiAccount = false,
+        accountNumber = dan1,
+        linkId = "linkId",
+        accountStatus = AccountStatusOpen,
+        accountStatusId = Option(DefermentAccountAvailable),
+        lastUpdated = LocalDateTime.now()))
 
-    val modelWithAgentAccess = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
+    val modelWithAgentAccess: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
 
-    def page(viewModel: FinancialsHomeModel, maybeBannerPartial: Option[HtmlFormat.Appendable]) = Jsoup.parse(app.injector.instanceOf[customs_financials_home].apply(viewModel, maybeBannerPartial).body)
+    def page(viewModel: FinancialsHomeModel,
+             maybeBannerPartial: Option[HtmlFormat.Appendable]): Document =
+      Jsoup.parse(app.injector.instanceOf[customs_financials_home].apply(viewModel, maybeBannerPartial).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

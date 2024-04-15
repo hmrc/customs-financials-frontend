@@ -26,25 +26,22 @@ case class FinancialsHomeModel(eori: EORI,
                                notificationMessageKeys: Seq[String],
                                accountLinks: Seq[AccountLink],
                                xiEori: Option[String] = None) {
+
   private val allMyAccounts: Seq[CDSAccount] = accounts.flatMap(_.myAccounts)
   val dutyDefermentAccounts: Seq[DutyDefermentAccount] = filterDutyDefermentAccounts(allMyAccounts)
   val guaranteeAccountViewModels: Seq[GeneralGuaranteeAccount] = filterGuaranteeAccounts(allMyAccounts)
   val cashAccounts: Seq[CashAccount] = filterCashAccounts(allMyAccounts)
   val isAgent: Boolean = accounts.exists(_.isAgent)
 
-  def dutyDefermentAccountDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = accountLinks.map { accountLink =>
-    (accountLink.eori, accountLink.accountNumber) -> appConfig.accountUrl(accountLink.linkId)
-  }.toMap
-
-  def dutyDefermentAccountDDSetupLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = accountLinks.map { accountLink =>
-    (accountLink.eori, accountLink.accountNumber) -> appConfig.directDebitUrl(accountLink.linkId)
-  }.toMap
-
-  def dutyDefermentContactDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] = {
+  def dutyDefermentAccountDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] =
     accountLinks.map { accountLink =>
-      (accountLink.eori, accountLink.accountNumber) -> appConfig.contactDetailsUrl(accountLink.linkId)
+      (accountLink.eori, accountLink.accountNumber) -> appConfig.accountUrl(accountLink.linkId)
     }.toMap
-  }
+
+  def dutyDefermentAccountDDSetupLinks()(implicit appConfig: AppConfig): Map[(String, String), String] =
+    accountLinks.map { accountLink =>
+      (accountLink.eori, accountLink.accountNumber) -> appConfig.directDebitUrl(accountLink.linkId)
+    }.toMap
 
   def isNiAccountIndicator: Map[(EORI, String), Boolean] = {
     accountLinks.map { accountLink =>

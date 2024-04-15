@@ -21,17 +21,20 @@ import play.api.mvc.Request
 import play.twirl.api.Html
 import views.html.error_states.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import utils.Utils.emptyString
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              implicit val appConfig: AppConfig,
                              notFoundView: not_found_template,
-                             errorTemplate: error_template
-                            ) extends FrontendErrorHandler {
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
+                             errorTemplate: error_template) extends FrontendErrorHandler {
+  override def standardErrorTemplate(pageTitle: String,
+                                     heading: String,
+                                     message: String)(implicit request: Request[_]): Html =
     errorTemplate(Messages("cf.error.standard-error.title"), Messages("cf.error.standard-error.heading"),
-      Messages("cf.error.standard-error.message"), "", "")
+      Messages("cf.error.standard-error.message"), emptyString, emptyString)
 
   override def notFoundTemplate(implicit request: Request[_]): Html =
     notFoundView()

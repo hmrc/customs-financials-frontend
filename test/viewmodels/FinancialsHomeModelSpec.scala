@@ -16,13 +16,11 @@
 
 package viewmodels
 
-import domain.{
-  AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance
-}
-import org.joda.time.DateTime
+import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+
+import java.time.LocalDateTime
 
 class FinancialsHomeModelSpec extends SpecBase {
 
@@ -84,7 +82,7 @@ class FinancialsHomeModelSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now())
+        lastUpdated = LocalDateTime.now())
     )
 
     val homeModel: FinancialsHomeModel = FinancialsHomeModel(eori1, None, accounts, Nil, accountLinks)

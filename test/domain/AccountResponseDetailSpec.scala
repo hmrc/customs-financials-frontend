@@ -23,6 +23,7 @@ import utils.SpecBase
 class AccountResponseDetailSpec extends SpecBase {
 
   "totalNumberOfAccounts" should {
+
     "return correct no of accounts" when {
       "dutyDefermentAccount, generalGuaranteeAccount and cdsCashAccount have accounts" in new Setup {
         accResDetailObWithAccount.totalNumberOfAccounts mustBe 3

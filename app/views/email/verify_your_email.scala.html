@@ -25,7 +25,10 @@
         button: components.button
 )
 
-@(nextPage:String, email: Option[String])(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(
+    nextPage:String,
+    email: Option[String]
+)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
         pageTitle = Some(messages("cf.verify.your.email.title"))
@@ -34,11 +37,12 @@
         @h1(msg = "cf.verify.your.email.heading", classes = "govuk-heading-xl")
 
         @p(messages("cf.verify.your.email.p1"))
+
         @if(email.isDefined){
             @p(messages("cf.verify.your.email.p2", email.get))
         }
+
         @p(messages("cf.verify.your.email.p3"))
 
         <p class="govuk-body">@button("cf.verify.your.email.change.button", Some(nextPage))</p>
-       
 }

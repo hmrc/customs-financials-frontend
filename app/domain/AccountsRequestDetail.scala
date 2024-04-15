@@ -21,8 +21,7 @@ import play.api.libs.json.{Json, OFormat}
 case class AccountsRequestDetail(EORINo: String,
                                  accountType: Option[String],
                                  accountNumber: Option[String],
-                                 referenceDate: Option[String]
-                                )
+                                 referenceDate: Option[String])
 
 object AccountsRequestDetail {
   implicit val format: OFormat[AccountsRequestDetail] = Json.format[AccountsRequestDetail]

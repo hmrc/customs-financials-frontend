@@ -36,8 +36,8 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
                                                     customsDataStore: DataStoreService,
                                                     implicit val mcc: MessagesControllerComponents,
                                                     authorisedToViewRequestReceived: authorised_to_view_request_received,
-                                                    eoriNumberFormProvider: EoriNumberFormProvider)(
-  implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                                    eoriNumberFormProvider: EoriNumberFormProvider)
+                                                   (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
@@ -51,6 +51,7 @@ class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierActi
           case Right(_) => Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
           case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
         }
+
       case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
     }
   }

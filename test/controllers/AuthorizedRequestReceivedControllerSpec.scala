@@ -19,12 +19,13 @@ package controllers
 import domain.{RequestAuthoritiesCSVError, RequestAuthoritiesCsvResponse, UnverifiedEmail}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.any
-import play.api.http.Status.OK
-import play.api.inject
+import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
+import play.api.{Application, inject}
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import utils.SpecBase
+
 import scala.concurrent.Future
 
 class AuthorizedRequestReceivedControllerSpec extends SpecBase {
@@ -35,19 +36,21 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe OK
         html.text().contains("Request received") shouldBe true
       }
     }
 
     "should be directed to InternalServerError page when no email is returned from data-store" in new Setup {
-      when(mockDataStoreService.getEmail(any)(any))
-        .thenReturn(Future.successful(Left(UnverifiedEmail)))
+      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
+
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        status(result) shouldBe 500
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
         html.text().contains("Sorry, we’re experiencing technical difficulties") shouldBe true
         html.text().contains("Please try again in a few minutes.") shouldBe true
       }
@@ -61,7 +64,8 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
-        status(result) shouldBe 500
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
         html.text().contains("Sorry, we’re experiencing technical difficulties") shouldBe true
         html.text().contains("Please try again in a few minutes.") shouldBe true
       }
@@ -79,12 +83,12 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase {
     when(mockDataStoreService.getEmail(any)(any))
       .thenReturn(Future.successful(Right(Email("address@email.com"))))
 
-    val app = application()
+    val app: Application = application()
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).configure("features.new-agent-view-enabled" -> false).build()
 
-    val controller = app.injector.instanceOf[AuthorizedRequestReceivedController]
+    val controller: AuthorizedRequestReceivedController = app.injector.instanceOf[AuthorizedRequestReceivedController]
   }
 }

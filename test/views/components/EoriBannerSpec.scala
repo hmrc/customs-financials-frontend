@@ -71,10 +71,11 @@ class EoriBannerSpec extends SpecBase {
 
     def viewDoc(eori: Option[String] = None,
                 companyName: Option[String] = None,
-                xiEori: String): Document = Jsoup.parse(app.injector.instanceOf[eori_banner].apply(
-      eori,
-      companyName,
-      xiEori
-    ).body)
+                xiEori: String): Document =
+      Jsoup.parse(app.injector.instanceOf[eori_banner].apply(
+        eori,
+        companyName,
+        xiEori
+      ).body)
   }
 }

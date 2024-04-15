@@ -27,6 +27,7 @@ import utils.SpecBase
 import java.time.LocalDate
 
 class PostponedVatStatementGroupSpec extends SpecBase {
+
   "collectFiles" should {
     "return correct output when amended is true, file role is PostponedVATAmendedStatement " +
       "and source is CDS" in new Setup {
@@ -99,21 +100,18 @@ class PostponedVatStatementGroupSpec extends SpecBase {
     implicit val msgs: Messages = messages(app)
     val date: LocalDate = LocalDate.of(year, month, day)
 
-    // Metadata for file role PostponedVATAmendedStatement
     val metaDataWithSourceCdsAndFileRolePostVatAmendStat: PostponedVatStatementFileMetadata =
       PostponedVatStatementFileMetadata(startYear, periodStartMonth, Pdf, PostponedVATAmendedStatement, CDS, None)
 
     val metaDataWithSourceChiefAndFileRolePostVatAmendStat: PostponedVatStatementFileMetadata =
       PostponedVatStatementFileMetadata(startYear, periodStartMonth, Pdf, PostponedVATAmendedStatement, CHIEF, None)
 
-    // Metadata for file role PostponedVATStatement
     val metaDataWithSourceCdsAndFileRolePostVatStat: PostponedVatStatementFileMetadata =
       PostponedVatStatementFileMetadata(startYear, periodStartMonth, Pdf, PostponedVATStatement, CDS, None)
 
     val metaDataWithSourceChiefAndFileRolePostVatStat: PostponedVatStatementFileMetadata =
       PostponedVatStatementFileMetadata(startYear, periodStartMonth, Pdf, PostponedVATStatement, CHIEF, None)
 
-    //PostponedVatStatementFile for Metadata with PostponedVATAmendedStatement
     val pVatFilesForSourceCdsAndFileRolePostVatAmendStat: Seq[PostponedVatStatementFile] = Seq(
       PostponedVatStatementFile(fileName, downloadUrl, size, metaDataWithSourceCdsAndFileRolePostVatAmendStat, eori)
     )
@@ -122,7 +120,6 @@ class PostponedVatStatementGroupSpec extends SpecBase {
       PostponedVatStatementFile(fileName, downloadUrl, size, metaDataWithSourceChiefAndFileRolePostVatAmendStat, eori)
     )
 
-    //PostponedVatStatementFile for Metadata with PostponedVATStatement
     val pVatFilesForSourceCdsAndFileRolePostVatStat: Seq[PostponedVatStatementFile] = Seq(
       PostponedVatStatementFile(fileName, downloadUrl, size, metaDataWithSourceCdsAndFileRolePostVatStat, eori)
     )
@@ -131,14 +128,12 @@ class PostponedVatStatementGroupSpec extends SpecBase {
       PostponedVatStatementFile(fileName, downloadUrl, size, metaDataWithSourceChiefAndFileRolePostVatStat, eori)
     )
 
-    // PostponedVatStatementGroup for PostponedVATAmendedStatement
     val pVatStatGroupForCdsAndFileRolePostVatAmendStat: PostponedVatStatementGroup =
       PostponedVatStatementGroup(date, pVatFilesForSourceCdsAndFileRolePostVatAmendStat)
 
     val pVatStatGroupForChiefAndFileRolePostVatAmendStat: PostponedVatStatementGroup =
       PostponedVatStatementGroup(date, pVatFilesForSourceChiefAndFileRolePostVatAmendStat)
 
-    // PostponedVatStatementGroup for PostponedVATStatement
     val pVatStatGroupForCdsAndFileRolePostVatStat: PostponedVatStatementGroup =
       PostponedVatStatementGroup(date, pVatFilesForSourceCdsAndFileRolePostVatStat)
 

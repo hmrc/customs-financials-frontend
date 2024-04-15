@@ -23,4 +23,3 @@ case class RequestAuthoritiesCsvResponse(requestAcceptedDate: String)
 object RequestAuthoritiesCsvResponse {
   implicit val format: OFormat[RequestAuthoritiesCsvResponse] = Json.format[RequestAuthoritiesCsvResponse]
 }
-

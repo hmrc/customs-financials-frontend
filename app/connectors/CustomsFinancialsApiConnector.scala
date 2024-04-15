@@ -27,8 +27,8 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
-                                              httpClient: HttpClient, metricsReporter: MetricsReporterService)
-                                             (implicit ec: ExecutionContext) {
+                                              httpClient: HttpClient,
+                                              metricsReporter: MetricsReporterService)(implicit ec: ExecutionContext) {
 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
     httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
@@ -43,8 +43,10 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
       "/subscriptions/unverified-email-display").map(res => res.unVerifiedEmail)
   }
 
-  def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
+  def deleteNotification(eori: String,
+                         fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
+
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
       httpClient.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
     }

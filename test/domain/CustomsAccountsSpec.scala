@@ -20,8 +20,11 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks._
 import org.scalatest.prop.Tables.Table
 import utils.SpecBase
+import utils.TestData.{
+  BALANCE_10, BALANCE_100, BALANCE_1000000, BALANCE_150, BALANCE_20, BALANCE_200, BALANCE_200000,
+  BALANCE_200001, BALANCE_200002, BALANCE_50, NEGATIVE_BALANCE_10, NEGATIVE_BALANCE_100, NEGATIVE_BALANCE_50
+}
 
-// scalastyle:off magic.number
 class CustomsAccountsSpec extends SpecBase {
 
   "CDSAccounts" should {
@@ -73,7 +76,8 @@ class CustomsAccountsSpec extends SpecBase {
 
     "filterByAccountNumber" should {
       "return a function which returns any accounts which match the given account number" in new Setup {
-        val func = filterByAccountNumber(cashAccountNumber)
+        val func: Seq[CDSAccount] => Seq[CDSAccount] = filterByAccountNumber(cashAccountNumber)
+
         func(traderAccounts) must be(List(cashAccount))
       }
     }
@@ -102,6 +106,7 @@ class CustomsAccountsSpec extends SpecBase {
         (AccountCancelled, false, false),
         (AccountCancelled, true, false)
       )
+
       "return correct requiredDirectDebit status" in new Setup {
         forAll(values) {
           (statusId: CDSAccountStatusId, isleOfManFlag: Boolean, expectedResult: Boolean) => {
@@ -121,7 +126,7 @@ class CustomsAccountsSpec extends SpecBase {
     }
 
     "return zero used funds when the guarantee limit is zero" in new Setup {
-      val expectedUsedFunds = -200001
+      val expectedUsedFunds: Int = -200001
       guaranteeAccountZeroLimit.balances.get.usedFunds must be(expectedUsedFunds)
     }
 
@@ -142,7 +147,7 @@ class CustomsAccountsSpec extends SpecBase {
   }
 
   "DutyDefermentBalance" should {
-    "return correct used funds value" in new Setup{
+    "return correct used funds value" in new Setup {
       val expectedUsedFunds = 80
       dd1.balances.usedFunds must be(expectedUsedFunds)
     }
@@ -158,23 +163,31 @@ class CustomsAccountsSpec extends SpecBase {
       }
 
       "return funds if periodAccountLimit & periodAvailableAccountBalance are positives" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(50)))
-        balance.usedFunds must be(50)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(BALANCE_100)), None, Some(BigDecimal(BALANCE_50)))
+
+        balance.usedFunds must be(BALANCE_50)
       }
 
       "return funds if periodAccountLimit is positive & periodAvailableAccountBalance is negative" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(-50)))
-        balance.usedFunds must be(150)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(BALANCE_100)), None, Some(BigDecimal(NEGATIVE_BALANCE_50)))
+
+        balance.usedFunds must be(BALANCE_150)
       }
 
       "return funds if periodAccountLimit is positive & periodAvailableAccountBalance is zero" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(0)))
-        balance.usedFunds must be(100)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(BALANCE_100)), None, Some(BigDecimal(0)))
+
+        balance.usedFunds must be(BALANCE_100)
       }
 
       "return funds if periodAccountLimit is zero & periodAvailableAccountBalance is negative" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(-100)))
-        balance.usedFunds must be(100)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(NEGATIVE_BALANCE_100)))
+
+        balance.usedFunds must be(BALANCE_100)
       }
     }
 
@@ -184,13 +197,16 @@ class CustomsAccountsSpec extends SpecBase {
       }
 
       "return calculated value if periodAccountLimit & periodAvailableAccountBalance are positives" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(50)))
-        balance.usedPercentage must be(50)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(BALANCE_100)), None, Some(BigDecimal(BALANCE_50)))
+
+        balance.usedPercentage must be(BALANCE_50)
       }
 
       "return 100 if periodAccountLimit is positive & periodAvailableAccountBalance is zero" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(100)), None, Some(BigDecimal(0)))
-        balance.usedPercentage must be(100)
+        val balance: DutyDefermentBalance = DutyDefermentBalance(None, Some(BigDecimal(BALANCE_100)), None, Some(BigDecimal(0)))
+
+        balance.usedPercentage must be(BALANCE_100)
       }
     }
 
@@ -200,24 +216,29 @@ class CustomsAccountsSpec extends SpecBase {
       }
 
       "return the balance if periodAvailableAccountBalance is a positive value" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(50)))
-        balance.availableBalance must be(50)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(BALANCE_50)))
+
+        balance.availableBalance must be(BALANCE_50)
       }
 
       "return the balance if periodAvailableAccountBalance is a zero value" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(0)))
+        val balance: DutyDefermentBalance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(0)))
+
         balance.availableBalance must be(0)
       }
 
       "return the balance if periodAvailableAccountBalance is a negative value" in new Setup {
-        val balance = DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(-50)))
-        balance.availableBalance must be(-50)
+        val balance: DutyDefermentBalance =
+          DutyDefermentBalance(None, Some(BigDecimal(0)), None, Some(BigDecimal(NEGATIVE_BALANCE_50)))
+
+        balance.availableBalance must be(NEGATIVE_BALANCE_50)
       }
     }
 
     "not throw an exception for any input values" in new Setup {
-      val sampleValues = List(Some(BigDecimal(10)), Some(BigDecimal(100)),
-        Some(BigDecimal(-10)), Some(BigDecimal(-100)), Some(BigDecimal(0)), None)
+      val sampleValues: List[Option[BigDecimal]] = List(Some(BigDecimal(BALANCE_10)), Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(NEGATIVE_BALANCE_10)), Some(BigDecimal(NEGATIVE_BALANCE_100)), Some(BigDecimal(0)), None)
 
       for {
         periodGuaranteeLimit <- sampleValues
@@ -239,45 +260,48 @@ class CustomsAccountsSpec extends SpecBase {
     private val traderEori = "12345678"
     private val agentEori = "09876543"
 
-    val guaranteeAccount = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(1000000), BigDecimal(200000))))
+    val guaranteeAccount: GeneralGuaranteeAccount = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
+      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_1000000), BigDecimal(BALANCE_200000))))
 
-    val guaranteeAccountZeroLimit = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(200001))))
+    val guaranteeAccountZeroLimit: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable,
+        Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(BALANCE_200001))))
 
-    val guaranteeAccountZeroBalance = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(200002), BigDecimal(0))))
+    val guaranteeAccountZeroBalance: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
+        DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_200002), BigDecimal(0))))
 
-    val guaranteeAccountZeroLimitZeroBalance = GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(0))))
+    val guaranteeAccountZeroLimitZeroBalance: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount("G123456", traderEori, AccountStatusOpen, DefermentAccountAvailable,
+        Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(0))))
 
-    val dd1 = DutyDefermentAccount("1231231231", traderEori, false,
-      AccountStatusOpen, DirectDebitMandateCancelled, DutyDefermentBalance(Some(BigDecimal(200)),
-        Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20))),
-        viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", traderEori, isNiAccount = false,
+      AccountStatusOpen, DirectDebitMandateCancelled, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)), Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))),
+      viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd2 = DutyDefermentAccount("7567567567", traderEori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", traderEori, isNiAccount = false, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd3 = DutyDefermentAccount("7897897897", agentEori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", agentEori, isNiAccount = false, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd4 = DutyDefermentAccount("1112223334", agentEori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
+    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", agentEori, isNiAccount = false, AccountStatusOpen,
+      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
         None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
 
     val cashAccountNumber = "987654"
 
-    val cashAccount = CashAccount(cashAccountNumber, traderEori,
+    val cashAccount: CashAccount = CashAccount(cashAccountNumber, traderEori,
       AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999.99))))
 
-    val traderAccounts = List(guaranteeAccount, dd1, dd2, cashAccount)
-    val traderCdsAccounts = CDSAccounts(traderEori, None, traderAccounts)
-    val agentClientsAccounts = List(dd1, dd2, cashAccount)
-    val agentOwnAccounts = List(dd3, dd4)
-    val agentAccounts = agentClientsAccounts ++ agentOwnAccounts
-    val agentCdsAccounts = CDSAccounts(agentEori, None, agentAccounts)
+    val traderAccounts: List[CDSAccount] = List(guaranteeAccount, dd1, dd2, cashAccount)
+    val traderCdsAccounts: CDSAccounts = CDSAccounts(traderEori, None, traderAccounts)
+    val agentClientsAccounts: List[CDSAccount] = List(dd1, dd2, cashAccount)
+    val agentOwnAccounts: List[DutyDefermentAccount] = List(dd3, dd4)
+    val agentAccounts: List[CDSAccount] = agentClientsAccounts ++ agentOwnAccounts
+    val agentCdsAccounts: CDSAccounts = CDSAccounts(agentEori, None, agentAccounts)
   }
 }

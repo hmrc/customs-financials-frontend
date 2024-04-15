@@ -17,7 +17,7 @@
 package services
 
 import com.codahale.metrics.{Histogram, MetricRegistry}
-import com.kenshoo.play.metrics.Metrics
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.mockito.ArgumentMatchers
 import play.api.{Application, inject}
 import play.api.http.Status
@@ -118,19 +118,20 @@ class MetricsReporterServiceSpec extends SpecBase {
   }
 
   trait Setup {
-    val mockDateTimeService = mock[DateTimeService]
-    val startTimestamp = OffsetDateTime.parse("2018-11-09T17:15:30+01:00")
-    val endTimestamp = OffsetDateTime.parse("2018-11-09T17:15:35+01:00")
+    val mockDateTimeService: DateTimeService = mock[DateTimeService]
+    val startTimestamp: OffsetDateTime = OffsetDateTime.parse("2018-11-09T17:15:30+01:00")
+    val endTimestamp: OffsetDateTime = OffsetDateTime.parse("2018-11-09T17:15:35+01:00")
     val elapsedTimeInMillis = 5000L
-    when(mockDateTimeService.getTimeStamp())
+
+    when(mockDateTimeService.getTimeStamp)
       .thenReturn(startTimestamp, endTimestamp)
 
-    val mockHistogram = mock[Histogram]
+    val mockHistogram: Histogram = mock[Histogram]
 
-    val mockRegistry = mock[MetricRegistry]
+    val mockRegistry: MetricRegistry = mock[MetricRegistry]
     when(mockRegistry.histogram(ArgumentMatchers.any())).thenReturn(mockHistogram)
 
-    val mockMetrics = mock[Metrics]
+    val mockMetrics: Metrics = mock[Metrics]
     when(mockMetrics.defaultRegistry).thenReturn(mockRegistry)
 
     val app: Application = GuiceApplicationBuilder().overrides(

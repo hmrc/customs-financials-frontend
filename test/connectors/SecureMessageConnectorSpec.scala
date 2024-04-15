@@ -37,13 +37,13 @@ class SecureMessageConnectorSpec extends SpecBase {
       when(mockConfig.customsSecureMessagingBannerEndpoint).thenReturn(expectedUrl)
 
       when[Future[HtmlPartial]](mockHttpClient.GET(eqTo(expectedUrl), any, any)(any, any, any))
-        .thenReturn(Future.successful(HtmlPartial.Success(Some("Hello"), Html(""))))
+        .thenReturn(Future.successful(HtmlPartial.Success(Some("Hello"), Html(emptyString))))
 
       private val connector = app.injector.instanceOf[SecureMessageConnector]
 
       running(app) {
         val result = await(connector.getMessageCountBanner(returnTo)(fakeRequest()))
-        result.get mustEqual HtmlPartial.Success(Some("Hello"), Html(""))
+        result.get mustEqual HtmlPartial.Success(Some("Hello"), Html(emptyString))
       }
     }
 

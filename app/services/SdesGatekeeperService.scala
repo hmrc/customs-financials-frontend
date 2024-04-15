@@ -17,6 +17,8 @@
 package services
 
 import domain.{FileInformation, _}
+import utils.Utils.emptyString
+
 import javax.inject.Singleton
 
 @Singleton
@@ -35,10 +37,9 @@ class SdesGatekeeperService() {
         metadata("PeriodStartDay").toInt,
         FileFormat(metadata("FileType")),
         FileRole(metadata("FileRole"))),
-      ""
+      emptyString
     )
   }
 
   def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] = _.map(converter)
-
 }

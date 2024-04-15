@@ -25,18 +25,14 @@ class AccountSpec extends SpecBase {
     "be serializable and deserializable to/from JSON" in {
       val account = Account("123456", "GeneralGuarantee", "EORI1234")
 
-      // Serialize the Account object to JSON
       val jsonAccount: JsValue = Json.toJson(account)
 
-      // Verify the JSON structure and values
       (jsonAccount \ "accountNumber").as[String] shouldBe "123456"
       (jsonAccount \ "accountType").as[String] shouldBe "GeneralGuarantee"
       (jsonAccount \ "accountOwner").as[String] shouldBe "EORI1234"
 
-      // Deserialize the JSON back to Account object
       val parsedAccount = jsonAccount.as[Account]
 
-      // Verify the deserialized Account object
       parsedAccount shouldBe account
     }
   }

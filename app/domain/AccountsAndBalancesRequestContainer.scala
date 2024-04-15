@@ -16,10 +16,11 @@
 
 package domain
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AccountsAndBalancesRequestContainer(accountsAndBalancesRequest: AccountsAndBalancesRequest)
 
 object AccountsAndBalancesRequestContainer {
-  implicit val accountsAndBalancesRequestContainerFormat = Json.format[AccountsAndBalancesRequestContainer]
+  implicit val accountsAndBalancesRequestContainerFormat: OFormat[AccountsAndBalancesRequestContainer] =
+    Json.format[AccountsAndBalancesRequestContainer]
 }

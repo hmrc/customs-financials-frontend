@@ -14,25 +14,40 @@
  * limitations under the License.
  */
 
-package controllers
+package utils
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.test.Helpers._
-import utils.SpecBase
+import utils.Constants._
 
+class ConstantsSpec extends SpecBase {
 
-class StaticPagesControllerSpec extends SpecBase {
+  "FIXED_DATE_TIME_YEAR" should {
+    "return correct value" in {
+      FIXED_DATE_TIME_YEAR mustBe 2027
+    }
+  }
 
-  "accessibility page" should {
-    "return OK / 303" in {
-      val app = application().build()
+  "FIXED_DATE_TIME_MONTH" should {
+    "return correct value" in {
+      FIXED_DATE_TIME_MONTH mustBe 12
+    }
+  }
 
-      running(app) {
-        val request = fakeRequest(GET, routes.StaticPagesController.accessibility.url)
-        val result = route(app, request).value
+  "FIXED_DATE_TIME_DAY" should {
+    "return correct value" in {
+      FIXED_DATE_TIME_DAY mustBe 20
+    }
+  }
 
-        status(result) mustBe SEE_OTHER
-      }
+  "FIXED_DATE_TIME_HOUR_OF_DAY" should {
+    "return correct value" in {
+      FIXED_DATE_TIME_HOUR_OF_DAY mustBe 12
+    }
+  }
+
+  "FIXED_DATE_TIME_MINUTES_OF_HOUR" should {
+    "return correct value" in {
+      FIXED_DATE_TIME_MINUTES_OF_HOUR mustBe 30
     }
   }
 }

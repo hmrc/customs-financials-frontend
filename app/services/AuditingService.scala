@@ -26,6 +26,8 @@ import uk.gov.hmrc.play.audit.AuditExtensions
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.{Disabled, Failure, Success}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import utils.Utils.hyphen
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,10 +36,10 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
 
   val log: LoggerLike = Logger(this.getClass)
 
-  val AUDIT_AUTHORISED_TRANSACTION = "View account"
+  private val AUDIT_AUTHORISED_TRANSACTION = "View account"
   val AUDIT_TYPE = "ViewAccount"
 
-  val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold("-")(_._2)
+  private val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold(hyphen)(_._2)
 
   def auditFiles[T <: SdesFile](files: Seq[T], eori: String)(
     implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Seq[AuditResult]] = {
@@ -57,26 +59,30 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   def viewAccount(user: SignedInUser)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val historicEoriAuditDetails: Seq[AuditEori] = user.allEoriHistory.map(
       eoriHistory => AuditEori(eoriHistory.eori, isHistoric = true))
+
     val eoriAuditDetails: AuditEori = AuditEori(user.eori, isHistoric = false)
     val eoriList = eoriAuditDetails +: historicEoriAuditDetails
     val auditEvent = AuditModel(AUDIT_TYPE, AUDIT_AUTHORISED_TRANSACTION, Json.toJson(eoriList))
+
     audit(auditEvent)
   }
 
-  private def toExtendedDataEvent(appName: String, auditModel: AuditModel, path: String)(
-    implicit hc: HeaderCarrier): ExtendedDataEvent =
+  private def toExtendedDataEvent(appName: String,
+                                  auditModel: AuditModel,
+                                  path: String)(implicit hc: HeaderCarrier): ExtendedDataEvent =
     ExtendedDataEvent(
       auditSource = appName,
       auditType = auditModel.auditType,
       tags = AuditExtensions.auditHeaderCarrier(hc).toAuditTags(auditModel.transactionName, path),
-      detail = auditModel.detail
-    )
+      detail = auditModel.detail)
 
   private def logAuditResult(auditResult: AuditResult): Unit = auditResult match {
     case Success =>
       log.debug("Splunk Audit Successful")
+
     case Failure(err, _) =>
       log.debug(s"Splunk Audit Error, message: $err")
+
     case Disabled =>
       log.debug(s"Auditing Disabled")
   }

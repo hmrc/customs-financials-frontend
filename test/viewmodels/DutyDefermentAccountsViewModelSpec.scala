@@ -21,7 +21,6 @@ import domain.{
   AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
   DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
 }
-import org.joda.time.DateTime
 import org.scalatest.Assertion
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
@@ -32,6 +31,8 @@ import views.html.account_cards.{
   duty_deferment_balances, duty_deferment_inaccurate_balances_message
 }
 import views.html.components.{account_status, hidden_status}
+
+import java.time.LocalDateTime
 
 class DutyDefermentAccountsViewModelSpec extends SpecBase {
 
@@ -108,7 +109,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
           id = "payment-details-DAN01234",
           href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
           displayValue = msgs("cf.accounts.contact.details"),
-          hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234"),
+          hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234")
         )
       ),
 
@@ -118,7 +119,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
           classValue = "govuk-link",
           href = appConfig.dutyDefermentTopUpLink,
           displayValue = msgs("cf.accounts.topUp"),
-          hiddenMsg = msgs("cf.accounts.label.topUp", "DAN01234"),
+          hiddenMsg = msgs("cf.accounts.label.topUp", "DAN01234")
         )
       ),
       pendingAccountGuidance = None)
@@ -156,7 +157,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
     val dan1 = "DAN01234"
     val dan2 = "DAN43210"
 
-    val date: DateTime = DateTime.now()
+    val date: LocalDateTime = LocalDateTime.now()
     val sessionId = "test_session_id"
     val linkId = "test_link_id"
 

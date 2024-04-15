@@ -15,11 +15,13 @@
  *@
 
 @import domain.DutyDefermentAccount
+
 @this()
 
-@(dutyDefermentAccount: DutyDefermentAccount,
-    dutyDefermentAccountDDSetupLinks: Map[(String, String), String])(
-    implicit messages: Messages)
+@(
+    dutyDefermentAccount: DutyDefermentAccount,
+    dutyDefermentAccountDDSetupLinks: Map[(String, String), String]
+)(implicit messages: Messages)
 
     <div class="govuk-warning-text govuk-!-margin-top-3 govuk-!-margin-bottom-0">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>

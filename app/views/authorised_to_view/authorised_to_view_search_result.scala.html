@@ -15,6 +15,7 @@
  *@
 
 @import config.AppConfig
+@import utils.Utils.emptyString
 
 @this(
         layout: Layout,
@@ -44,7 +45,7 @@
 ) {
     @h1(messages("cf.search.authorities.result.title", query), classes = "govuk-heading-xl")
     @p(messages("cf.search.authorities.result.p1", searchedAuthorities.numberOfAuthorities,
-            if(searchedAuthorities.numberOfAuthorities == "1") {""} else { "s" }
+            if(searchedAuthorities.numberOfAuthorities == "1") {emptyString} else { "s" }
         )
     )
 
@@ -57,7 +58,7 @@
 
                 case AuthorisedDutyDefermentAccount(account, balances)
                     if((!balances.map(_.periodAvailableAccountBalance).isEmpty) && (
-                        balances.map(_.periodAvailableAccountBalance).headOption.getOrElse("") == "0.00")) =>
+                        balances.map(_.periodAvailableAccountBalance).headOption.getOrElse(emptyString) == "0.00")) =>
                     result_panel(account.accountType, account.accountNumber, None, balances.map(
                         _.periodAvailableGuaranteeBalance))
 

@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package views.components
+package domain
 
-import play.api.Application
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.test.Helpers._
-import play.twirl.api.HtmlFormat
 import utils.SpecBase
-import views.html.components.progress_bar
 
-class ProgressBarSpec extends SpecBase {
+class AccountsAndBalancesResponseContainerSpec extends SpecBase {
 
-  "ProgressBar" should {
+  "toCdsAccounts" should {
 
-    "should generate correct HTML" in {
-      val usedPercentage = 90
-      val app: Application = application().build()
+    "return empty accounts" when {
+      "there is no DD, GA and Cach accounts in the response" in {
 
-      running(app) {
-        val view = app.injector.instanceOf[progress_bar]
-        val output: HtmlFormat.Appendable = view(usedPercentage)
-        val html: Document = Jsoup.parse(contentAsString(output))
+        val eori = "GB12345678"
 
-        html.getElementsByTag("span").attr("class") must include("graph-90")
+        val accResponseWithNoAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
+          AccountsAndBalancesResponse(
+            None,
+            domain.AccountResponseDetail(
+              Some(eori),
+              None,
+              None,
+              None,
+              None))
+        )
+
+        accResponseWithNoAccounts.toCdsAccounts(eori) mustBe CDSAccounts(eori, isNiAccount = Some(false), Seq.empty)
       }
     }
   }

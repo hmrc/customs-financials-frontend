@@ -67,7 +67,7 @@ class EoriHistorySpec extends SpecBase {
 
   "toLoggable" should {
     "return correct string" in new Setup {
-      eoriHistoryOb.toLoggable() mustBe
+      eoriHistoryOb.toLoggable mustBe
         s"EoriHistory(Eori: ${obfuscateEori(eori)}, validFrom: Some(2023-10-08), validUntil: Some(2023-10-08))"
     }
   }

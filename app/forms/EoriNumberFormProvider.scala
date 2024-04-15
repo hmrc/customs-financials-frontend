@@ -25,6 +25,5 @@ class EoriNumberFormProvider extends Mappings {
     Form(
       "value" -> text("cf.search.authorities.error")
         .verifying(checkEORI("cf.search.authorities.error.invalid"))
-
     )
 }

@@ -17,13 +17,20 @@
 package views.components
 
 import config.AppConfig
-import domain.{AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSCashBalance, CashAccount, DefermentAccountAvailable, DirectDebitMandateCancelled}
+import domain.{
+  AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSCashBalance,
+  CashAccount, DefermentAccountAvailable, DirectDebitMandateCancelled
+}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
+import utils.TestData.{BALANCE_876, BALANCE_987, BALANCE_999}
 import views.html.account_cards.cash_account_cards
 
 class CashAccountCardSpec extends SpecBase {
@@ -56,7 +63,9 @@ class CashAccountCardSpec extends SpecBase {
 
     "generate a hidden suspended status for screen readers" in new Setup {
       running(app) {
-        val newCashAccount = CashAccount("123456", "owner", AccountStatusSuspended, DirectDebitMandateCancelled, CDSCashBalance(Some(BigDecimal(987))))
+        val newCashAccount = CashAccount("123456", "owner", AccountStatusSuspended, DirectDebitMandateCancelled,
+          CDSCashBalance(Some(BigDecimal(BALANCE_987))))
+
         val status = content(newCashAccount).select(".cash-account").first
 
         status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
@@ -65,26 +74,34 @@ class CashAccountCardSpec extends SpecBase {
 
     "generate a hidden closed status for screen readers" in new Setup {
       running(app) {
-        val newCashAccount = CashAccount("123456", "owner", AccountStatusClosed, AccountCancelled, CDSCashBalance(Some(BigDecimal(876))))
+        val newCashAccount = CashAccount("123456", "owner", AccountStatusClosed, AccountCancelled,
+          CDSCashBalance(Some(BigDecimal(BALANCE_876))))
         val status = content(newCashAccount).select(".cash-account").first
+
         status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
       }
     }
 
     "include a top up link" in new Setup {
       running(app) {
-        content(cashAccount).containsLinkWithText("https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations", "Top up")
+        content(cashAccount)
+          .containsLinkWithText("https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations",
+            "Top up")
       }
     }
   }
 
   trait Setup extends I18nSupport {
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
-    val cashAccount = CashAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(999))))
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    def content(cashAccount: CashAccount) = Jsoup.parse(app.injector.instanceOf[cash_account_cards].apply(Seq(cashAccount)).body)
+    val cashAccount: CashAccount =
+      CashAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable,
+        CDSCashBalance(Some(BigDecimal(BALANCE_999))))
+
+    def content(cashAccount: CashAccount): Document =
+      Jsoup.parse(app.injector.instanceOf[cash_account_cards].apply(Seq(cashAccount)).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

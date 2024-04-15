@@ -24,11 +24,12 @@
 
 <p id="balance-@accountAttribute" class="@accountAttribute govuk-body custom-card__balance">
     <span id="balance-amount-@accountAttribute" class="custom-card__balance-amount">
-    @{Formatters.formatCurrencyAmount(balance)}
+        @{Formatters.formatCurrencyAmount(balance)}
     </span>
+
     @if(balance > 0) {
      <span id="balance-text-@accountAttribute" class="custom-card__balance-text">
-     @messages("cf.available")
+        @messages("cf.available")
      </span>
     }
 </p>

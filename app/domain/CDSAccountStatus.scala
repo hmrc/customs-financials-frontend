@@ -42,7 +42,7 @@ object CDSAccountStatus {
 
   import play.api.Logger
 
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
   implicit val CDSAccountStatusReads: Format[CDSAccountStatus] = new Format[CDSAccountStatus] {
     override def writes(accountStatus: CDSAccountStatus): JsValue = JsString(accountStatus.name)

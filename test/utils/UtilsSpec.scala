@@ -24,6 +24,7 @@ import domain.StandingAuthorityFile
 import Utils._
 
 class UtilsSpec extends SpecBase {
+
   "isSearchQueryAnAccountNumber" should {
     "return true when input string is Account number" in new Setup {
       isSearchQueryAnAccountNumber(seven) mustBe true
@@ -57,6 +58,12 @@ class UtilsSpec extends SpecBase {
     }
   }
 
+  "asterisk" should {
+    "return correct value" in {
+      asterisk mustBe "*"
+    }
+  }
+
   "xiCsvFileNameRegEx" should {
     "return true when string matches the regex" in {
       "SA_XI_000000000154_csv.csv".matches(xiCsvFileNameRegEx) mustBe true
@@ -80,15 +87,15 @@ class UtilsSpec extends SpecBase {
       val standAuthMetadata: StandingAuthorityMetadata =
         StandingAuthorityMetadata(year, month, day, Csv, StandingAuthority)
 
-      val gbAuthFiles = Seq(
-        StandingAuthorityFile("SA_000000000153_csv.csv", "", size, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", "", size, standAuthMetadata, "GB123456789012"))
+      val gbAuthFiles: Seq[StandingAuthorityFile] = Seq(
+        StandingAuthorityFile("SA_000000000153_csv.csv", emptyString, size, standAuthMetadata, "GB123456789012"),
+        StandingAuthorityFile("SA_000000000154_csv.csv", emptyString, size, standAuthMetadata, "GB123456789012"))
 
-      val xiAuthFiles =
-        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", "", size, standAuthMetadata, "XI123456789012"),
-          StandingAuthorityFile("SA_XI_000000000154_csv.csv", "", size, standAuthMetadata, "XI123456789012"))
+      val xiAuthFiles: Seq[StandingAuthorityFile] =
+        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012"),
+          StandingAuthorityFile("SA_XI_000000000154_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012"))
 
-      val csvFileForBothGBAndXI = gbAuthFiles ++ xiAuthFiles
+      val csvFileForBothGBAndXI: Seq[StandingAuthorityFile] = gbAuthFiles ++ xiAuthFiles
 
       partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
         CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)

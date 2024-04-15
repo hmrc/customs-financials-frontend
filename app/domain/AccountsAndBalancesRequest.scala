@@ -23,4 +23,3 @@ case class AccountsAndBalancesRequest(requestCommon: AccountsRequestCommon, requ
 object AccountsAndBalancesRequest {
   implicit val format: OFormat[AccountsAndBalancesRequest] = Json.format[AccountsAndBalancesRequest]
 }
-

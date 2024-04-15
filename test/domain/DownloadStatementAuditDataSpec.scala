@@ -18,15 +18,15 @@ package domain
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+import utils.TestData.{DAY_2, DAY_20, FILE_SIZE_DEFAULT, MONTH_1, MONTH_2, YEAR_1972, YEAR_2010}
 
-//scalastyle:off magic.number
 class DownloadStatementAuditDataSpec extends SpecBase {
 
   "DownloadStatementAuditDataSpec.apply" should {
 
     "correctly map DutyDefermentStatementFileMetadata and include the eori" in {
       val dutyDefermentStatementFileMetadata = DutyDefermentStatementFileMetadata(
-        1972, 2, 20, 2010, 1, 2,
+        YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2,
         FileFormat.Pdf, FileRole.DutyDefermentStatement, DDStatementType.Weekly,
         Some(true), Some("GreenShieldStamps"), "12345678", Some("some request id")
       )
@@ -52,7 +52,7 @@ class DownloadStatementAuditDataSpec extends SpecBase {
 
     "correctly map VatCertificateFileMetadata and include the eori" in {
       val vatCertificateFileMetadata = VatCertificateFileMetadata(
-        2010, 1, FileFormat.Csv, FileRole.C79Certificate, None
+        YEAR_2010, MONTH_1, FileFormat.Csv, FileRole.C79Certificate, None
       )
 
       val sut = DownloadStatementAuditData(vatCertificateFileMetadata, "12345")
@@ -68,7 +68,7 @@ class DownloadStatementAuditDataSpec extends SpecBase {
 
     "correctly map PostponedVatCertificateFileMetadata and include the eori" in {
       val postponedVatCertificateFileMetadata = PostponedVatStatementFileMetadata(
-        2010, 2, FileFormat.Pdf, FileRole.PostponedVATStatement, "some HoDs", Some("some request Id")
+        YEAR_2010, MONTH_2, FileFormat.Pdf, FileRole.PostponedVATStatement, "some HoDs", Some("some request Id")
       )
 
       val sut = DownloadStatementAuditData(postponedVatCertificateFileMetadata, "12345")
@@ -85,8 +85,8 @@ class DownloadStatementAuditDataSpec extends SpecBase {
 
     "correctly map SecurityStatementFileMetadata and include the eori" in {
       val securityStatementFileMetadata = SecurityStatementFileMetadata(
-        1972, 2, 20, 2010, 1, 2, FileFormat.Csv, FileRole.SecurityStatement,
-        "GB1234567890", 1234L, "check it", Some("thing")
+        YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2, FileFormat.Csv, FileRole.SecurityStatement,
+        "GB1234567890", FILE_SIZE_DEFAULT, "check it", Some("thing")
       )
 
       val sut = DownloadStatementAuditData(securityStatementFileMetadata, "12345")

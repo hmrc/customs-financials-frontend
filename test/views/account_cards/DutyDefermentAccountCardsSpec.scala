@@ -21,7 +21,6 @@ import domain.{
   AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
   DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
 }
-import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
@@ -33,9 +32,12 @@ import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
+import java.time.LocalDateTime
+
 class DutyDefermentAccountCardsSpec extends SpecBase {
 
   "view" should {
+
     "display correct contents" when {
       "model has dutyDefermentAccounts and has only 1 DutyDefermentAccount for the eori" in new Setup {
         val model: FinancialsHomeModel = FinancialsHomeModel(eori1, None, accounts, Nil, accountLinks)
@@ -149,7 +151,8 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         isIsleOfMan = false)
 
     val accounts: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori2)))
-    val accountsWithEori1: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori1)))
+    val accountsWithEori1: Seq[CDSAccounts] =
+      Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori1)))
 
     val accountsWithEori1WithNiAccount: Seq[CDSAccounts] =
       Seq(
@@ -171,7 +174,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now())
+        lastUpdated = LocalDateTime.now())
     )
 
     val accountLinksWithNiAccount: Seq[AccountLink] = Seq(
@@ -183,10 +186,11 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusSuspended,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now())
+        lastUpdated = LocalDateTime.now())
     )
 
     def viewDoc(model: FinancialsHomeModel): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(DutyDefermentAccountsViewModel(model)).body)
+      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(
+        DutyDefermentAccountsViewModel(model)).body)
   }
 }

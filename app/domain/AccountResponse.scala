@@ -24,8 +24,7 @@ case class AccountResponse(number: String,
                            accountStatus: Option[CDSAccountStatus],
                            accountStatusID: Option[CDSAccountStatusId],
                            viewBalanceIsGranted: Boolean,
-                           isleOfManFlag: Option[Boolean] = Some(false)
-                          )
+                           isleOfManFlag: Option[Boolean] = Some(false))
 
 object AccountResponse {
   implicit val reads: Reads[AccountResponse] = Json.reads[AccountResponse]

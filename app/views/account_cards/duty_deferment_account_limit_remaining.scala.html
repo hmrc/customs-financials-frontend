@@ -20,6 +20,7 @@
 @this()
 
 @(account: DutyDefermentAccount, periodAvailableBalance: Boolean)(implicit messages: Messages)
+
 <dl class="@if(periodAvailableBalance) { limit-remaining} results search-results">
     @account.balances.periodAvailableAccountBalance.map{balance =>
         <div class="accountLimitRemaining search-results__item">
@@ -27,6 +28,7 @@
             <dd class="search-results__description">@{Formatters.formatCurrencyAmount(balance)}</dd>
         </div>
     }
+
     @account.balances.periodAvailableGuaranteeBalance.map{balance =>
         <div class="guaranteeLimitRemaining search-results__item">
             <dt class="search-results__term">@messages("cf.account.authorized-to-view.guarantee-limit-remaining")</dt>

@@ -66,7 +66,7 @@ object CDSAccountStatusId {
 
   import play.api.Logger
 
-  val logger = Logger(this.getClass)
+  val logger: Logger = Logger(this.getClass)
 
   private val values: Set[CDSAccountStatusId] = Set(
     DefermentAccountAvailable,
@@ -80,7 +80,7 @@ object CDSAccountStatusId {
     GuaranteeExceeded,
     AccountCancelled)
 
-  implicit val CDSAccountStatusIdReads = new Format[CDSAccountStatusId] {
+  implicit val CDSAccountStatusIdReads: Format[CDSAccountStatusId] = new Format[CDSAccountStatusId] {
     override def writes(accountStatusId: CDSAccountStatusId): JsValue = JsNumber(accountStatusId.value)
 
     override def reads(json: JsValue): JsResult[CDSAccountStatusId] = {
@@ -92,6 +92,7 @@ object CDSAccountStatusId {
               logger.warn(s"Invalid account status id: $statusId")
               DefermentAccountAvailable
             })
+
           case None =>
             logger.warn(s"No account status id in JSON")
             DefermentAccountAvailable

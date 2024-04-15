@@ -21,8 +21,8 @@ import utils.Utils.emptyString
 
 trait Constraints {
 
-  lazy val gbnEoriRegex: String = "GBN\\d{11}"
-  lazy val eoriRegex: String = "GB\\d{12}"
+  private lazy val gbnEoriRegex: String = "GBN\\d{11}"
+  private lazy val eoriRegex: String = "GB\\d{12}"
   lazy val xiEoriRegex: String = "XI\\d{12}"
   lazy val danRegex: String = "^[0-9]{7}"
   lazy val canRegex: String = "^[0-9]{11}"
@@ -40,6 +40,5 @@ trait Constraints {
       case _ => Invalid(invalidFormatErrorKey, eoriRegex)
     }
 
-  protected def stripWhitespace(str: String): String =
-    str.replaceAll("\\s", emptyString).toUpperCase
+  protected def stripWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase
 }

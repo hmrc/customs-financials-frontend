@@ -23,7 +23,7 @@ case class DutyDefermentAccountResponse(account: AccountResponse,
                                         isNiAccount: Option[Boolean] = Some(false),
                                         limits: Option[Limits], balances: Option[DefermentBalancesResponse]) {
 
-  def toDomain(): domain.DutyDefermentAccount = {
+  def toDomain: domain.DutyDefermentAccount = {
     val balance = domain.DutyDefermentBalance(
       limits.map(limit => BigDecimal(limit.periodGuaranteeLimit)),
       limits.map(limit => BigDecimal(limit.periodAccountLimit)),

@@ -30,6 +30,7 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.SpecBase
+import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022}
 
 import scala.concurrent.Future
 import scala.reflect.io.File
@@ -70,6 +71,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
@@ -98,6 +100,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
       ).configure("features.new-agent-view-enabled" -> true).build()
+
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
@@ -162,6 +165,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(app, request).value
+
         status(result) should be(OK)
       }
     }
@@ -176,6 +180,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
+
         status(result) should be(OK)
       }
     }
@@ -185,16 +190,16 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val fileObj1 = File("CS_000000000154_csv.csv")
-      val fileObj2 = File("CS_000000000152_csv.csv")
+      val fileObj1: File = File("CS_000000000154_csv.csv")
+      val fileObj2: File = File("CS_000000000152_csv.csv")
 
-      val fileObjectList = List(fileObj1, fileObj2)
+      val fileObjectList: List[File] = List(fileObj1, fileObj2)
 
       fileObjectList.sortWith((x1, x2) => x1.lastModified < x2.lastModified)
 
-      val filesWithNames = List("CS_000000000154_csv.csv",
+      val filesWithNames: List[EORI] = List("CS_000000000154_csv.csv",
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
-      val filesseperated = filesWithNames.map(x => x.split("_")(1))
+      val filesseperated: List[EORI] = filesWithNames.map(x => x.split("_")(1))
 
       filesseperated.sortWith(_ < _).headOption
 
@@ -233,7 +238,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe OK
+
         html.text().contains("Search results for GB123456789012") shouldBe true
         html.text().contains("£100.0") shouldBe true
         html.text().contains("£200.0") shouldBe true
@@ -265,7 +272,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe OK
+
         html.text().contains("Search results for GB123456789012") shouldBe true
         html.text().contains("£1000.00") shouldBe false
       }
@@ -274,6 +283,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return OK if there are no authorities returned and display the no authorities page" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(NoAuthorities)))
+
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
@@ -282,6 +292,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
+
         status(result) shouldBe OK
         html.text().contains("There are no matching result for 'GB123456789012'") shouldBe true
       }
@@ -670,43 +681,49 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
   trait Setup {
 
-    val dd1 = DutyDefermentAccount("1231231231", newUser().eori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", newUser().eori, isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)), Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))),
+      viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd2 = DutyDefermentAccount("7567567567", newUser().eori, false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", newUser().eori, isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)), None, None),
+      viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd3 = DutyDefermentAccount("7897897897", "testEori10", false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", "testEori10", isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val dd4 = DutyDefermentAccount("1112223334", "testEori11", false, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", "testEori11", isNiAccount = false,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)), None, None),
+      viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val xiDd = DutyDefermentAccount("1231231000", newUser().xiEori.get, true, AccountStatusOpen,
-      DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(200)), Some(BigDecimal(100)),
-        Some(BigDecimal(50)), Some(BigDecimal(20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val xiDd: DutyDefermentAccount = DutyDefermentAccount("1231231000", newUser().xiEori.get, isNiAccount = true,
+      AccountStatusOpen, DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))), viewBalanceIsGranted = true, isIsleOfMan = false)
 
-    val cashAccount1 = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable,
-      CDSCashBalance(Some(BigDecimal(100))))
+    val cashAccount1: CashAccount = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable,
+      CDSCashBalance(Some(BigDecimal(BALANCE_100))))
 
-    val cashAccount2 = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable,
+    val cashAccount2: CashAccount = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable,
       CDSCashBalance(None))
 
-    val ggAccount1 = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(500), BigDecimal(300))))
+    val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
+      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_500), BigDecimal(BALANCE_300))))
 
-    val ggAccount2 = GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
+    val ggAccount2: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
 
-    val accounts = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
-    val xiAccounts = List(xiDd)
+    val accounts: List[CDSAccount] = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
+    val xiAccounts: List[DutyDefermentAccount] = List(xiDd)
 
-    val cdsAccounts = CDSAccounts(newUser().eori, None, accounts)
-    val xiCdsAccounts = CDSAccounts(newUser().xiEori.get, None, xiAccounts)
-    val emptyCdsAccounts = CDSAccounts(newUser().eori, None, List())
+    val cdsAccounts: CDSAccounts = CDSAccounts(newUser().eori, None, accounts)
+    val xiCdsAccounts: CDSAccounts = CDSAccounts(newUser().xiEori.get, None, xiAccounts)
+    val emptyCdsAccounts: CDSAccounts = CDSAccounts(newUser().eori, None, List())
 
     val gbEORI = "GB123456789012"
     val xiEORI = "XI123456789012"
@@ -716,17 +733,18 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
     val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
 
-    val standAuthMetadata: StandingAuthorityMetadata = StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority)
+    val standAuthMetadata: StandingAuthorityMetadata =
+      StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority)
 
     val gbStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000153_csv.csv", gbStanAuthFile153Url, 500L, standAuthMetadata, gbEORI)
+      "SA_000000000153_csv.csv", gbStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
     val gbStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000154_csv.csv", gbStanAuthFile154Url, 500L, standAuthMetadata, gbEORI)
+      "SA_000000000154_csv.csv", gbStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
 
     val xiStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, 500L, standAuthMetadata, xiEORI)
+      "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
     val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, 500L, standAuthMetadata, xiEORI)
+      "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
 
     val emailId = "test@test.com"
 
@@ -743,7 +761,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any))
       .thenReturn(Future.successful(Seq.empty))
 
-    val app = application()
+    val app: Application = application()
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService),

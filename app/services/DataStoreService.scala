@@ -30,14 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DataStoreService @Inject()(http: HttpClient,
-                                 metricsReporter: MetricsReporterService)(
-  implicit appConfig: AppConfig, ec: ExecutionContext) {
+                                 metricsReporter: MetricsReporterService)
+                                (implicit appConfig: AppConfig, ec: ExecutionContext) {
 
-  val log = Logger(this.getClass)
+  val log: Logger = Logger(this.getClass)
 
   def getAllEoriHistory(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/eori-history"
     val emptyEoriHistory = Seq(EoriHistory(eori, None, None))
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
       http.GET[EoriHistoryResponse](dataStoreEndpoint).map(response => response.eoriHistory)
         .recover { case e =>
@@ -49,6 +50,7 @@ class DataStoreService @Inject()(http: HttpClient,
 
   def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/verified-email"
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       http.GET[EmailResponse](dataStoreEndpoint).map {
         case EmailResponse(Some(address), _, None) => Right(Email(address))
@@ -62,6 +64,7 @@ class DataStoreService @Inject()(http: HttpClient,
 
   def getCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       http.GET[CompanyInformationResponse](dataStoreEndpoint).map(
         response => if (response.consent == "1") Some(response.name) else None)
@@ -73,6 +76,7 @@ class DataStoreService @Inject()(http: HttpClient,
 
   def getOwnCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
     }.recover { case e =>
@@ -100,6 +104,7 @@ class DataStoreService @Inject()(http: HttpClient,
 
   def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
     val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.address))
     }.recover { case e =>
@@ -110,7 +115,8 @@ class DataStoreService @Inject()(http: HttpClient,
 }
 
 case class EmailResponse(address: Option[String],
-                         timestamp: Option[String], undeliverable: Option[UndeliverableInformation])
+                         timestamp: Option[String],
+                         undeliverable: Option[UndeliverableInformation])
 
 object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]
@@ -122,7 +128,9 @@ object EoriHistoryResponse {
   implicit val format: OFormat[EoriHistoryResponse] = Json.format[EoriHistoryResponse]
 }
 
-case class CompanyInformationResponse(name: String, consent: String, address: CompanyAddress)
+case class CompanyInformationResponse(name: String,
+                                      consent: String,
+                                      address: CompanyAddress)
 
 object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]

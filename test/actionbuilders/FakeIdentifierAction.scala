@@ -22,7 +22,8 @@ import play.api.mvc.{AnyContent, BodyParser, PlayBodyParsers, Request, Result}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers)(eoriHistory: Seq[EoriHistory]) extends IdentifierAction {
+class FakeIdentifierAction @Inject()(bodyParsers: PlayBodyParsers)(eoriHistory: Seq[EoriHistory])
+  extends IdentifierAction {
 
   lazy val newUser: SignedInUser = SignedInUser("testEori1", eoriHistory, Some("someAltEori"))
 

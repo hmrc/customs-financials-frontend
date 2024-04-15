@@ -16,9 +16,10 @@
 
 package domain
 
-import org.joda.time.DateTime
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+
+import java.time.LocalDateTime
 
 class AccountLinksSpec extends SpecBase {
 
@@ -67,8 +68,8 @@ class AccountLinksSpec extends SpecBase {
   "SessionCacheLink" should {
     "should be able to assign data to this SessionCache" in new Setup {
 
-      val res = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
-        Option(DebitRejectedAccountClosedOrTransferred), linkId)
+      val res: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
+        AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       res mustBe sessionCache
     }
@@ -86,14 +87,14 @@ trait Setup {
   val accountStatusId: Option[CDSAccountStatusId] = Option(DebitRejectedAccountClosedOrTransferred)
   val linkId: String = "someLinkId"
   val danId: String = "someDan"
-  lazy val lastUpdated: DateTime = DateTime.now()
+  lazy val lastUpdated: LocalDateTime = LocalDateTime.now()
 
-  val accountLink: AccountLink = AccountLink(sessionId, eori, false,
+  val accountLink: AccountLink = AccountLink(sessionId, eori, isNiAccount = false,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
     eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
 
-  val sessionCache = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
-    Option(DebitRejectedAccountClosedOrTransferred), linkId)
+  val sessionCache: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
+    AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
 }

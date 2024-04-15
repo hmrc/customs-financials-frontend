@@ -125,9 +125,11 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
     val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
       AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
     val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
       AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
         Some(AuthorisedBalances("100.0", "200.0")))
+
     val cashAccount: AuthorisedCashAccount =
       AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
   }

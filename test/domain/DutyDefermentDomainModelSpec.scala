@@ -16,11 +16,11 @@
 
 package domain
 
-import utils.SpecBase
 import domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import utils.SpecBase
+import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_50}
 
-//scalastyle:off magic.number
 class DutyDefermentDomainModelSpec extends SpecBase {
 
   "DutyDefermentDomainModel" should {
@@ -30,41 +30,44 @@ class DutyDefermentDomainModelSpec extends SpecBase {
         Some(AccountStatusOpen),
         Some(AccountStatusSuspended),
         Some(AccountStatusClosed),
-        None
-      )
-      val expectedDDBalance = DutyDefermentBalance(Some(BigDecimal(200)),
-        Some(BigDecimal(100)), Some(BigDecimal(50)), Some(BigDecimal(20)))
+        None)
 
-      val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", false, AccountStatusOpen,
+      val expectedDDBalance = DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)),
+        Some(BigDecimal(BALANCE_20)))
+
+      val expectedDDA = domain.DutyDefermentAccount("1231231231", "EORI12345678", isNiAccount = false, AccountStatusOpen,
         DefermentAccountAvailable, expectedDDBalance, viewBalanceIsGranted = false, isIsleOfMan = false)
 
-      val account = AccountResponse("1231231231", "", "EORI12345678",
+      val account = AccountResponse("1231231231", emptyString, "EORI12345678",
         accountStatus = None, None, viewBalanceIsGranted = false)
 
       val dda = DDA(account, Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
 
-      statusList.foreach { case status =>
+      statusList.foreach { status =>
         val dd = dda.copy(account = account.copy(accountStatus = status))
-        dd.toDomain() mustBe expectedDDA.copy(status = status.getOrElse(AccountStatusOpen))
+        dd.toDomain mustBe expectedDDA.copy(status = status.getOrElse(AccountStatusOpen))
       }
     }
 
     "correctly set DutyDefermentAccount domain model based isleOfManFlag" in {
-      val iomList = List(
-        Some(true),
-        Some(false),
-        None
-      )
+      val iomList = List(Some(true), Some(false), None)
 
-      val account = AccountResponse("1231231231", "", "EORI12345678", accountStatus = None,
+      val account = AccountResponse("1231231231", emptyString, "EORI12345678", accountStatus = None,
         accountStatusID = None, viewBalanceIsGranted = false, isleOfManFlag = None)
-      val dda = DDA(account, isIomAccount = Some(iomList.nonEmpty),
 
-        isNiAccount = Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
+      val dda = DDA(
+        account,
+        isIomAccount = Some(iomList.nonEmpty),
+        isNiAccount = Some(false),
+        Some(Limits("200", "100")),
+        Some(Bal("50", "20")))
 
-      iomList.foreach { case iom =>
+      iomList.foreach { iom =>
         val dd = dda.copy(isIomAccount = Some(iom.getOrElse(false)))
-        dd.toDomain().isIsleOfMan mustBe iom.getOrElse(false)
+        dd.toDomain.isIsleOfMan mustBe iom.getOrElse(false)
       }
     }
   }

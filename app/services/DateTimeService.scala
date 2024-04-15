@@ -17,6 +17,7 @@
 package services
 
 import config.AppConfig
+import utils.Constants._
 
 import java.time._
 import javax.inject.{Inject, Singleton}
@@ -24,11 +25,14 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DateTimeService @Inject()(appConfig: AppConfig) {
 
-  def getTimeStamp(): OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
+  def getTimeStamp: OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
 
   def systemDateTime(): LocalDateTime = {
     if (appConfig.fixedDateTime) {
-      LocalDateTime.of(LocalDate.of(2027, 12, 20), LocalTime.of(12, 30)) // scalastyle:ignore
+      LocalDateTime.of(
+        LocalDate.of(FIXED_DATE_TIME_YEAR, FIXED_DATE_TIME_MONTH, FIXED_DATE_TIME_DAY),
+        LocalTime.of(FIXED_DATE_TIME_HOUR_OF_DAY, FIXED_DATE_TIME_MINUTES_OF_HOUR)
+      )
     } else {
       LocalDateTime.now()
     }

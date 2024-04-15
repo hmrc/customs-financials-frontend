@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package domain
+package utils
 
-import controllers.OrderedByEoriHistory
-
-case class SecurityStatementsForEori(eoriHistory: EoriHistory,
-                                     currentStatements: Seq[SecurityStatementsByPeriod],
-                                     requestedStatements: Seq[SecurityStatementsByPeriod])
-  extends OrderedByEoriHistory[SecurityStatementsForEori]
+object Constants {
+  val FIXED_DATE_TIME_YEAR = 2027
+  val FIXED_DATE_TIME_MONTH = 12
+  val FIXED_DATE_TIME_DAY = 20
+  val FIXED_DATE_TIME_HOUR_OF_DAY = 12
+  val FIXED_DATE_TIME_MINUTES_OF_HOUR = 30
+}

@@ -19,7 +19,5 @@ package domain
 import domain.DutyPaymentMethod._
 
 object PostponedVat {
-
-  val sources = Seq(CDS, CHIEF)
-
+  val sources: Seq[String] = Seq(CDS, CHIEF)
 }

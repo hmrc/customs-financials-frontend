@@ -20,6 +20,7 @@ import connectors.CustomsFinancialsApiConnector
 import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import org.mockito.ArgumentMatchersSugar.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.inject.bind
 import play.api.test.Helpers._
 import services.MetricsReporterService
@@ -42,19 +43,20 @@ class EmailControllerSpec extends SpecBase {
     }
 
     "return undeliverable email" in new Setup {
-      val undeliverableResponse = EmailVerifiedResponse(Some("undeliverbaleEmail"))
-      val expectedUndeliverabeResult = EmailVerifiedResponse(Some("undeliverbaleEmail"))
-      val mockHttpClient = mock[HttpClient]
+      val undeliverableResponse: EmailVerifiedResponse = EmailVerifiedResponse(Some("undeliverbaleEmail"))
+      val expectedUndeliverabeResult: EmailVerifiedResponse = EmailVerifiedResponse(Some("undeliverbaleEmail"))
+      val mockHttpClient: HttpClient = mock[HttpClient]
+
       when[Future[EmailVerifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
         .thenReturn(Future.successful(undeliverableResponse))
 
-      override val app = application().overrides(
+      override val app: Application = application().overrides(
         bind[MetricsReporterService].toInstance(mockMetricsReporterService),
         bind[HttpClient].toInstance(mockHttpClient)
       ).build()
 
 
-      val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
       val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
 
@@ -83,28 +85,28 @@ class EmailControllerSpec extends SpecBase {
         bind[MetricsReporterService].toInstance(mockMetricsReporterService),
         bind[HttpClient].toInstance(mockHttpClient)
       ).build()
+
       val request = fakeRequest(GET, routes.EmailController.showUndeliverable().url)
       val result = route(app, request).value
-      status(result) shouldBe OK
 
+      status(result) shouldBe OK
     }
   }
 
   trait Setup {
-    val expectedResult = Some("unverifiedEmail")
+    val expectedResult: Option[String] = Some("unverifiedEmail")
     implicit val hc: HeaderCarrier = HeaderCarrier()
     private val mockHttpClient = mock[HttpClient]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
-    val response = EmailUnverifiedResponse(Some("unverifiedEmail"))
+    val response: EmailUnverifiedResponse = EmailUnverifiedResponse(Some("unverifiedEmail"))
 
     when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
       .thenReturn(Future.successful(response))
 
-    val app = application().overrides(
+    val app: Application = application().overrides(
       bind[MetricsReporterService].toInstance(mockMetricsReporterService),
       bind[HttpClient].toInstance(mockHttpClient)
     ).build()
-
   }
 }

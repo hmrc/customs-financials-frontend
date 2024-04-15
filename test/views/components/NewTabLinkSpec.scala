@@ -29,6 +29,7 @@ import views.html.components.newTabLink
 class NewTabLinkSpec extends SpecBase {
 
   "view" should {
+
     "display correct contents" when {
       "preLinkMessage is available" in new Setup {
         viewDoc.text().contains(msgs(preLinkMessage)) mustBe true

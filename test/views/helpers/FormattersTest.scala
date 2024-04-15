@@ -20,25 +20,27 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
+import utils.TestData.{FILE_SIZE_1000, FILE_SIZE_1000000, FILE_SIZE_42, FILE_SIZE_5430000, FILE_SIZE_999999}
 
 import java.time.{LocalDate, LocalDateTime}
-import java.util.Locale
 
 class FormattersTest extends SpecBase {
+
   implicit val messages: Messages = Helpers.stubMessages()
+
   "FileFormatters.fileSize" should {
     "Postfix `KB` for files from 1000 to 999999 bytes" in {
-      Formatters.fileSize(1000) mustBe "1KB"
-      Formatters.fileSize(999999) mustBe "999KB"
+      Formatters.fileSize(FILE_SIZE_1000) mustBe "1KB"
+      Formatters.fileSize(FILE_SIZE_999999) mustBe "999KB"
     }
 
     "Postfix `KB` for files less than 1000 bytes and set the value to `1`" in {
-      Formatters.fileSize(42) mustBe "1KB"
+      Formatters.fileSize(FILE_SIZE_42) mustBe "1KB"
     }
 
     "Postfix `MB` for files over 999999 bytes" in {
-      Formatters.fileSize(1000000) mustBe "1.0MB"
-      Formatters.fileSize(5430000) mustBe "5.4MB"
+      Formatters.fileSize(FILE_SIZE_1000000) mustBe "1.0MB"
+      Formatters.fileSize(FILE_SIZE_5430000) mustBe "5.4MB"
     }
   }
 
@@ -89,13 +91,6 @@ class FormattersTest extends SpecBase {
       Formatters.dateAsdMMMyyyy(date) mustBe "1 month.abbr.2 2020"
     }
   }
-
-  /*"DateFormatters.timeAsHourMinutesWithAmPm" should {
-    "format the date using hh:mm a pattern" in {
-      val date = LocalDateTime.parse("2020-04-08T12:30")
-      Formatters.timeAsHourMinutesWithAmPm(date) mustBe "12:30 pm"
-    }
-  }*/
 
   "DateFormatters.updatedDateTime" should {
     "format the date using hh:mm a on d MMMM yyyy pattern" in {

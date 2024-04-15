@@ -29,8 +29,8 @@ class OrderedByEoriHistorySpec extends SpecBase {
     "correctly compare two instances based on validFrom in EoriHistory" in new Setup {
       val eori1 = "EORI1"
       val eori2 = "EORI2"
-      val eoriHistory1 = EoriHistory(eori1, Some(LocalDate.parse("2022-01-01")), None)
-      val eoriHistory2 = EoriHistory(eori2, Some(LocalDate.parse("2023-01-01")), None)
+      val eoriHistory1: EoriHistory = EoriHistory(eori1, Some(LocalDate.parse("2022-01-01")), None)
+      val eoriHistory2: EoriHistory = EoriHistory(eori2, Some(LocalDate.parse("2023-01-01")), None)
 
       val obj1 = new TestClass(eoriHistory1)
       val obj2 = new TestClass(eoriHistory2)
@@ -42,8 +42,8 @@ class OrderedByEoriHistorySpec extends SpecBase {
 
     "return 1 when validFrom is not available for both instances" in new Setup {
       val eori = "EORI"
-      val eoriHistory1 = EoriHistory(eori, None, None)
-      val eoriHistory2 = EoriHistory(eori, None, None)
+      val eoriHistory1: EoriHistory = EoriHistory(eori, None, None)
+      val eoriHistory2: EoriHistory = EoriHistory(eori, None, None)
 
       val obj1 = new TestClass(eoriHistory1)
       val obj2 = new TestClass(eoriHistory2)

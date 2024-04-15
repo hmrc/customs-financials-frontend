@@ -21,7 +21,11 @@
     govukSummaryList: GovukSummaryList
 )
 
-@(accountLink: AccountLinkWithoutDate, ni: Boolean, linkText: String)(implicit messages: Messages, appConfig: AppConfig)
+@(
+    accountLink: AccountLinkWithoutDate,
+    ni: Boolean,
+    linkText: String
+)(implicit messages: Messages, appConfig: AppConfig)
 
 @govukSummaryList(SummaryList(
     attributes = Map("id" -> s"contact-account-list-${accountLink.accountNumber}"),

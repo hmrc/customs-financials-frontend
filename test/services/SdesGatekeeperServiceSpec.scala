@@ -23,9 +23,10 @@ import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
+import utils.TestData.{DAY_1, FILE_SIZE_DEFAULT, MONTH_6, YEAR_2022}
 
-//scalastyle:off magic.number
 class SdesGatekeeperServiceSpec extends SpecBase {
+
   implicit val messages: Messages = Helpers.stubMessages()
   "SdesGatekeeperService" should {
 
@@ -43,16 +44,16 @@ class SdesGatekeeperServiceSpec extends SpecBase {
       val fileInformationForStandingAuthorityCSV = domain.FileInformation(
         "authorities-2022-06.csv",
         "https://some.sdes.domain?token=abc123",
-        1234L,
+        FILE_SIZE_DEFAULT,
         Metadata(standingAuthorityFileMetadata)
       )
 
       val expectedStandingAuthorityFile = StandingAuthorityFile(
         "authorities-2022-06.csv",
         "https://some.sdes.domain?token=abc123",
-        1234L,
-        StandingAuthorityMetadata(2022, 6, 1, Csv, StandingAuthority), ""
-      )
+        FILE_SIZE_DEFAULT,
+        StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority),
+        emptyString)
 
       val standingAuthorityFile = sdesGatekeeperService.convertToStandingAuthoritiesFile(
         fileInformationForStandingAuthorityCSV)
@@ -61,4 +62,3 @@ class SdesGatekeeperServiceSpec extends SpecBase {
     }
   }
 }
-//scalastyle:on magic.number

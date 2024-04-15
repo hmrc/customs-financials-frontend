@@ -18,15 +18,17 @@ package views
 
 import config.AppConfig
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import org.scalatest.matchers.should.Matchers._
+import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.error_states.not_found_template
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class NotFoundTemplateSpec extends SpecBase {
 
@@ -61,12 +63,11 @@ class NotFoundTemplateSpec extends SpecBase {
   }
 
   trait Setup extends I18nSupport {
-    implicit val request = FakeRequest("GET", "/some/resource/path")
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    val view =
-      Jsoup.parse(app.injector.instanceOf[not_found_template].apply().body)
+    val view: Document = Jsoup.parse(app.injector.instanceOf[not_found_template].apply().body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

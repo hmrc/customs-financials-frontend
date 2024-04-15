@@ -19,7 +19,7 @@ package controllers
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.inject
+import play.api.{Application, inject}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.EmptyRetrieval
@@ -71,8 +71,8 @@ class UnauthorisedControllerSpec extends SpecBase {
   }
 
   trait Setup {
-    val mockAuthConnector = mock[AuthConnector]
-    val app = application().overrides(
+    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    val app: Application = application().overrides(
       inject.bind[AuthConnector].toInstance(mockAuthConnector)
     ).build()
   }

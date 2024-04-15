@@ -37,12 +37,12 @@ class SecureMessageConnector @Inject()(http: HttpClient,
 
   def getMessageCountBanner(returnToUrl: String)(implicit request: RequestHeader): Future[Option[HtmlPartial]] = {
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
+
     http.GET[HtmlPartial](appConfig.customsSecureMessagingBannerEndpoint, Seq(("return_to", returnToUrl)))
       .map {
         case success@HtmlPartial.Success(_, _) => Some(success)
         case HtmlPartial.Failure(_, _) => None
-      }
-      .recover {
+      }.recover {
         case exc =>
           log.error(s"Problem loading message banner partial: ${exc.getMessage}")
           None

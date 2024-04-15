@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
-import play.twirl.api.{HtmlFormat}
+import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import domain.{AccountStatusClosed, AccountStatusPending, AccountStatusSuspended, AccountStatusOpen}
 import views.html.components.account_status
@@ -29,7 +29,6 @@ import views.html.components.account_status
 class AccountStatusSpec extends SpecBase {
 
   "render correct status message for pending status" in new Setup {
-    val view = app.injector.instanceOf[account_status]
     val output: HtmlFormat.Appendable = view(
       status = AccountStatusPending,
       accountType = "duty-deferment"
@@ -40,7 +39,6 @@ class AccountStatusSpec extends SpecBase {
   }
 
   "render correct status message for closed status" in new Setup {
-    val view = app.injector.instanceOf[account_status]
     val output: HtmlFormat.Appendable = view(
       status = AccountStatusClosed,
       accountType = "duty-deferment"
@@ -51,7 +49,6 @@ class AccountStatusSpec extends SpecBase {
   }
 
   "render correct status message for suspended status" in new Setup {
-    val view = app.injector.instanceOf[account_status]
     val output: HtmlFormat.Appendable = view(
       status = AccountStatusSuspended,
       accountType = "duty-deferment"
@@ -62,7 +59,6 @@ class AccountStatusSpec extends SpecBase {
   }
 
   "not render status message for open duty-deferment status" in new Setup {
-    val view = app.injector.instanceOf[account_status]
     val output: HtmlFormat.Appendable = view(
       status = AccountStatusOpen,
       accountType = "duty-deferment"
@@ -74,5 +70,6 @@ class AccountStatusSpec extends SpecBase {
 
   trait Setup {
     val app: Application = application().build()
+    val view: account_status = app.injector.instanceOf[account_status]
   }
 }

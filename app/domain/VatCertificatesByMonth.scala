@@ -22,7 +22,8 @@ import views.helpers.Formatters
 
 import java.time.LocalDate
 
-case class VatCertificatesByMonth(date: LocalDate, files: Seq[VatCertificateFile])(implicit messages: Messages)
+case class VatCertificatesByMonth(date: LocalDate,
+                                  files: Seq[VatCertificateFile])(implicit messages: Messages)
   extends Ordered[VatCertificatesByMonth] {
 
   val formattedMonth: String = Formatters.dateAsMonth(date)

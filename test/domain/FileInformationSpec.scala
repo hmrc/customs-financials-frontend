@@ -19,6 +19,7 @@ package domain
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
+import utils.TestData.FILE_SIZE_DEFAULT
 
 class FileInformationSpec extends SpecBase {
 
@@ -42,7 +43,7 @@ class FileInformationSpec extends SpecBase {
       val expectedFileInformation = FileInformation(
         "pvat-2018-06.csv",
         "https://some.sdes.domain?token=abc123",
-        1234, // scalastyle:ignore magic.number
+        FILE_SIZE_DEFAULT,
         Metadata(List(
           MetadataItem("periodStartYear", "2018"),
           MetadataItem("periodStartMonth", "6"),
@@ -50,7 +51,9 @@ class FileInformationSpec extends SpecBase {
           MetadataItem("fileRole", "pvat")
         ))
       )
+
       val fileInformation = Json.parse(json).as[FileInformation]
+
       fileInformation must be(expectedFileInformation)
 
     }
@@ -59,7 +62,7 @@ class FileInformationSpec extends SpecBase {
       val fileInformation = domain.FileInformation(
         "pvat-2018-06.csv",
         "https://some.sdes.domain?token=abc123",
-        1234, // scalastyle:ignore magic.number
+        FILE_SIZE_DEFAULT,
         Metadata(List(
           MetadataItem("periodStartYear", "2018"),
           MetadataItem("periodStartMonth", "6"),
@@ -80,7 +83,9 @@ class FileInformationSpec extends SpecBase {
           |      { "metadata": "fileRole", "value": "pvat" }
           |    ]
           |  }""".stripMargin
+
       val json = Json.toJson(fileInformation)
+
       json must be(Json.parse(expectedJson))
     }
   }

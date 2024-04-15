@@ -18,28 +18,36 @@ package views.components
 
 import org.jsoup.Jsoup
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
 
 class HelpAndSupportMessageSpec extends SpecBase {
 
-  implicit val messages = Helpers.stubMessages()
+  implicit val messages: Messages = Helpers.stubMessages()
 
   "Help And Support card" should {
 
     "display a help and support message with heading class as non-default" in {
       val page = Jsoup.parse(views.html.components.help_and_support_message("govuk-heading-s").body)
-      page.getElementById("help_and_support").text mustBe "cf.help-and-support.title cf.account.help-support.message cf.account.help-support.numbers. cf.account.help-support.office-hours"
+
+      page.getElementById("help_and_support")
+        .text mustBe "cf.help-and-support.title cf.account.help-support.message" +
+        " cf.account.help-support.numbers. cf.account.help-support.office-hours"
+
       page.getElementsByClass("govuk-heading-s").isEmpty mustBe false
-      page.getElementById("contact-number").text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
+      page.getElementById("contact-number")
+        .text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
       page.getElementById("office-hours").text mustBe "cf.account.help-support.office-hours"
     }
 
     "display help and support message for default case" in {
       val page = Jsoup.parse(views.html.components.help_and_support_message().body)
+
       page.getElementById("help_and_support")
       page.getElementsByClass("govuk-heading-m").isEmpty mustBe false
-      page.getElementById("contact-number").text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
+      page.getElementById("contact-number")
+        .text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
       page.getElementById("office-hours").text mustBe "cf.account.help-support.office-hours"
     }
   }
