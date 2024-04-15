@@ -71,6 +71,7 @@ object TestData {
   val YEAR_2010 = 2010
   val YEAR_2017 = 2017
   val YEAR_2022 = 2022
+  val YEAR_2023 = 2023
   val YEAR_2027 = 2027
 
   val MONTH_1 = 1

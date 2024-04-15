@@ -16,9 +16,10 @@
 
 package domain
 
-import org.joda.time.DateTime
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+
+import java.time.LocalDateTime
 
 class AccountLinksSpec extends SpecBase {
 
@@ -86,7 +87,7 @@ trait Setup {
   val accountStatusId: Option[CDSAccountStatusId] = Option(DebitRejectedAccountClosedOrTransferred)
   val linkId: String = "someLinkId"
   val danId: String = "someDan"
-  lazy val lastUpdated: DateTime = DateTime.now()
+  lazy val lastUpdated: LocalDateTime = LocalDateTime.now()
 
   val accountLink: AccountLink = AccountLink(sessionId, eori, isNiAccount = false,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)

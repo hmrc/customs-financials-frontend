@@ -17,11 +17,7 @@
 package views.account_cards
 
 import config.AppConfig
-import domain.{
-  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
-  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
-}
-import org.joda.time.DateTime
+import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
@@ -32,6 +28,8 @@ import utils.SpecBase
 import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
+
+import java.time.LocalDateTime
 
 class DutyDefermentAccountCardsSpec extends SpecBase {
 
@@ -173,7 +171,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now())
+        lastUpdated = LocalDateTime.now())
     )
 
     val accountLinksWithNiAccount: Seq[AccountLink] = Seq(
@@ -185,7 +183,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusSuspended,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now())
+        lastUpdated = LocalDateTime.now())
     )
 
     def viewDoc(model: FinancialsHomeModel): Document =

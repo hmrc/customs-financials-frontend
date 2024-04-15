@@ -17,14 +17,7 @@
 package views.components
 
 import config.AppConfig
-import domain.{
-  AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending,
-  AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred,
-  DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount,
-  DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded,
-  ReturnedMailOther
-}
-import org.joda.time.DateTime
+import domain.{AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred, DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded, ReturnedMailOther}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -37,6 +30,8 @@ import utils.SpecBase
 import utils.TestData.{BALANCE_299, BALANCE_499, BALANCE_500, BALANCE_999, NEGATIVE_BALANCE_100}
 import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.html.account_cards.duty_deferment_account_cards
+
+import java.time.LocalDateTime
 
 class DutyDefermentAccountCardSpec extends SpecBase {
 
@@ -424,7 +419,7 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     val accountLinks: Seq[AccountLink] = Seq(AccountLink(
       sessionId = "sessionId", eori, isNiAccount = false, accountNumber = dan,
       linkId = "0123456789", accountStatus = AccountStatusOpen,
-      accountStatusId = Option(DefermentAccountAvailable), lastUpdated = DateTime.now))
+      accountStatusId = Option(DefermentAccountAvailable), lastUpdated = LocalDateTime.now))
 
     val model: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts = accounts,
       accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(emptyString))

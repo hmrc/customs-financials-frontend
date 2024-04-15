@@ -16,7 +16,7 @@
 
 package domain
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
 
 case class AccountLink(sessionId: String,
                        eori: EORI,
@@ -25,7 +25,7 @@ case class AccountLink(sessionId: String,
                        accountStatus: CDSAccountStatus,
                        accountStatusId: Option[CDSAccountStatusId],
                        linkId: String,
-                       lastUpdated: DateTime) {
+                       lastUpdated: LocalDateTime) {
 
   def this(id: String, sessionCacheAccountLink: SessionCacheAccountLink) = {
     this(id,
@@ -35,7 +35,7 @@ case class AccountLink(sessionId: String,
       sessionCacheAccountLink.accountStatus,
       sessionCacheAccountLink.accountStatusId,
       sessionCacheAccountLink.linkId,
-      DateTime.now()
+      LocalDateTime.now()
     )
   }
 }

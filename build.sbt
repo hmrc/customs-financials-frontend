@@ -74,8 +74,7 @@ val compileDependencies = Seq(
   ws,
   "org.typelevel" %% "cats-core" % "2.10.0",
   "uk.gov.hmrc" %% "tax-year" % "4.0.0",
-  "org.webjars.npm" % "moment" % "2.30.1",
-  "com.typesafe.play" %% "play-json-joda" % "2.10.4"
+  "org.webjars.npm" % "moment" % "2.30.1"
 )
 
 val testDependencies = Seq(

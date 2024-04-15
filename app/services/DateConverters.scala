@@ -19,8 +19,6 @@ package services
 import java.time.{LocalDate, ZoneId, ZoneOffset}
 import java.util.Date
 
-import org.joda.time
-
 object DateConverters {
   implicit def toLocalDate(date: Date): LocalDate = date.toInstant.atZone(ZoneId.systemDefault()).toLocalDate
 
@@ -28,7 +26,7 @@ object DateConverters {
     def compare(that: LocalDate): Int = date.compareTo(that)
   }
 
-  implicit def toJodaTime(date: LocalDate): time.LocalDate = {
-    new time.LocalDate(java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC)))
+  implicit def toJavaTime(date: LocalDate): LocalDate = {
+    java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC))
   }
 }

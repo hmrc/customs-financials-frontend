@@ -16,19 +16,16 @@
 
 package domain
 
-import org.joda.time.DateTime
 import play.api.libs.json.{Json, OFormat}
+
+import java.time.LocalDateTime
 
 case class UndeliverableInformation(subject: String,
                                     eventId: String,
                                     groupId: String,
-                                    timestamp: DateTime,
+                                    timestamp: LocalDateTime,
                                     event: UndeliverableInformationEvent)
 
 object UndeliverableInformation {
-
-  import play.api.libs.json.JodaReads._
-  import play.api.libs.json.JodaWrites._
-
   implicit val format: OFormat[UndeliverableInformation] = Json.format[UndeliverableInformation]
 }

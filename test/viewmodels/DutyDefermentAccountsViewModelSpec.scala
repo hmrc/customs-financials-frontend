@@ -17,17 +17,16 @@
 package viewmodels
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
-  DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
-import org.joda.time.DateTime
+import domain.{AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance}
 import org.scalatest.Assertion
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import views.html.account_cards.{duty_deferment_account_direct_debit_setup, duty_deferment_balance_details,
-  duty_deferment_balances, duty_deferment_inaccurate_balances_message}
+import views.html.account_cards.{duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances, duty_deferment_inaccurate_balances_message}
 import views.html.components.{account_status, hidden_status}
+
+import java.time.LocalDateTime
 
 class DutyDefermentAccountsViewModelSpec extends SpecBase {
 
@@ -152,7 +151,7 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase {
     val dan1 = "DAN01234"
     val dan2 = "DAN43210"
 
-    val date: DateTime = DateTime.now()
+    val date: LocalDateTime = LocalDateTime.now()
     val sessionId = "test_session_id"
     val linkId = "test_link_id"
 

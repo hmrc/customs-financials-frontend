@@ -21,7 +21,6 @@ import config.AppConfig
 import connectors.{CustomsFinancialsSessionCacheConnector, SecureMessageConnector}
 import domain.FileRole.{DutyDefermentStatement, PostponedVATAmendedStatement, StandingAuthority}
 import domain._
-import org.joda.time.DateTime
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Logger, LoggerLike}
@@ -34,6 +33,7 @@ import views.html.dashboard.{customs_financials_home, customs_financials_partial
 import views.html.error_states.account_not_available
 import utils.Utils.{emptyString, hyphen}
 
+import java.time.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -65,7 +65,11 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
         xiEori <- dataStoreService.getXiEori(eori)
         allAccounts <- getAllAccounts(eori, xiEori)
-        page <- if (allAccounts.nonEmpty) pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial) else redirectToPageWithoutAccounts()
+        page <- if (allAccounts.nonEmpty) {
+          pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial)
+        } else {
+          redirectToPageWithoutAccounts()
+        }
       } yield page
       result.recover {
         case TimeoutResponse =>
@@ -107,7 +111,8 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
       sessionId = hc.sessionId.getOrElse({
-        log.error("Missing SessionID"); SessionId("Missing Session ID")
+        log.error("Missing SessionID");
+        SessionId("Missing Session ID")
       })
       accountLinks = createAccountLinks(sessionId, cdsAccountsList)
       _ <- sessionCacheConnector.storeSession(sessionId.value, accountLinks)
@@ -128,7 +133,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
       cdsAccount.status,
       Option(cdsAccount.statusId),
       UUID.randomUUID().toString.replaceAll(hyphen, emptyString),
-      DateTime.now()
+      LocalDateTime.now()
     )
   } yield accountLink
 

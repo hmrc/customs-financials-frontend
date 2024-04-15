@@ -19,10 +19,10 @@ package utils
 import java.time.{LocalDate, ZoneId}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import services.DateConverters
+import utils.TestData.{DAY_2, MONTH_1, YEAR_2022, YEAR_2023}
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 
 class DateConvertersSpec extends SpecBase {
 
@@ -40,26 +40,21 @@ class DateConvertersSpec extends SpecBase {
     }
 
     "OrderLocalDate returns -1 when passed different date" in new Setup {
-      val diffDate: LocalDate = LocalDate.of(year2023, month, day)
+      val diffDate: LocalDate = LocalDate.of(YEAR_2023, MONTH_1, DAY_2)
       private val convert = DateConverters.OrderedLocalDate(localDate).compare(diffDate)
 
       convert mustBe -1
     }
 
     "toJodaTime will return correct date format value yyyy/mm/dd" in new Setup {
-      private val convert = DateConverters.toJodaTime(localDate)
+      private val convert = DateConverters.toJavaTime(localDate)
 
       convert.toString mustBe date.toInstant.atZone(ZoneId.systemDefault()).toLocalDate.toString
     }
   }
 
   trait Setup {
-    val year2022 = 2022
-    val year2023 = 2023
-    val month = 1
-    val day = 2
-
     val date: Date = new SimpleDateFormat("mm/dd/yyyy").parse("01/02/2022")
-    val localDate: LocalDate = LocalDate.of(year2022, month, day)
+    val localDate: LocalDate = LocalDate.of(YEAR_2022, MONTH_1, DAY_2)
   }
 }

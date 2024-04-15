@@ -18,7 +18,6 @@ package connectors
 
 import config.AppConfig
 import domain._
-import org.joda.time.DateTime
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
@@ -28,6 +27,7 @@ import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, SessionId}
 import utils.SpecBase
 
+import java.time.LocalDateTime
 import java.util.UUID
 import scala.concurrent.Future
 
@@ -128,9 +128,9 @@ class CustomsFinancialsSessionCacheConnectorSpec
 
     val someLinks: Seq[AccountLink] = Seq(
       AccountLink(sessionId.value, "eori1", isNiAccount = false, "dan1",
-        AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now),
+        AccountStatusOpen, Option(DefermentAccountAvailable), "link1", LocalDateTime.now),
       AccountLink(sessionId.value, "eori2", isNiAccount = false, "dan2",
-        AccountStatusClosed, Option(AccountCancelled), "link1", DateTime.now)
+        AccountStatusClosed, Option(AccountCancelled), "link1", LocalDateTime.now)
     )
 
     val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
@@ -140,7 +140,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val accountLink: AccountLink = AccountLink(sessionId.value, "eori1", isNiAccount = false, "1234567",
-      AccountStatusOpen, Option(DefermentAccountAvailable), "link1", DateTime.now)
+      AccountStatusOpen, Option(DefermentAccountAvailable), "link1", LocalDateTime.now)
 
     val sessionAccountCacheLink: SessionCacheAccountLink = SessionCacheAccountLink("eori1", isNiAccount = false,
       "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")

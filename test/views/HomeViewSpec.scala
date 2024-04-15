@@ -18,7 +18,6 @@ package views
 
 import config.AppConfig
 import domain.{AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
-import org.joda.time.DateTime
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.Application
@@ -32,6 +31,7 @@ import utils.SpecBase
 import viewmodels.FinancialsHomeModel
 import views.html.dashboard.customs_financials_home
 
+import java.time.LocalDateTime
 import scala.util.Random
 
 class HomeViewSpec extends SpecBase {
@@ -158,7 +158,7 @@ class HomeViewSpec extends SpecBase {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = DateTime.now()))
+        lastUpdated = LocalDateTime.now()))
 
     val modelWithAgentAccess: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
 
