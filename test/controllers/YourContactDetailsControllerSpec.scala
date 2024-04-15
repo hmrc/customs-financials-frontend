@@ -71,6 +71,24 @@ class YourContactDetailsControllerSpec extends SpecBase {
       redirectLocation(result) should be(Option(routes.CustomsFinancialsHomeController.index.url))
     }
 
+    "redirect to Home page if there is no sessionId present" in new Setup {
+      val sessionHeaderValue = "session_acf"
+
+      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
+        any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+
+      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
+        routes.YourContactDetailsController.onPageLoad().url,
+        sessionHeaderValue)
+
+      val result: Future[Result] = route(app, request).value
+
+      status(result) should be(SEE_OTHER)
+      redirectLocation(result) should be(Option(routes.CustomsFinancialsHomeController.index.url))
+    }
+
     "redirect to home page if sessionId is not found in cache" in new Setup {
       when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
         any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))

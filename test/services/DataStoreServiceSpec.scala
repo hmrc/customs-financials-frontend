@@ -17,7 +17,10 @@
 package services
 
 import config.AppConfig
-import domain.{CompanyAddress, EoriHistory, UnverifiedEmail, XiEoriAddressInformation}
+import domain.{
+  CompanyAddress, EoriHistory, UndeliverableInformation, UndeliverableInformationEvent, UnverifiedEmail,
+  XiEoriAddressInformation, UndeliverableEmail
+}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchersSugar.any
 import org.mockito.invocation.InvocationOnMock
@@ -29,7 +32,7 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
@@ -113,6 +116,64 @@ class DataStoreServiceSpec extends SpecBase {
         val response = service.getEmail(eori)
         val result = await(response)
         result mustBe Right(Email("someemail@mail.com"))
+      }
+    }
+
+    "return Left(UndeliverableEmail) when there is undeliverable info" in new Setup {
+      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
+        emptyString,
+        emptyString,
+        emptyString,
+        None,
+        None,
+        emptyString)
+
+      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
+        "test_event",
+        "test_event",
+        LocalDateTime.now(),
+        undeliverableEvent)
+
+      val emailAddress = "test"
+
+      val emailResponse: EmailResponse = EmailResponse(Some(emailAddress), None, Some(undeliverableInfo))
+
+      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(Json.toJson(emailResponse).as[EmailResponse]))
+
+      running(app) {
+        val response = service.getEmail(eori)
+        val result = await(response)
+
+        result mustBe Left(UndeliverableEmail(emailAddress))
+      }
+    }
+
+    "return Left(UnverifiedEmail) when there is no address in response" in new Setup {
+      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
+        emptyString,
+        emptyString,
+        emptyString,
+        None,
+        None,
+        emptyString)
+
+      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
+        "test_event",
+        "test_event",
+        LocalDateTime.now(),
+        undeliverableEvent)
+
+      val emailResponse: EmailResponse = EmailResponse(None, None, Some(undeliverableInfo))
+
+      when[Future[EmailResponse]](mockHttp.GET(any, any, any)(any, any, any)).thenReturn(
+        Future.successful(Json.toJson(emailResponse).as[EmailResponse]))
+
+      running(app) {
+        val response = service.getEmail(eori)
+        val result = await(response)
+
+        result mustBe Left(UnverifiedEmail)
       }
     }
 

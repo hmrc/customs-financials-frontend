@@ -145,6 +145,19 @@ class ApiServiceSpec
         }
       }
 
+      "return SearchError if the API returns empty response" in new Setup {
+        val httpResponse: JsValue = Json.parse("{}")
+
+        when[Future[HttpResponse]](mockHttpClient.POST(any, any, any)(any, any, any, any))
+          .thenReturn(Future.successful(HttpResponse.apply(OK, httpResponse.toString())))
+
+        running(app) {
+          val result = await(service.searchAuthorities(traderEori, traderEori))
+
+          result mustBe Left(SearchError)
+        }
+      }
+
       "return SearchedAuthorities if the API returns 200" in new Setup {
         val responseGuarantee: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
