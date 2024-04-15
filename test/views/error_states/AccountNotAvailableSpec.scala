@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package views.html.error_states
+package views.error_states
 
-import utils.SpecBase
 import config.AppConfig
-import org.jsoup.nodes.Document
-import play.api.i18n.Messages
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
+import play.api.i18n.Messages
+import play.api.mvc.AnyContentAsEmpty
+import play.api.test.FakeRequest
+import utils.SpecBase
 import views.html.error_states.account_not_available
-
 
 class AccountNotAvailableSpec extends SpecBase {
 
@@ -43,13 +43,13 @@ class AccountNotAvailableSpec extends SpecBase {
   }
 
   trait Setup {
-    val app = application().build()
+    val app: Application = application().build()
     val eori = "GB000000000001"
-    val notificationMessageKeys = Seq("key1", "key2")
+    val notificationMessageKeys: Seq[String] = Seq("key1", "key2")
 
-    implicit val appConfig = app.injector.instanceOf[config.AppConfig]
+    implicit val appConfig: AppConfig = app.injector.instanceOf[config.AppConfig]
     implicit val msg: Messages = messages(app)
-    implicit val request = FakeRequest("GET", "/some/resource/path")
+    implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
     val view: Document = Jsoup.parse(
       app.injector.instanceOf[account_not_available].apply(eori, notificationMessageKeys).body

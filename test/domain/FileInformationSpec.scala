@@ -51,7 +51,9 @@ class FileInformationSpec extends SpecBase {
           MetadataItem("fileRole", "pvat")
         ))
       )
+
       val fileInformation = Json.parse(json).as[FileInformation]
+
       fileInformation must be(expectedFileInformation)
 
     }
@@ -81,7 +83,9 @@ class FileInformationSpec extends SpecBase {
           |      { "metadata": "fileRole", "value": "pvat" }
           |    ]
           |  }""".stripMargin
+
       val json = Json.toJson(fileInformation)
+
       json must be(Json.parse(expectedJson))
     }
   }

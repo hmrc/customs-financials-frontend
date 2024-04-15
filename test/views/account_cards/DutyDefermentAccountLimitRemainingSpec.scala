@@ -30,6 +30,7 @@ import views.html.account_cards.duty_deferment_account_limit_remaining
 class DutyDefermentAccountLimitRemainingSpec extends SpecBase {
 
   "view" should {
+
     "display correct contents" when {
       "periodAvailableAccountBalance has some value" in new Setup {
         val availableAccountBalanceText: String = viewDoc(

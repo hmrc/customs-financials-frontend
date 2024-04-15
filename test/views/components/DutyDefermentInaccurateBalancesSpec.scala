@@ -18,12 +18,16 @@ package views.components
 
 import config.AppConfig
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import play.api.Application
+import play.api.i18n.Messages
 import play.api.test.Helpers
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.account_cards.duty_deferment_inaccurate_balances_message
 
 class DutyDefermentInaccurateBalancesSpec extends SpecBase {
+
   "Duty deferment inaccurate balances warning message" should {
     "have an id 'duty-deferment-balances-warning'" in new Setup {
       running(app) {
@@ -33,9 +37,9 @@ class DutyDefermentInaccurateBalancesSpec extends SpecBase {
   }
 
   trait Setup {
-    val app = application().build()
-    implicit val appConfig = app.injector.instanceOf[AppConfig]
-    implicit val messages = Helpers.stubMessages()
-    val view = Jsoup.parse(app.injector.instanceOf[duty_deferment_inaccurate_balances_message].apply().body)
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    implicit val messages: Messages = Helpers.stubMessages()
+    val view: Document = Jsoup.parse(app.injector.instanceOf[duty_deferment_inaccurate_balances_message].apply().body)
   }
 }

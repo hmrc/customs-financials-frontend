@@ -94,7 +94,7 @@ class AccountsAndBalanceSpec extends SpecBase {
     "be able to generate common request without PID and originatingSystem when 'useACC27' is true" in {
       val requestDud09 = AccountsRequestCommon.generate
       requestDud09.receiptDate.isEmpty mustBe false
-      requestDud09.acknowledgementReference.size mustBe 32
+      requestDud09.acknowledgementReference.length mustBe 32
       requestDud09.regime mustBe CDS
     }
 
@@ -105,7 +105,6 @@ class AccountsAndBalanceSpec extends SpecBase {
       val fromJson = Json.fromJson[CDSAccountStatusId](js).get
 
       fromJson mustBe initialAccountStatusID
-
     }
   }
 }

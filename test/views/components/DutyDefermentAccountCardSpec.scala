@@ -119,13 +119,15 @@ class DutyDefermentAccountCardSpec extends SpecBase {
 
     "not include account limit remaining" in new Setup {
       running(app) {
-        content(dutyDefermentAccountWithoutBalances).getElementsByClass("account-limit-remaining").size() mustBe 0
+        content(dutyDefermentAccountWithoutBalances)
+          .getElementsByClass("account-limit-remaining").size() mustBe 0
       }
     }
 
     "not include guarantee limit remaining" in new Setup {
       running(app) {
-        content(dutyDefermentAccountWithoutBalances).getElementsByClass("account-limit-remaining").size() mustBe 0
+        content(dutyDefermentAccountWithoutBalances)
+          .getElementsByClass("account-limit-remaining").size() mustBe 0
       }
     }
 
@@ -162,7 +164,8 @@ class DutyDefermentAccountCardSpec extends SpecBase {
     "account is open" should {
       "not display open account status" in new Setup {
         running(app) {
-          content(dutyDefermentAccountOpen).getElementsByClass("duty-deferment-account-status").isEmpty mustBe true
+          content(dutyDefermentAccountOpen)
+            .getElementsByClass("duty-deferment-account-status").isEmpty mustBe true
         }
       }
     }

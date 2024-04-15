@@ -106,6 +106,7 @@ class CustomsAccountsSpec extends SpecBase {
         (AccountCancelled, false, false),
         (AccountCancelled, true, false)
       )
+
       "return correct requiredDirectDebit status" in new Setup {
         forAll(values) {
           (statusId: CDSAccountStatusId, isleOfManFlag: Boolean, expectedResult: Boolean) => {

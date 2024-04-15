@@ -21,7 +21,9 @@ import utils.SpecBase
 import views.helpers.Formatters
 
 class CDSAccountSpec extends SpecBase {
+
   "DutyDefermentAccount.displayBalances" should {
+
     "return correct output" when {
       "periodAccountLimit is greater than 0 and periodGuaranteeLimit is 0 " in new Setup {
         ddAccount.displayBalances(

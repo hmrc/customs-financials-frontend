@@ -31,6 +31,7 @@ import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_search
 
 class AuthorisedToViewSearchSpec extends SpecBase {
+  
   "AuthorisedToViewSearch view" should {
     "display correct title and guidance" in new SetUp {
       val view: Document = Jsoup.parse(

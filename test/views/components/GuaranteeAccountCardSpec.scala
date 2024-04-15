@@ -115,7 +115,8 @@ class GuaranteeAccountCardSpec extends SpecBase {
       "hidden status-description for screen readers" in new Setup {
         running(app) {
           val status = content(newGuaranteeAccount).select(".guarantee-account").first
-          status.getElementsByTag("span").first.getElementsByClass("govuk-visually-hidden").isEmpty mustBe false
+          status.getElementsByTag("span").first
+            .getElementsByClass("govuk-visually-hidden").isEmpty mustBe false
         }
       }
 
@@ -149,7 +150,9 @@ class GuaranteeAccountCardSpec extends SpecBase {
   }
 
   trait Setup extends I18nSupport {
-    implicit val csrfRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest("GET", "/some/resource/path")
+    implicit val csrfRequest: FakeRequest[AnyContentAsEmpty.type] =
+      fakeRequest("GET", "/some/resource/path")
+
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 

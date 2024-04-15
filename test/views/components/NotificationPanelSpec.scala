@@ -85,7 +85,9 @@ class NotificationPanelSpec extends SpecBase {
       "new requested duty deferment statement is available " in {
         val messageKeys = List("cf.customs-financials-home.notification.requested-duty-deferment")
         val expected =
-          List("cf.customs-financials-home.notification.cf.customs-financials-home.notification.requested-duty-deferment")
+          List(
+            "cf.customs-financials-home.notification.cf.customs-financials-home.notification.requested-duty-deferment"
+          )
 
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
@@ -123,7 +125,8 @@ class NotificationPanelSpec extends SpecBase {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.getElementsContainingText("You have a new Postponed import VAT statement").isEmpty mustBe true
+        content
+          .getElementsContainingText("You have a new Postponed import VAT statement").isEmpty mustBe true
       }
     }
 

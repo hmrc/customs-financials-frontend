@@ -27,6 +27,7 @@ import views.html.components.confirmation_panel
 class ConfirmationPanelSpec extends SpecBase {
 
   "view" should {
+
     "display correct contents" when {
       "body and id have some value" in new Setup {
         val view: Document = viewDoc(h1, Some(body), Some(id))
@@ -69,10 +70,11 @@ class ConfirmationPanelSpec extends SpecBase {
 
     def viewDoc(h1: String,
                 body: Option[String] = None,
-                id: Option[String] = None): Document = Jsoup.parse(app.injector.instanceOf[confirmation_panel].apply(
-      h1,
-      body,
-      id
-    ).body)
+                id: Option[String] = None): Document =
+      Jsoup.parse(app.injector.instanceOf[confirmation_panel].apply(
+        h1,
+        body,
+        id
+      ).body)
   }
 }

@@ -67,8 +67,8 @@ class AccountLinksSpec extends SpecBase {
   "SessionCacheLink" should {
     "should be able to assign data to this SessionCache" in new Setup {
 
-      val res = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
-        Option(DebitRejectedAccountClosedOrTransferred), linkId)
+      val res: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
+        AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
 
       res mustBe sessionCache
     }
@@ -88,12 +88,12 @@ trait Setup {
   val danId: String = "someDan"
   lazy val lastUpdated: DateTime = DateTime.now()
 
-  val accountLink: AccountLink = AccountLink(sessionId, eori, false,
+  val accountLink: AccountLink = AccountLink(sessionId, eori, isNiAccount = false,
     accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
   val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
     eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
 
-  val sessionCache = SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
-    Option(DebitRejectedAccountClosedOrTransferred), linkId)
+  val sessionCache: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
+    AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
 }

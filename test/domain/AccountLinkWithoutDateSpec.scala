@@ -23,12 +23,11 @@ class AccountLinkWithoutDateSpec extends SpecBase {
 
   "AccountLinkWithoutDate" should {
     "be serializable and deserializable to/from JSON" in {
-      val accountLinkWithoutDate = AccountLinkWithoutDate("EORI123456", isNiAccount = true, "123456", "Active", Some(1), "linkId123")
+      val accountLinkWithoutDate =
+        AccountLinkWithoutDate("EORI123456", isNiAccount = true, "123456", "Active", Some(1), "linkId123")
 
-      // Serialize the AccountLinkWithoutDate object to JSON
       val jsonAccountLinkWithoutDate: JsValue = Json.toJson(accountLinkWithoutDate)
 
-      // Verify the JSON structure and values
       (jsonAccountLinkWithoutDate \ "eori").as[String] shouldBe "EORI123456"
       (jsonAccountLinkWithoutDate \ "isNiAccount").as[Boolean] shouldBe true
       (jsonAccountLinkWithoutDate \ "accountNumber").as[String] shouldBe "123456"
@@ -36,10 +35,8 @@ class AccountLinkWithoutDateSpec extends SpecBase {
       (jsonAccountLinkWithoutDate \ "accountStatusId").asOpt[Int] shouldBe Some(1)
       (jsonAccountLinkWithoutDate \ "linkId").as[String] shouldBe "linkId123"
 
-      // Deserialize the JSON back to AccountLinkWithoutDate object
       val parsedAccountLinkWithoutDate = jsonAccountLinkWithoutDate.as[AccountLinkWithoutDate]
 
-      // Verify the deserialized AccountLinkWithoutDate object
       parsedAccountLinkWithoutDate shouldBe accountLinkWithoutDate
     }
   }
