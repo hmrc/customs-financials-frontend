@@ -16,14 +16,14 @@
 
 package views.components
 
-import play.api.Application
+import domain.{AccountStatusClosed, AccountStatusOpen, AccountStatusPending, AccountStatusSuspended}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import play.api.Application
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
-import domain.{AccountStatusClosed, AccountStatusPending, AccountStatusSuspended, AccountStatusOpen}
 import views.html.components.account_status
 
 class AccountStatusSpec extends SpecBase {
@@ -35,7 +35,9 @@ class AccountStatusSpec extends SpecBase {
     )(messages(app))
 
     val html: Document = Jsoup.parse(contentAsString(output))
+
     html.getElementsByClass("duty-deferment-status").text() must include("Pending Opening On CDS")
+    Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
   "render correct status message for closed status" in new Setup {
@@ -45,7 +47,9 @@ class AccountStatusSpec extends SpecBase {
     )(messages(app))
 
     val html: Document = Jsoup.parse(contentAsString(output))
+
     html.getElementsByClass("duty-deferment-status").text() must include("Closed")
+    Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
   "render correct status message for suspended status" in new Setup {
@@ -55,7 +59,9 @@ class AccountStatusSpec extends SpecBase {
     )(messages(app))
 
     val html: Document = Jsoup.parse(contentAsString(output))
+
     html.getElementsByClass("duty-deferment-status").text() must include("Action Required")
+    Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
   "not render status message for open duty-deferment status" in new Setup {
@@ -65,7 +71,9 @@ class AccountStatusSpec extends SpecBase {
     )(messages(app))
 
     val html: Document = Jsoup.parse(contentAsString(output))
+
     html.getElementsByTag("body").text() mustNot include("Open Status Message")
+    Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
   trait Setup {
