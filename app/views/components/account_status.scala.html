@@ -23,11 +23,11 @@
 
 @if(!status.isOpen) {
     @if((accountType eq "duty-deferment") && (status.isSuspended || status.isPending )) {
-        <span class="@{status.statusAttribute} card-header__status @accountType-status" aria-hidden="true">
+        <span class="@{status.statusAttribute} account-status-header card-header__status @accountType-status" aria-hidden="true">
             @messages(s"cf.duty-deferment.status.$status")
         </span>
     } else {
-        <span class="@{status.statusAttribute} card-header__status @accountType-status" aria-hidden="true">
+        <span class="@{status.statusAttribute} account-status-header card-header__status @accountType-status" aria-hidden="true">
             @messages(s"cf.account.status.$status")
         </span>
     }
