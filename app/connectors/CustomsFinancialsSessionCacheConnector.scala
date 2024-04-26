@@ -35,7 +35,6 @@ object AccountLinksRequest {
   implicit val format: OFormat[AccountLinksRequest] = Json.format[AccountLinksRequest]
 }
 
-
 class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
                                                        appConfig: AppConfig,
                                                        metricsReporter: MetricsReporterService)

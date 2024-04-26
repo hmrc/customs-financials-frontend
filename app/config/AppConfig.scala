@@ -58,6 +58,11 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
   lazy val manageAuthoritiesFrontendUrl: String =
     config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
 
+  lazy val manageAuthoritiesServiceUrl = s"${servicesConfig.baseUrl("customs-manage-authorities-frontend")}${
+    config.get[String](
+      "microservice.services.customs-manage-authorities-frontend.context")
+  }"
+
   lazy val guaranteeAccountUrl: String =
     config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
 

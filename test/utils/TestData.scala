@@ -104,4 +104,6 @@ object TestData {
   val LENGTH_8 = 8
   val LENGTH_11 = 11
   val LENGTH_27 = 27
+
+  val TEST_EORI = "GB12345678"
 }
