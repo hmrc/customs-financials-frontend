@@ -18,7 +18,7 @@ package controllers
 
 import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
 import config.AppConfig
-import connectors.{CustomsFinancialsSessionCacheConnector, SecureMessageConnector}
+import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthoritiesConnector, SecureMessageConnector}
 import domain.FileRole.{DutyDefermentStatement, PostponedVATAmendedStatement, StandingAuthority}
 import domain._
 import play.api.i18n.I18nSupport
@@ -50,6 +50,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 accountNotAvailable: account_not_available,
                                                 sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
                                                 secureMessageConnector: SecureMessageConnector,
+                                                customsManageAuthConnector:CustomsManageAuthoritiesConnector,
                                                 implicit val mcc: MessagesControllerComponents)
                                                (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -65,6 +66,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
         xiEori <- dataStoreService.getXiEori(eori)
         allAccounts <- getAllAccounts(eori, xiEori)
+        _ <- customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
         page <- if (allAccounts.nonEmpty) {
           pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial)
         } else {

@@ -17,20 +17,17 @@
 package controllers
 
 import config.AppConfig
-import connectors.CustomsFinancialsSessionCacheConnector
-import domain.FileRole.{
-  C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement,
-  SecurityStatement, StandingAuthority
-}
-import domain.{
-  AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
-}
+import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthoritiesConnector}
+import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement,
+  SecurityStatement, StandingAuthority}
+import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
+  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages
+import play.api.mvc.Results.Ok
 import play.api.{Application, inject}
 import play.api.test.Helpers
 import play.api.test.Helpers._
@@ -482,6 +479,7 @@ class HomeControllerSpec extends SpecBase {
     val mockNotificationService: NotificationService = mock[NotificationService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
+    val mockManageAuthoritiesConnector: CustomsManageAuthoritiesConnector = mock[CustomsManageAuthoritiesConnector]
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
     when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(mockAccounts))
@@ -500,6 +498,8 @@ class HomeControllerSpec extends SpecBase {
       Future.successful(HttpResponse(Status.OK, emptyString)))
 
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+    when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
+      .thenReturn(Future.successful(Ok))
 
     val app: Application = application().overrides(
       inject.bind[CDSAccounts].toInstance(mockAccounts),
