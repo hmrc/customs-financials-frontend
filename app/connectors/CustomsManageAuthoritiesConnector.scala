@@ -22,7 +22,6 @@ import play.api.Logging
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK}
 import play.api.mvc.Results.{InternalServerError, Ok, ServiceUnavailable}
 import play.api.mvc.{RequestHeader, Results}
-import services.MetricsReporterService
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
@@ -32,7 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsManageAuthoritiesConnector @Inject()(httpClient: HttpClient,
                                                   appConfig: AppConfig,
-                                                  metricsReporter: MetricsReporterService,
                                                   headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
                                                  (implicit executionContext: ExecutionContext) extends Logging {
 
