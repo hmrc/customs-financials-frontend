@@ -60,6 +60,12 @@ class AppConfigSpec extends SpecBase {
     }
   }
 
+  "manageAuthoritiesServiceUrl" should {
+    "return the correct service url" in new Setup {
+      appConfig.manageAuthoritiesServiceUrl shouldBe "http://localhost:9000/customs/manage-authorities"
+    }
+  }
+
   trait Setup {
     val app: Application = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
