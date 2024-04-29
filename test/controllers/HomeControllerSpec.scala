@@ -18,19 +18,23 @@ package controllers
 
 import config.AppConfig
 import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthoritiesConnector}
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement,
-  SecurityStatement, StandingAuthority}
-import domain.{AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation}
+import domain.FileRole.{
+  C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement,
+  SecurityStatement, StandingAuthority
+}
+import domain.{
+  AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
+  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
+}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchersSugar.{any, eqTo}
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Results.Ok
-import play.api.{Application, inject}
 import play.api.test.Helpers
 import play.api.test.Helpers._
+import play.api.{Application, inject}
 import services._
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{GatewayTimeoutException, HttpResponse, InternalServerException, SessionId}
@@ -38,8 +42,8 @@ import utils.SpecBase
 import utils.TestData.{BALANCE_888, LENGTH_8}
 import viewmodels.FinancialsHomeModel
 
-import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
+import scala.jdk.CollectionConverters._
 import scala.util.Random
 
 class HomeControllerSpec extends SpecBase {
@@ -336,12 +340,14 @@ class HomeControllerSpec extends SpecBase {
       val mockApiService = mock[ApiService]
       val mockNotificationService = mock[NotificationService]
       val mockDataStoreService = mock[DataStoreService]
+      val mockManageAuthoritiesConnector = mock[CustomsManageAuthoritiesConnector]
 
       val app = application().overrides(
         inject.bind[CDSAccounts].toInstance(mockAccounts),
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
       ).build()
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(
@@ -352,9 +358,13 @@ class HomeControllerSpec extends SpecBase {
       when(mockApiService.getAccounts(any)(any)).thenReturn(
         Future.failed(new InternalServerException("SPS is Down")))
 
+      when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
+        .thenReturn(Future.successful(Ok))
+
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
+
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts.url
       }
@@ -369,6 +379,7 @@ class HomeControllerSpec extends SpecBase {
       running(app) {
         val notifications = List(Notification(C79Certificate, isRequested = false))
         val actualResult: Seq[String] = controller.getNotificationMessageKeys(notifications)
+
         actualResult mustBe Seq("c79")
       }
     }
@@ -380,6 +391,7 @@ class HomeControllerSpec extends SpecBase {
       running(app) {
         val notifications = List(Notification(PostponedVATAmendedStatement, isRequested = true))
         val actualResult: Seq[String] = controller.getNotificationMessageKeys(notifications)
+
         actualResult mustBe Seq()
       }
     }
@@ -506,7 +518,8 @@ class HomeControllerSpec extends SpecBase {
       inject.bind[ApiService].toInstance(mockApiService),
       inject.bind[NotificationService].toInstance(mockNotificationService),
       inject.bind[DataStoreService].toInstance(mockDataStoreService),
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
+      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
+      inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector),
     ).build()
   }
 }
