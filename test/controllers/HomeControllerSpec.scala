@@ -519,7 +519,7 @@ class HomeControllerSpec extends SpecBase {
       inject.bind[NotificationService].toInstance(mockNotificationService),
       inject.bind[DataStoreService].toInstance(mockDataStoreService),
       inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
-      inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector),
+      inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
     ).build()
   }
 }
