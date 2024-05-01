@@ -59,14 +59,17 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
 
   def index: Action[AnyContent] = (authenticate andThen checkEmailIsVerified).async {
     implicit request =>
+
       val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
       val eori = request.user.eori
+
+      customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
+
       val result = for {
         _ <- auditingService.viewAccount(request.user)
         maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
         xiEori <- dataStoreService.getXiEori(eori)
         allAccounts <- getAllAccounts(eori, xiEori)
-        _ <- customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
         page <- if (allAccounts.nonEmpty) {
           pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial)
         } else {
