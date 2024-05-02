@@ -6,7 +6,7 @@ language.english = English
 language.change.english=Change the language to English
 
 # Overall service name for GOV.UK header
-service.name=Bwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+service.name=Rheoli tollau mewnforio a chyfrifon TAW
 cf.service-name=Eich datganiadau tollau
 cf.eori=Rhif EORI:
 cf.account-number=Cyfrif:
@@ -142,7 +142,7 @@ cf.not-subscribed-to-cds.detail.subscribe-cds.title=Tanysgrifio i’r CDS
 cf.not-subscribed-to-cds.detail.subscribe-cds.link=Tanysgrifio i’r Gwasanaeth Datganiadau Tollau.
 
 # Customs Financials Home Page
-cf.customs-financials-home.title=Eich cyfrifon ariannol ar gyfer y tollau
+cf.customs-financials-home.title=Eich tollau mewnforio a’ch cyfrifon TAW
 cf.customs-financials-home.duty-deferment.title=Cyfrif gohirio tollau
 cf.customs-financials-home.duty-deferment.title2=Cyfrifon gohirio tollau
 cf.customs-financials-home.guarantee-account.title=Cyfrif gwarant cyffredinol
