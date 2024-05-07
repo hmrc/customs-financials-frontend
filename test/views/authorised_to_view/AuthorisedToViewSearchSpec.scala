@@ -44,8 +44,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           isXiEoriEnabled = false
         ).body)
 
-      view.title() mustBe "Find accounts you have authority to use - View your customs financial accounts " +
-        "- GOV.UK - View your customs financial accounts - GOV.UK"
+      view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
+        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
       val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
       val liElements: Elements = elements.get(0).getElementsByTag("li")
@@ -65,8 +65,8 @@ class AuthorisedToViewSearchSpec extends SpecBase {
           isXiEoriEnabled = true
         ).body)
 
-      view.title() mustBe "Find accounts you have authority to use - View your customs financial accounts " +
-        "- GOV.UK - View your customs financial accounts - GOV.UK"
+      view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
+        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
       val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
       val liElements: Elements = elements.get(0).getElementsByTag("li")

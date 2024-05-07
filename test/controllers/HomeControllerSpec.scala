@@ -98,7 +98,7 @@ class HomeControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementsByTag("h1").text mustBe "Your customs financial accounts"
+        html.getElementsByTag("h1").text mustBe "Your import duties and VAT accounts"
       }
     }
   }

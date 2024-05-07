@@ -6,7 +6,7 @@ language.english = English
 language.change.cymraeg=Newid yr iaith ir Gymraeg
 
 # Overall service name for GOV.UK header
-service.name=View your customs financial accounts
+service.name=Manage import duties and VAT accounts
 cf.service-name=Your customs statements
 cf.eori=EORI number:
 cf.account-number=Account:
@@ -75,8 +75,8 @@ cf.cash-account.withdraw-funds.guidance.link.aria-label=Withdraw funds from your
 cf.accounts.label.topUp=Top up duty deferment {0}
 cf.accounts.contact.details=Payment details
 cf.accounts.label.contact.details=Payment details for duty deferment {0}
-cf.accounts.view-customs-account=view your customs financial accounts
-cf.accounts.view-customs-account-not-found=view your customs financial accounts.
+cf.accounts.view-customs-account=manage import duties and VAT accounts
+cf.accounts.view-customs-account-not-found=manage import duties and VAT accounts.
 cf.accounts.back-customs-account=Back to your customs financial accounts
 cf.account.status.AccountStatusClosed = Closed
 cf.account.status.AccountStatusSuspended = Suspended
@@ -139,7 +139,7 @@ cf.not-subscribed-to-cds.detail.subscribe-cds.title=Subscribe to CDS
 cf.not-subscribed-to-cds.detail.subscribe-cds.link=Subscribe to the Customs Declaration Service.
 
 # Customs Financials Home Page
-cf.customs-financials-home.title=Your customs financial accounts
+cf.customs-financials-home.title=Your import duties and VAT accounts
 cf.customs-financials-home.duty-deferment.title=Duty deferment account
 cf.customs-financials-home.duty-deferment.title2=Duty deferment accounts
 cf.customs-financials-home.guarantee-account.title=General guarantee account
