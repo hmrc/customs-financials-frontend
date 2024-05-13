@@ -45,7 +45,7 @@ class NotFoundTemplateSpec extends SpecBase {
         val expected = List(
           "If you typed the web address, check it is correct.",
           "If you pasted the web address, check you copied the entire address.",
-          "Or you can manage import duties and VAT accounts."
+          "You can go back to manage import duties and VAT accounts."
         )
         val actual =
           view.getElementsByClass("govuk-body").asScala.map(_.text()).toList

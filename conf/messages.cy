@@ -45,7 +45,9 @@ cf.error.not-found.title=Heb ddod o hyd i’r dudalen
 cf.error.not-found.heading=Heb ddod o hyd i’r dudalen
 cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
-cf.error.not-found.message.go-to-home-page-text1=Neu gallwch
+cf.error.not-found.message.go-to-home-page-text1=Gallwch fynd
+cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli tollau mewnforio a chyfrifon TAW
+
 
 # Unauthorised Error
 cf.error.unauthorized.title=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y dudalen hon
@@ -318,7 +320,7 @@ cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
 cf.authorities.request.received.title = Cais wedi dod i law
 cf.authorities.request.received.panel.h1 = Cais wedi dod i law
 cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ati o’r dudalen ‘'Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio'’, cyn pen 1 awr fel arfer.
-cf.authorities.request.received.link = Yn ôl i fwrw golwg dros eich cyfrifon ariannol ar gyfer y tollau
+cf.authorities.request.received.link = Yn ôli reoli tollau mewnforio a chyfrifon TAW
 cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar gael i’w lawrlwytho:
 cf.authorities.notification-panel.a.gb-authority=Awdurdodau ym Mhrydain Fawr (CSV)
 cf.authorities.notification-panel.a.xi-authority=Awdurdodau yng Ngogledd Iwerddon (CSV)
