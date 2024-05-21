@@ -62,10 +62,10 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase {
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      elements.get(1).getElementsByTag("dt").html() mustBe
+      elements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.eori.number")
 
-      elements.get(1).getElementsByTag("dd").html() mustBe "GBN45365789211"
+      elements.get(0).getElementsByTag("dd").html() mustBe "GBN45365789211"
     }
 
     "display only XI EORI when only XI EORI is present" in new Setup {
@@ -80,10 +80,10 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase {
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      elements.get(1).getElementsByTag("dt").html() mustBe
+      elements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.xiEori.number")
 
-      elements.get(1).getElementsByTag("dd").html() mustBe "XI45365789211"
+      elements.get(0).getElementsByTag("dd").html() mustBe "XI45365789211"
     }
 
     "display both GB and XI EORI when both are present" in new Setup {
@@ -98,13 +98,13 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase {
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      elements.get(1).getElementsByTag("dt").html() mustBe
+      elements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.eori.number")
-      elements.get(1).getElementsByTag("dd").html() mustBe "GBN45365789211"
+      elements.get(0).getElementsByTag("dd").html() mustBe "GBN45365789211"
 
-      elements.get(2).getElementsByTag("dt").html() mustBe
+      elements.get(1).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.xiEori.number")
-      elements.get(2).getElementsByTag("dd").html() mustBe "XI45365789211"
+      elements.get(1).getElementsByTag("dd").html() mustBe "XI45365789211"
     }
   }
 

@@ -55,9 +55,9 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
         val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-        summaryRowElements.get(0).getElementsByTag("dt").html() mustBe
+        summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
           messages(app)("cf.search.authorities.result.company.name")
-        summaryRowElements.get(0).getElementsByTag("dd").html() mustBe "TestCompany"
+        summaryRowElements.get(1).getElementsByTag("dd").html() mustBe "TestCompany"
       }
     }
 
@@ -74,13 +74,13 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
+      summaryRowElements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.eori.number")
-      summaryRowElements.get(1).getElementsByTag("dd").html() mustBe "GBN45365789211"
+      summaryRowElements.get(0).getElementsByTag("dd").html() mustBe "GBN45365789211"
 
-      summaryRowElements.get(2).getElementsByTag("dt").html() mustBe
+      summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.xiEori.number")
-      summaryRowElements.get(2).getElementsByTag("dd").html() mustBe "XI45365789211"
+      summaryRowElements.get(1).getElementsByTag("dd").html() mustBe "XI45365789211"
     }
 
     "display only GB EORI label if authorities are available only for GB EORI" in new SetUp {
@@ -94,9 +94,9 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
+      summaryRowElements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.eori.number")
-      summaryRowElements.get(1).getElementsByTag("dd").html() mustBe "GBN45365789211"
+      summaryRowElements.get(0).getElementsByTag("dd").html() mustBe "GBN45365789211"
     }
 
     "display only XI EORI label if authorities are available for XI EORI" in new SetUp {
@@ -111,9 +111,9 @@ class AuthorisedToViewSearchResultSpec extends SpecBase {
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
-      summaryRowElements.get(1).getElementsByTag("dt").html() mustBe
+      summaryRowElements.get(0).getElementsByTag("dt").html() mustBe
         messages(app)("cf.search.authorities.result.xiEori.number")
-      summaryRowElements.get(1).getElementsByTag("dd").html() mustBe "XI45365789211"
+      summaryRowElements.get(0).getElementsByTag("dd").html() mustBe "XI45365789211"
     }
   }
 
