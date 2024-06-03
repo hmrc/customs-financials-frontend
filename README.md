@@ -91,3 +91,10 @@ This project has Tampermonkey scripts available in tampermonkey directory.
 #### Tampermonkey
 [Chrome Extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)<br>
 [Firefox Extension](https://addons.mozilla.org/pl/firefox/addon/tampermonkey/)
+
+## All tests and checks
+
+This is a sbt command alias specific to this project. It will run a scala style check, run unit tests, run integration
+tests and produce a coverage report:
+
+> `sbt runAllChecks`
