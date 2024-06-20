@@ -195,10 +195,10 @@ cf.undeliverable.email.link-text=Verify or change email address
 
 cf.search.authorities = Find accounts you have authority to use
 cf.search.authorities.p = You can search for accounts you have authority to use on the Customs Declaration Service by:
-cf.search.authorities.eori = an EORI number starting GB or GBN
-cf.search.authorities.eori.xi = an EORI number starting GB, GBN or XI
-cf.search.authorities.account = an account number for duty deferment, cash or general guarantee account
-cf.search.authorities.link = Request all accounts as CSV
+cf.search.authorities.eori = an EORI number starting GB
+cf.search.authorities.eori.xi = an EORI number starting GB or XI
+cf.search.authorities.account = an account number for a duty deferment, cash or general guarantee account
+cf.search.authorities.link = Request all accounts as a CSV file
 cf.search.authorities.hint = Enter an EORI number starting with GB followed by 12 digits. <br> For example, '‘GB123456789000’'.</br>
 cf.search.authorities.h2 = Request all accounts
 cf.search.authorities.p2 = You can request a list of all accounts you have a standing authority to use in CSV file format.
