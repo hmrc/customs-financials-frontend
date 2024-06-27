@@ -85,6 +85,9 @@
     ))
 
     <p class="govuk-body govuk-!-padding-bottom-9" id="contact-report-change-link">
+
+        @messages("cf.contact-details.report-change-pre-link-text")
+
         @hmrcNewTabLink(
             NewTabLink(
                 language = Some(messages.lang.toString),
@@ -93,6 +96,8 @@
                 text=messages("cf.contact-details.report-change-link")
             )
         )
+
+        @messages("cf.contact-details.report-change-post-link-text")
     </p>
     
     @h2("cf.contact-details.primary-email-address.h2", id=Some("contact-email-heading"))
