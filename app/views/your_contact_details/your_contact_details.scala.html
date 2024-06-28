@@ -19,6 +19,7 @@
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
+@import views.html.components.newTabLink
 @import views.html.Layout
 @import utils.Utils.emptyString
 
@@ -29,7 +30,8 @@
         hmrcNewTabLink: HmrcNewTabLink,
         govukSummaryList: GovukSummaryList,
         account: components.account_link,
-        layout: Layout
+        layout: Layout,
+        newTabLink: newTabLink
 )
 
 @(
@@ -84,22 +86,15 @@
         )
     ))
 
-    <p class="govuk-body govuk-!-padding-bottom-9" id="contact-report-change-link">
+    @newTabLink(
+            href = appConfig.reportChangeCdsUrl,
+            linkMessage = messages("cf.contact-details.report-change-link"),
+            preLinkMessage = Some(messages("cf.contact-details.report-change-pre-link-text")),
+            postLinkMessage = Some(messages("cf.contact-details.report-change-post-link-text")),
+            pId = Some("contact-report-change-link"),
+            style = Some("govuk-body govuk-!-padding-bottom-9")
+    )
 
-        @messages("cf.contact-details.report-change-pre-link-text")
-
-        @hmrcNewTabLink(
-            NewTabLink(
-                language = Some(messages.lang.toString),
-                classList = Some("govuk-link"),
-                href=Some(appConfig.reportChangeCdsUrl),
-                text=messages("cf.contact-details.report-change-link")
-            )
-        )
-
-        @messages("cf.contact-details.report-change-post-link-text")
-    </p>
-    
     @h2("cf.contact-details.primary-email-address.h2", id=Some("contact-email-heading"))
     @p("cf.contact-details.primary-email-address.text")
 
@@ -123,7 +118,7 @@
                 language = Some(messages.lang.toString),
                 classList = Some("govuk-link"),
                 href=Some(appConfig.changeEmailUrl),
-                text=messages("cf.contact-details.change-email-link")
+                text=messages("cf.contact-details.change-email-link"),
             )
         )
     </p>

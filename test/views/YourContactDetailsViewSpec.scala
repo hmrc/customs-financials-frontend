@@ -66,13 +66,11 @@ class YourContactDetailsViewSpec extends SpecBase {
 
     "display link to get enquiry form for your contact details" in new Setup {
       running(app) {
-        view.getElementById("contact-report-change-link").text mustBe
+        view.getElementById("contact-report-change-link").text() mustBe
           "This is the contact address you gave us when you registered for your EORI number." +
             " You can fill in an enquiry form (opens in a new tab) to change this address."
       }
     }
-
-
   }
 
 

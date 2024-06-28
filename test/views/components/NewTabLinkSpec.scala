@@ -44,6 +44,16 @@ class NewTabLinkSpec extends SpecBase {
         val elementByClass: Elements = viewDoc.getElementsByClass("govuk-link")
         elementByClass.get(0).text() mustBe linkMessage
       }
+
+      "display newTabLink with all optional elements displays both pre, mid and post message links" in new Setup {
+
+        viewDocWithAllOptionals.text().contains(msgs(preLinkMessage)) mustBe true
+        viewDocWithAllOptionals.text().contains(msgs(postLinkMessage)) mustBe true
+
+        val elementByClass: Elements = viewDoc.getElementsByClass("govuk-link")
+        elementByClass.get(0).text() mustBe linkMessage
+
+      }
     }
   }
 
@@ -56,9 +66,15 @@ class NewTabLinkSpec extends SpecBase {
     val linkMessage = "test_link_message"
     val href: String = "test_link"
     val preLinkMessage = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
+    val postLinkMessage = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
+    val pId = "link-id"
+    val style = "govuk-body govuk-!-padding-bottom-9"
 
     val viewDoc: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href, Some(preLinkMessage)).body)
+
+    val viewDocWithAllOptionals: Document = Jsoup.parse(app.injector.instanceOf[newTabLink].apply(
+        linkMessage, href, Some(preLinkMessage), Some(postLinkMessage), Some(pId), Some(style)).body)
 
     val viewDocWithNoPreLinkMessage: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href).body)
