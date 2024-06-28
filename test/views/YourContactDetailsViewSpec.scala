@@ -73,8 +73,6 @@ class YourContactDetailsViewSpec extends SpecBase {
     }
   }
 
-
-
   trait Setup extends I18nSupport {
     val eori: String = "EORI0123"
     val email = "email@emailland.com"
