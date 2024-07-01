@@ -23,13 +23,16 @@
 @(
     linkMessage: String,
     href: String,
-    preLinkMessage: Option[String] = None
+    preLinkMessage: Option[String] = None,
+    postLinkMessage: Option[String] = None,
+    pId: Option[String] = None,
+    style: Option[String] = None
 )(
     implicit messages: Messages,
     appConfig: AppConfig
 )
 
-<p class="govuk-body">
+<p class="@style" id="@pId">
     @preLinkMessage.map(messages(_))
 
     @hmrcNewTabLink(
@@ -40,4 +43,6 @@
             text=messages(linkMessage)
         )
     )
+
+    @postLinkMessage.map(messages(_))
 </p>
