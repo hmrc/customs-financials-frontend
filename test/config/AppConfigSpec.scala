@@ -66,6 +66,12 @@ class AppConfigSpec extends SpecBase {
     }
   }
 
+  "reportChangeUrl" should {
+    "return the correct url" in new Setup {
+      appConfig.reportChangeCdsUrl shouldBe "https://www.gov.uk/eori/get-help"
+    }
+  }
+
   trait Setup {
     val app: Application = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
