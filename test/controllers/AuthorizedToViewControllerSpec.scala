@@ -294,7 +294,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe OK
-        html.text().contains("There are no matching result for 'GB123456789012'") shouldBe true
+        html.text().contains("There are no matching results for 'GB123456789012'") shouldBe true
       }
     }
 
@@ -345,7 +345,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe OK
-        html.text().contains("There are no matching result for '1000000'") shouldBe true
+        html.text().contains("There are no matching results for '1000000'") shouldBe true
       }
     }
 
