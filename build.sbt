@@ -1,18 +1,17 @@
 import uk.gov.hmrc.DefaultBuildSettings.{itSettings, targetJvm}
-import play.core.PlayVersion.current
 
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.16"
-val bootstrapVersion = "8.5.0"
-val scala2_13_12 = "2.13.12"
+val bootstrapVersion = "9.0.0"
+val scala3_3_3 = "3.3.3"
 
 val scalaStyleConfigFile = "scalastyle-config.xml"
 val testScalaStyleConfigFile = "test-scalastyle-config.xml"
 val testDirectory = "test"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := scala2_13_12
+ThisBuild / scalaVersion := scala3_3_3
 
 lazy val scalastyleSettings = Seq(scalastyleConfig := baseDirectory.value /  scalaStyleConfigFile,
   (Test / scalastyleConfig) := baseDirectory.value/ testDirectory /  testScalaStyleConfigFile)
@@ -28,7 +27,7 @@ lazy val microservice = Project(appName, file("."))
   .disablePlugins(sbt.plugins.JUnitXmlReportPlugin)
   .settings(
     PlayKeys.playDefaultPort := 9876,
-    libraryDependencies ++= compileDependencies ++ testDependencies,
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     retrieveManaged := true,
   )
   .settings(scoverageSettings *)
@@ -44,16 +43,7 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    scalacOptions ++= Seq(
-      "-Wunused:imports",
-      "-Wunused:patvars",
-      "-Wunused:implicits",
-      "-Wunused:explicits",
-      "-Wunused:privates",
-      "-P:silencer:pathFilters=target/.*",
-      "-P:silencer:pathFilters=routes",
-      "-P:silencer:pathFilters=views;routes"),
-
+    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")),
     Test / scalacOptions ++= Seq(
       "-Wunused:imports",
       "-Wunused:params",
@@ -62,31 +52,10 @@ lazy val microservice = Project(appName, file("."))
       "-Wunused:explicits",
       "-Wunused:privates"),
     libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.for3Use2_13With("", ".12")),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.for3Use2_13With("",".12")
     )
   ).settings(resolvers += Resolver.jcenterRepo)
-
-val compileDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-frontend-play-30" % bootstrapVersion,
-  "uk.gov.hmrc" %% "play-partials-play-30"      % "9.1.0",
-  "uk.gov.hmrc" %% "play-frontend-hmrc-play-30" % "9.4.0",
-  ws,
-  "org.typelevel" %% "cats-core" % "2.10.0",
-  "uk.gov.hmrc" %% "tax-year" % "4.0.0",
-  "org.webjars.npm" % "moment" % "2.30.1"
-)
-
-val testDependencies = Seq(
-  "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.2.18" % Test,
-  "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test,
-  "org.jsoup" % "jsoup" % "1.17.2" % Test,
-  "org.playframework" %% "play-test" % current % Test,
-  "com.vladsch.flexmark" % "flexmark-all" % "0.64.8" % Test,
-  "org.mockito" %% "mockito-scala-scalatest" % "1.17.31" % Test,
-  "uk.gov.hmrc" %% "tax-year" % "4.0.0" % Test
-)
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 compileScalastyle := (Compile / scalastyle).toTask("").value
