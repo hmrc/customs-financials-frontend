@@ -22,12 +22,16 @@ import javax.inject.Inject
 import play.api.http.Status
 import play.api.mvc.RequestHeader
 import play.api.{Logger, Logging}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+import connectors.AccountLinksRequest.jsonBodyWritable
+import domain.SearchAuthoritiesRequest.jsonBodyWritable
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SecureMessageConnector @Inject()(http: HttpClient,
+class SecureMessageConnector @Inject()(httpClient: HttpClientV2,
                                        appConfig: AppConfig,
                                        headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
                                       (implicit ec: ExecutionContext)
@@ -38,7 +42,19 @@ class SecureMessageConnector @Inject()(http: HttpClient,
   def getMessageCountBanner(returnToUrl: String)(implicit request: RequestHeader): Future[Option[HtmlPartial]] = {
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
 
-    http.GET[HtmlPartial](appConfig.customsSecureMessagingBannerEndpoint, Seq(("return_to", returnToUrl)))
+    httpClient.get(url"${appConfig.customsSecureMessagingBannerEndpoint}")
+      .setHeader("return_to" -> returnToUrl)
+      .execute[HtmlPartial]
+      .flatMap {
+        case success@HtmlPartial.Success(_, _) => Future.successful(Some(success))
+        case HtmlPartial.Failure(_, _) => Future.successful(None)
+      }.recover {
+      exc =>
+        log.error(s"Problem loading message banner partial: ${exc.getMessage}")
+        None
+    }
+
+    /*http.GET[HtmlPartial](appConfig.customsSecureMessagingBannerEndpoint, Seq(("return_to", returnToUrl)))
       .map {
         case success@HtmlPartial.Success(_, _) => Some(success)
         case HtmlPartial.Failure(_, _) => None
@@ -46,6 +62,6 @@ class SecureMessageConnector @Inject()(http: HttpClient,
         case exc =>
           log.error(s"Problem loading message banner partial: ${exc.getMessage}")
           None
-      }
+      }*/
   }
 }

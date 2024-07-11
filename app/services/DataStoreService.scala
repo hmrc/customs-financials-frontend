@@ -17,68 +17,102 @@
 package services
 
 import config.AppConfig
-import domain._
+import domain.*
 import play.api.Logger
 import play.api.http.Status.NOT_FOUND
 import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataStoreService @Inject()(http: HttpClient,
+class DataStoreService @Inject()(httpClient: HttpClientV2,
                                  metricsReporter: MetricsReporterService)
                                 (implicit appConfig: AppConfig, ec: ExecutionContext) {
 
   val log: Logger = Logger(this.getClass)
 
   def getAllEoriHistory(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/eori-history"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/eori-history"
     val emptyEoriHistory = Seq(EoriHistory(eori, None, None))
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
-      http.GET[EoriHistoryResponse](dataStoreEndpoint).map(response => response.eoriHistory)
+      httpClient.get(url"$dataStoreEndpoint")
+        .execute[EoriHistoryResponse]
+        .flatMap {
+          response => Future.successful(response.eoriHistory)
+        }.recover { case e =>
+        log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
+        emptyEoriHistory
+      }
+     /* httpClient.GET[EoriHistoryResponse](dataStoreEndpoint).map(response => response.eoriHistory)
         .recover { case e =>
           log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
           emptyEoriHistory
-        }
+        }*/
     }
   }
 
   def getEmail(eori: EORI)(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/verified-email"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/verified-email"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
-      http.GET[EmailResponse](dataStoreEndpoint).map {
+      httpClient.get(url"$dataStoreEndpoint")
+        .execute[EmailResponse]
+        .flatMap {
+          case EmailResponse(Some(address), _, None) => Future.successful(Right(Email(address)))
+          case EmailResponse(Some(email), _, Some(_)) => Future.successful(Left(UndeliverableEmail(email)))
+          case _ => Future.successful(Left(UnverifiedEmail))
+        }.recover {
+        case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
+      }
+
+    /*  httpClient.GET[EmailResponse](dataStoreEndpoint).map {
         case EmailResponse(Some(address), _, None) => Right(Email(address))
         case EmailResponse(Some(email), _, Some(_)) => Left(UndeliverableEmail(email))
         case _ => Left(UnverifiedEmail)
       }.recover {
         case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
-      }
+      }*/
     }
   }
 
   def getCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(
+      httpClient.get(url"$dataStoreEndpoint")
+        .execute[CompanyInformationResponse]
+        .flatMap {
+          response => Future.successful(if (response.consent == "1") Some(response.name) else None)
+        }.recover { case e =>
+        log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+        None
+      }
+      /*    httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(
         response => if (response.consent == "1") Some(response.name) else None)
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
+    }*/
     }
   }
 
   def getOwnCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
+      httpClient.get(url"$dataStoreEndpoint")
+        .execute[CompanyInformationResponse]
+        .flatMap {
+          response => Future.successful(Some(response.name))
+        }
+
+      //httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
@@ -86,13 +120,18 @@ class DataStoreService @Inject()(http: HttpClient,
   }
 
   def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/xieori-information"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/xieori-information"
     val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
 
     if (isXiEoriEnabled) {
       metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
-        http.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
-          response => if (response.xiEori.isEmpty) None else Some(response.xiEori))
+        httpClient.get(url"$dataStoreEndpoint")
+          .execute[XiEoriInformationReponse]
+          .flatMap {
+            response => Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
+          }
+        /*httpClient.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
+          response => if (response.xiEori.isEmpty) None else Some(response.xiEori))*/
       }.recover { case e =>
         log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
         None
@@ -103,10 +142,15 @@ class DataStoreService @Inject()(http: HttpClient,
   }
 
   def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
-    val dataStoreEndpoint = appConfig.customsDataStore + s"/eori/$eori/company-information"
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      http.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.address))
+      httpClient.get(url"$dataStoreEndpoint")
+        .execute[CompanyInformationResponse]
+        .flatMap {
+          response => Future.successful(Some(response.address))
+        }
+      //httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.address))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None

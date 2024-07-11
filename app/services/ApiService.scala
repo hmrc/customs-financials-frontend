@@ -17,12 +17,20 @@
 package services
 
 import config.AppConfig
-import domain._
+import domain.*
 import play.api.libs.json.{JsResultException, Json, OFormat}
 import play.api.{Logger, LoggerLike}
 import play.mvc.Http.Status
-import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+/*import connectors.AccountLinksRequest.jsonBodyWritable
+import domain.AccountsAndBalancesRequest.jsonBodyWritable
+import domain.AccountsRequestCommon.jsonBodyWritable
+import domain.AccountsRequestDetail.jsonBodyWritable
+import domain.SearchAuthoritiesRequest.jsonBodyWritable
+import domain.AccountsAndBalancesRequestContainer.jsonBodyWritable*/
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,39 +55,60 @@ object SdesNotificationsForEori {
 }
 
 @Singleton
-class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterService)
+class ApiService @Inject()(httpClient: HttpClientV2,
+                           metricsReporter: MetricsReporterService)
                           (implicit appConfig: AppConfig, ec: ExecutionContext) {
 
   val log: LoggerLike = Logger(this.getClass)
 
   def getAccounts(eori: String)(implicit hc: HeaderCarrier): Future[CDSAccounts] = {
-    val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/accounts"
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/accounts"
 
     val requestDetail = AccountsRequestDetail(eori, None, None, None)
     val accountsAndBalancesRequest = AccountsAndBalancesRequestContainer(
       domain.AccountsAndBalancesRequest(AccountsRequestCommon.generate, requestDetail)
     )
+
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.accounts") {
-      http.POST[AccountsAndBalancesRequestContainer, AccountsAndBalancesResponseContainer](
-        apiEndpoint, accountsAndBalancesRequest).map(_.toCdsAccounts(eori))
+      httpClient.post(url"$apiEndpoint")
+        .withBody[AccountsAndBalancesRequestContainer](accountsAndBalancesRequest)
+        .execute[AccountsAndBalancesResponseContainer]
+        .flatMap {
+          res => Future.successful(res.toCdsAccounts(eori))
+        }
+
+     /* httpClient.POST[AccountsAndBalancesRequestContainer, AccountsAndBalancesResponseContainer](
+        apiEndpoint, accountsAndBalancesRequest).map(_.toCdsAccounts(eori))*/
     }
   }
 
   def searchAuthorities(eori: String,
                         searchID: String)
                        (implicit hc: HeaderCarrier): Future[Either[SearchResponse, SearchedAuthorities]] = {
-    val apiEndpoint = appConfig.customsFinancialsApi + "/search-authorities"
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/search-authorities"
     val request = SearchAuthoritiesRequest(searchID, eori)
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.search-authorities") {
-      http.POST[SearchAuthoritiesRequest, HttpResponse](apiEndpoint, request).map {
+      httpClient.post(url"$apiEndpoint")
+        .withBody[SearchAuthoritiesRequest](request)
+        .execute[HttpResponse]
+        .flatMap {
+          case response if response.status == Status.NO_CONTENT => Future.successful(Left(NoAuthorities))
+          case response if response.status != Status.OK => Future.successful(Left(SearchError))
+          case response => Json.parse(response.body).asOpt[SearchedAuthoritiesResponse] match {
+            case Some(value) => Future.successful(Right(value.toSearchAuthorities))
+            case None => Future.successful(Left(SearchError))
+          }
+        }.recover { case _ => Left(SearchError) }
+
+   /*   httpClient.POST[SearchAuthoritiesRequest, HttpResponse](apiEndpoint, request).map {
         case response if response.status == Status.NO_CONTENT => Left(NoAuthorities)
         case response if response.status != Status.OK => Left(SearchError)
         case response => Json.parse(response.body).asOpt[SearchedAuthoritiesResponse] match {
           case Some(value) => Right(value.toSearchAuthorities)
           case None => Left(SearchError)
         }
-      }.recover { case _ => Left(SearchError) }
+      }.recover { case _ => Left(SearchError) }*/
     }
   }
 
@@ -87,26 +116,58 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
     val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications"
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.notifications") {
-      http.GET[SdesNotificationsForEori](apiEndpoint).map(_.notifications)
+      httpClient.get(url"$apiEndpoint")
+        .execute[SdesNotificationsForEori]
+        .flatMap {
+          res => Future.successful(res.notifications)
+        }
+
+      //httpClient.GET[SdesNotificationsForEori](apiEndpoint).map(_.notifications)
     }
   }
 
   def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications/$fileRole"
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/$eori/notifications/$fileRole"
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
-      http.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
+      httpClient.delete(url"$apiEndpoint")
+        .execute[HttpResponse]
+        .flatMap {
+          res => Future.successful(res.status == Status.OK)
+        }
+      //httpClient.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
     }
   }
 
   def requestAuthoritiesCsv(eori: String, alternateEORI: Option[String])(
     implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
 
-    val apiEndpoint = appConfig.customsFinancialsApi + "/standing-authorities-file"
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/standing-authorities-file"
     val requestAuthoritiesCsv: RequestAuthoritiesCsv = RequestAuthoritiesCsv(eori, alternateEORI)
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.request.authorities.csv") {
-      http.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
+      httpClient.post(url"$apiEndpoint")
+        .withBody[RequestAuthoritiesCsv](requestAuthoritiesCsv)
+        .execute[HttpResponse]
+        .flatMap {
+          case response if response.status == Status.OK =>
+            Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
+              case value => Future.successful(Right(value))
+            }
+
+          case response =>
+            log.error(s"requestAuthoritiesCsv failed with ${response.status} ${response.body}")
+            Future.successful(Left(RequestAuthoritiesCSVError))
+        }.recover {
+        case ex: JsResultException =>
+          log.error(s"requestAuthoritiesCsv threw an JS exception - ${ex.getMessage}")
+          Left(JsonParseError)
+        case ex: Throwable =>
+          log.error(s"requestAuthoritiesCsv threw an exception - ${ex.getMessage}")
+          Left(RequestAuthoritiesCSVError)
+      }
+
+      /*httpClient.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
         case response if response.status == Status.OK =>
           Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
             case value => Right(value)
@@ -123,7 +184,7 @@ class ApiService @Inject()(http: HttpClient, metricsReporter: MetricsReporterSer
         case ex: Throwable =>
           log.error(s"requestAuthoritiesCsv threw an exception - ${ex.getMessage}")
           Left(RequestAuthoritiesCSVError)
-      }
+      }*/
     }
   }
 }

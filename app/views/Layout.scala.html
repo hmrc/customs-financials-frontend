@@ -47,7 +47,7 @@
         eori: Option[String] = None,
         companyName: Option[String] = None,
         xiEori: Option[String] = None
-)(contentBlock: Html)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
+)(contentBlock: Html)(implicit request: RequestHeader, appConfig: AppConfig, messages: Messages)
 
 @phaseBannerContent = {
     @messages("feedback.before")
