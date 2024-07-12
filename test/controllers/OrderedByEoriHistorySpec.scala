@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import domain.EoriHistory
 import utils.SpecBase
 

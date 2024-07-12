@@ -19,7 +19,6 @@ package services
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.{Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase

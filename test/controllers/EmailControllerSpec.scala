@@ -18,7 +18,7 @@ package controllers
 
 import connectors.CustomsFinancialsApiConnector
 import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.inject.bind

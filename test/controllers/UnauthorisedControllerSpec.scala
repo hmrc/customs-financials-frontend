@@ -18,6 +18,7 @@ package controllers
 
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => meq}
+import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}
 import play.api.test.Helpers._

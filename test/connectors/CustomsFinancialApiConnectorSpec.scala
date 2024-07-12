@@ -18,7 +18,8 @@ package connectors
 
 import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import domain.FileRole.StandingAuthority
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper

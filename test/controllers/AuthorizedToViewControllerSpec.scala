@@ -22,7 +22,8 @@ import domain.FileRole.StandingAuthority
 import domain._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.test.Helpers._
 import play.api.{Application, inject}

@@ -21,7 +21,8 @@ import domain.{
   AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA,
   DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA, _
 }
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.{any, eq => eqTo}
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}

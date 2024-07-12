@@ -18,7 +18,8 @@ package controllers
 
 import domain.{RequestAuthoritiesCSVError, RequestAuthoritiesCsvResponse, UnverifiedEmail}
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.{Application, inject}
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}

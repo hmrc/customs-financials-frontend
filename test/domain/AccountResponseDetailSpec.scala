@@ -17,7 +17,6 @@
 package domain
 
 import domain.DutyPaymentMethod.CDS
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
 
 class AccountResponseDetailSpec extends SpecBase {

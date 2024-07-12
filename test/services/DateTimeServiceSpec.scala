@@ -18,6 +18,7 @@ package services
 
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
+import org.mockito.Mockito.when
 import play.api.test.Helpers._
 import utils.SpecBase
 import utils.TestData.{DAY_20, HOUR_12, MINUTES_30, MONTH_12, YEAR_2027}

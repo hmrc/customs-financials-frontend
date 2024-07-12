@@ -19,7 +19,8 @@ package controllers
 import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector}
 import domain._
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

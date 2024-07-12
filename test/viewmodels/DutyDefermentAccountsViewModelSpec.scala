@@ -22,7 +22,6 @@ import domain.{
   DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
 }
 import org.scalatest.Assertion
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase

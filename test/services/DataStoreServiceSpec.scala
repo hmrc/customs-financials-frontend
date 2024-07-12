@@ -22,7 +22,7 @@ import domain.{
   XiEoriAddressInformation, UndeliverableEmail
 }
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}

@@ -19,7 +19,6 @@ package utils
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.StandingAuthorityMetadata
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import domain.StandingAuthorityFile
 import Utils._
 

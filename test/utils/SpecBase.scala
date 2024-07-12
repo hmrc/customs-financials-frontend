@@ -22,7 +22,7 @@ import com.codahale.metrics.MetricRegistry
 import domain.{EoriHistory, SignedInUser}
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.jsoup.nodes.Document
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike

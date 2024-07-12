@@ -20,7 +20,8 @@ import config.AppConfig
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.{FileInformation, Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import org.mockito.ArgumentMatchersSugar.{any, eq => eqTo}
+import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status
 import play.api.i18n.Messages

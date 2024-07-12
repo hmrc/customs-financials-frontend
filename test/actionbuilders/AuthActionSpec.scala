@@ -18,8 +18,8 @@ package actionbuilders
 
 import com.google.inject.Inject
 import config.AppConfig
-import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.{Application, inject}
 import play.api.mvc.{Action, AnyContent, BodyParsers, Result, Results}
 import play.api.test.Helpers._

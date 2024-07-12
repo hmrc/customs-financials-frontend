@@ -19,6 +19,7 @@ package services
 import com.codahale.metrics.{Histogram, MetricRegistry}
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.{verify, when}
 import play.api.{Application, inject}
 import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder

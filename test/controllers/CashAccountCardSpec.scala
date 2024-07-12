@@ -16,14 +16,14 @@
 
 package controllers
 
-
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
   XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
