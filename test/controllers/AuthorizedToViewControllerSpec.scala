@@ -311,7 +311,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Right(SearchedAuthorities("3",
           Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
-        .andThenAnswer(Future.successful(Right(SearchedAuthorities("3",
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3",
           Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -336,7 +336,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(Left(NoAuthorities)))
+        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(Left(NoAuthorities)))
 
       running(app) {
         val request = fakeRequest(POST,
@@ -394,7 +394,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).andThenAnswer(
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).thenReturn(
           Future.successful(Left(NoAuthorities))
         )
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -428,7 +428,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(
+        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(
           Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -535,7 +535,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return Internal Server Error and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for EORI" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
@@ -550,7 +550,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return Internal Server Error when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for input account number" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 

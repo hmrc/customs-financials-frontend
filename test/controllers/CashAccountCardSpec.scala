@@ -98,7 +98,7 @@ class CashAccountCardSpec extends SpecBase {
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))
-    when(mockAccounts.eori).isLenient()
+    //when(mockAccounts.eori).isLenient()
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
 

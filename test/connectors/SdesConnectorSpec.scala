@@ -19,14 +19,14 @@ package connectors
 import config.AppConfig
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
-import domain.{FileInformation, Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
+import domain.{FileInformation, Metadata, MetadataItem, SdesFile, StandingAuthorityFile, StandingAuthorityMetadata}
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.{verify, when, times, spy}
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.{Application, inject}
 import play.api.libs.json.{JsArray, Json}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import utils.SpecBase
@@ -64,7 +64,7 @@ class SdesConnectorSpec extends SpecBase {
           .thenReturn(Future.successful(HttpResponse(Status.OK,
             Json.toJson(standingAuthoritiesFilesSdesResponse).toString())))
 
-        when(sdesGatekeeperServiceSpy.convertTo(any)).thenCallRealMethod()
+        when(sdesGatekeeperServiceSpy.convertTo(any())).thenCallRealMethod()
 
         val app: Application = application().overrides(
           inject.bind[HttpClient].toInstance(mockHttp),
