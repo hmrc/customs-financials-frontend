@@ -16,7 +16,7 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
 

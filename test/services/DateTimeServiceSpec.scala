@@ -16,7 +16,7 @@
 
 package services
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import org.mockito.Mockito.when
 import play.api.test.Helpers._

@@ -24,12 +24,13 @@ import domain.{
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.Mockito.{verify, when}
 import play.api.{Application, inject}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException,
+  UpstreamErrorResponse}
 import utils.SpecBase
 
 import java.time.{LocalDate, LocalDateTime}

@@ -21,7 +21,7 @@ import domain._
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.{Application, inject}
 import play.api.test.Helpers._
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}

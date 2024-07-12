@@ -25,6 +25,7 @@ import org.jsoup.nodes.Document
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.api
@@ -50,6 +51,7 @@ trait SpecBase extends AnyWordSpecLike
   with OptionValues
   with ScalaFutures
   with Matchers
+  with MustMatchers
   with IntegrationPatience {
 
   val emptyString = ""

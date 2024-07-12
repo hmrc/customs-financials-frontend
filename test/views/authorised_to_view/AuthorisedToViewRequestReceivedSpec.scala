@@ -20,7 +20,7 @@ import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty

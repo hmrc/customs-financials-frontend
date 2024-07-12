@@ -18,7 +18,7 @@ package domain
 
 import utils.SpecBase
 import domain.{GeneralGuaranteeAccount => domainGGA, GeneralGuaranteeAccountResponse => onwireGGA}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 
 class GeneralGuaranteeAccountDomainModelSpec extends SpecBase {
 

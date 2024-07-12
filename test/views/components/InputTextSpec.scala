@@ -19,7 +19,7 @@ package views.components
 import forms.EoriNumberFormProvider
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.data.Form
 import play.api.i18n.Messages

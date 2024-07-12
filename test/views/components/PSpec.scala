@@ -19,7 +19,7 @@ package views.components
 import play.api.Application
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase

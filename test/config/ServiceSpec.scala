@@ -16,7 +16,6 @@
 
 package config
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Configuration
 import utils.SpecBase
 

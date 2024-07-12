@@ -21,9 +21,9 @@ import play.api.inject.bind
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import config.AppConfig
-import org.mockito.ArgumentMatchersSugar.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import utils.SpecBase
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.partials.HtmlPartial

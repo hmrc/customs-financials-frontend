@@ -19,7 +19,7 @@ package services
 import config.AppConfig
 import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{verify, when}
 import org.mockito.captor.{ArgCaptor, Captor}
 import play.api.libs.json.{JsArray, Json}
 import play.api.test.Helpers._

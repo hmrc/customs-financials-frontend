@@ -17,7 +17,7 @@
 package domain
 
 import domain.FileRole.C79Certificate
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import services.DocumentAttributes
 import utils.SpecBase
 

@@ -20,7 +20,7 @@ import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import uk.gov.hmrc.auth.core.AuthConnector

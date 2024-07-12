@@ -20,7 +20,7 @@ import domain.DDStatementType.{Excise, Supplementary, UnknownStatementType, Week
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.i18n.Messages
 import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.test.Helpers.stubMessages

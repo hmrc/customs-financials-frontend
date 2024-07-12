@@ -18,7 +18,7 @@ package domain
 
 import domain.FileFormat.Pdf
 import domain.FileRole.SecurityStatement
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import utils.SpecBase
 
 import java.time.LocalDate

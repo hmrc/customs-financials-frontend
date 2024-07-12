@@ -18,7 +18,7 @@ package domain
 
 import domain.FileFormat.{Csv, Pdf}
 import domain.FileRole.SecurityStatement
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase

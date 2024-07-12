@@ -19,7 +19,7 @@ package domain
 import domain.DutyPaymentMethod.{CDS, CHIEF}
 import domain.FileFormat.Pdf
 import domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase

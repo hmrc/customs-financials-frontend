@@ -16,7 +16,7 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import utils.SpecBase
 
 class WithNameSpec extends SpecBase {

@@ -24,7 +24,7 @@ import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}

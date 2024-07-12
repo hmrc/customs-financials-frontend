@@ -18,7 +18,7 @@ package services
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
