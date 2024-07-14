@@ -34,7 +34,6 @@ import utils.SpecBase
 import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022}
 
 import scala.concurrent.Future
-import scala.reflect.io.File
 
 class AuthorizedToViewControllerSpec extends SpecBase {
 
@@ -190,13 +189,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
-
-      val fileObj1: File = File("CS_000000000154_csv.csv")
-      val fileObj2: File = File("CS_000000000152_csv.csv")
-
-      val fileObjectList: List[File] = List(fileObj1, fileObj2)
-
-      fileObjectList.sortWith((x1, x2) => x1.lastModified < x2.lastModified)
 
       val filesWithNames: List[EORI] = List("CS_000000000154_csv.csv",
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")

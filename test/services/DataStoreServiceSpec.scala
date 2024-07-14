@@ -17,20 +17,17 @@
 package services
 
 import config.AppConfig
-import domain.{
-  CompanyAddress, EoriHistory, UndeliverableInformation, UndeliverableInformationEvent, UnverifiedEmail,
-  XiEoriAddressInformation, UndeliverableEmail
-}
+import domain.{CompanyAddress, EoriHistory, UndeliverableEmail, UndeliverableInformation, UndeliverableInformationEvent, UnverifiedEmail, XiEoriAddressInformation}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.Mockito.{verify, when}
 import play.api.{Application, inject}
 import play.api.libs.json.Json
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, NotFoundException, ServiceUnavailableException,
-  UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClientV2, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
 
 import java.time.{LocalDate, LocalDateTime}
@@ -383,7 +380,7 @@ class DataStoreServiceSpec extends SpecBase {
 
   trait Setup {
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val mockHttp: HttpClient = mock[HttpClient]
+    val mockHttp: HttpClient = mock[HttpClientV2]
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val eori = "GB11111"
 
