@@ -18,7 +18,7 @@ package domain
 
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}

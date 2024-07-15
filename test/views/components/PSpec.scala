@@ -24,7 +24,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.p
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class PSpec extends SpecBase with MustMatchers {
 

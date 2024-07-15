@@ -22,7 +22,7 @@ import domain.FileRole.SecurityStatement
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import java.time.LocalDate
 

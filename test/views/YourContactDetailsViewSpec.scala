@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.your_contact_details.your_contact_details
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 

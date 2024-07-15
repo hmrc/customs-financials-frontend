@@ -23,7 +23,7 @@ import utils.SpecBase
 import utils.TestData.{DAY_20, HOUR_12, MINUTES_30, MONTH_12, YEAR_2027}
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class DateTimeServiceSpec extends SpecBase with MustMatchers {
 

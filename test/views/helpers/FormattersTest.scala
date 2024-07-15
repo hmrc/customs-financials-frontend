@@ -23,7 +23,7 @@ import utils.TestData.{FILE_SIZE_1000, FILE_SIZE_1000000, FILE_SIZE_42, FILE_SIZ
   FILE_SIZE_999999}
 
 import java.time.{LocalDate, LocalDateTime}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class FormattersTest extends SpecBase with MustMatchers {
 

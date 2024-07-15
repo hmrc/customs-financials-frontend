@@ -24,7 +24,7 @@ import play.api.test.Helpers
 import utils.SpecBase
 
 import scala.jdk.CollectionConverters._
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class NotificationPanelSpec extends SpecBase with MustMatchers {
   implicit val messages: Messages = Helpers.stubMessages()

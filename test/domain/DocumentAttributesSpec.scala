@@ -20,7 +20,7 @@ import domain.FileRole.C79Certificate
 
 import services.DocumentAttributes
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class DocumentAttributesSpec extends SpecBase with MustMatchers {
 

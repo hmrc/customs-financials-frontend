@@ -18,7 +18,7 @@ package domain
 
 import domain.FileFormat.Pdf
 import domain.FileRole.SecurityStatement
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import utils.SpecBase
 

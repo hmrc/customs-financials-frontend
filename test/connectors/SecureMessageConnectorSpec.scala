@@ -28,7 +28,7 @@ import utils.SpecBase
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.play.partials.HtmlPartial
 import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL

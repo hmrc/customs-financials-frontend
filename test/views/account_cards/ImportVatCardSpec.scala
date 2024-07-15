@@ -25,7 +25,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.import_vat_card
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class ImportVatCardSpec extends SpecBase with MustMatchers {
 

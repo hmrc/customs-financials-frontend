@@ -26,7 +26,7 @@ import utils.SpecBase
 import utils.TestData._
 import utils.Utils.emptyString
 import viewmodels.Paginated
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import scala.jdk.CollectionConverters._
 

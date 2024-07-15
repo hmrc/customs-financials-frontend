@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.components.inputText
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class InputTextSpec extends SpecBase with MustMatchers {
 

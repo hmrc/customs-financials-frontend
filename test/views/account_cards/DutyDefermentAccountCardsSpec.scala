@@ -33,7 +33,7 @@ import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
 import java.time.LocalDateTime
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
 

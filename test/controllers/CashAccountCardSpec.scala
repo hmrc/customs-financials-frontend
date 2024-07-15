@@ -33,7 +33,7 @@ import services.{ApiService, DataStoreService, NotificationService, XiEoriInform
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import scala.concurrent.Future
 

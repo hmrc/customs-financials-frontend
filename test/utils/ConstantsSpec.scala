@@ -18,7 +18,7 @@ package utils
 
 
 import utils.Constants._
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class ConstantsSpec extends SpecBase with MustMatchers {
 

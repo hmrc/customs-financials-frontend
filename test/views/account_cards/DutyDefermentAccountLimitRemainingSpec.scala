@@ -26,7 +26,7 @@ import play.api.i18n.Messages
 import utils.SpecBase
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_limit_remaining
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers {
 

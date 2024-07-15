@@ -17,7 +17,7 @@
 package domain
 
 import play.api.libs.json.{JsString, JsSuccess, Json}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 import utils.SpecBase
 
 class CDSAccountStatusSpec extends SpecBase with MustMatchers {

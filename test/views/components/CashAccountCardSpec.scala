@@ -32,7 +32,7 @@ import play.api.test.Helpers.running
 import utils.SpecBase
 import utils.TestData.{BALANCE_876, BALANCE_987, BALANCE_999}
 import views.html.account_cards.cash_account_cards
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class CashAccountCardSpec extends SpecBase with MustMatchers {
 

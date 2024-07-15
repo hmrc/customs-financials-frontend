@@ -137,4 +137,4 @@ trait SpecBase extends AnyWordSpecLike
 }
 
 trait ShouldMatchers extends ShouldMatcher
-//trait MustMatchers extends MustMatcher
+trait MustMatchers extends MustMatcher

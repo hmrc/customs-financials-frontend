@@ -29,7 +29,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_search
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
   "AuthorisedToViewSearch view" should {

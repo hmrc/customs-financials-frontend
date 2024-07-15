@@ -27,7 +27,7 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.components.authorities_notification_panel
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
 

@@ -23,7 +23,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.duty_deferment_balance_details
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class DutyDefermentBalanceDetailsSpec extends SpecBase with MustMatchers {
 

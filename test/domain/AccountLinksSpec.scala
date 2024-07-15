@@ -19,7 +19,7 @@ package domain
 import utils.SpecBase
 
 import java.time.LocalDateTime
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class AccountLinksSpec extends SpecBase with MustMatchers {
 

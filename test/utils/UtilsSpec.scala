@@ -21,7 +21,7 @@ import domain.FileRole.StandingAuthority
 import domain.StandingAuthorityMetadata
 import domain.StandingAuthorityFile
 import Utils._
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class UtilsSpec extends SpecBase with MustMatchers {
 

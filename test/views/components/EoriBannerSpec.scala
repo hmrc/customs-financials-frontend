@@ -23,7 +23,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.eori_banner
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class EoriBannerSpec extends SpecBase with MustMatchers {
 

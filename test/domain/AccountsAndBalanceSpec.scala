@@ -19,7 +19,7 @@ package domain
 import domain.DutyPaymentMethod.CDS
 import play.api.libs.json.Json
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
 

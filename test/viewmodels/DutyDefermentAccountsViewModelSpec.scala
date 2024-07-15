@@ -30,7 +30,7 @@ import views.html.account_cards.{
   duty_deferment_balances, duty_deferment_inaccurate_balances_message
 }
 import views.html.components.{account_status, hidden_status}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import java.time.LocalDateTime
 

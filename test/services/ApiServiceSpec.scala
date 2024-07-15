@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
 import utils.TestData.FILE_SIZE_1000
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 import scala.concurrent.Future
 

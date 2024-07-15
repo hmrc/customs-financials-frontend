@@ -18,7 +18,7 @@ package controllers
 
 import play.api.test.Helpers._
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class StaticPagesControllerSpec extends SpecBase with MustMatchers{
 

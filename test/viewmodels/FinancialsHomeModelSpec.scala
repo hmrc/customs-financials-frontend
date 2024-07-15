@@ -20,7 +20,7 @@ import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts,
 import utils.SpecBase
 
 import java.time.LocalDateTime
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class FinancialsHomeModelSpec extends SpecBase with MustMatchers {
 

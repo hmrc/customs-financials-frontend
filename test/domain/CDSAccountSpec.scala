@@ -19,7 +19,7 @@ package domain
 
 import utils.SpecBase
 import views.helpers.Formatters
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class CDSAccountSpec extends SpecBase with MustMatchers {
 

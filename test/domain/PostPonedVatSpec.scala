@@ -17,7 +17,7 @@
 package domain
 
 import utils.SpecBase
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class PostPonedVatSpec extends SpecBase with MustMatchers {
 

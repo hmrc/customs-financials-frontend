@@ -40,7 +40,7 @@ import utils.TestData.{FILE_SIZE_888, LENGTH_8}
 import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
 import scala.util.Random
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
+import utils.MustMatchers
 
 class HomeControllerCardSpec extends SpecBase with MustMatchers {
 

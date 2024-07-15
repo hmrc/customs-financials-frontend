@@ -31,9 +31,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
-import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import scala.concurrent.Future
+import utils.MustMatchers
 
 class EmailControllerSpec extends SpecBase with MustMatchers {
 
