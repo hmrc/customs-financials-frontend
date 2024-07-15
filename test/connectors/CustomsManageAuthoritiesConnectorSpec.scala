@@ -16,7 +16,6 @@
 
 package connectors
 
-import config.AppConfig
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
@@ -116,7 +115,6 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
   }
 
   trait Setup {
-    val mockAppConfig: AppConfig = mock[AppConfig]
     val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val endPointUrl =
@@ -125,7 +123,6 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val app: Application = application().overrides(
-      inject.bind[AppConfig].toInstance(mockAppConfig),
       inject.bind[HttpClientV2].toInstance(mockHttpClient),
       inject.bind[RequestBuilder].toInstance(requestBuilder)
     ).build()

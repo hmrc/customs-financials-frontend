@@ -56,6 +56,8 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
 
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+
         when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
 
         await(sdesService.getAuthoritiesCsvFiles(someEori)(hc))
@@ -71,6 +73,8 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
           .thenReturn(
             Future.successful(HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesSdesResponse).toString()))
           )
+
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
 
         when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
 
@@ -104,6 +108,8 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
             Future.successful(
               HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString()))
           )
+
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
 
         when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
 

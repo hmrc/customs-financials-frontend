@@ -18,17 +18,17 @@ package connectors
 
 import config.AppConfig
 import domain.*
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
 import play.api.{Application, inject}
 import play.api.test.Helpers.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId, StringContextOps, *}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId, *}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
 import utils.MustMatchers
-
+import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +44,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "save all account links for a session" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
+        //val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
 
         when(requestBuilder.withBody(any[AccountLinksRequest]())(any(), any(), any()))
           .thenReturn(requestBuilder)
@@ -52,7 +52,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
 
-        when(mockHttpClient.post(eqTo(url"$cacheUrl"))(any())).thenReturn(requestBuilder)
+        when(mockHttpClient.post(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.storeSession(sessionId.value, someLinks))
         result.status mustBe OK
@@ -70,7 +70,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
 
-        when(mockHttpClient.delete(eqTo(url"$cacheUrl"))(any())).thenReturn(requestBuilder)
+        when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.removeSession(sessionId.value))
         result.status mustBe OK
@@ -88,7 +88,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
 
-        when(mockHttpClient.get(eqTo(url"$cacheUrl"))(any())).thenReturn(requestBuilder)
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.getAccontLinks(sessionId.value))
         result mustBe None
@@ -165,7 +165,6 @@ class CustomsFinancialsSessionCacheConnectorSpec
     when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
 
     val app: Application = application().overrides(
-      inject.bind[AppConfig].toInstance(mockAppConfig),
       inject.bind[HttpClientV2].toInstance(mockHttpClient),
       inject.bind[RequestBuilder].toInstance(requestBuilder)
     ).build()

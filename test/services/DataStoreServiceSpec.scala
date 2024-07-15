@@ -211,7 +211,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         val eori = "ETMP500ERROR"
 
         when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-          .thenReturn(new ServiceUnavailableException("ServiceUnavailable"))
+          .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
 
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -227,9 +227,9 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
           CompanyInformationResponse(companyName, "1", address)
 
         when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(new ServiceUnavailableException("ServiceUnavailable"))
+          .thenReturn(Future.successful(companyInformationResponse))
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(Future.successful(companyInformationResponse))
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
           val response = service.getCompanyName(eori)

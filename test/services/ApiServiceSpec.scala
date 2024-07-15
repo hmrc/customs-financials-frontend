@@ -104,13 +104,14 @@ class ApiServiceSpec
         when(requestBuilder.execute(any[HttpReads[AccountsAndBalancesResponseContainer]], any[ExecutionContext]))
           .thenReturn(Future.successful(accounts))
 
-        when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
+        when(mockHttpClient.post(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(appTest) {
           val service = appTest.injector.instanceOf[ApiService]
           await(service.getAccounts(traderEori))
-          verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
-            "customs-financials-api.get.accounts"))(any)(any)
+
+          verify(mockMetricsReporterService)
+            .withResponseTimeLogging(eqTo("customs-financials-api.get.accounts"))(any)(any)
         }
       }
 
@@ -151,7 +152,7 @@ class ApiServiceSpec
           .thenReturn(requestBuilder)
 
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(HttpResponse.apply(NO_CONTENT, emptyString)))
+          .thenReturn(Future.successful(HttpResponse.apply(CREATED, emptyString)))
 
         when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
 
