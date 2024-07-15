@@ -18,7 +18,6 @@ package utils
 
 
 import utils.Constants._
-import utils.MustMatchers
 
 class ConstantsSpec extends SpecBase with MustMatchers {
 

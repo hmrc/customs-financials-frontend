@@ -19,7 +19,7 @@ package connectors
 import config.AppConfig
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
-import domain.{FileInformation, Metadata, MetadataItem, SdesFile, StandingAuthorityFile, StandingAuthorityMetadata}
+import domain.{FileInformation, Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{spy, times, verify, when}
 
@@ -35,10 +35,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOp
 import utils.SpecBase
 import utils.MustMatchers
 
-import java.net.URL
 import utils.TestData.{DAY_1, DAY_25, FILE_SIZE_111, FILE_SIZE_115, MONTH_5, MONTH_6, YEAR_2022}
-
-import scala.concurrent.Future
 
 class SdesConnectorSpec extends SpecBase with MustMatchers {
 

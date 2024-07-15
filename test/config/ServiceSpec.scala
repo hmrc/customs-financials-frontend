@@ -18,7 +18,6 @@ package config
 
 import play.api.Configuration
 import utils.{ShouldMatchers, SpecBase}
-import org.scalatest.matchers.must.Matchers as MustMatchers
 
 class ServiceSpec extends SpecBase with ShouldMatchers {
 

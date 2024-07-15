@@ -32,7 +32,6 @@ import utils.MustMatchers
 
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
-import scala.concurrent.Future
 
 class CustomsManageAuthoritiesConnectorSpec extends SpecBase
   with ScalaFutures

@@ -34,8 +34,6 @@ import utils.SpecBase
 import utils.TestData.FILE_SIZE_1000
 import utils.MustMatchers
 
-import scala.concurrent.Future
-
 class ApiServiceSpec
   extends SpecBase
     with FutureAwaits

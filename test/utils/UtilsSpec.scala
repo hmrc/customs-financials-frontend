@@ -21,7 +21,6 @@ import domain.FileRole.StandingAuthority
 import domain.StandingAuthorityMetadata
 import domain.StandingAuthorityFile
 import Utils._
-import utils.MustMatchers
 
 class UtilsSpec extends SpecBase with MustMatchers {
 

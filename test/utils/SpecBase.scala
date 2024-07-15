@@ -19,7 +19,6 @@ package utils
 import actionbuilders.{FakeIdentifierAction, IdentifierAction}
 import org.apache.pekko.stream.testkit.NoMaterializer
 import com.codahale.metrics.MetricRegistry
-import com.ibm.icu.impl.duration.DateFormatter
 import domain.{EoriHistory, SignedInUser}
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.jsoup.nodes.Document
@@ -42,7 +41,6 @@ import play.api.{Application, inject}
 import scala.util.{Failure, Success, Try}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.text.SimpleDateFormat
 import scala.annotation.implicitNotFound
 import scala.jdk.CollectionConverters.*
 import scala.language.implicitConversions
@@ -56,7 +54,6 @@ trait SpecBase extends AnyWordSpecLike
   with MockitoSugar
   with OptionValues
   with ScalaFutures
-  //with Matchers
   with IntegrationPatience {
 
   val emptyString = ""

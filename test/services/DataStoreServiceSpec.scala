@@ -31,7 +31,6 @@ import java.net.URL
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
 import utils.SpecBase
-import uk.gov.hmrc.http.HttpReads.Implicits.*
 import utils.MustMatchers
 
 import java.time.{LocalDate, LocalDateTime}

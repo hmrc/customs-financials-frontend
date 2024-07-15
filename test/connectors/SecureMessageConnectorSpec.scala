@@ -21,17 +21,16 @@ import play.api.inject.bind
 import play.api.test.Helpers.*
 import play.twirl.api.Html
 import config.AppConfig
-import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.StringContextOps
 import utils.SpecBase
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.play.partials.HtmlPartial
-import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
+import uk.gov.hmrc.http.{HttpReads, *}
 import utils.MustMatchers
 
 import scala.concurrent.{ExecutionContext, Future}
-import java.net.URL
 
 class SecureMessageConnectorSpec extends SpecBase with MustMatchers {
 

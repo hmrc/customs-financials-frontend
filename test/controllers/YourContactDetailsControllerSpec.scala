@@ -34,8 +34,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 import utils.{ShouldMatchers, SpecBase}
 
-import scala.concurrent.Future
-
 class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
 
   "YourContactDetailsController" should {
