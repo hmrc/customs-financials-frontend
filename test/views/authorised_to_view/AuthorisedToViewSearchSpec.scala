@@ -29,8 +29,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_search
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AuthorisedToViewSearchSpec extends SpecBase {
+class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
   "AuthorisedToViewSearch view" should {
 
     "display correct title and guidance" in new SetUp {

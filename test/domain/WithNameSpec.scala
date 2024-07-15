@@ -18,13 +18,15 @@ package domain
 
 
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class WithNameSpec extends SpecBase {
+class WithNameSpec extends SpecBase with MustMatchers {
 
   "WithName" should {
     "successfully overwrites name" in {
       val testData = "Test Name"
       val withName: WithName = new WithName(testData)
+
       withName.toString mustBe testData
     }
   }

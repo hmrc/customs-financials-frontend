@@ -23,8 +23,9 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.confirmation_panel
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class ConfirmationPanelSpec extends SpecBase {
+class ConfirmationPanelSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

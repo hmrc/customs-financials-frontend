@@ -23,8 +23,9 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.authorised_account_search_inset
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AuthorisedAccountSearchInsetSpec extends SpecBase {
+class AuthorisedAccountSearchInsetSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

@@ -28,8 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_request_received
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AuthorisedToViewRequestReceivedSpec extends SpecBase {
+class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Authorised to View request received" should {
 

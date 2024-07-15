@@ -36,10 +36,11 @@ import utils.SpecBase
 import utils.TestData.{BALANCE_299, BALANCE_499, BALANCE_500, BALANCE_999, NEGATIVE_BALANCE_100}
 import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.html.account_cards.duty_deferment_account_cards
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import java.time.LocalDateTime
 
-class DutyDefermentAccountCardSpec extends SpecBase {
+class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
 
   "Duty Deferment Account Card" should {
 

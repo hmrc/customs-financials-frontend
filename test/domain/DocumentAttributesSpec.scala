@@ -20,8 +20,9 @@ import domain.FileRole.C79Certificate
 
 import services.DocumentAttributes
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class DocumentAttributesSpec extends SpecBase {
+class DocumentAttributesSpec extends SpecBase with MustMatchers {
 
   "isRequested" should {
     val documentAttributes = DocumentAttributes(

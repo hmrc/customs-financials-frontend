@@ -17,8 +17,9 @@
 package domain
 
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AccountsAndBalancesResponseContainerSpec extends SpecBase {
+class AccountsAndBalancesResponseContainerSpec extends SpecBase with MustMatchers {
 
   "toCdsAccounts" should {
 

@@ -17,9 +17,9 @@
 package config
 
 import play.api.Application
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
 
-class AppConfigSpec extends SpecBase {
+class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "AppConfig" should {
     "contain correct values for the provided configuration" in new Setup {

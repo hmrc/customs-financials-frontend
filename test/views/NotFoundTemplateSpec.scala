@@ -27,10 +27,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.error_states.not_found_template
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import scala.jdk.CollectionConverters._
 
-class NotFoundTemplateSpec extends SpecBase {
+class NotFoundTemplateSpec extends SpecBase with MustMatchers {
 
   "Not found template view" should {
 
@@ -49,7 +50,7 @@ class NotFoundTemplateSpec extends SpecBase {
         )
         val actual =
           view.getElementsByClass("govuk-body").asScala.map(_.text()).toList
-        actual should be(expected)
+        actual mustBe expected
       }
     }
 

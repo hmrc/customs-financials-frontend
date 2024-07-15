@@ -27,8 +27,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.error_states.not_subscribed_to_cds
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class NotSubscribedToCdsViewSpec extends SpecBase {
+class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
 
   "Not subscribed to cds view" should {
     "display header as non-link text" in new Setup {

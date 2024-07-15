@@ -26,8 +26,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.error_states.account_not_available
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AccountNotAvailableSpec extends SpecBase {
+class AccountNotAvailableSpec extends SpecBase with MustMatchers {
 
   "AccountNotAvailable view" should {
     "render correctly" in new Setup {

@@ -22,22 +22,25 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.ScalaFutures
-
 import play.api.Application
 import play.api.inject.bind
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import services.MetricsReporterService
 import utils.SpecBase
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import org.scalatest.matchers.must.Matchers as MustMatchers
 
-import scala.concurrent.Future
+import java.net.URL
+import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialApiConnectorSpec
   extends SpecBase
     with ScalaFutures
     with FutureAwaits
-    with DefaultAwaitTimeout {
+    with DefaultAwaitTimeout
+    with MustMatchers {
 
   "CustomsFinancialApiConnector" should {
     "return verified email" in new Setup {
@@ -54,8 +57,10 @@ class CustomsFinancialApiConnectorSpec
 
       running(app) {
 
-        when[Future[EmailUnverifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+        when(requestBuilder.execute(any[HttpReads[EmailUnverifiedResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
+
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -79,25 +84,32 @@ class CustomsFinancialApiConnectorSpec
 
     val expectedResult: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    val mockHttpClient: HttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
     val response: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
 
-    when[Future[EmailVerifiedResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+    when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
       .thenReturn(Future.successful(response))
+
+    when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
     when(mockMetricsReporterService.withResponseTimeLogging[HttpResponse](any)(any)(any))
       .thenAnswer((i: InvocationOnMock) => {
         i.getArgument[Future[HttpResponse]](1)
       })
 
-    when[Future[HttpResponse]](mockHttpClient.DELETE(any, any)(any, any, any))
+    when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+    when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
       .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
+
+    when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
     val app: Application = application().overrides(
       bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      bind[HttpClient].toInstance(mockHttpClient)
+      bind[HttpClientV2].toInstance(mockHttpClient),
+      bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
   }
 }

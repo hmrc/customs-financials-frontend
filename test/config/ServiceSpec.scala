@@ -17,9 +17,10 @@
 package config
 
 import play.api.Configuration
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
+import org.scalatest.matchers.must.Matchers as MustMatchers
 
-class ServiceSpec extends SpecBase {
+class ServiceSpec extends SpecBase with ShouldMatchers {
 
   "should be loaded from configuration correctly" in {
     val config = Configuration(
@@ -44,7 +45,7 @@ class ServiceSpec extends SpecBase {
 
       import Service.convertToString
 
-      convertToString(serviceOb) mustBe "http://localhost:8080"
+      convertToString(serviceOb) shouldBe "http://localhost:8080"
     }
   }
 

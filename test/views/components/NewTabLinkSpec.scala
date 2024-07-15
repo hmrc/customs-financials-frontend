@@ -25,8 +25,9 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.newTabLink
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class NewTabLinkSpec extends SpecBase {
+class NewTabLinkSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

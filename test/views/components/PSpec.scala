@@ -24,8 +24,9 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.p
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class PSpec extends SpecBase {
+class PSpec extends SpecBase with MustMatchers {
 
   "P component" should {
     "render the default class name when classes is not defined" in new Setup {

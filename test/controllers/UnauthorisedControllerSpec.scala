@@ -19,6 +19,7 @@ package controllers
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => meq}
 import org.mockito.Mockito.when
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import play.api.{Application, inject}
 import play.api.test.Helpers._
@@ -30,7 +31,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UnauthorisedControllerSpec extends SpecBase {
+class UnauthorisedControllerSpec extends SpecBase with MustMatchers {
 
   "UnauthorisedController" should {
     "load 'not subscribed to cds' page" in new Setup {

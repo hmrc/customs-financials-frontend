@@ -26,10 +26,11 @@ import utils.SpecBase
 import utils.TestData._
 import utils.Utils.emptyString
 import viewmodels.Paginated
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import scala.jdk.CollectionConverters._
 
-class PaginatedSpec extends SpecBase {
+class PaginatedSpec extends SpecBase with MustMatchers {
 
   val app: Application = application().build()
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

@@ -29,6 +29,7 @@ import domain.{
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import play.api.http.Status
 import play.api.i18n.Messages
@@ -47,7 +48,7 @@ import scala.concurrent.Future
 import scala.jdk.CollectionConverters._
 import scala.util.Random
 
-class HomeControllerSpec extends SpecBase {
+class HomeControllerSpec extends SpecBase with MustMatchers {
 
   "CustomsFinancialsHomeController" should {
     val eori1 = "EORI0123"

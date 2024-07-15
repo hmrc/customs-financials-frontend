@@ -33,10 +33,11 @@ import services.{ApiService, DataStoreService, NotificationService, XiEoriInform
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import scala.concurrent.Future
 
-class CashAccountCardSpec extends SpecBase {
+class CashAccountCardSpec extends SpecBase with MustMatchers {
 
   "the landing page" should {
     "show cash account card details" in new Setup {

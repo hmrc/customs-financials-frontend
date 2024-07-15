@@ -18,8 +18,9 @@ package controllers
 
 import play.api.test.Helpers._
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class StaticPagesControllerSpec extends SpecBase {
+class StaticPagesControllerSpec extends SpecBase with MustMatchers{
 
   "accessibility page" should {
     "return OK / 303" in {

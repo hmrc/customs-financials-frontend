@@ -28,8 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.your_contact_details.your_contact_details
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class YourContactDetailsViewSpec extends SpecBase {
+class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Your Contact Details" should {
     "display header" in new Setup {

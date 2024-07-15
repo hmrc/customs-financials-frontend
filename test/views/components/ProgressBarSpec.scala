@@ -24,8 +24,9 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.progress_bar
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class ProgressBarSpec extends SpecBase {
+class ProgressBarSpec extends SpecBase with MustMatchers {
 
   "ProgressBar" should {
 

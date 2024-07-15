@@ -22,16 +22,17 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
 import org.mockito.ArgumentCaptor
 import play.api.libs.json.{JsArray, Json}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector._
+import uk.gov.hmrc.play.audit.http.connector.*
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
+
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AuditingServiceSpec extends SpecBase {
+class AuditingServiceSpec extends SpecBase with ShouldMatchers {
 
   "AuditingService" should {
 

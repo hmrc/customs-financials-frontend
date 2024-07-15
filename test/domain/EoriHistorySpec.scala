@@ -16,14 +16,14 @@
 
 package domain
 
-
 import play.api.libs.json.{JsSuccess, Json}
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
 
-class EoriHistorySpec extends SpecBase {
+class EoriHistorySpec extends SpecBase with MustMatchers {
 
   "it" should {
     "parse ISO_LOCAL_DATE" in {

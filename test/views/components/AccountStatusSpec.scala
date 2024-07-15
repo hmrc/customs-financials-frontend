@@ -25,8 +25,9 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.components.account_status
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AccountStatusSpec extends SpecBase {
+class AccountStatusSpec extends SpecBase with MustMatchers {
 
   "render correct status message for pending status" in new Setup {
     val output: HtmlFormat.Appendable = view(

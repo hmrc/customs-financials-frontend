@@ -26,8 +26,9 @@ import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.error_states.not_subscribed_to_cds
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class NotSubscribedToCdsSpec extends SpecBase {
+class NotSubscribedToCdsSpec extends SpecBase with MustMatchers {
 
   "Not Subscribed to CDS view" should {
     "render correctly" in new Setup {

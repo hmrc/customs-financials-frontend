@@ -16,7 +16,6 @@
 
 package services
 
-
 import play.api.Application
 import org.mockito.Mockito.when
 import play.api.test.Helpers._
@@ -24,8 +23,9 @@ import utils.SpecBase
 import utils.TestData.{DAY_20, HOUR_12, MINUTES_30, MONTH_12, YEAR_2027}
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class DateTimeServiceSpec extends SpecBase {
+class DateTimeServiceSpec extends SpecBase with MustMatchers {
 
   "return the fixed date if fixedDateTime is enabled" in {
     val app: Application = application().configure("features.fixed-system-time" -> true).build()

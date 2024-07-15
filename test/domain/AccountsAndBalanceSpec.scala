@@ -19,8 +19,9 @@ package domain
 import domain.DutyPaymentMethod.CDS
 import play.api.libs.json.Json
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AccountsAndBalanceSpec extends SpecBase {
+class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
 
   "AccountsAndBalances" should {
     "be able parse account status from json" in {

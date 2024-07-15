@@ -27,8 +27,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.dashboard.customs_financials_partial_home
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class PartialHomeViewSpec extends SpecBase {
+class PartialHomeViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Partial Home View" should {
     "display header as a link text" in new Setup {

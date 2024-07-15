@@ -18,7 +18,7 @@ package services
 
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.{verify, when, reset}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
@@ -26,13 +26,15 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 class NotificationServiceSpec
   extends MockAuditingService
     with FutureAwaits
     with DefaultAwaitTimeout
     with ScalaFutures
-    with BeforeAndAfterEach {
+    with BeforeAndAfterEach
+    with MustMatchers {
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

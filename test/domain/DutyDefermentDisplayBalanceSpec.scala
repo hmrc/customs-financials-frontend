@@ -17,8 +17,9 @@
 package domain
 
 import utils.SpecBase
+import utils.ShouldMatchers
 
-class DutyDefermentDisplayBalanceSpec extends SpecBase {
+class DutyDefermentDisplayBalanceSpec extends SpecBase with ShouldMatchers {
 
   "DutyDefermentDisplayBalance" should {
 

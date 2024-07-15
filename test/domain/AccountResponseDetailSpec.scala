@@ -18,8 +18,9 @@ package domain
 
 import domain.DutyPaymentMethod.CDS
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AccountResponseDetailSpec extends SpecBase {
+class AccountResponseDetailSpec extends SpecBase with MustMatchers {
 
   "totalNumberOfAccounts" should {
 

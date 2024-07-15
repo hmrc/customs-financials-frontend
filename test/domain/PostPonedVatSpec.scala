@@ -16,10 +16,10 @@
 
 package domain
 
-
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class PostPonedVatSpec extends SpecBase {
+class PostPonedVatSpec extends SpecBase with MustMatchers {
 
   "PostPonedVat" should {
     "parse sequence of CDS and Chief String from DutyPaymentMethod" in {

@@ -29,8 +29,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_search_result
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class AuthorisedToViewSearchResultSpec extends SpecBase {
+class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
 
   "AuthorisedToViewSearchResult view" should {
     "display the correct title, header and company name" in new SetUp {

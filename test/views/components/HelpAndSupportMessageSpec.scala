@@ -21,8 +21,9 @@ import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class HelpAndSupportMessageSpec extends SpecBase {
+class HelpAndSupportMessageSpec extends SpecBase with MustMatchers {
 
   implicit val messages: Messages = Helpers.stubMessages()
 

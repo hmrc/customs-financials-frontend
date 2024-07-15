@@ -17,11 +17,11 @@
 package controllers
 
 import domain.EoriHistory
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
 
 import java.time.LocalDate
 
-class OrderedByEoriHistorySpec extends SpecBase {
+class OrderedByEoriHistorySpec extends SpecBase with ShouldMatchers {
 
   "OrderedByEoriHistory" should {
 

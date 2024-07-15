@@ -19,8 +19,9 @@ package domain
 
 import utils.SpecBase
 import views.helpers.Formatters
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class CDSAccountSpec extends SpecBase {
+class CDSAccountSpec extends SpecBase with MustMatchers {
 
   "DutyDefermentAccount.displayBalances" should {
 

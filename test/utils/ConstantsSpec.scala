@@ -18,8 +18,9 @@ package utils
 
 
 import utils.Constants._
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class ConstantsSpec extends SpecBase {
+class ConstantsSpec extends SpecBase with MustMatchers {
 
   "FIXED_DATE_TIME_YEAR" should {
     "return correct value" in {

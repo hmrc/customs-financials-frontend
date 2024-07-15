@@ -23,10 +23,11 @@ import domain.FileRole.{PostponedVATAmendedStatement, PostponedVATStatement}
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import java.time.LocalDate
 
-class PostponedVatStatementGroupSpec extends SpecBase {
+class PostponedVatStatementGroupSpec extends SpecBase with MustMatchers {
 
   "collectFiles" should {
     "return correct output when amended is true, file role is PostponedVATAmendedStatement " +

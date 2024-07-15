@@ -17,9 +17,9 @@
 package forms.mappings
 
 import play.api.data.validation.{Invalid, Valid}
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
 
-class ConstraintsSpec extends SpecBase with Constraints {
+class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
 
   "checkEORI" should {
 

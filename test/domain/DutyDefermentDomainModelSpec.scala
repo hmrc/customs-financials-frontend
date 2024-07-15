@@ -19,9 +19,10 @@ package domain
 import domain.{DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA}
 
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_50}
 
-class DutyDefermentDomainModelSpec extends SpecBase {
+class DutyDefermentDomainModelSpec extends SpecBase with MustMatchers {
 
   "DutyDefermentDomainModel" should {
 

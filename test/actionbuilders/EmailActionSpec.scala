@@ -27,10 +27,11 @@ import services.DataStoreService
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.ServiceUnavailableException
 import utils.SpecBase
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import scala.concurrent.Future
 
-class EmailActionSpec extends SpecBase {
+class EmailActionSpec extends SpecBase with MustMatchers{
 
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {

@@ -25,8 +25,9 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.import_vat_card
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class ImportVatCardSpec extends SpecBase {
+class ImportVatCardSpec extends SpecBase with MustMatchers {
 
   "view" should {
     "display correct text and guidance" in new Setup {

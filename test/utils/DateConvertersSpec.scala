@@ -22,8 +22,9 @@ import utils.TestData.{DAY_2, MONTH_1, YEAR_2022, YEAR_2023}
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class DateConvertersSpec extends SpecBase {
+class DateConvertersSpec extends SpecBase with MustMatchers {
 
   "Date Converters" should {
     "toLocalDate converts datetime to local time" in new Setup {

@@ -25,11 +25,11 @@ import play.api.{Application, inject}
 import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
 
 import scala.concurrent.Future
 
-class AuthorizedRequestReceivedControllerSpec extends SpecBase {
+class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatchers {
 
   "requestAuthoritiesCsv" should {
     "should be sent to authorisedToViewRequestReceived when request successful" in new Setup {

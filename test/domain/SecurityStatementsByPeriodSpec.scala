@@ -18,12 +18,13 @@ package domain
 
 import domain.FileFormat.Pdf
 import domain.FileRole.SecurityStatement
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
 import utils.SpecBase
 
 import java.time.LocalDate
 
-class SecurityStatementsByPeriodSpec extends SpecBase {
+class SecurityStatementsByPeriodSpec extends SpecBase with MustMatchers {
 
   "pdf" should {
     "return the file when files has pdf format" in new Setup {

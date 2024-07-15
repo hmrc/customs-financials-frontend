@@ -23,6 +23,7 @@ import domain.{
 }
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 
 import play.api.http.Status
@@ -39,8 +40,9 @@ import utils.TestData.{FILE_SIZE_888, LENGTH_8}
 import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
 import scala.util.Random
+import org.scalatest.matchers.must.{Matchers => MustMatchers}
 
-class HomeControllerCardSpec extends SpecBase {
+class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
   "CustomsFinancialsHomeController" should {
 
