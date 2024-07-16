@@ -39,7 +39,7 @@ class SecureMessageConnectorSpec extends SpecBase with MustMatchers {
       when(requestBuilder.execute(any[HttpReads[HtmlPartial]], any[ExecutionContext]))
         .thenReturn(Future.successful(HtmlPartial.Success(Some("Hello"), Html(emptyString))))
 
-      when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+      when(requestBuilder.transform(any())).thenReturn(requestBuilder)
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -55,7 +55,7 @@ class SecureMessageConnectorSpec extends SpecBase with MustMatchers {
       when(requestBuilder.execute(any[HttpReads[HtmlPartial]], any[ExecutionContext]))
         .thenReturn(Future.failed(new Exception("ahh")))
 
-      when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+      when(requestBuilder.transform(any())).thenReturn(requestBuilder)
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -71,7 +71,7 @@ class SecureMessageConnectorSpec extends SpecBase with MustMatchers {
       when(requestBuilder.execute(any[HttpReads[HtmlPartial]], any[ExecutionContext]))
         .thenReturn(Future.successful(HtmlPartial.Failure(Some(INTERNAL_SERVER_ERROR), "ahh")))
 
-      when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+      when(requestBuilder.transform(any())).thenReturn(requestBuilder)
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 

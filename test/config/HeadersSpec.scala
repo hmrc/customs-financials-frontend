@@ -21,12 +21,6 @@ import Headers.*
 
 class HeadersSpec extends SpecBase with MustMatchers {
 
-  "RETURN_TO" should {
-    "return correct constant value" in {
-      RETURN_TO.trim mustBe "return_to"
-    }
-  }
-
   "X_CLIENT_ID" should {
     "return correct constant value" in {
       X_CLIENT_ID.trim mustBe "x-client-id"
