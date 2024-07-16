@@ -17,18 +17,18 @@
 package services
 
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
-import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse as CA,
-  DefermentBalancesResponse as Bal, DutyDefermentAccountResponse as DDA, GeneralGuaranteeAccountResponse as GGA, *}
+import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse as CA, DefermentBalancesResponse as Bal, DutyDefermentAccountResponse as DDA, GeneralGuaranteeAccountResponse as GGA, *}
 import org.mockito.ArgumentMatchers.{any, eq as eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
+
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 import play.api.{Application, inject}
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, *}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
 import utils.TestData.FILE_SIZE_1000
@@ -97,6 +97,9 @@ class ApiServiceSpec
             )
           )
         )
+
+        when[Future[Seq[DutyDefermentAccount]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
+          .thenReturn(Future.successful(Seq(dd1.toDomain)))
 
         when(requestBuilder.withBody(any[AccountsAndBalancesRequestContainer])(any(), any(), any()))
           .thenReturn(requestBuilder)
