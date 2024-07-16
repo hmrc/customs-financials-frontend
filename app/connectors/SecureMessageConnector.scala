@@ -28,6 +28,7 @@ import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import connectors.AccountLinksRequest.jsonBodyWritable
 import domain.SearchAuthoritiesRequest.jsonBodyWritable
+import config.Headers.RETURN_TO
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -43,7 +44,7 @@ class SecureMessageConnector @Inject()(httpClient: HttpClientV2,
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
 
     httpClient.get(url"${appConfig.customsSecureMessagingBannerEndpoint}")
-      .setHeader("return_to" -> returnToUrl)
+      .setHeader(RETURN_TO -> returnToUrl)
       .execute[HtmlPartial]
       .flatMap {
         case success@HtmlPartial.Success(_, _) => Future.successful(Some(success))

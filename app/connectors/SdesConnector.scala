@@ -26,6 +26,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOp
 import javax.inject.Inject
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
+import config.Headers.{X_CLIENT_ID, X_SDES_KEY}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,7 +59,7 @@ class SdesConnector @Inject()(httpClient: HttpClientV2,
 
     metricsReporterService.withResponseTimeLogging(metricsName) {
       httpClient.get(url"$url")
-        .setHeader("x-client-id" -> appConfig.xClientIdHeader, "X-SDES-Key" -> key)
+        .setHeader(X_CLIENT_ID -> appConfig.xClientIdHeader, X_SDES_KEY -> key)
         .execute[HttpResponse]
         .flatMap {
           res =>
