@@ -97,6 +97,6 @@ class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
     implicit val msg: Messages = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
-    val date = "19th August 2022"
+    val date = "25 November 2022"
   }
 }
