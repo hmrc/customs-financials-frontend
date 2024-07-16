@@ -30,7 +30,7 @@ import services.MetricsReporterService
 import utils.SpecBase
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import org.scalatest.matchers.must.Matchers as MustMatchers
+import utils.MustMatchers
 
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
