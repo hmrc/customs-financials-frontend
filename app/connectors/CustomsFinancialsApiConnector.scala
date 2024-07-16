@@ -38,7 +38,6 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
       .flatMap {
         response => Future.successful(response)
       }
-    //httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
   }
 
   def getEmailaddress(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
@@ -47,7 +46,6 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
       .flatMap {
         response => Future.successful(response)
       }
-    //httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/email-display")
   }
 
   def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
@@ -56,8 +54,6 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
       .flatMap {
         res => Future.successful(res.unVerifiedEmail)
       }
-   /* httpClient.GET[EmailUnverifiedResponse](appConfig.customsFinancialsApi +
-      "/subscriptions/unverified-email-display").map(res => res.unVerifiedEmail)*/
   }
 
   def deleteNotification(eori: String,
@@ -70,7 +66,6 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
         .flatMap {
           res => Future.successful(res.status == Status.OK)
         }
-      //httpClient.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
     }
   }
 }

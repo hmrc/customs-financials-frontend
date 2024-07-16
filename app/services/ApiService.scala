@@ -25,12 +25,6 @@ import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
-/*import connectors.AccountLinksRequest.jsonBodyWritable
-import domain.AccountsAndBalancesRequest.jsonBodyWritable
-import domain.AccountsRequestCommon.jsonBodyWritable
-import domain.AccountsRequestDetail.jsonBodyWritable
-import domain.SearchAuthoritiesRequest.jsonBodyWritable
-import domain.AccountsAndBalancesRequestContainer.jsonBodyWritable*/
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -76,9 +70,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
         .flatMap {
           res => Future.successful(res.toCdsAccounts(eori))
         }
-
-     /* httpClient.POST[AccountsAndBalancesRequestContainer, AccountsAndBalancesResponseContainer](
-        apiEndpoint, accountsAndBalancesRequest).map(_.toCdsAccounts(eori))*/
     }
   }
 
@@ -100,15 +91,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
             case None => Future.successful(Left(SearchError))
           }
         }.recover { case _ => Left(SearchError) }
-
-   /*   httpClient.POST[SearchAuthoritiesRequest, HttpResponse](apiEndpoint, request).map {
-        case response if response.status == Status.NO_CONTENT => Left(NoAuthorities)
-        case response if response.status != Status.OK => Left(SearchError)
-        case response => Json.parse(response.body).asOpt[SearchedAuthoritiesResponse] match {
-          case Some(value) => Right(value.toSearchAuthorities)
-          case None => Left(SearchError)
-        }
-      }.recover { case _ => Left(SearchError) }*/
     }
   }
 
@@ -121,8 +103,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
         .flatMap {
           res => Future.successful(res.notifications)
         }
-
-      //httpClient.GET[SdesNotificationsForEori](apiEndpoint).map(_.notifications)
     }
   }
 
@@ -135,7 +115,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
         .flatMap {
           res => Future.successful(res.status == Status.OK)
         }
-      //httpClient.DELETE[HttpResponse](apiEndpoint).map(_.status == Status.OK)
     }
   }
 
@@ -166,25 +145,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
           log.error(s"requestAuthoritiesCsv threw an exception - ${ex.getMessage}")
           Left(RequestAuthoritiesCSVError)
       }
-
-      /*httpClient.POST[RequestAuthoritiesCsv, HttpResponse](apiEndpoint, requestAuthoritiesCsv).map {
-        case response if response.status == Status.OK =>
-          Json.parse(response.body).as[RequestAuthoritiesCsvResponse] match {
-            case value => Right(value)
-          }
-
-        case response =>
-          log.error(s"requestAuthoritiesCsv failed with ${response.status} ${response.body}")
-          Left(RequestAuthoritiesCSVError)
-
-      }.recover {
-        case ex: JsResultException =>
-          log.error(s"requestAuthoritiesCsv threw an JS exception - ${ex.getMessage}")
-          Left(JsonParseError)
-        case ex: Throwable =>
-          log.error(s"requestAuthoritiesCsv threw an exception - ${ex.getMessage}")
-          Left(RequestAuthoritiesCSVError)
-      }*/
     }
   }
 }

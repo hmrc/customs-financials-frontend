@@ -43,6 +43,7 @@ class MetricsReporterServiceSpec extends SpecBase {
               Future.successful("OK")
             }
           }
+
           verify(mockRegistry).histogram("responseTimes.foo.200")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
@@ -57,6 +58,7 @@ class MetricsReporterServiceSpec extends SpecBase {
               }
             }
           }
+
           verify(mockRegistry).histogram("responseTimes.bar.500")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
@@ -71,6 +73,7 @@ class MetricsReporterServiceSpec extends SpecBase {
               }
             }
           }
+
           verify(mockRegistry).histogram("responseTimes.bar.404")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
@@ -85,6 +88,7 @@ class MetricsReporterServiceSpec extends SpecBase {
               }
             }
           }
+
           verify(mockRegistry).histogram("responseTimes.bar.400")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
@@ -99,6 +103,7 @@ class MetricsReporterServiceSpec extends SpecBase {
               }
             }
           }
+
           verify(mockRegistry).histogram("responseTimes.bar.503")
           verify(mockHistogram).update(elapsedTimeInMillis)
         }
@@ -112,6 +117,7 @@ class MetricsReporterServiceSpec extends SpecBase {
             }
           }
         }
+
         verify(mockRegistry).histogram("responseTimes.bar.403")
         verify(mockHistogram).update(elapsedTimeInMillis)
       }
@@ -124,8 +130,7 @@ class MetricsReporterServiceSpec extends SpecBase {
     val endTimestamp: OffsetDateTime = OffsetDateTime.parse("2018-11-09T17:15:35+01:00")
     val elapsedTimeInMillis = 5000L
 
-    when(mockDateTimeService.getTimeStamp)
-      .thenReturn(startTimestamp, endTimestamp)
+    when(mockDateTimeService.getTimeStamp).thenReturn(startTimestamp, endTimestamp)
 
     val mockHistogram: Histogram = mock[Histogram]
 

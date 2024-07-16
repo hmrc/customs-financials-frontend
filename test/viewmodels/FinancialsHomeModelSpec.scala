@@ -16,7 +16,8 @@
 
 package viewmodels
 
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable,
+  DutyDefermentAccount, DutyDefermentBalance}
 import utils.SpecBase
 
 import java.time.LocalDateTime

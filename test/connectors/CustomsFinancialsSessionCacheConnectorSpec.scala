@@ -44,7 +44,6 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "save all account links for a session" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        //val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
 
         when(requestBuilder.withBody(any[AccountLinksRequest]())(any(), any(), any()))
           .thenReturn(requestBuilder)
@@ -64,7 +63,6 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "should remove the session from the cache" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/remove/" + sessionId.value
 
         when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
@@ -82,8 +80,6 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "Should return Nothing when no result found" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl +
-          "/account-links/" + sessionId.value
 
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
@@ -102,7 +98,7 @@ class CustomsFinancialsSessionCacheConnectorSpec
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(HttpResponse(OK, "Some_String")))
+          .thenReturn(Future.successful(HttpResponse(OK, "Some_String")))
 
         when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 

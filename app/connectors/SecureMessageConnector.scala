@@ -53,15 +53,5 @@ class SecureMessageConnector @Inject()(httpClient: HttpClientV2,
         log.error(s"Problem loading message banner partial: ${exc.getMessage}")
         None
     }
-
-    /*http.GET[HtmlPartial](appConfig.customsSecureMessagingBannerEndpoint, Seq(("return_to", returnToUrl)))
-      .map {
-        case success@HtmlPartial.Success(_, _) => Some(success)
-        case HtmlPartial.Failure(_, _) => None
-      }.recover {
-        case exc =>
-          log.error(s"Problem loading message banner partial: ${exc.getMessage}")
-          None
-      }*/
   }
 }

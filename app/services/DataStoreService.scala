@@ -49,11 +49,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
         log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
         emptyEoriHistory
       }
-     /* httpClient.GET[EoriHistoryResponse](dataStoreEndpoint).map(response => response.eoriHistory)
-        .recover { case e =>
-          log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
-          emptyEoriHistory
-        }*/
     }
   }
 
@@ -70,14 +65,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
         }.recover {
         case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
       }
-
-    /*  httpClient.GET[EmailResponse](dataStoreEndpoint).map {
-        case EmailResponse(Some(address), _, None) => Right(Email(address))
-        case EmailResponse(Some(email), _, Some(_)) => Left(UndeliverableEmail(email))
-        case _ => Left(UnverifiedEmail)
-      }.recover {
-        case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
-      }*/
     }
   }
 
@@ -93,12 +80,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
         log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
         None
       }
-      /*    httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(
-        response => if (response.consent == "1") Some(response.name) else None)
-    }.recover { case e =>
-      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
-      None
-    }*/
     }
   }
 
@@ -111,8 +92,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
         .flatMap {
           response => Future.successful(Some(response.name))
         }
-
-      //httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.name))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None
@@ -130,8 +109,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
           .flatMap {
             response => Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
           }
-        /*httpClient.GET[XiEoriInformationReponse](dataStoreEndpoint).map(
-          response => if (response.xiEori.isEmpty) None else Some(response.xiEori))*/
       }.recover { case e =>
         log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
         None
@@ -150,7 +127,6 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
         .flatMap {
           response => Future.successful(Some(response.address))
         }
-      //httpClient.GET[CompanyInformationResponse](dataStoreEndpoint).map(response => Some(response.address))
     }.recover { case e =>
       log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
       None

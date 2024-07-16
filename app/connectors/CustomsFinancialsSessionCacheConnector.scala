@@ -60,7 +60,6 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
         .flatMap {
           Future.successful
         }
-      //httpClient.POST[AccountLinksRequest, HttpResponse](sessionCacheUrl, request)
     }
   }
 
@@ -73,10 +72,6 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
       case _ => None
     }
 
-    /*httpClient.GET[Seq[AccountLinkWithoutDate]](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$sessionId").map(
-      Some(_)).recover { case _ => None }*/
-
   def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] =
     httpClient.get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/session/$sessionId")
       .execute[HttpResponse]
@@ -85,10 +80,6 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
       }.recover {
       case _ => None
     }
-
-    /*httpClient.GET[HttpResponse](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId").map(
-      Some(_)).recover { case _ => None }*/
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = s"${appConfig.customsFinancialsSessionCacheUrl}/remove/$id"
@@ -99,7 +90,6 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
         .flatMap {
           Future.successful
         }
-      //httpClient.DELETE[HttpResponse](sessionCacheUrl)
     }
   }
 

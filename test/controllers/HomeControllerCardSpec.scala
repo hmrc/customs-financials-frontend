@@ -189,6 +189,7 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
         }
       }
     }
+
     "show the historic eori duty deferment cards" in {
 
       val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",
