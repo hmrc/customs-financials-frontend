@@ -43,10 +43,16 @@ class CustomsFinancialApiConnectorSpec
     with MustMatchers {
 
   "CustomsFinancialApiConnector" should {
+
     "return verified email" in new Setup {
 
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+
+        when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
+          .thenReturn(Future.successful(EmailVerifiedResponse(Some("verifiedEmail"))))
+
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
         await(result) mustBe expectedResult

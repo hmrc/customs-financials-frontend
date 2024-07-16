@@ -36,7 +36,7 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
     httpClient.get(url"${appConfig.customsFinancialsApi}/subscriptions/subscriptionsdisplay")
       .execute[EmailVerifiedResponse]
       .flatMap {
-        Future.successful
+        response => Future.successful(response)
       }
     //httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/subscriptionsdisplay")
   }
@@ -45,7 +45,7 @@ class CustomsFinancialsApiConnector @Inject()(appConfig: AppConfig,
     httpClient.get(url"${appConfig.customsFinancialsApi}/subscriptions/email-display")
       .execute[EmailVerifiedResponse]
       .flatMap {
-        Future.successful
+        response => Future.successful(response)
       }
     //httpClient.GET[EmailVerifiedResponse](appConfig.customsFinancialsApi + "/subscriptions/email-display")
   }
