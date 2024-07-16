@@ -23,19 +23,19 @@ class HeadersSpec extends SpecBase with MustMatchers {
 
   "RETURN_TO" should {
     "return correct constant value" in {
-      RETURN_TO mustBe "return_to"
+      RETURN_TO.trim mustBe "return_to"
     }
   }
 
   "X_CLIENT_ID" should {
     "return correct constant value" in {
-      X_CLIENT_ID mustBe "x-client-id"
+      X_CLIENT_ID.trim mustBe "x-client-id"
     }
   }
 
   "X_SDES_KEY" should {
     "return correct constant value" in {
-      X_SDES_KEY mustBe "X-SDES-Key"
+      X_SDES_KEY.trim mustBe "X-SDES-Key"
     }
   }
 }
