@@ -16,7 +16,7 @@
 
 package domain
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class AccountResponse(number: String,
                            `type`: String,
@@ -24,7 +24,7 @@ case class AccountResponse(number: String,
                            accountStatus: Option[CDSAccountStatus],
                            accountStatusID: Option[CDSAccountStatusId],
                            viewBalanceIsGranted: Boolean,
-                           isleOfManFlag: Option[Boolean] = Some(false))
+                           isleOfManFlag: Option[Boolean] = None)
 
 object AccountResponse {
   implicit val reads: Reads[AccountResponse] = Json.reads[AccountResponse]
