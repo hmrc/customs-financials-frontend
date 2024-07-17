@@ -16,11 +16,17 @@
 
 package domain
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, JsValue, Json, OFormat, Writes}
+import play.api.libs.ws.BodyWritable
+import domain.AccountsAndBalancesRequest.jsonBodyWritable
 
 case class AccountsAndBalancesRequestContainer(accountsAndBalancesRequest: AccountsAndBalancesRequest)
 
 object AccountsAndBalancesRequestContainer {
-  implicit val accountsAndBalancesRequestContainerFormat: OFormat[AccountsAndBalancesRequestContainer] =
-    Json.format[AccountsAndBalancesRequestContainer]
+  implicit val format: OFormat[AccountsAndBalancesRequestContainer] = Json.format[AccountsAndBalancesRequestContainer]
+
+    implicit def jsonBodyWritable[T](implicit
+                                     writes: Writes[T],
+                                     jsValueBodyWritable: BodyWritable[JsValue]
+                                    ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

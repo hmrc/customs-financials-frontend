@@ -19,11 +19,14 @@ package connectors
 import config.AppConfig
 import domain.{AccountLink, AccountLinkWithoutDate, SessionCacheAccountLink}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsValue, Json, OFormat, Writes}
+import play.api.libs.ws.BodyWritable
 import services.MetricsReporterService
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.HttpReadsInstances.readFromJson
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,38 +36,60 @@ case class AccountLinksRequest(sessionId: String,
 
 object AccountLinksRequest {
   implicit val format: OFormat[AccountLinksRequest] = Json.format[AccountLinksRequest]
+
+  implicit def jsonBodyWritable[T](implicit
+                                   writes: Writes[T],
+                                   jsValueBodyWritable: BodyWritable[JsValue]
+                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }
 
-class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClient,
+class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
                                                        appConfig: AppConfig,
                                                        metricsReporter: MetricsReporterService)
                                                       (implicit executionContext: ExecutionContext) {
 
   def storeSession(id: String, accountLinks: Seq[AccountLink])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/update-links"
+    val sessionCacheUrl = s"${appConfig.customsFinancialsSessionCacheUrl}/update-links"
 
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.update-links") {
       val request: AccountLinksRequest = AccountLinksRequest(id, toSessionCacheAccountLinks(accountLinks))
 
-      httpClient.POST[AccountLinksRequest, HttpResponse](sessionCacheUrl, request)
+      httpClient.post(url"$sessionCacheUrl")
+        .withBody[AccountLinksRequest](request)
+        .execute[HttpResponse]
+        .flatMap {
+          Future.successful
+        }
     }
   }
 
   def getAccontLinks(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
-    httpClient.GET[Seq[AccountLinkWithoutDate]](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/$sessionId").map(
-      Some(_)).recover { case _ => None }
+    httpClient.get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/$sessionId")
+      .execute[Seq[AccountLinkWithoutDate]]
+      .flatMap {
+        res => Future.successful(Some(res))
+      }.recover {
+      case _ => None
+    }
 
   def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] =
-    httpClient.GET[HttpResponse](
-      appConfig.customsFinancialsSessionCacheUrl + s"/account-links/session/$sessionId").map(
-      Some(_)).recover { case _ => None }
+    httpClient.get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/session/$sessionId")
+      .execute[HttpResponse]
+      .flatMap {
+        res => Future.successful(Some(res))
+      }.recover {
+      case _ => None
+    }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    val sessionCacheUrl = appConfig.customsFinancialsSessionCacheUrl + "/remove/" + id
+    val sessionCacheUrl = s"${appConfig.customsFinancialsSessionCacheUrl}/remove/$id"
 
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.remove") {
-      httpClient.DELETE[HttpResponse](sessionCacheUrl)
+      httpClient.delete(url"$sessionCacheUrl")
+        .execute[HttpResponse]
+        .flatMap {
+          Future.successful
+        }
     }
   }
 

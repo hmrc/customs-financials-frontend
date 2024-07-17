@@ -19,15 +19,16 @@ package views.email
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.email.undeliverable_email
+import utils.MustMatchers
 
-class UndeliverableEmailSpec extends SpecBase {
+class UndeliverableEmailSpec extends SpecBase with MustMatchers {
 
   "view" should {
     "display correct guidance and text" in new Setup {
@@ -49,7 +50,7 @@ class UndeliverableEmailSpec extends SpecBase {
 
       view.text().contains(messages(app)("cf.undeliverable.email.link-text")) mustBe true
 
-      view.toString should include(nextPageUrl)
+      view.toString must include(nextPageUrl)
       view.text().contains(email.get) mustBe true
     }
 

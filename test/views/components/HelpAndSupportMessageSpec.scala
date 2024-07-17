@@ -17,12 +17,13 @@
 package views.components
 
 import org.jsoup.Jsoup
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
+import utils.MustMatchers
 
-class HelpAndSupportMessageSpec extends SpecBase {
+class HelpAndSupportMessageSpec extends SpecBase with MustMatchers {
 
   implicit val messages: Messages = Helpers.stubMessages()
 

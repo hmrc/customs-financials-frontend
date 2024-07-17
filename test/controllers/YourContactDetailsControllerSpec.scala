@@ -17,28 +17,33 @@
 package controllers
 
 import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector}
-import domain._
+import domain.*
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
-import utils.SpecBase
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import java.net.URL
+import utils.{ShouldMatchers, SpecBase}
 
-class YourContactDetailsControllerSpec extends SpecBase {
+class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
 
   "YourContactDetailsController" should {
     "return OK when request session id is found in the cache" in new Setup {
       val sessionValue = "session_acfe456"
 
-      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-        any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+      when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
+      .thenReturn(Future.successful("Some_String"))
+
+      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionValue))))
@@ -55,8 +60,10 @@ class YourContactDetailsControllerSpec extends SpecBase {
       val sessionCacheValue = "session_acfe456"
       val sessionHeaderValue = "session_acf"
 
-      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-        any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+      when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
+        .thenReturn(Future.successful("Some_String"))
+
+      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionCacheValue))))
@@ -74,8 +81,10 @@ class YourContactDetailsControllerSpec extends SpecBase {
     "redirect to Home page if there is no sessionId present" in new Setup {
       val sessionHeaderValue = "session_acf"
 
-      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-        any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+      when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
+        .thenReturn(Future.successful("Some_String"))
+
+      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
@@ -90,8 +99,10 @@ class YourContactDetailsControllerSpec extends SpecBase {
     }
 
     "redirect to home page if sessionId is not found in cache" in new Setup {
-      when[Future[String]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-        any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful("Some_String"))
+      when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
+        .thenReturn(Future.successful("Some_String"))
+
+      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any)(any)).thenReturn(Future.successful(None))
 
@@ -147,7 +158,8 @@ class YourContactDetailsControllerSpec extends SpecBase {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSdesConnector: SdesConnector = mock[SdesConnector]
     val mockSessionCache: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
-    val mockHttpClient: HttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val email: Email = Email("email@123.com")
 
     when(mockSessionCache.getAccontLinks(any)(any)).thenReturn(Future.successful(Option(Seq())))

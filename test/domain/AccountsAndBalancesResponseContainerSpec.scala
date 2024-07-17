@@ -16,10 +16,10 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+import utils.MustMatchers
 
-class AccountsAndBalancesResponseContainerSpec extends SpecBase {
+class AccountsAndBalancesResponseContainerSpec extends SpecBase with MustMatchers {
 
   "toCdsAccounts" should {
 

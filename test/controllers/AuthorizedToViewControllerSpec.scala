@@ -19,23 +19,23 @@ package controllers
 import connectors.SdesConnector
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
-import domain._
+import domain.*
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
-import play.api.test.Helpers._
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import play.api.test.Helpers.*
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.SpecBase
-import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022}
+import utils.{ShouldMatchers, SpecBase}
+import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1,
+  FILE_SIZE_500, MONTH_6, YEAR_2022}
 
 import scala.concurrent.Future
-import scala.reflect.io.File
 
-class AuthorizedToViewControllerSpec extends SpecBase {
+class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   "The Authorized to View page" should {
     "return OK" in new Setup {
@@ -79,9 +79,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
           html.getElementById("xi-csv-authority-link").attr("href")
@@ -108,13 +108,13 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
-        html.getElementById("xi-csv-authority-link").html() mustBe
+        html.getElementById("xi-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
+        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
       }
     }
 
@@ -139,7 +139,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
 
         status(result) should be(SEE_OTHER)
-        redirectLocation(result) mustBe Some(controllers.routes.EmailController.showUndeliverable().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EmailController.showUndeliverable().url)
       }
     }
 
@@ -152,7 +152,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
 
         status(result) should be(SEE_OTHER)
-        redirectLocation(result) mustBe Some(controllers.routes.EmailController.showUnverified().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EmailController.showUnverified().url)
       }
     }
   }
@@ -189,13 +189,6 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
-
-      val fileObj1: File = File("CS_000000000154_csv.csv")
-      val fileObj2: File = File("CS_000000000152_csv.csv")
-
-      val fileObjectList: List[File] = List(fileObj1, fileObj2)
-
-      fileObjectList.sortWith((x1, x2) => x1.lastModified < x2.lastModified)
 
       val filesWithNames: List[EORI] = List("CS_000000000154_csv.csv",
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
@@ -310,7 +303,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Right(SearchedAuthorities("3",
           Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
-        .andThenAnswer(Future.successful(Right(SearchedAuthorities("3",
+        .thenReturn(Future.successful(Right(SearchedAuthorities("3",
           Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -335,7 +328,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(Left(NoAuthorities)))
+        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(Left(NoAuthorities)))
 
       running(app) {
         val request = fakeRequest(POST,
@@ -393,7 +386,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).andThenAnswer(
+          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).thenReturn(
           Future.successful(Left(NoAuthorities))
         )
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -427,7 +420,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).andThenAnswer(Future.successful(
+        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(
           Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
 
       when(mockDataStoreService.getCompanyName(any)(any))
@@ -475,9 +468,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
           html.getElementById("xi-csv-authority-link").attr("href")
@@ -501,13 +494,13 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
-        html.getElementById("xi-csv-authority-link").html() mustBe
+        html.getElementById("xi-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") mustBe xiStanAuthFile154Url
+        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
       }
     }
 
@@ -534,7 +527,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return Internal Server Error and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for EORI" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
@@ -549,7 +542,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
     "return Internal Server Error when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for input account number" in new Setup {
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).andThenAnswer(Future.successful(Left(SearchError)))
+        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
@@ -577,9 +570,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
@@ -601,9 +594,9 @@ class AuthorizedToViewControllerSpec extends SpecBase {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() mustBe
+        html.getElementById("gb-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") mustBe gbStanAuthFile154Url
+        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
@@ -674,7 +667,7 @@ class AuthorizedToViewControllerSpec extends SpecBase {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById("h1") must not be emptyString
+        html.getElementById("h1") should not be emptyString
       }
     }
   }

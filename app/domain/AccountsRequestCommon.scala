@@ -16,13 +16,14 @@
 
 package domain
 
-import play.api.libs.json.{Json, OFormat}
 import domain.DutyPaymentMethod.CDS
 
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import scala.util.Random
+import play.api.libs.json.{Format, JsValue, Json, OFormat, Writes}
+import play.api.libs.ws.BodyWritable
 
 case class AccountsRequestCommon(receiptDate: String, acknowledgementReference: String, regime: String)
 
@@ -43,4 +44,9 @@ object AccountsRequestCommon {
   }
 
   implicit val format: OFormat[AccountsRequestCommon] = Json.format[AccountsRequestCommon]
+
+  implicit def jsonBodyWritable[T](implicit
+                                   writes: Writes[T],
+                                   jsValueBodyWritable: BodyWritable[JsValue]
+                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

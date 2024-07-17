@@ -16,15 +16,16 @@
 
 package views.helpers
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
-import utils.TestData.{FILE_SIZE_1000, FILE_SIZE_1000000, FILE_SIZE_42, FILE_SIZE_5430000, FILE_SIZE_999999}
+import utils.TestData.{FILE_SIZE_1000, FILE_SIZE_1000000, FILE_SIZE_42, FILE_SIZE_5430000,
+  FILE_SIZE_999999}
 
 import java.time.{LocalDate, LocalDateTime}
+import utils.MustMatchers
 
-class FormattersTest extends SpecBase {
+class FormattersTest extends SpecBase with MustMatchers {
 
   implicit val messages: Messages = Helpers.stubMessages()
 

@@ -19,7 +19,7 @@ package views
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -27,8 +27,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.error_states.not_subscribed_to_cds
+import utils.MustMatchers
 
-class NotSubscribedToCdsViewSpec extends SpecBase {
+class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
 
   "Not subscribed to cds view" should {
     "display header as non-link text" in new Setup {

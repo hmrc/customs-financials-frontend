@@ -16,10 +16,10 @@
 
 package domain
 
-import play.api.libs.json._
-import utils.SpecBase
+import play.api.libs.json.*
+import utils.{ShouldMatchers, SpecBase}
 
-class AccountLinkWithoutDateSpec extends SpecBase {
+class AccountLinkWithoutDateSpec extends SpecBase with ShouldMatchers {
 
   "AccountLinkWithoutDate" should {
     "be serializable and deserializable to/from JSON" in {

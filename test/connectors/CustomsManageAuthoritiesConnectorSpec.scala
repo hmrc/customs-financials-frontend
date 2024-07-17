@@ -16,24 +16,27 @@
 
 package connectors
 
-import config.AppConfig
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SERVICE_UNAVAILABLE}
 import play.api.test.Helpers.{running, status}
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import play.api.{Application, inject}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, UpstreamErrorResponse}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
 import utils.TestData.TEST_EORI
+import utils.MustMatchers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import java.net.URL
 
 class CustomsManageAuthoritiesConnectorSpec extends SpecBase
   with ScalaFutures
   with FutureAwaits
-  with DefaultAwaitTimeout {
+  with DefaultAwaitTimeout
+  with MustMatchers {
 
   "fetchAndSaveAccountAuthoritiesInCache" should {
 
@@ -43,8 +46,10 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
         running(app) {
           val connector = app.injector.instanceOf[CustomsManageAuthoritiesConnector]
 
-          when[Future[HttpResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
             .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+
+          when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
           val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
           status(result) mustBe OK
@@ -55,8 +60,10 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
         running(app) {
           val connector = app.injector.instanceOf[CustomsManageAuthoritiesConnector]
 
-          when[Future[HttpResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
             .thenReturn(Future.successful(HttpResponse.apply(NO_CONTENT, emptyString)))
+
+          when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
           val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
           status(result) mustBe OK
@@ -67,8 +74,10 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
         running(app) {
           val connector = app.injector.instanceOf[CustomsManageAuthoritiesConnector]
 
-          when[Future[HttpResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
             .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, emptyString)))
+
+          when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
           val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
           status(result) mustBe INTERNAL_SERVER_ERROR
@@ -79,8 +88,10 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
         running(app) {
           val connector = app.injector.instanceOf[CustomsManageAuthoritiesConnector]
 
-          when[Future[HttpResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
             .thenReturn(Future.successful(HttpResponse.apply(SERVICE_UNAVAILABLE, emptyString)))
+
+          when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
           val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
           status(result) mustBe SERVICE_UNAVAILABLE
@@ -91,8 +102,10 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
         running(app) {
           val connector = app.injector.instanceOf[CustomsManageAuthoritiesConnector]
 
-          when[Future[HttpResponse]](mockHttpClient.GET(any, any, any)(any, any, any))
+          when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
             .thenReturn(Future.failed(UpstreamErrorResponse("Internal Error", INTERNAL_SERVER_ERROR)))
+
+          when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
           val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
           status(result) mustBe INTERNAL_SERVER_ERROR
@@ -102,16 +115,16 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
   }
 
   trait Setup {
-    val mockAppConfig: AppConfig = mock[AppConfig]
-    val mockHttpClient: HttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val endPointUrl =
       s"http://localhost:9000/customs/manage-authorities/account-authorities/fetch-authorities/$TEST_EORI"
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     val app: Application = application().overrides(
-      inject.bind[AppConfig].toInstance(mockAppConfig),
-      inject.bind[HttpClient].toInstance(mockHttpClient)
+      inject.bind[HttpClientV2].toInstance(mockHttpClient),
+      inject.bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
   }
 }

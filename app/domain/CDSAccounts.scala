@@ -31,6 +31,6 @@ object CDSAccounts {
   val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect {
     case cashAccount: CashAccount => cashAccount }
 
-  val filterByAccountNumber: String => Seq[CDSAccount] =>
-    Seq[CDSAccount] = accountNumber => accounts => accounts.filter(_.number == accountNumber)
+  val filterByAccountNumber: String => Seq[CDSAccount] => Seq[CDSAccount] =
+    accountNumber => accounts => accounts.filter(_.number == accountNumber)
 }

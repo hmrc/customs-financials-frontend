@@ -17,34 +17,41 @@
 package config
 
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.{Request, RequestHeader}
 import play.twirl.api.Html
 import views.html.error_states.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import utils.Utils.emptyString
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              implicit val appConfig: AppConfig,
                              notFoundView: not_found_template,
-                             errorTemplate: error_template) extends FrontendErrorHandler {
+                             errorTemplate: error_template)(protected val ec: ExecutionContext) extends FrontendErrorHandler {
   override def standardErrorTemplate(pageTitle: String,
                                      heading: String,
-                                     message: String)(implicit request: Request[_]): Html =
-    errorTemplate(Messages("cf.error.standard-error.title"), Messages("cf.error.standard-error.heading"),
-      Messages("cf.error.standard-error.message"), emptyString, emptyString)
+                                     message: String)(implicit requestHeader: RequestHeader): Future[Html] =
+    Future.successful(
+      errorTemplate(
+        Messages("cf.error.standard-error.title"),
+        Messages("cf.error.standard-error.heading"),
+        Messages("cf.error.standard-error.message"),
+        emptyString,
+        emptyString)
+    )
 
-  override def notFoundTemplate(implicit request: Request[_]): Html =
-    notFoundView()
+  override def notFoundTemplate(implicit requestHeader: RequestHeader): Future[Html] =
+    Future.successful(notFoundView())
 
-  def unauthorized()(implicit request: Request[_]): Html = {
+  def unauthorized()(implicit requestHeader: RequestHeader): Html = {
     errorTemplate(Messages("cf.error.unauthorized.title"), Messages("cf.error.unauthorized.heading"),
       Messages("cf.error.unauthorized.message"))
   }
 
-  def technicalDifficulties()(implicit request: Request[_]): Html = {
+  def technicalDifficulties()(implicit requestHeader: RequestHeader): Html = {
     errorTemplate(Messages("cf.error.technicalDifficulties.title"), Messages("cf.error.technicalDifficulties.heading"),
       Messages("cf.error.technicalDifficulties.message"))
   }

@@ -20,13 +20,14 @@ import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.import_vat_card
+import utils.MustMatchers
 
-class ImportVatCardSpec extends SpecBase {
+class ImportVatCardSpec extends SpecBase with MustMatchers {
 
   "view" should {
     "display correct text and guidance" in new Setup {

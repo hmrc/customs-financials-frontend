@@ -19,15 +19,16 @@ package views.error_states
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.error_states.not_subscribed_to_cds
+import utils.MustMatchers
 
-class NotSubscribedToCdsSpec extends SpecBase {
+class NotSubscribedToCdsSpec extends SpecBase with MustMatchers {
 
   "Not Subscribed to CDS view" should {
     "render correctly" in new Setup {

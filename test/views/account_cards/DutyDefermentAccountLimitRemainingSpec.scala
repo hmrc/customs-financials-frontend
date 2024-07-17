@@ -20,14 +20,15 @@ import domain.{AccountStatusClosed, DefermentAccountAvailable, DutyDefermentAcco
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_limit_remaining
+import utils.MustMatchers
 
-class DutyDefermentAccountLimitRemainingSpec extends SpecBase {
+class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

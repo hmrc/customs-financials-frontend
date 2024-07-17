@@ -16,11 +16,11 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.{JsString, JsSuccess, Json}
+import utils.MustMatchers
 import utils.SpecBase
 
-class CDSAccountStatusSpec extends SpecBase {
+class CDSAccountStatusSpec extends SpecBase with MustMatchers {
 
   "CDSAccountStatusReads" should {
     "read correctly" in {

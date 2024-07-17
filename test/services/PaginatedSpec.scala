@@ -18,7 +18,7 @@ package services
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.test.FakeRequest
@@ -26,10 +26,11 @@ import utils.SpecBase
 import utils.TestData._
 import utils.Utils.emptyString
 import viewmodels.Paginated
+import utils.MustMatchers
 
 import scala.jdk.CollectionConverters._
 
-class PaginatedSpec extends SpecBase {
+class PaginatedSpec extends SpecBase with MustMatchers {
 
   val app: Application = application().build()
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

@@ -31,7 +31,9 @@ class UnauthorisedController @Inject()(override val authConnector: AuthConnector
                                        notSubscribedView: not_subscribed_to_cds,
                                        implicit val mcc: MessagesControllerComponents)
                                       (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport with AuthorisedFunctions {
+  extends FrontendController(mcc)
+    with I18nSupport
+    with AuthorisedFunctions {
 
   def onPageLoad: Action[AnyContent] = Action async { implicit request =>
     authorised(AuthProviders(GovernmentGateway)) {

@@ -24,7 +24,7 @@ import domain.{
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
@@ -33,8 +33,9 @@ import views.helpers.Formatters
 import views.html.account_cards.duty_deferment_account_cards
 
 import java.time.LocalDateTime
+import utils.MustMatchers
 
-class DutyDefermentAccountCardsSpec extends SpecBase {
+class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

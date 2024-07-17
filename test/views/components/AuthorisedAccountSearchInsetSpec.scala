@@ -18,13 +18,14 @@ package views.components
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.authorised_account_search_inset
+import utils.MustMatchers
 
-class AuthorisedAccountSearchInsetSpec extends SpecBase {
+class AuthorisedAccountSearchInsetSpec extends SpecBase with MustMatchers {
 
   "view" should {
 

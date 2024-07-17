@@ -21,7 +21,7 @@ import domain.{Account, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDut
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -29,8 +29,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_search_result
+import utils.MustMatchers
 
-class AuthorisedToViewSearchResultSpec extends SpecBase {
+class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
 
   "AuthorisedToViewSearchResult view" should {
     "display the correct title, header and company name" in new SetUp {

@@ -20,15 +20,16 @@ import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import utils.SpecBase
 import views.html.components.authorities_notification_panel
+import utils.MustMatchers
 
-class AuthoritiesNotificationPanelSpec extends SpecBase {
+class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
 
   "AuthoritiesNotificationPanel view" should {
     "display the correct guidance when only GB authority file exists" in new Setup {

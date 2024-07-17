@@ -17,11 +17,11 @@
 package domain
 
 import domain.DutyPaymentMethod.CDS
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
+import utils.MustMatchers
 
-class AccountsAndBalanceSpec extends SpecBase {
+class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
 
   "AccountsAndBalances" should {
     "be able parse account status from json" in {
@@ -48,9 +48,9 @@ class AccountsAndBalanceSpec extends SpecBase {
 
         val account = Json.parse(json).as[AccountResponse]
 
-        val expectedAccount = AccountResponse("123456",
-          "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true,
-          accountStatusID = None, isleOfManFlag = None)
+        val expectedAccount =
+          AccountResponse("123456", "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true,
+            accountStatusID = None)
 
         account mustBe expectedAccount
       }
@@ -67,8 +67,8 @@ class AccountsAndBalanceSpec extends SpecBase {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234",
-        None, viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = None)
+      val expectedAccount =
+        AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None)
 
       account mustBe expectedAccount
     }
@@ -93,6 +93,7 @@ class AccountsAndBalanceSpec extends SpecBase {
 
     "be able to generate common request without PID and originatingSystem when 'useACC27' is true" in {
       val requestDud09 = AccountsRequestCommon.generate
+
       requestDud09.receiptDate.isEmpty mustBe false
       requestDud09.acknowledgementReference.length mustBe 32
       requestDud09.regime mustBe CDS
@@ -101,6 +102,7 @@ class AccountsAndBalanceSpec extends SpecBase {
     "be able to serialise and deserialise CDSAccountStatusIDs" in {
 
       val initialAccountStatusID: CDSAccountStatusId = DefermentAccountAvailable
+
       val js = Json.toJson(initialAccountStatusID)
       val fromJson = Json.fromJson[CDSAccountStatusId](js).get
 

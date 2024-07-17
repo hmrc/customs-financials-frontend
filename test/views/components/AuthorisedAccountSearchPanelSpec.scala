@@ -20,13 +20,14 @@ import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.authorised_account_search_panel
+import utils.MustMatchers
 
-class AuthorisedAccountSearchPanelSpec extends SpecBase {
+class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
   "AuthorisedAccountSearchPanel view" should {
     "load correctly with correct guidance when using duty deferement" in new Setup {

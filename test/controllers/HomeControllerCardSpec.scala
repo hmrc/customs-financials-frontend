@@ -22,8 +22,10 @@ import domain.{
   DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
 }
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.when
+
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.{Application, inject}
@@ -38,8 +40,9 @@ import utils.TestData.{FILE_SIZE_888, LENGTH_8}
 import scala.jdk.CollectionConverters._
 import scala.concurrent.Future
 import scala.util.Random
+import utils.MustMatchers
 
-class HomeControllerCardSpec extends SpecBase {
+class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
   "CustomsFinancialsHomeController" should {
 
@@ -186,6 +189,7 @@ class HomeControllerCardSpec extends SpecBase {
         }
       }
     }
+
     "show the historic eori duty deferment cards" in {
 
       val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",

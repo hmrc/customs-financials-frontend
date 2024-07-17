@@ -16,15 +16,15 @@
 
 package controllers
 
-
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
 import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
   XiEoriAddressInformation}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.{Application, inject}
@@ -33,10 +33,11 @@ import services.{ApiService, DataStoreService, NotificationService, XiEoriInform
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
+import utils.MustMatchers
 
 import scala.concurrent.Future
 
-class CashAccountCardSpec extends SpecBase {
+class CashAccountCardSpec extends SpecBase with MustMatchers {
 
   "the landing page" should {
     "show cash account card details" in new Setup {
@@ -98,7 +99,6 @@ class CashAccountCardSpec extends SpecBase {
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))
-    when(mockAccounts.eori).isLenient()
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
 

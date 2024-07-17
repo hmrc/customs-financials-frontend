@@ -17,35 +17,41 @@
 package connectors
 
 import config.AppConfig
-import domain._
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
+import domain.*
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.{Application, inject}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, SessionId}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId, *}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
-
+import utils.MustMatchers
+import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialsSessionCacheConnectorSpec
   extends SpecBase
     with ScalaFutures
     with FutureAwaits
-    with DefaultAwaitTimeout {
+    with DefaultAwaitTimeout
+    with MustMatchers {
 
   "store session" should {
     "save all account links for a session" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/update-links"
 
-        when[Future[HttpResponse]](mockHttpClient.POST(eqTo(cacheUrl),
-          eqTo(accountLinkRequest), any)(any, any, any, any))
+        when(requestBuilder.withBody(any[AccountLinksRequest]())(any(), any(), any()))
+          .thenReturn(requestBuilder)
+
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+
+        when(mockHttpClient.post(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.storeSession(sessionId.value, someLinks))
         result.status mustBe OK
@@ -57,10 +63,12 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "should remove the session from the cache" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl + "/remove/" + sessionId.value
 
-        when[Future[HttpResponse]](mockHttpClient.DELETE(eqTo(cacheUrl), any)(any, any, any))
+        when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+
+        when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.removeSession(sessionId.value))
         result.status mustBe OK
@@ -72,11 +80,11 @@ class CustomsFinancialsSessionCacheConnectorSpec
     "Should return Nothing when no result found" in new Setup {
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
-        val cacheUrl = mockAppConfig.customsFinancialsSessionCacheUrl +
-          "/account-links/" + sessionId.value
 
-        when[Future[HttpResponse]](mockHttpClient.GET(eqTo(cacheUrl), any, any)(any, any, any))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.getAccontLinks(sessionId.value))
         result mustBe None
@@ -89,8 +97,10 @@ class CustomsFinancialsSessionCacheConnectorSpec
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
-        when[Future[HttpResponse]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.successful(HttpResponse(OK, "Some_String")))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+          .thenReturn(Future.successful(HttpResponse(OK, "Some_String")))
+
+        when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 
         val result: Option[HttpResponse] = await(connector.getSessionId(sessionId.value))
 
@@ -107,8 +117,10 @@ class CustomsFinancialsSessionCacheConnectorSpec
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsSessionCacheConnector]
 
-        when[Future[HttpResponse]](mockHttpClient.GET(any, any[Seq[(String, String)]],
-          any[Seq[(String, String)]])(any, any, any)).thenReturn(Future.failed(new RuntimeException(emptyString)))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+          .thenReturn(Future.failed(new RuntimeException(emptyString)))
+
+        when(mockHttpClient.get(any())(any())).thenReturn(requestBuilder)
 
         val result = await(connector.getSessionId(sessionId.value))
         result mustBe None
@@ -135,7 +147,8 @@ class CustomsFinancialsSessionCacheConnectorSpec
 
     val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
     val mockAppConfig: AppConfig = mock[AppConfig]
-    val mockHttpClient: HttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -146,9 +159,10 @@ class CustomsFinancialsSessionCacheConnectorSpec
       "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
 
     when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
+
     val app: Application = application().overrides(
-      inject.bind[AppConfig].toInstance(mockAppConfig),
-      inject.bind[HttpClient].toInstance(mockHttpClient)
+      inject.bind[HttpClientV2].toInstance(mockHttpClient),
+      inject.bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
   }
 }

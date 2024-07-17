@@ -26,7 +26,7 @@ import domain.{
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -36,10 +36,11 @@ import utils.SpecBase
 import utils.TestData.{BALANCE_299, BALANCE_499, BALANCE_500, BALANCE_999, NEGATIVE_BALANCE_100}
 import viewmodels.{DutyDefermentAccountsViewModel, FinancialsHomeModel}
 import views.html.account_cards.duty_deferment_account_cards
+import utils.MustMatchers
 
 import java.time.LocalDateTime
 
-class DutyDefermentAccountCardSpec extends SpecBase {
+class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
 
   "Duty Deferment Account Card" should {
 

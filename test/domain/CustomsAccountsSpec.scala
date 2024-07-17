@@ -16,16 +16,16 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.prop.TableDrivenPropertyChecks._
 import org.scalatest.prop.Tables.Table
 import utils.SpecBase
+import utils.MustMatchers
 import utils.TestData.{
   BALANCE_10, BALANCE_100, BALANCE_1000000, BALANCE_150, BALANCE_20, BALANCE_200, BALANCE_200000,
   BALANCE_200001, BALANCE_200002, BALANCE_50, NEGATIVE_BALANCE_10, NEGATIVE_BALANCE_100, NEGATIVE_BALANCE_50
 }
 
-class CustomsAccountsSpec extends SpecBase {
+class CustomsAccountsSpec extends SpecBase with MustMatchers {
 
   "CDSAccounts" should {
 

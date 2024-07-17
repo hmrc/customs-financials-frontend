@@ -19,13 +19,13 @@ package services
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.{Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
 import utils.TestData.{DAY_1, FILE_SIZE_DEFAULT, MONTH_6, YEAR_2022}
+import utils.MustMatchers
 
-class SdesGatekeeperServiceSpec extends SpecBase {
+class SdesGatekeeperServiceSpec extends SpecBase with MustMatchers {
 
   implicit val messages: Messages = Helpers.stubMessages()
   "SdesGatekeeperService" should {

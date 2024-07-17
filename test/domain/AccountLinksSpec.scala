@@ -16,12 +16,12 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
 
 import java.time.LocalDateTime
+import utils.MustMatchers
 
-class AccountLinksSpec extends SpecBase {
+class AccountLinksSpec extends SpecBase with MustMatchers {
 
   "AccountLink" should {
     "should be able to assign data to an accountLink" in new Setup {

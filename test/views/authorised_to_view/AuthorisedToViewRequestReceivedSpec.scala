@@ -20,7 +20,7 @@ import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import play.api.mvc.AnyContentAsEmpty
@@ -28,8 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.authorised_to_view.authorised_to_view_request_received
+import utils.MustMatchers
 
-class AuthorisedToViewRequestReceivedSpec extends SpecBase {
+class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Authorised to View request received" should {
 

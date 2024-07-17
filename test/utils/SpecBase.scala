@@ -22,9 +22,10 @@ import com.codahale.metrics.MetricRegistry
 import domain.{EoriHistory, SignedInUser}
 import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.jsoup.nodes.Document
-import org.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.should.{Matchers => ShouldMatcher}
+import org.scalatest.matchers.must.{Matchers => MustMatcher}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.api
@@ -34,11 +35,15 @@ import play.api.inject.guice.{GuiceApplicationBuilder, GuiceableModule}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.CSRFTokenHelper.CSRFFRequestHeader
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.{Application, inject}
 
+import scala.util.{Failure, Success, Try}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.annotation.implicitNotFound
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
+import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 class FakeMetrics extends Metrics {
@@ -49,7 +54,6 @@ trait SpecBase extends AnyWordSpecLike
   with MockitoSugar
   with OptionValues
   with ScalaFutures
-  with Matchers
   with IntegrationPatience {
 
   val emptyString = ""
@@ -75,6 +79,17 @@ trait SpecBase extends AnyWordSpecLike
 
     def notContainElementById(id: String): Assertion = {
       assert(!document.getElementsByAttribute("id").asScala.toList.exists(_.id() == id))
+    }
+  }
+
+  implicit def stringToOptionalLocalDate(dateAsString: String): Option[LocalDate] = {
+    val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    Try {
+      LocalDate.parse(dateAsString, dateFormatter)
+    } match {
+      case Success(date) => Some(date)
+      case Failure(_) => None
     }
   }
 
@@ -117,3 +132,6 @@ trait SpecBase extends AnyWordSpecLike
     SignedInUser("testEori1", allEoriHistory, Some("someAltEori"))
   }
 }
+
+trait ShouldMatchers extends ShouldMatcher
+trait MustMatchers extends MustMatcher

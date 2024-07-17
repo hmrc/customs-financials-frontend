@@ -39,7 +39,8 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                              sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
                                              implicit val mcc: MessagesControllerComponents)
                                             (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+  extends FrontendController(mcc)
+    with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 

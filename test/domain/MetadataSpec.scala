@@ -16,10 +16,10 @@
 
 package domain
 
-import utils.SpecBase
+import utils.{ShouldMatchers, SpecBase}
 import play.api.libs.json.{JsObject, Json}
 
-class MetadataSpec extends SpecBase {
+class MetadataSpec extends SpecBase with ShouldMatchers {
 
   "Metadata" should {
     "serialize to JSON correctly" in {

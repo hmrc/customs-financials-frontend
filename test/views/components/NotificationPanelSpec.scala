@@ -18,14 +18,15 @@ package views.components
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.i18n.Messages
 import play.api.test.Helpers
 import utils.SpecBase
 
 import scala.jdk.CollectionConverters._
+import utils.MustMatchers
 
-class NotificationPanelSpec extends SpecBase {
+class NotificationPanelSpec extends SpecBase with MustMatchers {
   implicit val messages: Messages = Helpers.stubMessages()
 
   "Notification Panel" should {

@@ -19,15 +19,16 @@ package views.components
 import forms.EoriNumberFormProvider
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.data.Form
 import play.api.i18n.Messages
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.components.inputText
+import utils.MustMatchers
 
-class InputTextSpec extends SpecBase {
+class InputTextSpec extends SpecBase with MustMatchers {
 
   "InputText" should {
     "display the correct view" in new Setup {

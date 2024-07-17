@@ -20,21 +20,24 @@ import config.AppConfig
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.{FileInformation, Metadata, MetadataItem, StandingAuthorityFile, StandingAuthorityMetadata}
-import org.mockito.ArgumentMatchersSugar.{any, eqTo}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito.{spy, times, verify, when}
+
+import scala.concurrent.{ExecutionContext, Future}
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.{Application, inject}
 import play.api.libs.json.{JsArray, Json}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
 import utils.SpecBase
+import utils.MustMatchers
+
 import utils.TestData.{DAY_1, DAY_25, FILE_SIZE_111, FILE_SIZE_115, MONTH_5, MONTH_6, YEAR_2022}
 
-import scala.concurrent.Future
-
-class SdesConnectorSpec extends SpecBase {
+class SdesConnectorSpec extends SpecBase with MustMatchers {
 
   "HttpSdesConnector" should {
 
@@ -44,37 +47,49 @@ class SdesConnectorSpec extends SpecBase {
         val url: String = sdesStandingAuthorityFileUrl
 
         val app: Application = application().overrides(
-          inject.bind[HttpClient].toInstance(mockHttp)
+          inject.bind[HttpClientV2].toInstance(mockHttpClient),
+          inject.bind[RequestBuilder].toInstance(requestBuilder)
         ).build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
-        when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(HttpResponse(Status.OK, JsArray(Nil).toString())))
 
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+
+        when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
+
         await(sdesService.getAuthoritiesCsvFiles(someEori)(hc))
-        verify(mockHttp).GET(eqTo(url), any, any)(any, any, any)
+
+        verify(mockHttpClient).get(eqTo(url"$url"))(any)
       }
 
       "converts Sdes response to List[StandingAuthorityFile]" in new Setup {
         val url: String = sdesStandingAuthorityFileUrl
         val numberOfStatements: Int = standingAuthoritiesFilesSdesResponse.length
 
-        when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
-          .thenReturn(Future.successful(HttpResponse(Status.OK,
-            Json.toJson(standingAuthoritiesFilesSdesResponse).toString())))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+          .thenReturn(
+            Future.successful(HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesSdesResponse).toString()))
+          )
 
-        when(sdesGatekeeperServiceSpy.convertTo(any)).thenCallRealMethod()
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+
+        when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
+
+        when(sdesGatekeeperServiceSpy.convertTo(any())).thenCallRealMethod()
 
         val app: Application = application().overrides(
-          inject.bind[HttpClient].toInstance(mockHttp),
+          inject.bind[HttpClientV2].toInstance(mockHttpClient),
+          inject.bind[RequestBuilder].toInstance(requestBuilder),
           inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
         ).build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
         await(sdesService.getAuthoritiesCsvFiles(someEori)(hc))
-        verify(mockHttp).GET(eqTo(url), any, any)(any, any, any)
+        verify(mockHttpClient).get(eqTo(url"$url"))(any)
         verify(sdesGatekeeperServiceSpy, times(numberOfStatements)).convertToStandingAuthoritiesFile(any)
       }
 
@@ -82,20 +97,27 @@ class SdesConnectorSpec extends SpecBase {
         val url: String = sdesStandingAuthorityFileUrl
 
         val app: Application = application().overrides(
-          inject.bind[HttpClient].toInstance(mockHttp)
+          inject.bind[HttpClientV2].toInstance(mockHttpClient),
+          inject.bind[RequestBuilder].toInstance(requestBuilder)
         ).build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
-        when[Future[HttpResponse]](mockHttp.GET(eqTo(url), any, any)(any, any, any))
-          .thenReturn(Future.successful(HttpResponse(Status.OK,
-            Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString())))
+        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+          .thenReturn(
+            Future.successful(
+              HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString()))
+          )
+
+        when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
+
+        when(mockHttpClient.get(eqTo(url"$url"))(any())).thenReturn(requestBuilder)
 
         val result: Seq[StandingAuthorityFile] =
           await(sdesService.getAuthoritiesCsvFiles(someEoriWithUnknownFileTypes)(hc))
 
         result mustBe (standingAuthorityFiles)
-        verify(mockHttp).GET(eqTo(url), any, any)(any, any, any)
+        verify(mockHttpClient).get(eqTo(url"$url"))(any)
       }
     }
   }
@@ -148,7 +170,8 @@ class SdesConnectorSpec extends SpecBase {
     )
 
     val sdesGatekeeperServiceSpy: SdesGatekeeperService = spy(new SdesGatekeeperService())
-    val mockHttp: HttpClient = mock[HttpClient]
+    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val mockAppConfig: AppConfig = mock[AppConfig]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
     val mockAuditingService: AuditingService = mock[AuditingService]

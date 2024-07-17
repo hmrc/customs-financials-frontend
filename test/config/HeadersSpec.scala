@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package domain
+package config
 
-import play.api.libs.json.{JsValue, Json, OFormat, Writes}
-import play.api.libs.ws.BodyWritable
+import utils.{MustMatchers, SpecBase}
+import Headers.*
 
-case class RequestAuthoritiesCsv(requestingEori: String, alternateEORI: Option[String])
+class HeadersSpec extends SpecBase with MustMatchers {
 
-object RequestAuthoritiesCsv {
-  implicit val format: OFormat[RequestAuthoritiesCsv] = Json.format[RequestAuthoritiesCsv]
+  "X_CLIENT_ID" should {
+    "return correct constant value" in {
+      X_CLIENT_ID.trim mustBe "x-client-id"
+    }
+  }
 
-  implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+  "X_SDES_KEY" should {
+    "return correct constant value" in {
+      X_SDES_KEY.trim mustBe "X-SDES-Key"
+    }
+  }
 }

@@ -16,12 +16,12 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.libs.json.Json
 import utils.SpecBase
+import utils.MustMatchers
 import utils.TestData.FILE_SIZE_DEFAULT
 
-class FileInformationSpec extends SpecBase {
+class FileInformationSpec extends SpecBase with MustMatchers {
 
   "FileInformation" should {
 

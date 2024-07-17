@@ -18,14 +18,15 @@ package domain
 
 import domain.FileFormat.{Csv, Pdf}
 import domain.FileRole.SecurityStatement
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
+import utils.MustMatchers
 
 import java.time.LocalDate
 
-class VatCertificatesByMonthSpec extends SpecBase {
+class VatCertificatesByMonthSpec extends SpecBase with MustMatchers {
 
   "formattedMonth" should {
     "return correct formatted value for the month" in new Setup {

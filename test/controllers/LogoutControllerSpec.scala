@@ -18,18 +18,20 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+
 import play.api.test.Helpers._
 import play.api.{Application, inject}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
 import utils.SpecBase
+import utils.MustMatchers
 
 import java.net.URLEncoder
 import scala.concurrent.Future
 
-class LogoutControllerSpec extends SpecBase {
+class LogoutControllerSpec extends SpecBase with MustMatchers {
 
   "logout" should {
     "redirect to logout link with survey continue" in new Setup {

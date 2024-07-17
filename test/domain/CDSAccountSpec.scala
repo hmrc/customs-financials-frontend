@@ -16,11 +16,12 @@
 
 package domain
 
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import utils.SpecBase
 import views.helpers.Formatters
+import utils.MustMatchers
 
-class CDSAccountSpec extends SpecBase {
+class CDSAccountSpec extends SpecBase with MustMatchers {
 
   "DutyDefermentAccount.displayBalances" should {
 

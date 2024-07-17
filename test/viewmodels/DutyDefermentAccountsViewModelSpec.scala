@@ -22,7 +22,6 @@ import domain.{
   DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
 }
 import org.scalatest.Assertion
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
@@ -31,10 +30,11 @@ import views.html.account_cards.{
   duty_deferment_balances, duty_deferment_inaccurate_balances_message
 }
 import views.html.components.{account_status, hidden_status}
+import utils.MustMatchers
 
 import java.time.LocalDateTime
 
-class DutyDefermentAccountsViewModelSpec extends SpecBase {
+class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
 
   "View model" should {
 

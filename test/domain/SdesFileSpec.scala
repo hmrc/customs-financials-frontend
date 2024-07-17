@@ -20,7 +20,7 @@ import domain.DDStatementType.{Excise, Supplementary, UnknownStatementType, Week
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.i18n.Messages
 import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.test.Helpers.stubMessages
@@ -28,11 +28,12 @@ import utils.SpecBase
 import utils.TestData.{DAY_2, DAY_20, FILE_SIZE_2064, FILE_SIZE_2164, FILE_SIZE_DEFAULT, LENGTH_11, LENGTH_27, LENGTH_8,
   MONTH_1, MONTH_2, YEAR_1972, YEAR_2010, YEAR_2017}
 import views.helpers.Formatters
+import utils.MustMatchers
 
 import java.time.LocalDate
 import scala.util.Random
 
-class SdesFileSpec extends SpecBase {
+class SdesFileSpec extends SpecBase with MustMatchers {
 
   "an SdesFile" should {
 

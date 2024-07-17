@@ -20,13 +20,14 @@ import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.components.authorised_account_search_company_name
+import utils.MustMatchers
 
-class AuthorisedAccountSearchCompanyNameSpec extends SpecBase {
+class AuthorisedAccountSearchCompanyNameSpec extends SpecBase with MustMatchers {
 
   "AuthorisedAccountSearchCompanyName view" should {
     "load correctly and display correct guidance" in new Setup {

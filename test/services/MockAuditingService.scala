@@ -20,6 +20,7 @@ import domain.AuditModel
 import org.mockito.ArgumentMatchers
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.SpecBase
+import org.mockito.Mockito.verify
 
 import scala.concurrent.ExecutionContext
 

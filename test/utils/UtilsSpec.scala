@@ -19,11 +19,10 @@ package utils
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.StandingAuthorityMetadata
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import domain.StandingAuthorityFile
 import Utils._
 
-class UtilsSpec extends SpecBase {
+class UtilsSpec extends SpecBase with MustMatchers {
 
   "isSearchQueryAnAccountNumber" should {
     "return true when input string is Account number" in new Setup {

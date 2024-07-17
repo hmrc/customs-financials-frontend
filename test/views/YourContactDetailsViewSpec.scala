@@ -20,7 +20,7 @@ import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -28,8 +28,9 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.SpecBase
 import views.html.your_contact_details.your_contact_details
+import utils.MustMatchers
 
-class YourContactDetailsViewSpec extends SpecBase {
+class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Your Contact Details" should {
     "display header" in new Setup {

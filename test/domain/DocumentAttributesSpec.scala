@@ -17,11 +17,12 @@
 package domain
 
 import domain.FileRole.C79Certificate
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import services.DocumentAttributes
 import utils.SpecBase
+import utils.MustMatchers
 
-class DocumentAttributesSpec extends SpecBase {
+class DocumentAttributesSpec extends SpecBase with MustMatchers {
 
   "isRequested" should {
     val documentAttributes = DocumentAttributes(

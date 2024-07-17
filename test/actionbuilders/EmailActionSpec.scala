@@ -17,8 +17,8 @@
 package actionbuilders
 
 import domain.{UndeliverableEmail, UnverifiedEmail}
-import org.mockito.ArgumentMatchersSugar.any
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.{Application, inject}
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
@@ -27,10 +27,11 @@ import services.DataStoreService
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.ServiceUnavailableException
 import utils.SpecBase
+import utils.MustMatchers
 
 import scala.concurrent.Future
 
-class EmailActionSpec extends SpecBase {
+class EmailActionSpec extends SpecBase with MustMatchers{
 
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {

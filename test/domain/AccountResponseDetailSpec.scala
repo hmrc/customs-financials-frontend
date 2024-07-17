@@ -17,10 +17,10 @@
 package domain
 
 import domain.DutyPaymentMethod.CDS
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import utils.SpecBase
+import utils.MustMatchers
 
-class AccountResponseDetailSpec extends SpecBase {
+class AccountResponseDetailSpec extends SpecBase with MustMatchers {
 
   "totalNumberOfAccounts" should {
 

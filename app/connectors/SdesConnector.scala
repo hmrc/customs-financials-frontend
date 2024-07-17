@@ -21,13 +21,16 @@ import domain.FileFormat.{authorityFileFormats, filterFileFormats}
 import domain.FileRole.StandingAuthority
 import domain.{FileInformation, SdesFile, StandingAuthorityFile}
 import services.{AuditingService, MetricsReporterService, SdesGatekeeperService}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse, StringContextOps}
+
 import javax.inject.Inject
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
+import uk.gov.hmrc.http.client.HttpClientV2
+import config.Headers.{X_CLIENT_ID, X_SDES_KEY}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SdesConnector @Inject()(httpClient: HttpClient,
+class SdesConnector @Inject()(httpClient: HttpClientV2,
                               appConfig: AppConfig,
                               metricsReporterService: MetricsReporterService,
                               sdesGatekeeperService: SdesGatekeeperService,
@@ -55,13 +58,19 @@ class SdesConnector @Inject()(httpClient: HttpClient,
                                      hc: HeaderCarrier): Future[Seq[B]] = {
 
     metricsReporterService.withResponseTimeLogging(metricsName) {
-      httpClient.GET[HttpResponse](url, headers = Seq("x-client-id" -> appConfig.xClientIdHeader,
-          "X-SDES-Key" -> key))(reads, HeaderCarrier(), implicitly)
-        .map(readSeq.read("GET", url, _))
-        .map(transform)
-        .map { files =>
-          auditingService.auditFiles(files, key)
-          files
+      httpClient.get(url"$url")
+        .setHeader(X_CLIENT_ID -> appConfig.xClientIdHeader, X_SDES_KEY -> key)
+        .execute[HttpResponse]
+        .flatMap {
+          res =>
+            Future.successful {
+              readSeq.read("GET", url, res)
+            }.map(transform)
+              .map {
+                files =>
+                  auditingService.auditFiles(files, key)
+                  files
+              }
         }
     }
   }

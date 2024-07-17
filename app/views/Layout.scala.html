@@ -15,9 +15,7 @@
  *@
 
 @import config.AppConfig
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukBackLink
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
 @import uk.gov.hmrc.govukfrontend.views.Aliases.Tag
@@ -25,11 +23,17 @@
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 @import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcReportTechnicalIssueHelper, HmrcLanguageSelectHelper, HmrcStandardPage}
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import views.html.components.help_and_support_message
 @import utils.Utils.emptyString
 
-@this(appConfig: AppConfig,
-        hmrcLayout: HmrcLayout,
+@this(
+        appConfig: AppConfig,
+        hmrcStandardPage: HmrcStandardPage,
         govukBackLink: GovukBackLink,
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         hmrcTimeoutDialog: HmrcTimeoutDialog,
@@ -37,7 +41,8 @@
         hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 
-@(pageTitle: Option[String] = None,
+@(
+        pageTitle: Option[String] = None,
         backLink: Option[String] = None,
         helpAndSupport: Boolean = true,
         deskpro: Boolean = true,
@@ -47,7 +52,7 @@
         eori: Option[String] = None,
         companyName: Option[String] = None,
         xiEori: Option[String] = None
-)(contentBlock: Html)(implicit request: Request[_], appConfig: AppConfig, messages: Messages)
+)(contentBlock: Html)(implicit request: RequestHeader, appConfig: AppConfig, messages: Messages)
 
 @phaseBannerContent = {
     @messages("feedback.before")
@@ -92,15 +97,22 @@
     }
 }
 
-@hmrcLayout(
-    userResearchBannerUrl = if (userResearchBanner) Some(appConfig.helpMakeGovUkBetterUrl) else None,
-    pageTitle = fullPageTitle,
-    serviceUrl = Some(controllers.routes.CustomsFinancialsHomeController.index.url),
-    signOutUrl = Some(controllers.routes.LogoutController.logout.url),
-    backLinkUrl = backLink,
-    beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None,
-    additionalHeadBlock = Some(additionalHead),
-    phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),
-    isWelshTranslationAvailable = welshToggle,
-    accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
-)(mainContent)
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        pageTitle = fullPageTitle,
+        serviceURLs =  ServiceURLs(
+                        serviceUrl =  Some(controllers.routes.CustomsFinancialsHomeController.index.url),
+                        signOutUrl = Some(controllers.routes.LogoutController.logout.url),
+                        accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
+                    ),
+        backLink = Some(BackLink(href = backLink.getOrElse(emptyString))),
+        templateOverrides = TemplateOverrides(
+                                additionalHeadBlock = Some(additionalHead),
+                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None
+                            ),
+        banners = Banners(
+                    phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),
+                    userResearchBanner = if (userResearchBanner) Some(UserResearchBanner(url = appConfig.helpMakeGovUkBetterUrl)) else None
+                ),
+        isWelshTranslationAvailable = welshToggle
+))(mainContent)

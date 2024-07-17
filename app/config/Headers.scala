@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package domain
+package config
 
-import play.api.libs.json.{JsValue, Json, OFormat, Writes}
-import play.api.libs.ws.BodyWritable
-
-case class RequestAuthoritiesCsv(requestingEori: String, alternateEORI: Option[String])
-
-object RequestAuthoritiesCsv {
-  implicit val format: OFormat[RequestAuthoritiesCsv] = Json.format[RequestAuthoritiesCsv]
-
-  implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+object Headers {
+  val X_CLIENT_ID = "x-client-id"
+  val X_SDES_KEY = "X-SDES-Key"
 }

@@ -23,7 +23,7 @@ import domain.{
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -32,8 +32,9 @@ import play.api.test.Helpers.running
 import utils.SpecBase
 import utils.TestData.{BALANCE_499, BALANCE_999}
 import views.html.account_cards.guarantee_account_cards
+import utils.MustMatchers
 
-class GuaranteeAccountCardSpec extends SpecBase {
+class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
 
   "Guarantee Account Card" should {
 
