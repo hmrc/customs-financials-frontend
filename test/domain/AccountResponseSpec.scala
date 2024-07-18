@@ -25,7 +25,7 @@ class AccountResponseSpec extends SpecBase with MustMatchers {
   "reads" should {
 
     "create the object correctly" when {
-      
+
       "isleOfManFlag is absence in the json representation" in new Setup {
         Json.fromJson(Json.parse(accResResponseString)) mustBe JsSuccess(accResWithDefaultIOMFlag)
       }

@@ -16,7 +16,7 @@
 
 package domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, Reads}
 
 case class AccountResponse(number: String,
                            `type`: String,
