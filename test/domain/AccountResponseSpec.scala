@@ -17,33 +17,61 @@
 package domain
 
 import utils.{MustMatchers, SpecBase}
-import play.api.libs.json.{JsObject, JsSuccess, Json}
+import play.api.libs.json.{JsSuccess, Json}
+import AccountResponse.reads
 
 class AccountResponseSpec extends SpecBase with MustMatchers {
 
   "reads" should {
-    "create the object correctly" in {
-      import AccountResponse.reads
 
-      val accRes = AccountResponse(number = "12345678",
-        `type` = "DutyDeferment",
-        owner = "test_eori",
-        accountStatus = Some(AccountStatusSuspended),
-        accountStatusID = Some(DirectDebitMandateCancelled),
-        viewBalanceIsGranted = true,
-        isleOfManFlag= None)
+    "create the object correctly" when {
+      
+      "isleOfManFlag is absence in the json representation" in new Setup {
+        Json.fromJson(Json.parse(accResResponseString)) mustBe JsSuccess(accResWithDefaultIOMFlag)
+      }
 
-      val accResResponseString =
-        """{
-          |"number":"12345678",
-          |"accountStatusID":4,
-          |"accountStatus":"suspended",
-          |"owner":"test_eori",
-          |"type":"DutyDeferment",
-          |"viewBalanceIsGranted":true
-          |}""".stripMargin
-
-      Json.fromJson(Json.parse(accResResponseString)) mustBe JsSuccess(accRes)
+      "isleOfManFlag value is present in the json representation" in new Setup {
+        Json.fromJson(Json.parse(accResResponseWithIOMValueString)) mustBe JsSuccess(accResWithIOMFlag)
+      }
     }
+  }
+
+  trait Setup {
+
+    val accResWithDefaultIOMFlag: AccountResponse = AccountResponse(number = "12345678",
+      `type` = "DutyDeferment",
+      owner = "test_eori",
+      accountStatus = Some(AccountStatusSuspended),
+      accountStatusID = Some(DirectDebitMandateCancelled),
+      viewBalanceIsGranted = true)
+
+    val accResWithIOMFlag: AccountResponse = AccountResponse(number = "12345678",
+      `type` = "DutyDeferment",
+      owner = "test_eori",
+      accountStatus = Some(AccountStatusSuspended),
+      accountStatusID = Some(DirectDebitMandateCancelled),
+      viewBalanceIsGranted = true,
+      isleOfManFlag = Some(true))
+
+    val accResResponseWithIOMValueString: String =
+      """{
+        |"number":"12345678",
+        |"accountStatusID":4,
+        |"accountStatus":"suspended",
+        |"owner":"test_eori",
+        |"type":"DutyDeferment",
+        |"viewBalanceIsGranted":true,
+        |"isleOfManFlag":true
+        |}""".stripMargin
+
+    val accResResponseString: String =
+      """{
+        |"number":"12345678",
+        |"accountStatusID":4,
+        |"accountStatus":"suspended",
+        |"owner":"test_eori",
+        |"type":"DutyDeferment",
+        |"viewBalanceIsGranted":true
+        |}""".stripMargin
   }
 }
