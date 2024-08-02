@@ -75,6 +75,20 @@ class CustomsFinancialApiConnectorSpec
       }
     }
 
+    "return None when email is not found" in new Setup {
+      running(app) {
+        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+
+        when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
+          .thenReturn(Future.successful(EmailVerifiedResponse(None)))
+
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+
+        val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
+        await(result) mustBe EmailVerifiedResponse(None)
+      }
+    }
+
     "delete notifications should return a boolean based on the result" in new Setup {
 
       running(app) {
