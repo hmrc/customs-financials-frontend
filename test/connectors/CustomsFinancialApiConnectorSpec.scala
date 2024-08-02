@@ -18,8 +18,9 @@ package connectors
 
 import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import domain.FileRole.StandingAuthority
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{verify, when}
 import org.mockito.invocation.InvocationOnMock
 import org.scalatest.concurrent.ScalaFutures
 import play.api.Application
@@ -50,19 +51,20 @@ class CustomsFinancialApiConnectorSpec
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
         when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(EmailVerifiedResponse(Some("verifiedEmail"))))
+          .thenReturn(Future.successful(response))
 
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
         await(result) mustBe expectedResult
+
+        verifyEndPoint("http://localhost:9893/customs-data-store/subscriptions/subscriptionsdisplay")
       }
     }
 
     "return unverified email" in new Setup {
 
       running(app) {
-
         when(requestBuilder.execute(any[HttpReads[EmailUnverifiedResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
 
@@ -71,11 +73,14 @@ class CustomsFinancialApiConnectorSpec
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
         val result: Future[Option[String]] = connector.isEmailUnverified(hc)
-        await(result) mustBe Some("unverified@email.com")
+        assert(await(result).contains("unverified@email.com"))
+
+        verifyEndPoint("http://localhost:9893/customs-data-store/subscriptions/unverified-email-display")
       }
     }
 
     "return None when email is not found" in new Setup {
+
       running(app) {
         val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
@@ -131,5 +136,11 @@ class CustomsFinancialApiConnectorSpec
       bind[HttpClientV2].toInstance(mockHttpClient),
       bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
+
+    protected def verifyEndPoint(expectedEndPoint: String): Unit = {
+      val urlCaptor = ArgumentCaptor.forClass(classOf[URL])
+      verify(mockHttpClient).get(urlCaptor.capture)(any())
+      assert(urlCaptor.getValue.toString == expectedEndPoint)
+    }
   }
 }
