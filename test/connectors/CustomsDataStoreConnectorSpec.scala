@@ -57,6 +57,22 @@ class CustomsDataStoreConnectorSpec
       }
     }
 
+    "return email when calling getEmailAddress" in new Setup {
+
+      running(app) {
+
+        when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
+          .thenReturn(Future.successful(response))
+
+        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+
+        val result: Future[EmailVerifiedResponse] = customsDataStoreConnector.getEmailAddress(hc)
+        await(result) mustBe expectedResult
+
+        verifyEndPoint("http://localhost:9893/customs-data-store/subscriptions/email-display")
+      }
+    }
+
     "return unverified email" in new Setup {
 
       running(app) {
