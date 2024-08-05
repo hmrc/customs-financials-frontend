@@ -16,7 +16,6 @@
 
 package connectors
 
-import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import domain.FileRole.StandingAuthority
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -44,43 +43,11 @@ class CustomsFinancialApiConnectorSpec
 
   "CustomsFinancialApiConnector" should {
 
-    "return verified email" in new Setup {
-
-      running(app) {
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
-
-        when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(EmailVerifiedResponse(Some("verifiedEmail"))))
-
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
-
-        val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
-        await(result) mustBe expectedResult
-      }
-    }
-
-    "return unverified email" in new Setup {
-
-      running(app) {
-
-        when(requestBuilder.execute(any[HttpReads[EmailUnverifiedResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(EmailUnverifiedResponse(Some("unverified@email.com"))))
-
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
-
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
-
-        val result: Future[Option[String]] = connector.isEmailUnverified(hc)
-        await(result) mustBe Some("unverified@email.com")
-      }
-    }
-
     "delete notifications should return a boolean based on the result" in new Setup {
 
       running(app) {
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
 
-        val result = await(connector.deleteNotification("someEori", StandingAuthority))
+        val result = await(customsFinancialsApiConnector.deleteNotification("someEori", StandingAuthority))
         result mustBe true
       }
     }
@@ -88,16 +55,10 @@ class CustomsFinancialApiConnectorSpec
 
   trait Setup {
 
-    val expectedResult: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-
-    val response: EmailVerifiedResponse = EmailVerifiedResponse(Some("verifiedEmail"))
-
-    when(requestBuilder.execute(any[HttpReads[EmailVerifiedResponse]], any[ExecutionContext]))
-      .thenReturn(Future.successful(response))
 
     when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -117,5 +78,8 @@ class CustomsFinancialApiConnectorSpec
       bind[HttpClientV2].toInstance(mockHttpClient),
       bind[RequestBuilder].toInstance(requestBuilder)
     ).build()
+
+    val customsFinancialsApiConnector: CustomsFinancialsApiConnector =
+      app.injector.instanceOf[CustomsFinancialsApiConnector]
   }
 }
