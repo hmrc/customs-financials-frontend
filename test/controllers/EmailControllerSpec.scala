@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.CustomsFinancialsApiConnector
+import connectors.CustomsDataStoreConnector
 import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -24,13 +24,14 @@ import org.mockito.ArgumentMatchers
 import play.api.Application
 import play.api.inject.bind
 import play.api.test.Helpers.*
+
 import java.net.URL
 import services.MetricsReporterService
 import utils.SpecBase
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier,HttpReads, *}
 
+import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, *}
 import utils.MustMatchers
 
 class EmailControllerSpec extends SpecBase with MustMatchers {
@@ -39,7 +40,7 @@ class EmailControllerSpec extends SpecBase with MustMatchers {
     "return unverified email" in new Setup {
 
       running(app) {
-        val connector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+        val connector = app.injector.instanceOf[CustomsDataStoreConnector]
 
         val result: Future[Option[String]] = connector.isEmailUnverified(hc)
         await(result) mustBe expectedResult
@@ -63,8 +64,7 @@ class EmailControllerSpec extends SpecBase with MustMatchers {
         bind[RequestBuilder].toInstance(requestBuilder)
       ).build()
 
-
-      val connector: CustomsFinancialsApiConnector = app.injector.instanceOf[CustomsFinancialsApiConnector]
+      val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
 
       val result: Future[EmailVerifiedResponse] = connector.isEmailVerified(hc)
 
