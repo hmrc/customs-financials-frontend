@@ -50,7 +50,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
                                                 accountNotAvailable: account_not_available,
                                                 sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
                                                 secureMessageConnector: SecureMessageConnector,
-                                                customsManageAuthConnector:CustomsManageAuthoritiesConnector,
+                                                customsManageAuthConnector: CustomsManageAuthoritiesConnector,
                                                 implicit val mcc: MessagesControllerComponents)
                                                (implicit val appConfig: AppConfig, ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport {
@@ -171,6 +171,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     }
 
     val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
+
     authorityMessage ++ requestedMessages ++ statementMessages
   }
 

@@ -135,6 +135,9 @@ object FileRole {
   case object StandingAuthority extends FileRole(
     "StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
+  case object CashAccountStatement extends FileRole(
+    "CashAccountStatement", "cash-account-statement", "Display Cash Account Statements", "cash-account-statement")
+
   val log: LoggerLike = Logger(this.getClass)
 
   def apply(name: String): FileRole = name match {
@@ -144,6 +147,7 @@ object FileRole {
     case "PostponedVATAmendedStatement" => PostponedVATAmendedStatement
     case "SecurityStatement" => SecurityStatement
     case "StandingAuthority" => StandingAuthority
+    case "CashAccountStatement" => CashAccountStatement
     case _ => throw new Exception(s"Unknown file role: $name")
   }
 
@@ -163,6 +167,7 @@ object FileRole {
         case "duty-deferment" => Right(DutyDefermentStatement)
         case "adjustments" => Right(SecurityStatement)
         case "authorities" => Right(StandingAuthority)
+        case "cash-account-statement" => Right(CashAccountStatement)
         case fileRole => Left(s"unknown file role: ${fileRole}")
       }
     }
@@ -174,6 +179,7 @@ object FileRole {
         case DutyDefermentStatement => "duty-deferment"
         case SecurityStatement => "adjustments"
         case StandingAuthority => "authorities"
+        case CashAccountStatement => "cash-account-statement"
         case _ => "unsupported-file-role"
       }
     }

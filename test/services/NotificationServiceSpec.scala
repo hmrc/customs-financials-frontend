@@ -16,7 +16,7 @@
 
 package services
 
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
+import domain.FileRole._
 import org.mockito.ArgumentMatchers.{eq => eqTo}
 import org.mockito.Mockito.{verify, when, reset}
 import org.scalatest.BeforeAndAfterEach
@@ -49,6 +49,7 @@ class NotificationServiceSpec
   "Notification service" should {
 
     "indicate that notifications are available" when {
+
       val collectionOfDocumentAttributes = List(
         DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map.empty),
         DocumentAttributes(eori, PostponedVATStatement, "new file", fileSize, Map.empty),
@@ -60,7 +61,8 @@ class NotificationServiceSpec
           "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
         DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map(
           "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
-        DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty)
+        DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty),
+        DocumentAttributes(eori, CashAccountStatement, "new file", fileSize, Map.empty)
       )
 
       "the given document type is present" in {
@@ -78,7 +80,8 @@ class NotificationServiceSpec
           Notification(C79Certificate, isRequested = true),
           Notification(DutyDefermentStatement, isRequested = true),
           Notification(SecurityStatement, isRequested = true),
-          Notification(StandingAuthority, isRequested = false)
+          Notification(StandingAuthority, isRequested = false),
+          Notification(CashAccountStatement, isRequested = false)
         )
 
         val actualNotification = await(notificationService.fetchNotifications(eori))

@@ -19,14 +19,12 @@ package domain
 import domain.DDStatementType.{Excise, Supplementary, UnknownStatementType, Weekly}
 import domain.DutyPaymentMethod.CDS
 import domain.FileFormat.{Csv, Pdf, UnknownFileFormat}
-import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement, SecurityStatement, StandingAuthority}
-
+import domain.FileRole._
 import play.api.i18n.Messages
 import play.api.libs.json.{JsString, JsSuccess, Json}
 import play.api.test.Helpers.stubMessages
 import utils.SpecBase
-import utils.TestData.{DAY_2, DAY_20, FILE_SIZE_2064, FILE_SIZE_2164, FILE_SIZE_DEFAULT, LENGTH_11, LENGTH_27, LENGTH_8,
-  MONTH_1, MONTH_2, YEAR_1972, YEAR_2010, YEAR_2017}
+import utils.TestData._
 import views.helpers.Formatters
 import utils.MustMatchers
 
@@ -59,6 +57,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       FileRole("PostponedVATAmendedStatement") mustBe PostponedVATAmendedStatement
       FileRole("SecurityStatement") mustBe SecurityStatement
       FileRole("StandingAuthority") mustBe StandingAuthority
+      FileRole("CashAccountStatement") mustBe CashAccountStatement
 
       intercept[Exception] {
         FileRole("Unknown")
@@ -84,6 +83,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       Json.fromJson(JsString("PostponedVATAmendedStatement")) mustBe JsSuccess(FileRole("PostponedVATAmendedStatement"))
       Json.fromJson(JsString("SecurityStatement")) mustBe JsSuccess(FileRole("SecurityStatement"))
       Json.fromJson(JsString("StandingAuthority")) mustBe JsSuccess(FileRole("StandingAuthority"))
+      Json.fromJson(JsString("CashAccountStatement")) mustBe JsSuccess(FileRole("CashAccountStatement"))
     }
 
     "return correct output for Writes" in new Setup {
@@ -98,6 +98,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       pathBinder.bind(emptyString, "duty-deferment") mustBe Right(DutyDefermentStatement)
       pathBinder.bind(emptyString, "adjustments") mustBe Right(SecurityStatement)
       pathBinder.bind(emptyString, "authorities") mustBe Right(StandingAuthority)
+      pathBinder.bind(emptyString, "cash-account-statement") mustBe Right(CashAccountStatement)
       pathBinder.bind(emptyString, "unknown") mustBe Left(s"unknown file role: unknown")
     }
 
@@ -109,6 +110,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       pathBinder.unbind(emptyString, DutyDefermentStatement) mustBe "duty-deferment"
       pathBinder.unbind(emptyString, SecurityStatement) mustBe "adjustments"
       pathBinder.unbind(emptyString, StandingAuthority) mustBe "authorities"
+      pathBinder.unbind(emptyString, CashAccountStatement) mustBe "cash-account-statement"
     }
   }
 

@@ -167,6 +167,7 @@ cf.customs-financials-home.notification.requested-duty-deferment=Your requested 
 cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
 cf.customs-financials-home.notification.requested-postponed-vat=Your requested postponed import VAT statements are available to view
 cf.customs-financials-home.notification.authorities=Your requested list of accounts you have authority to use is available
+cf.customs-financials-home.notification.cash-account-statement=Your requested cash account statements are available to view
 
 # Verify Your Email Address
 cf.verify.your.email.title=Verify your email address for the Customs Declaration Service

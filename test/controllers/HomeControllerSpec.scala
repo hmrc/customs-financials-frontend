@@ -18,19 +18,12 @@ package controllers
 
 import config.AppConfig
 import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthoritiesConnector}
-import domain.FileRole.{
-  C79Certificate, DutyDefermentStatement, PostponedVATAmendedStatement, PostponedVATStatement,
-  SecurityStatement, StandingAuthority
-}
-import domain.{
-  AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
-}
+import domain.FileRole._
+import domain._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import utils.MustMatchers
-
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.mvc.Results.Ok
@@ -213,6 +206,21 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
   "show notification when there is new Standing authorities csv file available" in new Setup {
     val notifications: List[Notification] = List(Notification(StandingAuthority, isRequested = false))
+
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
+      Future.successful(notifications))
+
+    running(app) {
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
+      val result = route(app, request).value
+      val html = Jsoup.parse(contentAsString(result))
+
+      html.containsElementById("notification-panel")
+    }
+  }
+
+  "show notification when there is new Cash Account Statement file available" in new Setup {
+    val notifications: List[Notification] = List(Notification(CashAccountStatement, isRequested = false))
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
       Future.successful(notifications))
