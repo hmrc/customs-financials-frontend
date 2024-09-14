@@ -72,6 +72,21 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  "isCashAccountV2FeatureFlagEnabled" should {
+    "return the correct value" in new Setup {
+      appConfig.isCashAccountV2FeatureFlagEnabled shouldBe false
+    }
+  }
+
+  "cashAccountUrl" should {
+
+    "return the correct url" when {
+      "isCashAccountV2FeatureFlagEnabled is disabled" in new Setup {
+        appConfig.cashAccountUrl shouldBe "http://localhost:9394/customs/cash-account"
+      }
+    }
+  }
+
   trait Setup {
     val app: Application = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
