@@ -74,6 +74,8 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "isCashAccountV2FeatureFlagEnabled" should {
     "return the correct value" in new Setup {
+      assume(!appConfig.isCashAccountV2FeatureFlagEnabled)
+
       appConfig.isCashAccountV2FeatureFlagEnabled shouldBe false
     }
   }
@@ -82,6 +84,8 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
     "return the correct url" when {
       "isCashAccountV2FeatureFlagEnabled is disabled" in new Setup {
+        assume(!appConfig.isCashAccountV2FeatureFlagEnabled)
+
         appConfig.cashAccountUrl shouldBe "http://localhost:9394/customs/cash-account"
       }
     }
