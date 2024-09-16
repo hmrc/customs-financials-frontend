@@ -330,9 +330,8 @@ case class CashAccountStatementFile(filename: String,
                                     downloadURL: String,
                                     size: Long,
                                     metadata: CashAccountStatementFileMetadata,
-                                    eori: String)
-                                   (implicit messages: Messages
-                                   ) extends Ordered[CashAccountStatementFile] with SdesFile {
+                                    eori: String)(implicit messages: Messages) extends Ordered[CashAccountStatementFile]
+  with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)

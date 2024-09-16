@@ -24,8 +24,7 @@ import java.time.LocalDate
 
 case class CashAccountStatementsByMonth(date: LocalDate,
                                         files: Seq[CashAccountStatementFile])
-                                       (implicit messages: Messages
-                                       ) extends Ordered[CashAccountStatementsByMonth] {
+                                       (implicit messages: Messages) extends Ordered[CashAccountStatementsByMonth] {
 
   val formattedMonth: String = Formatters.dateAsMonth(date)
   val formattedMonthYear: String = Formatters.dateAsMonthAndYear(date)

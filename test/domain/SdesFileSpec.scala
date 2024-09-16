@@ -252,6 +252,40 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     }
   }
 
+  "CashAccountStatementFile" should {
+    "return correct output for formattedSize" in new Setup {
+      cashAccountStatementFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_2164)
+    }
+
+    "return correct output for formattedMonth" in new Setup {
+      cashAccountStatementFile.formattedMonth mustBe "month.10"
+    }
+
+    "sort the files correctly" in new Setup {
+      val cashAccountStatementFile1: CashAccountStatementFile = CashAccountStatementFile(
+        filename = fileName,
+        downloadURL = downloadUrl,
+        size = size,
+        metadata = cashAccountStatementFileMetadata,
+        eori = eori
+      )
+
+      val cashAccountStatementFile2: CashAccountStatementFile = CashAccountStatementFile(
+        filename = fileName,
+        downloadURL = downloadUrl,
+        size = size,
+        metadata = cashAccountStatementFileMetadata.copy(
+          periodStartYear = cashAccountStatementFileMetadata.periodStartYear + 1,
+          fileFormat = Csv
+        ),
+        eori = eori
+      )
+
+      List(cashAccountStatementFile1, cashAccountStatementFile2)
+        .sorted mustBe List(cashAccountStatementFile1, cashAccountStatementFile2)
+    }
+  }
+
   "FileFormat" should {
     "generate correct output" when {
       "reads" in new Setup {
@@ -295,11 +329,21 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     val vatCertificateFileMetadata: VatCertificateFileMetadata =
       VatCertificateFileMetadata(YEAR_2010, MONTH_1, Csv, FileRole.C79Certificate, None)
 
+    val cashAccountStatementFileMetadata: CashAccountStatementFileMetadata =
+      CashAccountStatementFileMetadata(startYear, month, Csv, FileRole.CashAccountStatement, None)
+
     val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
       "test_url",
       FILE_SIZE_2164,
       vatCertificateFileMetadata,
       "test_eori")
+
+    val cashAccountStatementFile: CashAccountStatementFile = CashAccountStatementFile(
+      filename = "test_file_name",
+      downloadURL = "test_url",
+      size = FILE_SIZE_2164,
+      metadata = cashAccountStatementFileMetadata,
+      eori = "test_eori")
 
     def randomInt(limit: Int): Int = Random.nextInt(limit)
 
