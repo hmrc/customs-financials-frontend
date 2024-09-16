@@ -136,7 +136,9 @@ object FileRole {
     "StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
   case object CashAccountStatement extends FileRole(
-    "CashAccountStatement", "cash-account-statement", "Display Cash Account Statements", "cash-account-statement")
+    "CashAccountStatement", "cash-account-statement",
+    "Display Cash Account Statements", "requested-cash-account-statement"
+  )
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -323,3 +325,23 @@ case class PostponedVatStatementFileMetadata(periodStartYear: Int,
                                              fileRole: FileRole,
                                              source: String,
                                              statementRequestId: Option[String]) extends SdesFileMetadata
+
+case class CashAccountStatementFile(filename: String,
+                                    downloadURL: String,
+                                    size: Long,
+                                    metadata: CashAccountStatementFileMetadata,
+                                    eori: String)
+                                   (implicit messages: Messages
+                                   ) extends Ordered[CashAccountStatementFile] with SdesFile {
+
+  val formattedSize: String = Formatters.fileSize(size)
+  val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
+
+  def compare(that: CashAccountStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
+}
+
+case class CashAccountStatementFileMetadata(periodStartYear: Int,
+                                            periodStartMonth: Int,
+                                            fileFormat: FileFormat,
+                                            fileRole: FileRole,
+                                            statementRequestId: Option[String]) extends SdesFileMetadata
