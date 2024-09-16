@@ -180,5 +180,25 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
           "cf.customs-financials-home.notification.authorities").isEmpty mustBe true
       }
     }
+
+    "display Cash Account Statement notification" when {
+      "new Cash Account Statement file is available" in {
+        val messageKeys = List("cash-account-statement")
+        val expected = List("cf.customs-financials-home.notification.cash-account-statement")
+        val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
+
+        content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
+      }
+    }
+
+    "not display Cash Account Statement notification" when {
+      "there is no new Cash Account Statement file" in {
+        val messageKeys = List()
+        val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
+
+        content.getElementsContainingText(
+          "cf.customs-financials-home.notification.cash-account-statement").isEmpty mustBe true
+      }
+    }
   }
 }
