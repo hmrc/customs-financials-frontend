@@ -24,45 +24,45 @@ import utils.{MustMatchers, SpecBase}
 
 import java.time.LocalDate
 
-class CashAccountStatementByMonthSpec extends SpecBase with MustMatchers {
+class CashStatementsByMonthSpec extends SpecBase with MustMatchers {
 
   "formattedMonth" should {
     "return correct formatted value for the month" in new Setup {
-      cashAccountStatementByMonthWithPdf.formattedMonth mustBe "October"
+      cashStatementByMonthWithPdf.formattedMonth mustBe "October"
     }
   }
 
   "formattedMonthYear" should {
     "return correct formatted Month and year string" in new Setup {
-      cashAccountStatementByMonthWithPdf.formattedMonthYear mustBe "October 2023"
+      cashStatementByMonthWithPdf.formattedMonthYear mustBe "October 2023"
     }
   }
 
   "pdf" should {
-    "return CashAccountStatementFile when files has pdf format" in new Setup {
-      cashAccountStatementByMonthWithPdf.pdf mustBe Some(cashAccountStatementFilePdf)
+    "return CashStatementFile when files has pdf format" in new Setup {
+      cashStatementByMonthWithPdf.pdf mustBe Some(cashStatementFilePdf)
     }
 
     "return None when files has no file with pdf format" in new Setup {
-      cashAccountStatementByMonthWithCsv.pdf mustBe empty
+      cashStatementByMonthWithCsv.pdf mustBe empty
     }
   }
 
   "csv" should {
-    "return CashAccountStatementFile when files has csv format" in new Setup {
-      cashAccountStatementByMonthWithCsv.csv mustBe Some(cashAccountStatementFileCsv)
+    "return CashStatementFile when files has csv format" in new Setup {
+      cashStatementByMonthWithCsv.csv mustBe Some(cashStatementFileCsv)
     }
 
     "return None when files has no file with csv format" in new Setup {
-      cashAccountStatementByMonthWithPdf.csv mustBe empty
+      cashStatementByMonthWithPdf.csv mustBe empty
     }
   }
 
   "compare" should {
     "sort correctly" in new Setup {
-      List(cashAccountStatementByMonthWithCsv,
-        cashAccountStatementByMonthWithPdf
-      ).sorted mustBe List(cashAccountStatementByMonthWithPdf, cashAccountStatementByMonthWithCsv)
+      List(cashStatementByMonthWithCsv,
+        cashStatementByMonthWithPdf
+      ).sorted mustBe List(cashStatementByMonthWithPdf, cashStatementByMonthWithCsv)
     }
   }
 
@@ -84,13 +84,13 @@ class CashAccountStatementByMonthSpec extends SpecBase with MustMatchers {
     val app: Application = application().build()
     implicit val msgs: Messages = messages(app)
 
-    val metadataWithPdf: CashAccountStatementFileMetadata = CashAccountStatementFileMetadata(
+    val metadataWithPdf: CashStatementFileMetadata = CashStatementFileMetadata(
       startYear, month, Pdf, SecurityStatement, None)
 
-    val metadataWithCsv: CashAccountStatementFileMetadata = CashAccountStatementFileMetadata(
+    val metadataWithCsv: CashStatementFileMetadata = CashStatementFileMetadata(
       startYear, month, Csv, SecurityStatement, None)
 
-    val cashAccountStatementFilePdf: CashAccountStatementFile = CashAccountStatementFile(
+    val cashStatementFilePdf: CashStatementFile = CashStatementFile(
       fileName,
       downloadUrl,
       size,
@@ -98,17 +98,17 @@ class CashAccountStatementByMonthSpec extends SpecBase with MustMatchers {
       eori
     )
 
-    val cashAccountStatementFileCsv: CashAccountStatementFile = CashAccountStatementFile(fileName,
+    val cashStatementFileCsv: CashStatementFile = CashStatementFile(fileName,
       downloadUrl,
       size,
       metadataWithCsv,
       eori
     )
 
-    val cashAccountStatementByMonthWithPdf: CashAccountStatementsByMonth =
-      CashAccountStatementsByMonth(date, Seq(cashAccountStatementFilePdf))
+    val cashStatementByMonthWithPdf: CashStatementsByMonth =
+      CashStatementsByMonth(date, Seq(cashStatementFilePdf))
 
-    val cashAccountStatementByMonthWithCsv: CashAccountStatementsByMonth =
-      CashAccountStatementsByMonth(date.plusMonths(1), Seq(cashAccountStatementFileCsv))
+    val cashStatementByMonthWithCsv: CashStatementsByMonth =
+      CashStatementsByMonth(date.plusMonths(1), Seq(cashStatementFileCsv))
   }
 }

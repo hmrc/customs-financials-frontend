@@ -22,14 +22,14 @@ import views.helpers.Formatters
 
 import java.time.LocalDate
 
-case class CashAccountStatementsByMonth(date: LocalDate,
-                                        files: Seq[CashAccountStatementFile])
-                                       (implicit messages: Messages) extends Ordered[CashAccountStatementsByMonth] {
+case class CashStatementsByMonth(date: LocalDate,
+                                 files: Seq[CashStatementFile])
+                                (implicit messages: Messages) extends Ordered[CashStatementsByMonth] {
 
   val formattedMonth: String = Formatters.dateAsMonth(date)
   val formattedMonthYear: String = Formatters.dateAsMonthAndYear(date)
-  val pdf: Option[CashAccountStatementFile] = files.find(_.fileFormat == Pdf)
-  val csv: Option[CashAccountStatementFile] = files.find(_.fileFormat == Csv)
+  val pdf: Option[CashStatementFile] = files.find(_.fileFormat == Pdf)
+  val csv: Option[CashStatementFile] = files.find(_.fileFormat == Csv)
 
-  override def compare(that: CashAccountStatementsByMonth): Int = date.compareTo(that.date)
+  override def compare(that: CashStatementsByMonth): Int = date.compareTo(that.date)
 }
