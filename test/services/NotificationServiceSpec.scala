@@ -62,7 +62,7 @@ class NotificationServiceSpec
         DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map(
           "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
         DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty),
-        DocumentAttributes(eori, CashAccountStatement, "new file", fileSize, Map.empty)
+        DocumentAttributes(eori, CashStatement, "new file", fileSize, Map.empty)
       )
 
       "the given document type is present" in {
@@ -81,7 +81,7 @@ class NotificationServiceSpec
           Notification(DutyDefermentStatement, isRequested = true),
           Notification(SecurityStatement, isRequested = true),
           Notification(StandingAuthority, isRequested = false),
-          Notification(CashAccountStatement, isRequested = false)
+          Notification(CashStatement, isRequested = false)
         )
 
         val actualNotification = await(notificationService.fetchNotifications(eori))

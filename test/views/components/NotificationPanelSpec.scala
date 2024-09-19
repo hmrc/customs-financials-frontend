@@ -183,8 +183,8 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
 
     "display Cash Account Statement notification" when {
       "new Cash Account Statement file is available" in {
-        val messageKeys = List("cash-account-statement")
-        val expected = List("cf.customs-financials-home.notification.cash-account-statement")
+        val messageKeys = List("cash-statement")
+        val expected = List("cf.customs-financials-home.notification.cash-statement")
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.select("#notification-panel p").asScala.map(_.text()).toList mustBe expected
@@ -197,7 +197,7 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.getElementsContainingText(
-          "cf.customs-financials-home.notification.cash-account-statement").isEmpty mustBe true
+          "cf.customs-financials-home.notification.cash-statement").isEmpty mustBe true
       }
     }
   }

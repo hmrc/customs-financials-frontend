@@ -57,7 +57,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       FileRole("PostponedVATAmendedStatement") mustBe PostponedVATAmendedStatement
       FileRole("SecurityStatement") mustBe SecurityStatement
       FileRole("StandingAuthority") mustBe StandingAuthority
-      FileRole("CashAccountStatement") mustBe CashAccountStatement
+      FileRole("CashStatement") mustBe CashStatement
 
       intercept[Exception] {
         FileRole("Unknown")
@@ -83,7 +83,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       Json.fromJson(JsString("PostponedVATAmendedStatement")) mustBe JsSuccess(FileRole("PostponedVATAmendedStatement"))
       Json.fromJson(JsString("SecurityStatement")) mustBe JsSuccess(FileRole("SecurityStatement"))
       Json.fromJson(JsString("StandingAuthority")) mustBe JsSuccess(FileRole("StandingAuthority"))
-      Json.fromJson(JsString("CashAccountStatement")) mustBe JsSuccess(FileRole("CashAccountStatement"))
+      Json.fromJson(JsString("CashStatement")) mustBe JsSuccess(FileRole("CashStatement"))
     }
 
     "return correct output for Writes" in new Setup {
@@ -98,7 +98,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       pathBinder.bind(emptyString, "duty-deferment") mustBe Right(DutyDefermentStatement)
       pathBinder.bind(emptyString, "adjustments") mustBe Right(SecurityStatement)
       pathBinder.bind(emptyString, "authorities") mustBe Right(StandingAuthority)
-      pathBinder.bind(emptyString, "cash-account-statement") mustBe Right(CashAccountStatement)
+      pathBinder.bind(emptyString, "cash-statement") mustBe Right(CashStatement)
       pathBinder.bind(emptyString, "unknown") mustBe Left(s"unknown file role: unknown")
     }
 
@@ -110,7 +110,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       pathBinder.unbind(emptyString, DutyDefermentStatement) mustBe "duty-deferment"
       pathBinder.unbind(emptyString, SecurityStatement) mustBe "adjustments"
       pathBinder.unbind(emptyString, StandingAuthority) mustBe "authorities"
-      pathBinder.unbind(emptyString, CashAccountStatement) mustBe "cash-account-statement"
+      pathBinder.unbind(emptyString, CashStatement) mustBe "cash-statement"
     }
   }
 
@@ -252,37 +252,37 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     }
   }
 
-  "CashAccountStatementFile" should {
+  "CashStatementFile" should {
     "return correct output for formattedSize" in new Setup {
-      cashAccountStatementFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_2164)
+      cashStatementFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_2164)
     }
 
     "return correct output for formattedMonth" in new Setup {
-      cashAccountStatementFile.formattedMonth mustBe "month.10"
+      cashStatementFile.formattedMonth mustBe "month.10"
     }
 
     "sort the files correctly" in new Setup {
-      val cashAccountStatementFile1: CashAccountStatementFile = CashAccountStatementFile(
+      val cashStatementFile1: CashStatementFile = CashStatementFile(
         filename = fileName,
         downloadURL = downloadUrl,
         size = size,
-        metadata = cashAccountStatementFileMetadata,
+        metadata = cashStatementFileMetadata,
         eori = eori
       )
 
-      val cashAccountStatementFile2: CashAccountStatementFile = CashAccountStatementFile(
+      val cashStatementFile2: CashStatementFile = CashStatementFile(
         filename = fileName,
         downloadURL = downloadUrl,
         size = size,
-        metadata = cashAccountStatementFileMetadata.copy(
-          periodStartYear = cashAccountStatementFileMetadata.periodStartYear + 1,
+        metadata = cashStatementFileMetadata.copy(
+          periodStartYear = cashStatementFileMetadata.periodStartYear + 1,
           fileFormat = Csv
         ),
         eori = eori
       )
 
-      List(cashAccountStatementFile1, cashAccountStatementFile2)
-        .sorted mustBe List(cashAccountStatementFile1, cashAccountStatementFile2)
+      List(cashStatementFile1, cashStatementFile2)
+        .sorted mustBe List(cashStatementFile1, cashStatementFile2)
     }
   }
 
@@ -329,8 +329,8 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     val vatCertificateFileMetadata: VatCertificateFileMetadata =
       VatCertificateFileMetadata(YEAR_2010, MONTH_1, Csv, FileRole.C79Certificate, None)
 
-    val cashAccountStatementFileMetadata: CashAccountStatementFileMetadata =
-      CashAccountStatementFileMetadata(startYear, month, Csv, FileRole.CashAccountStatement, None)
+    val cashStatementFileMetadata: CashStatementFileMetadata =
+      CashStatementFileMetadata(startYear, month, Csv, FileRole.CashStatement, None)
 
     val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
       "test_url",
@@ -338,11 +338,11 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       vatCertificateFileMetadata,
       "test_eori")
 
-    val cashAccountStatementFile: CashAccountStatementFile = CashAccountStatementFile(
+    val cashStatementFile: CashStatementFile = CashStatementFile(
       filename = "test_file_name",
       downloadURL = "test_url",
       size = FILE_SIZE_2164,
-      metadata = cashAccountStatementFileMetadata,
+      metadata = cashStatementFileMetadata,
       eori = "test_eori")
 
     def randomInt(limit: Int): Int = Random.nextInt(limit)
