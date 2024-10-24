@@ -42,6 +42,20 @@ class HomeViewSpec extends SpecBase {
         page(modelWithAgentAccess, None).containsLinkWithText("#", "View your customs financial accounts")
       }
     }
+
+    "display other accounts you can use link" when {
+      "agent has access to other accounts with AuthorisedToView" in new Setup {
+        running(app) {
+          page(modelWithAgentAccess, None).containsLink("/customs/payment-records/authorized-to-view?page=1")
+        }
+      }
+    }
+
+    "display manage your account authorities link" in new Setup {
+      running(app) {
+        page(modelWithAgentAccess, None).containsLink("http://localhost:9000/customs/manage-authorities")
+      }
+    }
   }
 
   "not display manage your account authorities link" when {

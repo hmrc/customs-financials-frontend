@@ -80,6 +80,12 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  "isHomePageLinksEnabled" should {
+    "return the correct value" in new Setup {
+      appConfig.isHomePageLinksEnabled shouldBe true
+    }
+  }
+
   "cashAccountUrl" should {
 
     "return the correct url" when {
