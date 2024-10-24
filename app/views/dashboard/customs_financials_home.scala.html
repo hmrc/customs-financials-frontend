@@ -46,19 +46,18 @@
 
     @h1("cf.customs-financials-home.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 
-    @link("cf.account.manage-account-authorities.title",
-            appConfig.manageAuthoritiesFrontendUrl,
-            pWrapped = false,
-            linkId = Some("manage-account-authorities-link"),
-            linkClass = "govuk-link govuk-!-margin-right-2"
-    )
+    @if(appConfig.isHomePageLinksEnabled) {
+      @link("cf.account.manage-account-authorities.title",
+        appConfig.manageAuthoritiesFrontendUrl,
+        pWrapped = false,
+        linkId = Some("manage-account-authorities-link"),
+        linkClass = "govuk-link govuk-!-margin-right-2")
 
-    @link(
-            "cf.account.authorized-to-view.title",
-            controllers.routes.AuthorizedToViewController.onPageLoad().url,
-            linkId = Some("authorised-to-view-link"),
-            pWrapped = false
-    )
+      @link("cf.account.authorized-to-view.title",
+        controllers.routes.AuthorizedToViewController.onPageLoad().url,
+        linkId = Some("authorised-to-view-link"),
+        pWrapped = false)
+    }
 
     @notification_panel(model.notificationMessageKeys)
 
