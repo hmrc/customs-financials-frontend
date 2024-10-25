@@ -82,7 +82,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "isHomePageLinksEnabled" should {
     "return the correct value" in new Setup {
-      appConfig.isHomePageLinksEnabled shouldBe true
+      appConfig.isHomePageLinksEnabled shouldBe false
     }
   }
 
