@@ -85,7 +85,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
       dataStoreAddress <- dataStoreService.getCompanyAddress(request.user.eori)
       companyAddress =
-        dataStoreAddress.getOrElse(new CompanyAddress(emptyString, emptyString, Some(emptyString), emptyString))
+        dataStoreAddress.getOrElse(CompanyAddress(emptyString, emptyString, Some(emptyString), emptyString))
 
       address = CompanyAddress(
         streetAndNumber = companyAddress.streetAndNumber,
@@ -93,10 +93,15 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         postalCode = companyAddress.postalCode,
         countryCode = companyAddress.countryCode)
 
-      accountlinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
+      accountLinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
     } yield {
-      Ok(view(request.user.eori, accountlinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
-        companyName, address, email.toString)(request, messages, appConfig))
+      Ok(
+        view(request.user.eori,
+          accountLinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
+          companyName,
+          address,
+          email.toString)(request, messages, appConfig)
+      )
     }
   }
 

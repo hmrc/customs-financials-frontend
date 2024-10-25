@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package views
+package views.your_contact_details
 
 import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import org.jsoup.select.Elements
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import utils.SpecBase
+import play.api.test.Helpers.*
+import utils.{MustMatchers, SpecBase}
 import views.html.your_contact_details.your_contact_details
-import utils.MustMatchers
 
 class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
@@ -71,6 +70,27 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
           "This is the contact address you gave us when you registered for your EORI number." +
             " You can fill in an enquiry form (opens in a new tab) to change this address."
       }
+    }
+
+    "display the message banner" in new Setup {
+      val bannerComponent: Elements = view.getElementsByClass("govuk-!-padding-top-3 notifications-bar")
+      bannerComponent.size() must be > 0
+    }
+
+    "displays home as a link text and contain the correct url" in new Setup {
+      assert(view.containsLinkWithText("#", "Home"))
+    }
+
+    "displays Messages as a link text in message banner" in new Setup {
+      assert(view.containsLinkWithText("#", "Messages"))
+    }
+
+    "displays Your contact details as a link text in message banner" in new Setup {
+      assert(view.containsLinkWithText("#", "Your contact details"))
+    }
+
+    "displays Your account authorities as a link text in message banner" in new Setup {
+      assert(view.containsLinkWithText("#", "Your account authorities"))
     }
   }
 
