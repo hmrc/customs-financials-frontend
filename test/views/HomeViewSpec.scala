@@ -95,6 +95,12 @@ class HomeViewSpec extends SpecBase {
           page(modelWithAgentAccess, None).containsLinkWithText("#", "Your contact details")
         }
       }
+
+      "displays Your account authorities as a link text" in new Setup {
+        running(app) {
+          page(modelWithAgentAccess, None).containsLinkWithText("#", "Your account authorities")
+        }
+      }
     }
 
     "display the EORI and company name in the banner" in new Setup {

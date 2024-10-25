@@ -39,6 +39,7 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
   lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
   lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
   lazy val isCashAccountV2FeatureFlagEnabled: Boolean = config.get[Boolean]("features.cash-account-v2-enabled")
+  lazy val isHomePageLinksEnabled: Boolean = config.get[Boolean]("features.home-page-links-enabled")
 
   lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
   lazy val reportChangeCdsUrl: String = config.get[String]("external-urls.reportChangeUrl")
@@ -56,7 +57,7 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
     config.get[String]("microservice.services.customs-financials-frontend.url")
 
   lazy val cashAccountUrl: String =
-    if(isCashAccountV2FeatureFlagEnabled) {
+    if (isCashAccountV2FeatureFlagEnabled) {
       config.get[String]("microservice.services.customs-cash-account-frontend.urlV2")
     } else {
       config.get[String]("microservice.services.customs-cash-account-frontend.url")
