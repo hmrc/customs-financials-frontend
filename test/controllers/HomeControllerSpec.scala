@@ -220,7 +220,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   }
 
   "show notification when there is new Cash Account Statement file available" in new Setup {
-    val notifications: List[Notification] = List(Notification(CashStatement, isRequested = true))
+    val notifications: List[Notification] = List(Notification(CDSCashAccount, isRequested = true))
 
     when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
       Future.successful(notifications))

@@ -118,25 +118,31 @@ sealed abstract class FileRole(val name: String,
 object FileRole {
 
   case object DutyDefermentStatement extends FileRole(
-    "DutyDefermentStatement", "duty-deferment", "Download duty deferment statement", "duty-deferment")
+    "DutyDefermentStatement", "duty-deferment",
+    "Download duty deferment statement", "duty-deferment")
 
   case object C79Certificate extends FileRole(
-    "C79Certificate", "import-vat", "Download import VAT statement", "c79")
+    "C79Certificate", "import-vat",
+    "Download import VAT statement", "c79")
 
   case object PostponedVATStatement extends FileRole(
-    "PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
+    "PostponedVATStatement", "postponed-vat",
+    "Download postponed VAT statement", "postponed-vat")
 
   case object PostponedVATAmendedStatement extends FileRole(
-    "PostponedVATAmendedStatement", "postponed-vat", "Download postponed VAT amend statement", "postponed-vat")
+    "PostponedVATAmendedStatement", "postponed-vat",
+    "Download postponed VAT amend statement", "postponed-vat")
 
   case object SecurityStatement extends FileRole(
-    "SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
+    "SecurityStatement", "adjustments",
+    "Download adjustments statement", "adjustments")
 
   case object StandingAuthority extends FileRole(
-    "StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
+    "StandingAuthority", "authorities",
+    "Display standing authorities csv", "authorities")
 
-  case object CashStatement extends FileRole(
-    "CashStatement", "cash-statement",
+  case object CDSCashAccount extends FileRole(
+    "CDSCashAccount", "cash-statement",
     "Display Cash Statements", "requested-cash-statement"
   )
 
@@ -149,7 +155,7 @@ object FileRole {
     case "PostponedVATAmendedStatement" => PostponedVATAmendedStatement
     case "SecurityStatement" => SecurityStatement
     case "StandingAuthority" => StandingAuthority
-    case "CashStatement" => CashStatement
+    case "CDSCashAccount" => CDSCashAccount
     case _ => throw new Exception(s"Unknown file role: $name")
   }
 
@@ -169,7 +175,7 @@ object FileRole {
         case "duty-deferment" => Right(DutyDefermentStatement)
         case "adjustments" => Right(SecurityStatement)
         case "authorities" => Right(StandingAuthority)
-        case "cash-statement" => Right(CashStatement)
+        case "cash-statement" => Right(CDSCashAccount)
         case fileRole => Left(s"unknown file role: ${fileRole}")
       }
     }
@@ -181,7 +187,7 @@ object FileRole {
         case DutyDefermentStatement => "duty-deferment"
         case SecurityStatement => "adjustments"
         case StandingAuthority => "authorities"
-        case CashStatement => "cash-statement"
+        case CDSCashAccount => "cash-statement"
         case _ => "unsupported-file-role"
       }
     }
