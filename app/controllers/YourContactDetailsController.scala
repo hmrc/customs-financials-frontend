@@ -84,7 +84,7 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                            appConfig: AppConfig,
                            requestHeader: RequestHeader): Future[Result] = {
     val returnToUrl =
-      s"${appConfig.financialsFrontendUrl}${controllers.routes.CustomsFinancialsHomeController.index.url}"
+      s"${appConfig.financialsFrontendUrl}${controllers.routes.YourContactDetailsController.onPageLoad()}"
 
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
