@@ -42,7 +42,7 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
       running(app) {
         view.getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
           "Company details Primary email address Duty deferment contact details Support links"
-        }
+      }
     }
 
     "display the govlink" in new Setup {
@@ -77,19 +77,19 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
       bannerComponent.size() must be > 0
     }
 
-    "displays home as a link text and contain the correct url" in new Setup {
+    "display 'Home' as a link text and contain the correct url" in new Setup {
       assert(view.containsLinkWithText("#", "Home"))
     }
 
-    "displays Messages as a link text in message banner" in new Setup {
+    "display 'Messages' as a link text in message banner" in new Setup {
       assert(view.containsLinkWithText("#", "Messages"))
     }
 
-    "displays Your contact details as a link text in message banner" in new Setup {
+    "display 'Your contact details' as a link text in message banner" in new Setup {
       assert(view.containsLinkWithText("#", "Your contact details"))
     }
 
-    "displays Your account authorities as a link text in message banner" in new Setup {
+    "display 'Your account authorities' as a link text in message banner" in new Setup {
       assert(view.containsLinkWithText("#", "Your account authorities"))
     }
   }
