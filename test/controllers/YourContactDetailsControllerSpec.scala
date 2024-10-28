@@ -19,7 +19,7 @@ package controllers
 import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector, SecureMessageConnector}
 import domain.*
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
@@ -63,6 +63,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
 
     "display the message banner on successful page load" in new Setup {
       val sessionValue = "session_acfe456"
+      val returnUrl = s"http://localhost:9876${controllers.routes.YourContactDetailsController.onPageLoad()}"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
         .thenReturn(Future.successful("Some_String"))
@@ -72,7 +73,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionValue))))
 
-      when(mockSecureMessageConnector.getMessageCountBanner(any)(any))
+      when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
         .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), createHtmlContentForBanner()))))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
