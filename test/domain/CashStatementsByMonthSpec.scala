@@ -24,7 +24,7 @@ import utils.{MustMatchers, SpecBase}
 
 import java.time.LocalDate
 
-class CDSCashStatementsByMonthSpec extends SpecBase with MustMatchers {
+class CashStatementsByMonthSpec extends SpecBase with MustMatchers {
 
   "formattedMonth" should {
     "return correct formatted value for the month" in new Setup {
