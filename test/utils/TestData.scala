@@ -18,6 +18,7 @@ package utils
 
 object TestData {
 
+  val TEST_ID = "test_id"
   val ITEMS_20 = 20
   val ITEMS_40 = 40
   val ITEMS_45 = 45
@@ -85,7 +86,7 @@ object TestData {
   val DAY_20 = 20
   val DAY_25 = 25
 
-  val HOUR_12= 12
+  val HOUR_12 = 12
   val MINUTES_30 = 30
 
   val FILE_SIZE_DEFAULT = 1234L

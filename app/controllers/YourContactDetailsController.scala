@@ -18,10 +18,10 @@ package controllers
 
 import actionbuilders.{AuthenticatedRequest, IdentifierAction}
 import config.AppConfig
-import connectors.CustomsFinancialsSessionCacheConnector
+import connectors.{CustomsFinancialsSessionCacheConnector, SecureMessageConnector}
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, RequestHeader, Result}
 import play.api.{Logger, LoggerLike}
 import services.DataStoreService
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
@@ -37,8 +37,10 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
                                              dataStoreService: DataStoreService,
                                              view: your_contact_details,
                                              sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                             implicit val mcc: MessagesControllerComponents)
-                                            (implicit val appConfig: AppConfig, ec: ExecutionContext)
+                                             secureMessageConnector: SecureMessageConnector)
+                                            (implicit val appConfig: AppConfig,
+                                             ec: ExecutionContext,
+                                             mcc: MessagesControllerComponents)
   extends FrontendController(mcc)
     with I18nSupport {
 
@@ -54,9 +56,11 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
   }
 
   private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent],
-                                       headerId: SessionId)(implicit hc: HeaderCarrier,
-                                                            messages: Messages,
-                                                            appConfig: AppConfig): Future[Result] = {
+                                       headerId: SessionId)
+                                      (implicit hc: HeaderCarrier,
+                                       messages: Messages,
+                                       appConfig: AppConfig,
+                                       requestHeader: RequestHeader): Future[Result] = {
 
     sessionCacheConnector.getSessionId(headerId.value).flatMap {
       case Some(cacheId) =>
@@ -75,7 +79,13 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
 
   private def generateView(request: AuthenticatedRequest[AnyContent],
                            localSessionId: SessionId)
-                          (implicit hc: HeaderCarrier, messages: Messages, appConfig: AppConfig): Future[Result] = {
+                          (implicit hc: HeaderCarrier,
+                           messages: Messages,
+                           appConfig: AppConfig,
+                           requestHeader: RequestHeader): Future[Result] = {
+    val returnToUrl =
+      s"${appConfig.financialsFrontendUrl}${controllers.routes.CustomsFinancialsHomeController.index.url}"
+
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)
@@ -94,13 +104,15 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         countryCode = companyAddress.countryCode)
 
       accountLinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
+      messageBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
     } yield {
       Ok(
         view(request.user.eori,
           accountLinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
           companyName,
           address,
-          email.toString)(request, messages, appConfig)
+          email.toString,
+          messageBannerPartial.map(_.successfulContentOrEmpty))(request, messages, appConfig)
       )
     }
   }
