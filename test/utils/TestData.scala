@@ -16,8 +16,11 @@
 
 package utils
 
+import play.twirl.api.Html
+
 object TestData {
 
+  val TEST_ID = "test_id"
   val ITEMS_20 = 20
   val ITEMS_40 = 40
   val ITEMS_45 = 45
@@ -85,7 +88,7 @@ object TestData {
   val DAY_20 = 20
   val DAY_25 = 25
 
-  val HOUR_12= 12
+  val HOUR_12 = 12
   val MINUTES_30 = 30
 
   val FILE_SIZE_DEFAULT = 1234L
@@ -106,4 +109,32 @@ object TestData {
   val LENGTH_27 = 27
 
   val TEST_EORI = "GB12345678"
+
+  lazy val TEST_MESSAGE_BANNER: Html = Html(
+    """<html>
+      | <head></head>
+      | <body>
+      |  <div class="govuk-!-padding-bottom-3 govuk-!-padding-top-3 notifications-bar">
+      |   <ul class="govuk-list">
+      |    <li><a class="govuk-link" href="http://localhost:9876/customs/payment-records">Home</a></li>
+      |    <li class="notifications-bar-ul-li">
+      |      <a class="govuk-link" href="http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url">
+      |          Messages<span class="hmrc-notification-badge">2</span>
+      |      </a>
+      |   </li>
+      |    <li>
+      |      <a class="govuk-link" href="http://localhost:9876/customs/payment-records/your-contact-details">
+      |        Your contact details
+      |      </a>
+      |    </li>
+      |    <li>
+      |      <a class="govuk-link" href="http://localhost:9000/customs/manage-authorities">
+      |        Your account authorities
+      |      </a>
+      |    </li>
+      |   </ul>
+      |  </div>
+      |  <hr class="govuk-section-break govuk-section-break--visible" aria-hidden="true">
+      | </body>
+      |</html>""".stripMargin)
 }

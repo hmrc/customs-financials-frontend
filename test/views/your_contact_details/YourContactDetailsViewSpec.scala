@@ -14,63 +14,79 @@
  * limitations under the License.
  */
 
-package views
+package views.your_contact_details
 
 import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
+import org.jsoup.select.Elements
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import utils.SpecBase
+import play.api.test.Helpers.*
+import utils.{MustMatchers, SpecBase}
 import views.html.your_contact_details.your_contact_details
-import utils.MustMatchers
+import play.twirl.api.HtmlFormat
+import utils.TestData.TEST_MESSAGE_BANNER
 
 class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Your Contact Details" should {
     "display header" in new Setup {
       running(app) {
-        view.getElementsByTag("h1").text mustBe "Your contact details"
+        view().getElementsByTag("h1").text mustBe "Your contact details"
       }
     }
 
     "display second header text" in new Setup {
       running(app) {
-        view.getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
+        view().getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
           "Company details Primary email address Duty deferment contact details Support links"
-        }
+      }
     }
 
     "display the govlink" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-link")
+        view().getElementsByClass("govuk-link")
       }
     }
 
     "display link to view or change" in new Setup {
       running(app) {
-        view.containsLinkWithText("#", "View or change")
+        view().containsLinkWithText("#", "View or change")
       }
     }
 
     "display link to report a change" in new Setup {
       running(app) {
-        view.containsLinkWithText(appConfig.reportChangeCdsUrl,
+        view().containsLinkWithText(appConfig.reportChangeCdsUrl,
           "Report a change to your company details (opens in new tab)")
       }
     }
 
     "display link to get enquiry form for your contact details" in new Setup {
       running(app) {
-        view.getElementById("contact-report-change-link").text() mustBe
+        view().getElementById("contact-report-change-link").text() mustBe
           "This is the contact address you gave us when you registered for your EORI number." +
             " You can fill in an enquiry form (opens in a new tab) to change this address."
       }
+    }
+
+    "display the message banner partial when provided" in new Setup {
+      val pageView: Document = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
+      val bannerComponent: Elements = pageView.getElementsByClass("notifications-bar")
+
+      bannerComponent.size() must be > 0
+
+      assert(pageView.containsLinkWithText("http://localhost:9876/customs/payment-records", "Home"))
+      assert(pageView.containsLink("http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url"))
+
+      assert(pageView.containsLinkWithText(
+        "http://localhost:9876/customs/payment-records/your-contact-details", "Your contact details"))
+      assert(pageView.containsLinkWithText(
+        "http://localhost:9000/customs/manage-authorities", "Your account authorities"))
     }
   }
 
@@ -95,8 +111,14 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    def view: Document = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
-      eori, accountNumbers, companyName, companyAddress, email).body)
+    def view(messageBannerPartial: Option[HtmlFormat.Appendable] = None): Document =
+      Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
+        eori,
+        accountNumbers,
+        companyName,
+        companyAddress,
+        email,
+        messageBannerPartial).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

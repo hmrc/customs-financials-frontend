@@ -39,7 +39,8 @@
     accountLinks: Seq[AccountLinkWithoutDate],
     companyName: Option[String],
     companyAddress: CompanyAddress,
-    email: String
+    email: String,
+    messageBannerPartial: Option[HtmlFormat.Appendable] = None
 )(
     implicit request: Request[_],
     messages: Messages,
@@ -48,6 +49,7 @@
 
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
+    maybeMessageBannerPartial = messageBannerPartial,
     helpAndSupport = false,
     backLink = Some(routes.CustomsFinancialsHomeController.index.url)
 ) {

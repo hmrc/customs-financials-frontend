@@ -16,10 +16,10 @@
 
 package controllers
 
-import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector}
+import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector, SecureMessageConnector}
 import domain.*
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.when
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
@@ -29,35 +29,62 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.play.partials.HtmlPartial
+import utils.TestData.{TEST_ID, TEST_MESSAGE_BANNER}
 
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 import utils.{ShouldMatchers, SpecBase}
 
-class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
+class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
   "YourContactDetailsController" should {
     "return OK when request session id is found in the cache" in new Setup {
-      val sessionValue = "session_acfe456"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
-      .thenReturn(Future.successful("Some_String"))
+        .thenReturn(Future.successful("Some_String"))
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionValue))))
+        Option(HttpResponse(OK, sessionId))))
+
+      when(mockSecureMessageConnector.getMessageCountBanner(any)(any)).thenReturn(Future.successful(None))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
-        sessionValue)
+        sessionId)
 
       val result: Future[Result] = route(app, request).value
       status(result) should be(OK)
     }
 
+    "display the message banner on successful page load" in new Setup {
+      val returnUrl = s"http://localhost:9876${controllers.routes.YourContactDetailsController.onPageLoad()}"
+
+      when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
+        .thenReturn(Future.successful("Some_String"))
+
+      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+
+      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
+        Option(HttpResponse(OK, sessionId))))
+
+      when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
+        .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
+
+      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
+        routes.YourContactDetailsController.onPageLoad().url,
+        sessionId)
+
+      val result: Future[Result] = route(app, request).value
+      status(result) should be(OK)
+
+      val viewContent: String = contentAsString(result)
+      shouldDisplayMessageBanner(viewContent)
+    }
+
     "redirect to Home page if cache session id and request session id do not match" in new Setup {
-      val sessionCacheValue = "session_acfe456"
       val sessionHeaderValue = "session_acf"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
@@ -66,7 +93,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionCacheValue))))
+        Option(HttpResponse(OK, sessionId))))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
@@ -116,7 +143,15 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
     }
   }
 
+  private def shouldDisplayMessageBanner(view: String) = {
+    view should include("Home")
+    view should include("Messages")
+    view should include("Your contact details")
+    view should include("Your account authorities")
+  }
+
   trait Setup {
+    val sessionId = "session_acfe456"
 
     val n1 = 200
     val n2 = 100
@@ -157,6 +192,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSdesConnector: SdesConnector = mock[SdesConnector]
+    val mockSecureMessageConnector: SecureMessageConnector = mock[SecureMessageConnector]
     val mockSessionCache: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
     val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
@@ -175,6 +211,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers{
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService),
         inject.bind[SdesConnector].toInstance(mockSdesConnector),
+        inject.bind[SecureMessageConnector].toInstance(mockSecureMessageConnector),
         inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCache)
       ).configure("features.new-agent-view-enabled" -> false).build()
   }
