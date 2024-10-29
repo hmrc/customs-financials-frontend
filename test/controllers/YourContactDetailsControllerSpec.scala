@@ -49,8 +49,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
         Option(HttpResponse(OK, sessionId))))
 
-      when(mockSecureMessageConnector.getMessageCountBanner(any)(any))
-        .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
+      when(mockSecureMessageConnector.getMessageCountBanner(any)(any)).thenReturn(Future.successful(None))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
