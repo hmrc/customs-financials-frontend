@@ -28,69 +28,62 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import utils.{MustMatchers, SpecBase}
 import views.html.your_contact_details.your_contact_details
+import play.twirl.api.HtmlFormat
+import utils.TestData.TEST_MESSAGE_BANNER
 
 class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Your Contact Details" should {
     "display header" in new Setup {
       running(app) {
-        view.getElementsByTag("h1").text mustBe "Your contact details"
+        view().getElementsByTag("h1").text mustBe "Your contact details"
       }
     }
 
     "display second header text" in new Setup {
       running(app) {
-        view.getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
+        view().getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
           "Company details Primary email address Duty deferment contact details Support links"
       }
     }
 
     "display the govlink" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-link")
+        view().getElementsByClass("govuk-link")
       }
     }
 
     "display link to view or change" in new Setup {
       running(app) {
-        view.containsLinkWithText("#", "View or change")
+        view().containsLinkWithText("#", "View or change")
       }
     }
 
     "display link to report a change" in new Setup {
       running(app) {
-        view.containsLinkWithText(appConfig.reportChangeCdsUrl,
+        view().containsLinkWithText(appConfig.reportChangeCdsUrl,
           "Report a change to your company details (opens in new tab)")
       }
     }
 
     "display link to get enquiry form for your contact details" in new Setup {
       running(app) {
-        view.getElementById("contact-report-change-link").text() mustBe
+        view().getElementById("contact-report-change-link").text() mustBe
           "This is the contact address you gave us when you registered for your EORI number." +
             " You can fill in an enquiry form (opens in a new tab) to change this address."
       }
     }
 
-    "display the message banner" in new Setup {
-      val bannerComponent: Elements = view.getElementsByClass("govuk-!-padding-top-3 notifications-bar")
+    "display the message banner when provided" in new Setup {
+      val pageView: Document = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
+      val bannerComponent: Elements = pageView.getElementsByClass("govuk-!-padding-top-3 notifications-bar")
+
       bannerComponent.size() must be > 0
-    }
 
-    "display 'Home' as a link text and contain the correct url" in new Setup {
-      assert(view.containsLinkWithText("#", "Home"))
-    }
-
-    "display 'Messages' as a link text in message banner" in new Setup {
-      assert(view.containsLinkWithText("#", "Messages"))
-    }
-
-    "display 'Your contact details' as a link text in message banner" in new Setup {
-      assert(view.containsLinkWithText("#", "Your contact details"))
-    }
-
-    "display 'Your account authorities' as a link text in message banner" in new Setup {
-      assert(view.containsLinkWithText("#", "Your account authorities"))
+      assert(pageView.containsLinkWithText("#", "Home"))
+      assert(pageView.containsLinkWithText("#", "Messages"))
+      assert(pageView.containsLinkWithText("#", "Your contact details"))
+      assert(pageView.containsLinkWithText("#", "Your account authorities"))
     }
   }
 
@@ -115,8 +108,14 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    def view: Document = Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
-      eori, accountNumbers, companyName, companyAddress, email).body)
+    def view(messageBannerPartial: Option[HtmlFormat.Appendable] = None): Document =
+      Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
+        eori,
+        accountNumbers,
+        companyName,
+        companyAddress,
+        email,
+        messageBannerPartial).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }
