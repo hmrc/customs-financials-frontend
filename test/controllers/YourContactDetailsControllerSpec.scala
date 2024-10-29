@@ -40,7 +40,6 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
   "YourContactDetailsController" should {
     "return OK when request session id is found in the cache" in new Setup {
-      val sessionValue = "session_acfe456"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
         .thenReturn(Future.successful("Some_String"))
@@ -48,21 +47,20 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionValue))))
+        Option(HttpResponse(OK, sessionId))))
 
       when(mockSecureMessageConnector.getMessageCountBanner(any)(any))
         .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
-        sessionValue)
+        sessionId)
 
       val result: Future[Result] = route(app, request).value
       status(result) should be(OK)
     }
 
     "display the message banner on successful page load" in new Setup {
-      val sessionValue = "session_acfe456"
       val returnUrl = s"http://localhost:9876${controllers.routes.YourContactDetailsController.onPageLoad()}"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
@@ -71,14 +69,14 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionValue))))
+        Option(HttpResponse(OK, sessionId))))
 
       when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
         .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
-        sessionValue)
+        sessionId)
 
       val result: Future[Result] = route(app, request).value
       status(result) should be(OK)
@@ -88,7 +86,6 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "redirect to Home page if cache session id and request session id do not match" in new Setup {
-      val sessionCacheValue = "session_acfe456"
       val sessionHeaderValue = "session_acf"
 
       when(requestBuilder.execute(any[HttpReads[String]], any[ExecutionContext]))
@@ -97,7 +94,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionCacheValue))))
+        Option(HttpResponse(OK, sessionId))))
 
       val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
         routes.YourContactDetailsController.onPageLoad().url,
@@ -155,6 +152,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
   }
 
   trait Setup {
+    val sessionId = "session_acfe456"
 
     val n1 = 200
     val n2 = 100

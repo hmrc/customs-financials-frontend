@@ -74,16 +74,19 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
       }
     }
 
-    "display the message banner when provided" in new Setup {
+    "display the message banner partial when provided" in new Setup {
       val pageView: Document = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
-      val bannerComponent: Elements = pageView.getElementsByClass("govuk-!-padding-top-3 notifications-bar")
+      val bannerComponent: Elements = pageView.getElementsByClass("notifications-bar")
 
       bannerComponent.size() must be > 0
 
-      assert(pageView.containsLinkWithText("#", "Home"))
-      assert(pageView.containsLinkWithText("#", "Messages"))
-      assert(pageView.containsLinkWithText("#", "Your contact details"))
-      assert(pageView.containsLinkWithText("#", "Your account authorities"))
+      assert(pageView.containsLinkWithText("http://localhost:9876/customs/payment-records", "Home"))
+      assert(pageView.containsLink("http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url"))
+
+      assert(pageView.containsLinkWithText(
+        "http://localhost:9876/customs/payment-records/your-contact-details", "Your contact details"))
+      assert(pageView.containsLinkWithText(
+        "http://localhost:9000/customs/manage-authorities", "Your account authorities"))
     }
   }
 
