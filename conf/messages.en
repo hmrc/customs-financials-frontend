@@ -166,7 +166,7 @@ cf.customs-financials-home.notification.requested-c79=Your requested import VAT 
 cf.customs-financials-home.notification.requested-duty-deferment=Your requested duty deferment statements are available to view
 cf.customs-financials-home.notification.requested-adjustments=Your requested import adjustments statements are available to view
 cf.customs-financials-home.notification.requested-postponed-vat=Your requested postponed import VAT statements are available to view
-cf.customs-financials-home.notification.requested-cash-statement=Your requested cash account transactions are available to view.
+cf.customs-financials-home.notification.requested-cash-statement=Your requested cash account transactions are available to view
 cf.customs-financials-home.notification.authorities=Your requested list of accounts you have authority to use is available
 
 # Verify Your Email Address
@@ -332,6 +332,7 @@ cf.customs-financials-home.notification.multiple-duty-deferment = You have new d
 cf.customs-financials-home.notification.multiple-c79 = You have new import VAT certificates (C79)
 cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
 cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
+cf.customs-financials-home.notification.multiple-requested-cash-statement=Your requested cash account transactions are available to view
 cf.account.manage-account-authorities.title=Manage your account authorities
 
 # Timeout Messages
