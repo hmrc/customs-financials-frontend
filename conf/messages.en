@@ -332,6 +332,7 @@ cf.customs-financials-home.notification.multiple-duty-deferment = You have new d
 cf.customs-financials-home.notification.multiple-c79 = You have new import VAT certificates (C79)
 cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
 cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
+cf.customs-financials-home.notification.multiple-requested-cash-statement=Your requested cash account transactions are available to view.
 cf.account.manage-account-authorities.title=Manage your account authorities
 
 # Timeout Messages

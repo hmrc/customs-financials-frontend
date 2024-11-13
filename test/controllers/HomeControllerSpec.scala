@@ -234,6 +234,25 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     }
   }
 
+  "show notifications guidance when there are multiple notifications for cash account" in new Setup {
+    val notifications: List[Notification] = List(
+      Notification(CDSCashAccount, isRequested = true),
+      Notification(CDSCashAccount, isRequested = true),
+      Notification(CDSCashAccount, isRequested = true)
+    )
+
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
+      Future.successful(notifications))
+
+    running(app) {
+      val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
+      val result = route(app, request).value
+      val html = Jsoup.parse(contentAsString(result))
+
+      html.containsElementById("notification-panel")
+    }
+  }
+
   "partial landing page" should {
     "show error message as heading text" in {
 
