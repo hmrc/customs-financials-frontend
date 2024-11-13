@@ -263,7 +263,7 @@ cf.customs-financials-home.notification.multiple-duty-deferment = Mae gennych dd
 cf.customs-financials-home.notification.multiple-c79 = Mae gennych dystysgrifau TAW mewnforio (C79) newydd
 cf.customs-financials-home.notification.multiple-postponed-vat = Mae gennych ddatganiadau TAW mewnforio gohiriedig newydd
 cf.customs-financials-home.notification.multiple-adjustments = 	Mae gennych ddatganiadau addasiadau mewnforio newydd
-cf.customs-financials-home.notification.multiple-requested-cash-statement=Mae’r trafodion cyfrif arian parod y gwnaethoch gais amdanynt yn barod i’w gweld
+cf.customs-financials-home.notification.multiple-requested-cash-statement=Mae’r trafodion cyfrif arian parod y gwnaethoch gais amdanynt yn barod i’w gweld.
 
 cf.account.manage-account-authorities.title=Rheoli awdurdodau eich cyfrif
 
