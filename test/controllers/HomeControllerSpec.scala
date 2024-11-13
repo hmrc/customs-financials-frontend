@@ -234,7 +234,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     }
   }
   
-  "show notifications guidance when multiple notifications for cash account" in new Setup {
+  "show notifications guidance when there are multiple notifications for cash account" in new Setup {
     val notifications: List[Notification] = List(
       Notification(CDSCashAccount, isRequested = true),
       Notification(CDSCashAccount, isRequested = true),
