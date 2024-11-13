@@ -38,10 +38,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       val view: Document = Jsoup.parse(
         app.injector.instanceOf[authorised_to_view_search].apply(
           form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
           isXiEoriEnabled = false
         ).body)
 
@@ -59,10 +55,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       val view: Document = Jsoup.parse(
         app.injector.instanceOf[authorised_to_view_search].apply(
           form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
           isXiEoriEnabled = true
         ).body)
 
@@ -80,10 +72,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       val view: Document = Jsoup.parse(
         app.injector.instanceOf[authorised_to_view_search].apply(
           form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
           isXiEoriEnabled = true
         ).body)
 
@@ -94,63 +82,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
       anchorTag.attr("href") mustBe
         controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
-    }
-
-    "display correct guidance when csv url is of GB authority" in new SetUp {
-      val gbAuthUrl = "gbURL"
-
-      val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option(gbAuthUrl),
-          None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
-
-      view.getElementById("authorised-request-csv-link").html() mustBe
-        messages(app)("cf.search.authorities.link")
-
-      val anchorTag: Elements = view.getElementById("authorised-request-csv-link").getElementsByTag("a")
-
-      anchorTag.attr("href") mustBe
-        controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
-
-      view.getElementById("gb-csv-authority-link").html() mustBe
-        messages(app)("cf.authorities.notification-panel.a.gb-authority")
-      view.getElementById("gb-csv-authority-link").attr("href") mustBe gbAuthUrl
-    }
-
-    "display correct guidance when csv urls for both GB and XI authorities are available" in new SetUp {
-      val gbAuthUrl = "gbURL"
-      val xiAuthUrl = "xiURL"
-
-      val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option(gbAuthUrl),
-          Option(xiAuthUrl),
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
-
-      view.getElementById("authorised-request-csv-link").html() mustBe
-        messages(app)("cf.search.authorities.link")
-
-      val anchorTag: Elements = view.getElementById("authorised-request-csv-link").getElementsByTag("a")
-
-      anchorTag.attr("href") mustBe
-        controllers.routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url
-
-      view.getElementById("gb-csv-authority-link").html() mustBe
-        messages(app)("cf.authorities.notification-panel.a.gb-authority")
-      view.getElementById("gb-csv-authority-link").attr("href") mustBe gbAuthUrl
-
-      view.getElementById("xi-csv-authority-link").html() mustBe
-        messages(app)("cf.authorities.notification-panel.a.xi-authority")
-      view.getElementById("xi-csv-authority-link").attr("href") mustBe xiAuthUrl
     }
   }
 

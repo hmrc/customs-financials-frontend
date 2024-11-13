@@ -106,18 +106,6 @@ class ApiService @Inject()(httpClient: HttpClientV2,
     }
   }
 
-  def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/$eori/notifications/$fileRole"
-
-    metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
-      httpClient.delete(url"$apiEndpoint")
-        .execute[HttpResponse]
-        .flatMap {
-          res => Future.successful(res.status == Status.OK)
-        }
-    }
-  }
-
   def requestAuthoritiesCsv(eori: String, alternateEORI: Option[String])(
     implicit hc: HeaderCarrier): Future[Either[RequestCsvResponse, RequestAuthoritiesCsvResponse]] = {
 

@@ -41,21 +41,6 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
 
   private val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold(hyphen)(_._2)
 
-  def auditFiles[T <: SdesFile](files: Seq[T], eori: String)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Seq[AuditResult]] = {
-    Future.sequence(files.map { file => audit(file.auditModelFor(eori)) })
-  }
-
-  def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
-
-    auditConnector.sendExtendedEvent(dataEvent)
-      .map { auditResult =>
-        logAuditResult(auditResult)
-        auditResult
-      }
-  }
-
   def viewAccount(user: SignedInUser)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val historicEoriAuditDetails: Seq[AuditEori] = user.allEoriHistory.map(
       eoriHistory => AuditEori(eoriHistory.eori, isHistoric = true))
@@ -65,6 +50,16 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
     val auditEvent = AuditModel(AUDIT_TYPE, AUDIT_AUTHORISED_TRANSACTION, Json.toJson(eoriList))
 
     audit(auditEvent)
+  }
+  
+  private def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
+
+    auditConnector.sendExtendedEvent(dataEvent)
+      .map { auditResult =>
+        logAuditResult(auditResult)
+        auditResult
+      }
   }
 
   private def toExtendedDataEvent(appName: String,

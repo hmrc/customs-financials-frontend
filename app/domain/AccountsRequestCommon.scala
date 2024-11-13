@@ -17,13 +17,13 @@
 package domain
 
 import domain.DutyPaymentMethod.CDS
+import play.api.libs.json.{JsValue, Json, OFormat, Writes}
+import play.api.libs.ws.BodyWritable
 
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import scala.util.Random
-import play.api.libs.json.{Format, JsValue, Json, OFormat, Writes}
-import play.api.libs.ws.BodyWritable
 
 case class AccountsRequestCommon(receiptDate: String, acknowledgementReference: String, regime: String)
 

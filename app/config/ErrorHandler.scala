@@ -17,11 +17,11 @@
 package config
 
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.{Request, RequestHeader}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import views.html.error_states.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import utils.Utils.emptyString
+import views.html.error_states.{error_template, not_found_template}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

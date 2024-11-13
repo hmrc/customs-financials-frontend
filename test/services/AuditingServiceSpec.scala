@@ -17,10 +17,10 @@
 package services
 
 import config.AppConfig
-import domain.{AuditEori, AuditModel, EoriHistory, SignedInUser}
+import domain.{EoriHistory, SignedInUser}
+import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{verify, when}
-import org.mockito.ArgumentCaptor
 import play.api.libs.json.{JsArray, Json}
 import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HeaderCarrier
@@ -72,75 +72,6 @@ class AuditingServiceSpec extends SpecBase with ShouldMatchers {
       dataEvent.auditSource shouldBe expectedAuditSource
       dataEvent.auditType shouldBe "ViewAccount"
       dataEvent.detail shouldBe expectedAuditEvent
-    }
-
-    "create the correct data event for a user requesting duty deferment statements" in new Setup {
-      val model: AuditModel =
-        AuditModel(AUDIT_TYPE, AUDIT_DUTY_DEFERMENT_TRANSACTION, Json.toJson(AuditEori(eori, isHistoric = false)))
-
-      await(auditingService.audit(model))
-
-      val dataEventCaptor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
-      verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-
-      val dataEvent: ExtendedDataEvent = dataEventCaptor.getValue
-
-      dataEvent.auditSource should be(expectedAuditSource)
-      dataEvent.auditType should be(AUDIT_TYPE)
-      dataEvent.detail.toString() should include(eori)
-      dataEvent.tags.toString() should include(AUDIT_DUTY_DEFERMENT_TRANSACTION)
-    }
-
-    "create the correct data event for a user requesting VAT certificates" in new Setup {
-      val model: AuditModel =
-        AuditModel(AUDIT_VAT_CERTIFICATES, AUDIT_VAT_CERTIFICATES_TRANSACTION,
-          Json.toJson(AuditEori(eori, isHistoric = true)))
-
-      await(auditingService.audit(model))
-
-      val dataEventCaptor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
-      verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-
-      val dataEvent: ExtendedDataEvent = dataEventCaptor.getValue
-
-      dataEvent.auditSource should be(expectedAuditSource)
-      dataEvent.auditType should be(AUDIT_VAT_CERTIFICATES)
-      dataEvent.detail.toString() should include(eori)
-      dataEvent.tags.toString() should include(AUDIT_VAT_CERTIFICATES_TRANSACTION)
-    }
-
-    "create the correct data event for a user requesting postponed VAT certificates" in new Setup {
-      val model: AuditModel = AuditModel(AUDIT_POSTPONED_VAT_STATEMENTS, AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION,
-        Json.toJson(AuditEori(eori, isHistoric = false)))
-
-      await(auditingService.audit(model))
-
-      val dataEventCaptor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
-      verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-
-      val dataEvent: ExtendedDataEvent = dataEventCaptor.getValue
-
-      dataEvent.auditSource should be(expectedAuditSource)
-      dataEvent.auditType should be(AUDIT_POSTPONED_VAT_STATEMENTS)
-      dataEvent.detail.toString() should include(eori)
-      dataEvent.tags.toString() should include(AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION)
-    }
-
-    "create the correct data event for a user requesting security statements" in new Setup {
-      val model = AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION,
-        Json.toJson(AuditEori(eori, isHistoric = false)))
-
-      await(auditingService.audit(model))
-
-      val dataEventCaptor: ArgumentCaptor[ExtendedDataEvent] = ArgumentCaptor.forClass(classOf[ExtendedDataEvent])
-      verify(mockAuditConnector).sendExtendedEvent(dataEventCaptor.capture)(any, any)
-
-      val dataEvent: ExtendedDataEvent = dataEventCaptor.getValue
-
-      dataEvent.auditSource should be(expectedAuditSource)
-      dataEvent.auditType should be(AUDIT_SECURITY_STATEMENTS)
-      dataEvent.detail.toString() should include(eori)
-      dataEvent.tags.toString() should include(AUDIT_SECURITY_STATEMENTS_TRANSACTION)
     }
   }
 

@@ -16,9 +16,8 @@
 
 package domain
 
-import play.api.libs.json.{Format, JsValue, Json, OFormat, Writes}
+import play.api.libs.json.{JsValue, Json, OFormat, Writes}
 import play.api.libs.ws.BodyWritable
-import domain.AccountsAndBalancesRequest.jsonBodyWritable
 
 case class AccountsAndBalancesRequestContainer(accountsAndBalancesRequest: AccountsAndBalancesRequest)
 

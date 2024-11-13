@@ -16,7 +16,6 @@
 
 package config
 
-import domain.FileRole
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -111,6 +110,4 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
 
   lazy val sdesApi: String = servicesConfig.baseUrl("sdes") +
     config.get[String]("microservice.services.sdes.context")
-
-  def filesUrl(fileRole: FileRole): String = s"$sdesApi/files-available/list/${fileRole.name}"
 }
