@@ -85,7 +85,6 @@ class AuditingServiceSpec extends SpecBase with ShouldMatchers {
     val AUDIT_VAT_CERTIFICATES_TRANSACTION = "Display VAT certificates"
     val AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION = "Display postponed VAT statements"
     val AUDIT_SECURITY_STATEMENTS_TRANSACTION = "Display security statements"
-    val AUDIT_TYPE = "SDESCALL"
     val AUDIT_VAT_CERTIFICATES = "DisplayVATCertificates"
     val AUDIT_SECURITY_STATEMENTS = "DisplaySecurityStatements"
     val AUDIT_POSTPONED_VAT_STATEMENTS = "DisplayPostponedVATStatements"
