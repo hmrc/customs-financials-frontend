@@ -17,18 +17,14 @@
 package connectors
 
 import config.AppConfig
-
-import javax.inject.Inject
 import play.api.http.Status
 import play.api.mvc.RequestHeader
 import play.api.{Logger, Logging}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
-import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
-import connectors.AccountLinksRequest.jsonBodyWritable
-import domain.SearchAuthoritiesRequest.jsonBodyWritable
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class SecureMessageConnector @Inject()(httpClient: HttpClientV2,

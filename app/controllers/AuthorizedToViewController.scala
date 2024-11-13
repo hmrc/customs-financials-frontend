@@ -18,34 +18,27 @@ package controllers
 
 import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
 import config.{AppConfig, ErrorHandler}
-import connectors.{CustomsFinancialsApiConnector, SdesConnector}
-import domain.FileRole.StandingAuthority
-import domain._
+import domain.*
 import forms.EoriNumberFormProvider
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
-import play.api.mvc._
+import play.api.mvc.*
 import play.api.{Logger, LoggerLike}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Utils.{CsvFiles, emptyString, isXIEori, partitionCsvFilesByFileNamePattern}
-import views.helpers.Formatters
-import views.html.authorised_to_view._
+import utils.Utils.{emptyString, isXIEori}
+import views.html.authorised_to_view.*
 
-import java.time.LocalDate
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-// scalastyle:off cyclomatic.complexity
 @Singleton
 class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
                                            apiService: ApiService,
-                                           val sdesConnector: SdesConnector,
                                            errorHandler: ErrorHandler,
                                            dataStoreService: DataStoreService,
                                            verifyEmail: EmailAction,
-                                           financialsApiConnector: CustomsFinancialsApiConnector,
                                            implicit val mcc: MessagesControllerComponents,
                                            authorisedToViewSearch: authorised_to_view_search,
                                            authorisedToViewSearchResult: authorised_to_view_search_result,
@@ -57,48 +50,24 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   val log: LoggerLike = Logger(this.getClass)
   val form: Form[String] = eoriNumberFormProvider()
 
-  def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
-    financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
+  def onPageLoad(): Action[AnyContent] = (authenticate andThen verifyEmail) { implicit req =>
 
-    for {
-      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile()
-    } yield {
-      val viewModel = csvFiles
-      val fileExists = csvFiles.nonEmpty
-      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+    val isXiEoriEnabled = appConfig.xiEoriEnabled
 
-      val gbAuthUrl = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-      val date = Formatters.dateAsDayMonthAndYear(
-        Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-      val isXiEoriEnabled = appConfig.xiEoriEnabled
-
-      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
-    }
+    Ok(authorisedToViewSearch(form, isXiEoriEnabled))
   }
 
-  def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
+  def onSubmit(): Action[AnyContent] = authenticate.async { implicit request =>
     form.bindFromRequest().fold(
-      formWithErrors =>
-        for {
-          csvFiles <- getCsvFile()
-        } yield {
-          val viewModel = csvFiles
-          val fileExists = csvFiles.nonEmpty
-          val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
-
-          val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-          val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-          val date = Formatters.dateAsDayMonthAndYear(
-            Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+      formWithErrors => {
           val isXiEoriEnabled = appConfig.xiEoriEnabled
-
-          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
+          Future.successful(BadRequest(authorisedToViewSearch(formWithErrors, isXiEoriEnabled)))
         },
       query => processSearchQuery(request, query)
     )
   }
 
+  // scalastyle:off cyclomatic.complexity
   private def processSearchQuery(request: AuthenticatedRequest[AnyContent], query: EORI)
                                 (implicit hc: HeaderCarrier, messages: Messages,
                                  appConfig: AppConfig): Future[Result] = {
@@ -108,36 +77,20 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       gbEoriAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
       xiEORI: Option[EORI] <- dataStoreService.getXiEori(request.user.eori)
       xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
-      csvFiles <- getCsvFile()(request)
     } yield {
       val isMyAcc =
         gbEoriAccounts.myAccounts.exists(_.number == query) || xiEoriAccounts.myAccounts.exists(_.number == query)
 
-      val viewModel = csvFiles
-      val fileExists = csvFiles.nonEmpty
-      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
-      val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-
       (request.user.eori, isMyAcc, xiEORI) match {
         case (eori, _, _) if eori.equalsIgnoreCase(query) || (xiEORI.isDefined && xiEORI.get.equalsIgnoreCase(query)) =>
           displayErrorView(query,
-            "cf.account.authorized-to-view.search-own-eori",
-            fileExists,
-            gbAuthUrl,
-            xiAuthUrl)(request, messages, appConfig)
+            "cf.account.authorized-to-view.search-own-eori")(request, messages, appConfig)
 
         case (_, true, _) => displayErrorView(query,
-            "cf.account.authorized-to-view.search-own-accountnumber",
-            fileExists,
-            gbAuthUrl,
-            xiAuthUrl)(request, messages, appConfig)
+            "cf.account.authorized-to-view.search-own-accountnumber")(request, messages, appConfig)
 
         case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) => displayErrorView(query,
-            "cf.search.authorities.error.register-xi-eori",
-            fileExists,
-            gbAuthUrl,
-            xiAuthUrl)(request, messages, appConfig)
+            "cf.search.authorities.error.register-xi-eori")(request, messages, appConfig)
 
         case _ => if (xiEORI.nonEmpty) {
             searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
@@ -149,6 +102,7 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
 
     result.flatten
   }
+  // scalastyle:on
 
   private def getXiEoriCdsAccounts(request: AuthenticatedRequest[AnyContent], xiEORI: Option[String])
                                   (implicit hc: HeaderCarrier): Future[CDSAccounts] = {
@@ -159,17 +113,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   }
 
   private def displayErrorView(query: EORI,
-                               msgKey: String,
-                               fileExists: Boolean,
-                               gbAuthUrl: Option[String],
-                               xiAuthUrl: Option[String])
+                               msgKey: String)
                               (implicit request: Request[_], messages: Messages, appConfig: AppConfig): Future[Result] =
     Future.successful(BadRequest(authorisedToViewSearch(
       form.withError("value", msgKey).fill(query),
-      gbAuthUrl,
-      xiAuthUrl,
-      LocalDate.now.toString,
-      fileExists,
       appConfig.xiEoriEnabled)(request, messages, appConfig)))
 
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
@@ -267,11 +214,6 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
     val listOfEligibleAuthorities = List(gbAuthorities, xiAuthorities).filter(sAuth => !getDisplayLink(sAuth))
 
     if (listOfEligibleAuthorities.isEmpty) gbAuthorities else listOfEligibleAuthorities.head
-  }
-
-  private def getCsvFile()(implicit req: AuthenticatedRequest[_]): Future[Seq[StandingAuthorityFile]] = {
-    sdesConnector.getAuthoritiesCsvFiles(req.user.eori)
-      .map(_.sortWith(_.startDate isAfter _.startDate).sortBy(_.filename).toSeq.sortWith(_.filename > _.filename))
   }
 
   private def getClientEori(searchedAuthorities: SearchedAuthorities) = {

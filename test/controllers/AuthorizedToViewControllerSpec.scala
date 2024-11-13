@@ -16,9 +16,6 @@
 
 package controllers
 
-import connectors.SdesConnector
-import domain.FileFormat.Csv
-import domain.FileRole.StandingAuthority
 import domain.*
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -29,9 +26,8 @@ import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.TestData.*
 import utils.{ShouldMatchers, SpecBase}
-import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1,
-  FILE_SIZE_500, MONTH_6, YEAR_2022}
 
 import scala.concurrent.Future
 
@@ -49,72 +45,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "show the search EORI view when the feature flag is enabled" in new Setup {
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+      val newApp: Application = application().configure("features.new-agent-view-enabled" -> true).build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
         status(result) should be(OK)
-      }
-    }
-
-    "display the search EORI view with GB authority link when there are only GB authorities' csv file" in new Setup {
-
-      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
-
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
-
-      running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
-        val result = route(newApp, request).value
-        status(result) should be(OK)
-
-        val html = Jsoup.parse(contentAsString(result))
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        intercept[RuntimeException] {
-          html.getElementById("xi-csv-authority-link").attr("href")
-        }
-      }
-    }
-
-    "display the search EORI view with GB and XI authority link when there are" +
-      "GB and XI authorities' csv files" in new Setup {
-
-      val suthCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
-
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
-
-      running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
-        val result = route(newApp, request).value
-        status(result) should be(OK)
-
-        val html = Jsoup.parse(contentAsString(result))
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
       }
     }
 
@@ -171,11 +108,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "download authorities csv page when requests all accounts" in new Setup {
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("microservice.services.sdes.context" -> true).build()
+      val newApp: Application = application().configure("microservice.services.sdes.context" -> true).build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -188,7 +122,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "getCsvFile() sort by file name" in new Setup {
 
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
       val filesWithNames: List[EORI] = List("CS_000000000154_csv.csv",
         "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
@@ -444,7 +377,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "return BAD_REQUEST if an invalid payload sent" in new Setup {
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
           "value" -> "ERROR")
@@ -454,60 +386,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
 
-    "return BAD_REQUEST with correct CSV links for GB authorities if an invalid payload sent" in new Setup {
-
-      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
-      running(app) {
-        val request = fakeRequest(
-          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
-
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe BAD_REQUEST
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        intercept[RuntimeException] {
-          html.getElementById("xi-csv-authority-link").attr("href")
-        }
-      }
-    }
-
-    "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
-      "if an invalid payload sent" in new Setup {
-
-      val authCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
-      running(app) {
-        val request = fakeRequest(
-          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
-
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe BAD_REQUEST
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
-      }
-    }
-
     "return BAD_REQUEST with correct error msg when agent is not registered for his own XI EORI" +
       " and search authority using trader's XI EORI" in new Setup {
 
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
       when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
       running(app) {
@@ -555,8 +436,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "Display error message if searching your own EORI number" in new Setup {
-      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
@@ -570,18 +449,11 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
     }
 
     "Display error message if searching your own XI EORI number" in new Setup {
-      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
-
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
       running(app) {
@@ -593,10 +465,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe BAD_REQUEST
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
@@ -718,32 +586,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     val xiCdsAccounts: CDSAccounts = CDSAccounts(newUser().xiEori.get, None, xiAccounts)
     val emptyCdsAccounts: CDSAccounts = CDSAccounts(newUser().eori, None, List())
 
-    val gbEORI = "GB123456789012"
-    val xiEORI = "XI123456789012"
-
-    val gbStanAuthFile153Url = "https://test.co.uk/GB123456789012/SA_000000000153_csv.csv"
-    val gbStanAuthFile154Url = "https://test.co.uk/GB123456789012/SA_000000000154_csv.csv"
-    val xiStanAuthFile153Url = "https://test.co.uk/XI123456789012/SA_000000000153_XI_csv.csv"
-    val xiStanAuthFile154Url = "https://test.co.uk/XI123456789012/SA_000000000154_XI_csv.csv"
-
-    val standAuthMetadata: StandingAuthorityMetadata =
-      StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority)
-
-    val gbStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000153_csv.csv", gbStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
-    val gbStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000154_csv.csv", gbStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
-
-    val xiStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
-    val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
-
     val emailId = "test@test.com"
 
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val mockSdesConnector: SdesConnector = mock[SdesConnector]
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
       .thenReturn(Future.successful(cdsAccounts))
@@ -751,14 +597,11 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       .thenReturn(Future.successful(xiCdsAccounts))
     when(mockApiService.getAccounts(ArgumentMatchers.anyString())(any))
       .thenReturn(Future.successful(emptyCdsAccounts))
-    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any))
-      .thenReturn(Future.successful(Seq.empty))
 
     val app: Application = application()
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService),
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        inject.bind[DataStoreService].toInstance(mockDataStoreService)
       ).configure("features.new-agent-view-enabled" -> false).build()
   }
 }

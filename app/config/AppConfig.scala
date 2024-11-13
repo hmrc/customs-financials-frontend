@@ -16,7 +16,6 @@
 
 package config
 
-import domain.FileRole
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -34,8 +33,7 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
 
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
-
-  lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
+  
   lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
   lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
   lazy val isCashAccountV2FeatureFlagEnabled: Boolean = config.get[Boolean]("features.cash-account-v2-enabled")
@@ -108,9 +106,4 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
 
   lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
     config.get[String]("microservice.services.customs-data-store.context")
-
-  lazy val sdesApi: String = servicesConfig.baseUrl("sdes") +
-    config.get[String]("microservice.services.sdes.context")
-
-  def filesUrl(fileRole: FileRole): String = s"$sdesApi/files-available/list/${fileRole.name}"
 }

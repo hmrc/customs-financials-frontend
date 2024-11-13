@@ -282,115 +282,68 @@ class ApiServiceSpec
 
   }
 
-  "deleteNotification" should {
-    "send a delete notification request" in new Setup() {
-      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
-      when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+  "requestAuthoritiesCsv" should {
+    "return OK 200 with requestAcceptedDate" in new Setup {
+      val requestAuthoritiesCsvResponse: JsValue = Json.toJson(RequestAuthoritiesCsvResponse("DATE"))
 
-      when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
+        .thenReturn(requestBuilder)
+
+      when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+        .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
+
+      when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
 
       running(app) {
-        await(service.deleteNotification(traderEori, C79Certificate)(hc))
-        verify(mockHttpClient).delete(any)(any)
+        val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
+        response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
       }
     }
 
-    "log response time metric" in {
-      implicit val hc: HeaderCarrier = HeaderCarrier()
-      val traderEori = "12345678"
-      val mockHttpClient = mock[HttpClientV2]
-      val requestBuilder = mock[RequestBuilder]
-      val mockMetricsReporterService = mock[MetricsReporterService]
+    "return RequestAuthoritiesCSVError when fails" in new Setup {
+      when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
+        .thenReturn(requestBuilder)
 
-      val appTest = application().overrides(
-        inject.bind[HttpClientV2].toInstance(mockHttpClient),
-        inject.bind[RequestBuilder].toInstance(requestBuilder),
-        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
-      ).build()
-
-      when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
       when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(HttpResponse.apply(OK, emptyString)))
+        .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
 
-      when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
+      when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
 
-      when[Future[Boolean]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
-        .thenReturn(Future.successful(true))
-
-      val service = appTest.injector.instanceOf[ApiService]
-
-      running(appTest) {
-        await(service.deleteNotification(traderEori, C79Certificate))
-
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
-          "customs-financials-api.delete.notification"))(any)(any)
+      running(app) {
+        val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
+        response mustBe Left(RequestAuthoritiesCSVError)
       }
     }
 
-    "requestAuthoritiesCsv" should {
-      "return OK 200 with requestAcceptedDate" in new Setup {
-        val requestAuthoritiesCsvResponse: JsValue = Json.toJson(RequestAuthoritiesCsvResponse("DATE"))
+    "return JsonParseError when JSResultException thrown parsing json response" in new Setup {
+      val jsonError: JsValue = Json.toJson("some" -> "error")
 
-        when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
-          .thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
+        .thenReturn(requestBuilder)
 
-        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(HttpResponse.apply(OK, requestAuthoritiesCsvResponse.toString)))
+      when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+        .thenReturn(Future.successful(HttpResponse.apply(OK, jsonError.toString())))
 
-        when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
+      when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
 
-        running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
-          response mustBe Right(RequestAuthoritiesCsvResponse("DATE"))
-        }
+      running(app) {
+        val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
+        response mustBe Left(JsonParseError)
       }
+    }
 
-      "return RequestAuthoritiesCSVError when fails" in new Setup {
-        when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
-          .thenReturn(requestBuilder)
+    "return RequestAuthoritiesCSVError when exception thrown" in new Setup {
+      when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
+        .thenReturn(requestBuilder)
 
-        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(HttpResponse.apply(INTERNAL_SERVER_ERROR, "failure")))
+      when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
+        .thenReturn(Future.failed(UpstreamErrorResponse("failure", INTERNAL_SERVER_ERROR)))
 
-        when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
+      when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
 
-        running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
-          response mustBe Left(RequestAuthoritiesCSVError)
-        }
-      }
-
-      "return JsonParseError when JSResultException thrown parsing json response" in new Setup {
-        val jsonError: JsValue = Json.toJson("some" -> "error")
-
-        when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
-          .thenReturn(requestBuilder)
-
-        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(HttpResponse.apply(OK, jsonError.toString())))
-
-        when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
-
-        running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
-          response mustBe Left(JsonParseError)
-        }
-      }
-
-      "return RequestAuthoritiesCSVError when exception thrown" in new Setup {
-        when(requestBuilder.withBody(any[RequestAuthoritiesCsv])(any(), any(), any()))
-          .thenReturn(requestBuilder)
-
-        when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(UpstreamErrorResponse("failure", INTERNAL_SERVER_ERROR)))
-
-        when(mockHttpClient.post(any)(any)).thenReturn(requestBuilder)
-
-        running(app) {
-          val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
-          response mustBe Left(RequestAuthoritiesCSVError)
-        }
+      running(app) {
+        val response = await(service.requestAuthoritiesCsv("EORI", Some("someAltEori")))
+        response mustBe Left(RequestAuthoritiesCSVError)
       }
     }
   }

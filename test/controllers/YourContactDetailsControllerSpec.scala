@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.{CustomsFinancialsSessionCacheConnector, SdesConnector, SecureMessageConnector}
+import connectors.{CustomsFinancialsSessionCacheConnector, SecureMessageConnector}
 import domain.*
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -191,7 +191,6 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
     val mockApiService: ApiService = mock[ApiService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val mockSdesConnector: SdesConnector = mock[SdesConnector]
     val mockSecureMessageConnector: SecureMessageConnector = mock[SecureMessageConnector]
     val mockSessionCache: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
     val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
@@ -200,7 +199,6 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
     when(mockSessionCache.getAccontLinks(any)(any)).thenReturn(Future.successful(Option(Seq())))
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
-    when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(email)))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("companyName")))
     when(mockDataStoreService.getCompanyAddress(any)(any)).thenReturn(
@@ -210,7 +208,6 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService),
-        inject.bind[SdesConnector].toInstance(mockSdesConnector),
         inject.bind[SecureMessageConnector].toInstance(mockSecureMessageConnector),
         inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCache)
       ).configure("features.new-agent-view-enabled" -> false).build()

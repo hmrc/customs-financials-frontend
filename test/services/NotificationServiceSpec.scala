@@ -16,9 +16,9 @@
 
 package services
 
-import domain.FileRole._
-import org.mockito.ArgumentMatchers.{eq => eqTo}
-import org.mockito.Mockito.{verify, when, reset}
+import domain.FileRole.*
+import org.mockito.ArgumentMatchers.eq as eqTo
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
@@ -26,10 +26,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import utils.MustMatchers
+import utils.{MustMatchers, SpecBase}
 
 class NotificationServiceSpec
-  extends MockAuditingService
+    extends SpecBase
     with FutureAwaits
     with DefaultAwaitTimeout
     with ScalaFutures
