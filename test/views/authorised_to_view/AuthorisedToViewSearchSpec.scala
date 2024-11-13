@@ -152,6 +152,12 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
         messages(app)("cf.authorities.notification-panel.a.xi-authority")
       view.getElementById("xi-csv-authority-link").attr("href") mustBe xiAuthUrl
     }
+
+    "have a correct back link to manage authorities page" in new SetUp {
+      val backLink: Elements = sampleView.select("a.govuk-back-link")
+
+      backLink.attr("href") mustBe appConfig.manageAuthoritiesFrontendUrl
+    }
   }
 
   trait SetUp {
@@ -162,5 +168,14 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     val form: Form[String] = new EoriNumberFormProvider().apply()
     val date = "SomeDate"
+
+    val authorisedToViewInstance: authorised_to_view_search = app.injector.instanceOf[authorised_to_view_search]
+
+    val sampleView: Document = Jsoup.parse(authorisedToViewInstance.apply(
+        form = form,
+        date = date,
+        fileExists = true,
+        isXiEoriEnabled = true)
+      .body)
   }
 }
