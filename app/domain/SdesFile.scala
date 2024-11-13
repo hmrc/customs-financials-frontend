@@ -143,7 +143,7 @@ object FileRole {
 
   case object CDSCashAccount extends FileRole(
     "CDSCashAccount", "cash-statement",
-    "Display Cash Statements", "cash-statement"
+    "Display Cash Statements", "requested-cash-statement"
   )
 
   val log: LoggerLike = Logger(this.getClass)

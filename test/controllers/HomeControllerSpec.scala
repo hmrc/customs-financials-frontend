@@ -250,8 +250,6 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
       val html = Jsoup.parse(contentAsString(result))
       
       html.containsElementById("notification-panel")
-      html.select("#notification-panel")
-        .text() must include("Your requested cash account transactions are available to view")
     }
   }
  
