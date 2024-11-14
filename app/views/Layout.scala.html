@@ -105,7 +105,7 @@
                         signOutUrl = Some(controllers.routes.LogoutController.logout.url),
                         accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
                     ),
-        backLink = Some(BackLink(href = backLink.getOrElse(emptyString))),
+        backLink = backLink.filter(_.nonEmpty).map(BackLink(_)),
         templateOverrides = TemplateOverrides(
                                 additionalHeadBlock = Some(additionalHead),
                                 beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None

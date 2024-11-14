@@ -84,9 +84,7 @@ class LayoutSpec extends SpecBase with MustMatchers {
       viewDoc.getElementsByClass("govuk-back-link").attr("href")
         .contains(backLinkUrl.get) mustBe true
     } else {
-      viewDoc.getElementsByClass("govuk-back-link").text() mustBe "Back"
-      viewDoc.getElementsByClass("govuk-back-link").attr("href")
-        .contains("#") mustBe true
+      viewDoc.getElementsByClass("govuk-back-link").size() mustBe 0
     }
   }
 

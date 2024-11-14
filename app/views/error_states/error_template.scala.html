@@ -29,7 +29,11 @@
     details: String*
 )(implicit request:RequestHeader, messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(pageTitle), helpAndSupport = false) {
+@layout(
+    pageTitle = Some(pageTitle),
+    helpAndSupport = false,
+    backLink = Some(routes.AuthorizedToViewController.onPageLoad().url)
+) {
 
     @h1(heading, classes = "govuk-heading-xl")
 
