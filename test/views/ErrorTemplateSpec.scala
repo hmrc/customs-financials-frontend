@@ -18,7 +18,7 @@ package views
 
 import config.AppConfig
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.{Document, Element}
 import play.api.Application
 import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -35,7 +35,7 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
 
       "main header is correct" in new Setup {
         running(app) {
-          view.getElementsByTag("h1").text() mustBe messages(
+          viewWithBackLink.getElementsByTag("h1").text() mustBe messages(
             "cf.error.technicalDifficulties.heading"
           )
         }
@@ -43,21 +43,29 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
 
       "backlink should be visible" in new Setup {
         running(app) {
-          backLink must not be null
+          backLinkWithLink.isDefined mustBe true
         }
       }
 
       "backlink URL is correct" in new Setup {
         running(app) {
-          backLink.attr("href") mustBe expectedBackLinkPath
+          backLinkWithLink.map(_.attr("href")) mustBe Some(expectedBackLinkPath)
         }
       }
 
       "error message is correct" in new Setup {
         running(app) {
-          view.getElementsByClass("govuk-body").get(0).text() mustBe messages(
+          viewWithBackLink.getElementsByClass("govuk-body").get(0).text() mustBe messages(
             "cf.error.technicalDifficulties.message"
           )
+        }
+      }
+    }
+
+    "not display backlink" when {
+      "backlink is not passed as a parameter" in new Setup {
+        running(app) {
+          backLinkWithoutLink.isEmpty mustBe true
         }
       }
     }
@@ -71,15 +79,31 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
     implicit val messages: Messages = messagesApi.preferred(request)
 
-    val view: Document = Jsoup.parse(
+    val expectedBackLinkPath = "/customs/payment-records/authorized-to-view"
+
+    val viewWithBackLink: Document = Jsoup.parse(
       app.injector.instanceOf[error_template].apply(
-        pageTitle = messages.apply("cf.error.technicalDifficulties.title"),
-        heading = messages.apply("cf.error.technicalDifficulties.heading"),
-        details = Seq(messages.apply("cf.error.technicalDifficulties.message")): _*
+        pageTitle = messages("cf.error.technicalDifficulties.title"),
+        heading = messages("cf.error.technicalDifficulties.heading"),
+        backLink = Some(expectedBackLinkPath),
+        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
       ).body
     )
 
-    val backLink = view.select(".govuk-back-link").first()
-    val expectedBackLinkPath = "/customs/payment-records/authorized-to-view"
+    val viewWithoutBackLink: Document = Jsoup.parse(
+      app.injector.instanceOf[error_template].apply(
+        pageTitle = messages("cf.error.technicalDifficulties.title"),
+        heading = messages("cf.error.technicalDifficulties.heading"),
+        backLink = None,
+        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
+      ).body
+    )
+
+    val backLinkWithLink: Option[Element] =
+      Option(viewWithBackLink.select(".govuk-back-link").first())
+
+    val backLinkWithoutLink: Option[Element] =
+      Option(viewWithoutBackLink.select(".govuk-back-link").first())
+
   }
 }
