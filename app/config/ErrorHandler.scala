@@ -21,7 +21,7 @@ import play.api.mvc.{Request, RequestHeader}
 import play.twirl.api.Html
 import views.html.error_states.{error_template, not_found_template}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import utils.Utils.emptyString
+import controllers.routes
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,28 +31,35 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
                              implicit val appConfig: AppConfig,
                              notFoundView: not_found_template,
                              errorTemplate: error_template)(protected val ec: ExecutionContext) extends FrontendErrorHandler {
+
   override def standardErrorTemplate(pageTitle: String,
                                      heading: String,
                                      message: String)(implicit requestHeader: RequestHeader): Future[Html] =
     Future.successful(
       errorTemplate(
-        Messages("cf.error.standard-error.title"),
-        Messages("cf.error.standard-error.heading"),
-        Messages("cf.error.standard-error.message"),
-        emptyString,
-        emptyString)
+        pageTitle = Messages("cf.error.standard-error.title"),
+        heading = Messages("cf.error.standard-error.heading"),
+        details = Messages("cf.error.standard-error.message")
+      )
     )
 
   override def notFoundTemplate(implicit requestHeader: RequestHeader): Future[Html] =
     Future.successful(notFoundView())
 
   def unauthorized()(implicit requestHeader: RequestHeader): Html = {
-    errorTemplate(Messages("cf.error.unauthorized.title"), Messages("cf.error.unauthorized.heading"),
-      Messages("cf.error.unauthorized.message"))
+    errorTemplate(
+      pageTitle = Messages("cf.error.unauthorized.title"),
+      heading = Messages("cf.error.unauthorized.heading"),
+      details = Messages("cf.error.unauthorized.message")
+    )
   }
 
   def technicalDifficulties()(implicit requestHeader: RequestHeader): Html = {
-    errorTemplate(Messages("cf.error.technicalDifficulties.title"), Messages("cf.error.technicalDifficulties.heading"),
-      Messages("cf.error.technicalDifficulties.message"))
+    errorTemplate(
+      pageTitle = Messages("cf.error.technicalDifficulties.title"),
+      heading = Messages("cf.error.technicalDifficulties.heading"),
+      backLink = Some(routes.AuthorizedToViewController.onPageLoad().url),
+      details = Messages("cf.error.technicalDifficulties.message")
+    )
   }
 }

@@ -26,10 +26,15 @@
 @(
     pageTitle: String,
     heading: String,
+    backLink: Option[String] = None,
     details: String*
 )(implicit request:RequestHeader, messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(pageTitle), helpAndSupport = false) {
+@layout(
+    pageTitle = Some(pageTitle),
+    helpAndSupport = false,
+    backLink = backLink
+) {
 
     @h1(heading, classes = "govuk-heading-xl")
 
