@@ -46,7 +46,7 @@ cf.error.not-found.heading=Heb ddod o hyd i’r dudalen
 cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 cf.error.not-found.message.go-to-home-page-text1=Gallwch fynd
-cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli tollau mewnforio a chyfrifon TAW
+cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli awdurdodau eich cyfrif
 
 
 # Unauthorised Error
@@ -322,14 +322,14 @@ cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
 cf.authorities.request.received.title = Cais wedi dod i law
 cf.authorities.request.received.panel.h1 = Cais wedi dod i law
 cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ati o’r dudalen ‘'Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio'’, cyn pen 1 awr fel arfer.
-cf.authorities.request.received.link = Yn ôli reoli tollau mewnforio a chyfrifon TAW
+cf.authorities.request.received.link = Yn ôl i reoli awdurdodau eich cyfrif
 cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar gael i’w lawrlwytho:
 cf.authorities.notification-panel.a.gb-authority=Awdurdodau ym Mhrydain Fawr (CSV)
 cf.authorities.notification-panel.a.xi-authority=Awdurdodau yng Ngogledd Iwerddon (CSV)
 cf.authorities.notification-panel.p2=Crëwyd eich rhestr ar {0}. Bydd ar gael i’w gweld am 10 diwrnod.
 cf.authorities.label = Rydych wedi gwneud cais am restr o’r holl gyfrifon y mae gennych awdurdod i’w defnyddio.
 cf.authorities.next = Yr hyn sy’n digwydd nesaf
-cf.authorities.next.msg = Bydd eich rhestr ar gael o’r dudalen ‘Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio’, fel arfer o fewn 1 awr.
+cf.authorities.next.msg = Bydd eich rhestr ar gael ar y dudalen ‘Rheoli awdurdodau eich cyfrif’, fel arfer cyn pen 1 awr.
 
 cf.contact-details.title=Eich manylion cyswllt
 cf.contact-details.company-details=Manylion y cwmni

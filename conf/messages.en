@@ -45,7 +45,7 @@ cf.error.not-found.heading=Page not found
 cf.error.not-found.message.address-typed-wrong=If you typed the web address, check it is correct.
 cf.error.not-found.message.address-pasted-wrong=If you pasted the web address, check you copied the entire address.
 cf.error.not-found.message.go-to-home-page-text1=You can go
-cf.error.not-found.message.go-to-home-page-text2=back to manage import duties and VAT accounts
+cf.error.not-found.message.go-to-home-page-text2=back to manage your account authorities
 
 # Unauthorised Error
 cf.error.unauthorized.title=You are not authorised to view this page
@@ -236,14 +236,14 @@ cf.search.authorities.accountType.CDSCash = Cash account
 cf.authorities.request.received.title = Request received
 cf.authorities.request.received.panel.h1 = Request received
 cf.authorities.request.received.p = We will send an email to {0} when your CSV file is ready to download. You can access it from ''Find accounts you have authority to use'' page, usually within 1 hour.
-cf.authorities.request.received.link = Back to manage import duties and VAT accounts
+cf.authorities.request.received.link = Back to manage your account authorities
 cf.authorities.notification-panel.p1=The list of authorities you requested are available to download:
 cf.authorities.notification-panel.a.gb-authority=GB authorities (CSV)
 cf.authorities.notification-panel.a.xi-authority=Northern Ireland authorities (CSV)
 cf.authorities.notification-panel.p2=Your list was created on {0}. It will be available to view for 10 days.
 cf.authorities.label = You have requested a list of all accounts you have authority to use.
 cf.authorities.next = What happens next
-cf.authorities.next.msg = Your list will be available from the ''Find accounts you have authority to use'' page, usually within 1 hour.
+cf.authorities.next.msg = Your list will be available on the ''Manage your account authorities'' page, usually within 1 hour.
 
 # Contact Details
 cf.contact-details.title=Your contact details
