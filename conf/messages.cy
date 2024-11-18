@@ -46,7 +46,7 @@ cf.error.not-found.heading=Heb ddod o hyd i’r dudalen
 cf.error.not-found.message.address-typed-wrong=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
 cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
 cf.error.not-found.message.go-to-home-page-text1=Gallwch fynd
-cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli awdurdodau eich cyfrif
+cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli tollau mewnforio a chyfrifon TAW
 
 
 # Unauthorised Error
