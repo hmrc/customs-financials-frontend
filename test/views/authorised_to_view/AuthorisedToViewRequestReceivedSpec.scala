@@ -75,6 +75,17 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
           view.getElementById("cf.authorities.next.msg").text mustBe msg("cf.authorities.next.msg")
         }
       }
+
+      "display link with correct href" in new Setup {
+        running(app) {
+          val linkElement = view.getElementById("cf.authorities.request.received.link")
+            .getElementsByTag("a")
+            .first()
+
+          linkElement.text mustBe msg("cf.authorities.request.received.link")
+          linkElement.attr("href") mustBe expectedUrl
+        }
+      }
     }
   }
 
@@ -96,6 +107,8 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+
+    val expectedUrl: String = appConfig.manageAuthoritiesFrontendUrl
 
     def view: Document = Jsoup.parse(
       app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
