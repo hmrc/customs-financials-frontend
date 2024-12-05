@@ -18,10 +18,23 @@ package views.components
 
 import config.AppConfig
 import domain.{
-  AccountCancelled, AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusPending,
-  AccountStatusSuspended, CDSAccounts, ChangeOfLegalEntity, DebitRejectedAccountClosedOrTransferred,
-  DebitRejectedReferToDrawer, DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount,
-  DutyDefermentBalance, GuaranteeCancelledGuarantorsRequest, GuaranteeCancelledTradersRequest, GuaranteeExceeded,
+  AccountCancelled,
+  AccountLink,
+  AccountStatusClosed,
+  AccountStatusOpen,
+  AccountStatusPending,
+  AccountStatusSuspended,
+  CDSAccounts,
+  ChangeOfLegalEntity,
+  DebitRejectedAccountClosedOrTransferred,
+  DebitRejectedReferToDrawer,
+  DefermentAccountAvailable,
+  DirectDebitMandateCancelled,
+  DutyDefermentAccount,
+  DutyDefermentBalance,
+  GuaranteeCancelledGuarantorsRequest,
+  GuaranteeCancelledTradersRequest,
+  GuaranteeExceeded,
   ReturnedMailOther
 }
 import org.jsoup.Jsoup
@@ -122,42 +135,48 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
     "not include account limit remaining" in new Setup {
       running(app) {
         content(dutyDefermentAccountWithoutBalances)
-          .getElementsByClass("account-limit-remaining").size() mustBe 0
+          .getElementsByClass("account-limit-remaining")
+          .size() mustBe 0
       }
     }
 
     "not include guarantee limit remaining" in new Setup {
       running(app) {
         content(dutyDefermentAccountWithoutBalances)
-          .getElementsByClass("account-limit-remaining").size() mustBe 0
+          .getElementsByClass("account-limit-remaining")
+          .size() mustBe 0
       }
     }
 
     "include the hidden text for negative balance" in new Setup {
       running(app) {
-        content(accountWithNegativeBalance).getElementsByTag("span")
+        content(accountWithNegativeBalance)
+          .getElementsByTag("span")
           .hasClass("govuk-visually-hidden") mustBe true
       }
     }
 
     "include the aria-hidden attribute for negative balance" in new Setup {
       running(app) {
-        content(accountWithNegativeBalance).getElementsByTag("span")
+        content(accountWithNegativeBalance)
+          .getElementsByTag("span")
           .hasClass("custom-card__balance-amount--negative") mustBe true
       }
     }
 
     "include the color class for negative balance" in new Setup {
       running(app) {
-        content(accountWithNegativeBalance).getElementsByTag("span")
+        content(accountWithNegativeBalance)
+          .getElementsByTag("span")
           .hasClass("custom-card__balance-amount--negative") mustBe true
       }
     }
 
     "include account limit remaining with negative account balance added" in new Setup {
       running(app) {
-        content(accountWithNegativeBalance).getElementById(
-          "account-limit-123456").text mustBe "Your Account limit: £500"
+        content(accountWithNegativeBalance)
+          .getElementById("account-limit-123456")
+          .text mustBe "Your Account limit: £500"
       }
     }
   }
@@ -167,7 +186,8 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "not display open account status" in new Setup {
         running(app) {
           content(dutyDefermentAccountOpen)
-            .getElementsByClass("duty-deferment-account-status").isEmpty mustBe true
+            .getElementsByClass("duty-deferment-account-status")
+            .isEmpty mustBe true
         }
       }
     }
@@ -188,43 +208,51 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
 
       "display pending warning if accountStatus is 'Pending'" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementsContainingText(
-            "You cannot use this account on CDS yet").isEmpty mustBe false
+          content(dutyDefermentAccountPending)
+            .getElementsContainingText("You cannot use this account on CDS yet")
+            .isEmpty mustBe false
         }
       }
 
       "not display pending warning if accountStatus is not 'Pending'" in new Setup {
         running(app) {
-          content(dutyDefermentAccountOpen).getElementsContainingText(
-            "You cannot use this account on CDS yet").isEmpty mustBe true
+          content(dutyDefermentAccountOpen)
+            .getElementsContainingText("You cannot use this account on CDS yet")
+            .isEmpty mustBe true
         }
       }
 
       "not display set up direct debit if accountStatus is 'Pending'" in new Setup {
         running(app) {
           content(dutyDefermentAccountPending).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
 
       "not show direct debit if accountStatus & accountStatusId are invalid" in new Setup {
         running(app) {
           content(dutyDefermentAccountPending).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
 
       "display will be available if account balance is not 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPending).getElementById(
-            "duty-deferment-balance-123456").text mustBe "£99.01 will be available"
+          content(dutyDefermentAccountPending)
+            .getElementById("duty-deferment-balance-123456")
+            .text mustBe "£99.01 will be available"
         }
       }
 
       "not display will be available if account balance is 0" in new Setup {
         running(app) {
-          content(dutyDefermentAccountPendingZeroBalance).getElementById(
-            "duty-deferment-balance-123456").text mustBe "£0"
+          content(dutyDefermentAccountPendingZeroBalance)
+            .getElementById("duty-deferment-balance-123456")
+            .text mustBe "£0"
         }
       }
 
@@ -240,7 +268,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "display direct debit setup link if accountStatusId is DirectDebitMandateCancelled" in new Setup {
         running(app) {
           content(dutyDefermentAccountSuspendedWithStatusId4).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe true
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe true
         }
       }
 
@@ -253,51 +283,67 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "not display direct debit setup link if accountStatusId is ChangeOfLegalEntity" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID1).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
 
       "not display direct debit setup link if accountStatusId is GuaranteeCancelledGuarantorsRequest" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID2).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
 
       "not display direct debit setup link if accountStatusId is GuaranteeCancelledTradersRequest" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID3).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is DebitRejectedAccountClosedOrTransferred" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID5).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is DebitRejectedReferToDrawer" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID6).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is ReturnedMailOther" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID7).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is GuaranteeExceeded" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID8).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
       "not display direct debit setup link if accountStatusId is AccountCancelled" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusID9).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit"
+          ) mustBe false
         }
       }
     }
@@ -312,7 +358,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
           content(dutyDefermentAccountClosed).containsLinkWithText(
-            ddSetupLink, "set up a new Direct Debit.") mustBe false
+            ddSetupLink,
+            "set up a new Direct Debit."
+          ) mustBe false
         }
       }
     }
@@ -321,7 +369,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
           content(dutyDefermentAccountSuspendedIsleOfMan).containsLinkWithText(
-            ddSetupLink, "set up a Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a Direct Debit"
+          ) mustBe false
         }
       }
     }
@@ -330,7 +380,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
       "not include a a link to the duty deferment direct debit setup details" in new Setup {
         running(app) {
           content(dutyDefermentAccountStatusOpenIsleOfMan).containsLinkWithText(
-            ddSetupLink, "set up a Direct Debit") mustBe false
+            ddSetupLink,
+            "set up a Direct Debit"
+          ) mustBe false
         }
       }
 
@@ -338,7 +390,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
         "not include a a link to the duty deferment direct debit setup details" in new Setup {
           running(app) {
             content(dutyDefermentAccountStatusClosedIsleOfMan).containsLinkWithText(
-              ddSetupLink, "set up a Direct Debit") mustBe false
+              ddSetupLink,
+              "set up a Direct Debit"
+            ) mustBe false
           }
         }
       }
@@ -355,35 +409,63 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
     val contactDetailsLink1 = "http://localhost:9397/customs/duty-deferment/0123456789/contact-details"
     val otherEori = "other"
 
-    val dutyDefermentAccount: DutyDefermentAccount = DutyDefermentAccount(dan, eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_499)),
+    val dutyDefermentAccount: DutyDefermentAccount = DutyDefermentAccount(
+      dan,
+      eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_999)),
+        Some(BigDecimal(BALANCE_499)),
         Some(BigDecimal(BALANCE_299)),
-        Some(BigDecimal(99.01))), viewBalanceIsGranted = true, isIsleOfMan = false)
+        Some(BigDecimal(99.01))
+      ),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val accountWithNegativeBalance: DutyDefermentAccount = DutyDefermentAccount(dan, eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_500)),
+    val accountWithNegativeBalance: DutyDefermentAccount = DutyDefermentAccount(
+      dan,
+      eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_999)),
+        Some(BigDecimal(BALANCE_500)),
         Some(BigDecimal(BALANCE_299)),
-        Some(BigDecimal(NEGATIVE_BALANCE_100))), viewBalanceIsGranted = true, isIsleOfMan = false)
+        Some(BigDecimal(NEGATIVE_BALANCE_100))
+      ),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
     val dutyDefermentAccountWithoutBalances: DutyDefermentAccount =
-      DutyDefermentAccount(dan, eori, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
-        DutyDefermentBalance(None, None, None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+      DutyDefermentAccount(
+        dan,
+        eori,
+        isNiAccount = false,
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        DutyDefermentBalance(None, None, None, None),
+        viewBalanceIsGranted = true,
+        isIsleOfMan = false
+      )
 
     val dutyDefermentAccountOpen: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusOpen)
     val dutyDefermentAccountSuspended: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusSuspended)
     val dutyDefermentAccountClosed: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusClosed)
     val dutyDefermentAccountPending: DutyDefermentAccount = dutyDefermentAccount.copy(status = AccountStatusPending)
 
-    val dutyDefermentAccountSuspendedIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
-      status = AccountStatusSuspended, isIsleOfMan = true)
+    val dutyDefermentAccountSuspendedIsleOfMan: DutyDefermentAccount =
+      dutyDefermentAccount.copy(status = AccountStatusSuspended, isIsleOfMan = true)
 
-    val dutyDefermentAccountStatusOpenIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
-      status = AccountStatusOpen, isIsleOfMan = true)
+    val dutyDefermentAccountStatusOpenIsleOfMan: DutyDefermentAccount =
+      dutyDefermentAccount.copy(status = AccountStatusOpen, isIsleOfMan = true)
 
-    val dutyDefermentAccountStatusClosedIsleOfMan: DutyDefermentAccount = dutyDefermentAccount.copy(
-      status = AccountStatusClosed, isIsleOfMan = true)
+    val dutyDefermentAccountStatusClosedIsleOfMan: DutyDefermentAccount =
+      dutyDefermentAccount.copy(status = AccountStatusClosed, isIsleOfMan = true)
 
     val dutyDefermentAccountStatusID1: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = ChangeOfLegalEntity)
 
@@ -406,35 +488,59 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
     val dutyDefermentAccountStatusID8: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = GuaranteeExceeded)
     val dutyDefermentAccountStatusID9: DutyDefermentAccount = dutyDefermentAccount.copy(statusId = AccountCancelled)
 
-    val dutyDefermentAccountSuspendedWithStatusId4: DutyDefermentAccount = dutyDefermentAccount.copy(
-      status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
+    val dutyDefermentAccountSuspendedWithStatusId4: DutyDefermentAccount =
+      dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = DirectDebitMandateCancelled)
 
-    val dutyDefermentAccountSuspendedWithStatusId7: DutyDefermentAccount = dutyDefermentAccount.copy(
-      status = AccountStatusSuspended, statusId = ReturnedMailOther)
+    val dutyDefermentAccountSuspendedWithStatusId7: DutyDefermentAccount =
+      dutyDefermentAccount.copy(status = AccountStatusSuspended, statusId = ReturnedMailOther)
 
     val dutyDefermentAccountPendingZeroBalance: DutyDefermentAccount = dutyDefermentAccountPending.copy(balances =
-      DutyDefermentBalance(Some(BigDecimal(BALANCE_999)), Some(BigDecimal(BALANCE_499)),
-        Some(BigDecimal(BALANCE_299)), Some(BigDecimal(00.00))))
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_999)),
+        Some(BigDecimal(BALANCE_499)),
+        Some(BigDecimal(BALANCE_299)),
+        Some(BigDecimal(00.00))
+      )
+    )
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
     val app: Application = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances)))
+      CDSAccounts(eori, None, Seq(dutyDefermentAccount, dutyDefermentAccountWithoutBalances))
+    )
 
-    val accountLinks: Seq[AccountLink] = Seq(AccountLink(
-      sessionId = "sessionId", eori, isNiAccount = false, accountNumber = dan,
-      linkId = "0123456789", accountStatus = AccountStatusOpen,
-      accountStatusId = Option(DefermentAccountAvailable), lastUpdated = LocalDateTime.now))
+    val accountLinks: Seq[AccountLink] = Seq(
+      AccountLink(
+        sessionId = "sessionId",
+        eori,
+        isNiAccount = false,
+        accountNumber = dan,
+        linkId = "0123456789",
+        accountStatus = AccountStatusOpen,
+        accountStatusId = Option(DefermentAccountAvailable),
+        lastUpdated = LocalDateTime.now
+      )
+    )
 
-    val model: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts = accounts,
-      accountLinks = accountLinks, notificationMessageKeys = Seq.empty, xiEori = Some(emptyString))
+    val model: FinancialsHomeModel = FinancialsHomeModel(
+      eori,
+      companyName,
+      accounts = accounts,
+      accountLinks = accountLinks,
+      notificationMessageKeys = Seq.empty,
+      xiEori = Some(emptyString)
+    )
 
     def content(dutyDefermentAccount: DutyDefermentAccount = dutyDefermentAccount): Document = Jsoup.parse(
-      app.injector.instanceOf[duty_deferment_account_cards].apply(
-        DutyDefermentAccountsViewModel(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount)))))
-      ).body)
+      app.injector
+        .instanceOf[duty_deferment_account_cards]
+        .apply(
+          DutyDefermentAccountsViewModel(model.copy(accounts = Seq(CDSAccounts(eori, None, Seq(dutyDefermentAccount)))))
+        )
+        .body
+    )
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

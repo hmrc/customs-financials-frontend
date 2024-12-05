@@ -25,8 +25,8 @@ class AccountLinksSpec extends SpecBase with MustMatchers {
 
   "AccountLink" should {
     "should be able to assign data to an accountLink" in new Setup {
-      val res = new AccountLink(sessionId, eori, false,
-        accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
+      val res =
+        new AccountLink(sessionId, eori, false, accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
 
       res mustBe accountLink
       res.sessionId mustBe sessionId
@@ -40,8 +40,14 @@ class AccountLinksSpec extends SpecBase with MustMatchers {
     }
 
     "should be created from a sessionCacheInstance" in new Setup {
-      val sessCache = new SessionCacheAccountLink(eori, false, accountNumber, AccountStatusOpen,
-        Option(DebitRejectedAccountClosedOrTransferred), linkId)
+      val sessCache = new SessionCacheAccountLink(
+        eori,
+        false,
+        accountNumber,
+        AccountStatusOpen,
+        Option(DebitRejectedAccountClosedOrTransferred),
+        linkId
+      )
 
       val res = new AccountLink(sessionId, sessionCacheAccountLink = sessCache)
 
@@ -58,8 +64,7 @@ class AccountLinksSpec extends SpecBase with MustMatchers {
   "AccountLinkWithoutDate" should {
     "should be able to assign data to an accountLink" in new Setup {
 
-      val res = new AccountLinkWithoutDate(eori, false,
-        accountNumber, datelessAccount, datelssStatus, linkId)
+      val res = new AccountLinkWithoutDate(eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
 
       res mustBe accountLinkWithoutDate
     }
@@ -68,8 +73,14 @@ class AccountLinksSpec extends SpecBase with MustMatchers {
   "SessionCacheLink" should {
     "should be able to assign data to this SessionCache" in new Setup {
 
-      val res: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
-        AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
+      val res: SessionCacheAccountLink = SessionCacheAccountLink(
+        eori,
+        isNiAccount = false,
+        accountNumber,
+        AccountStatusOpen,
+        Option(DebitRejectedAccountClosedOrTransferred),
+        linkId
+      )
 
       res mustBe sessionCache
     }
@@ -89,12 +100,26 @@ trait Setup {
   val danId: String = "someDan"
   lazy val lastUpdated: LocalDateTime = LocalDateTime.now()
 
-  val accountLink: AccountLink = AccountLink(sessionId, eori, isNiAccount = false,
-    accountNumber, accountStatus, accountStatusId, linkId, lastUpdated)
+  val accountLink: AccountLink = AccountLink(
+    sessionId,
+    eori,
+    isNiAccount = false,
+    accountNumber,
+    accountStatus,
+    accountStatusId,
+    linkId,
+    lastUpdated
+  )
 
-  val accountLinkWithoutDate: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-    eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
+  val accountLinkWithoutDate: AccountLinkWithoutDate =
+    new AccountLinkWithoutDate(eori, false, accountNumber, datelessAccount, datelssStatus, linkId)
 
-  val sessionCache: SessionCacheAccountLink = SessionCacheAccountLink(eori, isNiAccount = false, accountNumber,
-    AccountStatusOpen, Option(DebitRejectedAccountClosedOrTransferred), linkId)
+  val sessionCache: SessionCacheAccountLink = SessionCacheAccountLink(
+    eori,
+    isNiAccount = false,
+    accountNumber,
+    AccountStatusOpen,
+    Option(DebitRejectedAccountClosedOrTransferred),
+    linkId
+  )
 }

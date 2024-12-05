@@ -17,8 +17,15 @@
 package services
 
 import config.AppConfig
-import domain.{CompanyAddress, EoriHistory, UndeliverableEmail, UndeliverableInformation,
-  UndeliverableInformationEvent, UnverifiedEmail, XiEoriAddressInformation}
+import domain.{
+  CompanyAddress,
+  EoriHistory,
+  UndeliverableEmail,
+  UndeliverableInformation,
+  UndeliverableInformationEvent,
+  UnverifiedEmail,
+  XiEoriAddressInformation
+}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
@@ -29,7 +36,13 @@ import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
 import java.net.URL
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{
+  HeaderCarrier,
+  HttpReads,
+  NotFoundException,
+  ServiceUnavailableException,
+  UpstreamErrorResponse
+}
 import utils.SpecBase
 import utils.MustMatchers
 
@@ -41,8 +54,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
   "Data store service" should {
     "return json response" in new Setup {
-      implicit def stringToOptionLocalDate: String => Option[LocalDate] = in => Some(
-        LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
+      implicit def stringToOptionLocalDate: String => Option[LocalDate] =
+        in => Some(LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
 
       val expectedEoriHistory: List[EoriHistory] =
         List(
@@ -111,8 +124,9 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         val response = service.getAllEoriHistory(eori)
         await(response)
 
-        verify(mockMetricsReporterService).withResponseTimeLogging(ArgumentMatchers.eq(
-          "customs-data-store.get.eori-history"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(
+          ArgumentMatchers.eq("customs-data-store.get.eori-history")
+        )(any)(any)
       }
     }
 
@@ -132,19 +146,11 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
     }
 
     "return Left(UndeliverableEmail) when there is undeliverable info" in new Setup {
-      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
-        emptyString,
-        emptyString,
-        emptyString,
-        None,
-        None,
-        emptyString)
+      val undeliverableEvent: UndeliverableInformationEvent =
+        UndeliverableInformationEvent(emptyString, emptyString, emptyString, emptyString, None, None, emptyString)
 
-      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
-        "test_event",
-        "test_event",
-        LocalDateTime.now(),
-        undeliverableEvent)
+      val undeliverableInfo: UndeliverableInformation =
+        UndeliverableInformation("test_sub", "test_event", "test_event", LocalDateTime.now(), undeliverableEvent)
 
       val emailAddress = "test"
 
@@ -164,19 +170,11 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
     }
 
     "return Left(UnverifiedEmail) when there is no address in response" in new Setup {
-      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
-        emptyString,
-        emptyString,
-        emptyString,
-        None,
-        None,
-        emptyString)
+      val undeliverableEvent: UndeliverableInformationEvent =
+        UndeliverableInformationEvent(emptyString, emptyString, emptyString, emptyString, None, None, emptyString)
 
-      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
-        "test_event",
-        "test_event",
-        LocalDateTime.now(),
-        undeliverableEvent)
+      val undeliverableInfo: UndeliverableInformation =
+        UndeliverableInformation("test_sub", "test_event", "test_event", LocalDateTime.now(), undeliverableEvent)
 
       val emailResponse: EmailResponse = EmailResponse(None, None, Some(undeliverableInfo))
 
@@ -290,7 +288,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       "return None when no company information is found" in new Setup {
         when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-        .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
 
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -305,7 +303,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       "return Company Address" in new Setup {
         val companyName = "Company name"
         val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
-        val companyInformationResponse: CompanyInformationResponse = CompanyInformationResponse(companyName, "1", address)
+        val companyInformationResponse: CompanyInformationResponse =
+          CompanyInformationResponse(companyName, "1", address)
 
         when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(companyInformationResponse))
@@ -407,12 +406,14 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockAppConfig.customsDataStore).thenReturn("test/value")
         when(mockAppConfig.xiEoriEnabled).thenReturn(false)
 
-        val app = application().overrides(
-          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder),
-          inject.bind[AppConfig].toInstance(mockAppConfig)
-        ).build()
+        val app = application()
+          .overrides(
+            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder),
+            inject.bind[AppConfig].toInstance(mockAppConfig)
+          )
+          .build()
 
         val service = app.injector.instanceOf[DataStoreService]
 
@@ -431,11 +432,13 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val eori = "GB11111"
 
-    val app: Application = application().overrides(
-      inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val service: DataStoreService = app.injector.instanceOf[DataStoreService]
 

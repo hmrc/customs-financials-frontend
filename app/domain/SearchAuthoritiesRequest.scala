@@ -16,7 +16,6 @@
 
 package domain
 
-
 import play.api.libs.json.{JsValue, Json, OFormat, Writes}
 import play.api.libs.ws.BodyWritable
 
@@ -26,7 +25,7 @@ object SearchAuthoritiesRequest {
   implicit val format: OFormat[SearchAuthoritiesRequest] = Json.format[SearchAuthoritiesRequest]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+      writes: Writes[T],
+      jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

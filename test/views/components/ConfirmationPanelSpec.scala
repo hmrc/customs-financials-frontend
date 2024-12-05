@@ -69,13 +69,16 @@ class ConfirmationPanelSpec extends SpecBase with MustMatchers {
     val h1 = "cf.account.authorized-to-view.title"
     val id = "test_id"
 
-    def viewDoc(h1: String,
-                body: Option[String] = None,
-                id: Option[String] = None): Document =
-      Jsoup.parse(app.injector.instanceOf[confirmation_panel].apply(
-        h1,
-        body,
-        id
-      ).body)
+    def viewDoc(h1: String, body: Option[String] = None, id: Option[String] = None): Document =
+      Jsoup.parse(
+        app.injector
+          .instanceOf[confirmation_panel]
+          .apply(
+            h1,
+            body,
+            id
+          )
+          .body
+      )
   }
 }

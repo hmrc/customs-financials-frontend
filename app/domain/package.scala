@@ -31,9 +31,9 @@ package object domain {
 
   implicit def optionBindable: PathBindable[Option[LinkId]] = new PathBindable[Option[LinkId]] {
     def bind(key: String, value: String): Either[String, Option[LinkId]] =
-      implicitly[PathBindable[LinkId]].
-        bind(key, value).
-        fold(
+      implicitly[PathBindable[LinkId]]
+        .bind(key, value)
+        .fold(
           left => Left(left),
           right => Right(Some(right))
         )

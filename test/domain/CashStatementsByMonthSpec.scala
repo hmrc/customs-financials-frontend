@@ -60,9 +60,10 @@ class CashStatementsByMonthSpec extends SpecBase with MustMatchers {
 
   "compare" should {
     "sort correctly" in new Setup {
-      List(cashStatementByMonthWithCsv,
-        cashStatementByMonthWithPdf
-      ).sorted mustBe List(cashStatementByMonthWithPdf, cashStatementByMonthWithCsv)
+      List(cashStatementByMonthWithCsv, cashStatementByMonthWithPdf).sorted mustBe List(
+        cashStatementByMonthWithPdf,
+        cashStatementByMonthWithCsv
+      )
     }
   }
 
@@ -84,11 +85,11 @@ class CashStatementsByMonthSpec extends SpecBase with MustMatchers {
     val app: Application = application().build()
     implicit val msgs: Messages = messages(app)
 
-    val metadataWithPdf: CashStatementFileMetadata = CashStatementFileMetadata(
-      startYear, month, Pdf, SecurityStatement, None)
+    val metadataWithPdf: CashStatementFileMetadata =
+      CashStatementFileMetadata(startYear, month, Pdf, SecurityStatement, None)
 
-    val metadataWithCsv: CashStatementFileMetadata = CashStatementFileMetadata(
-      startYear, month, Csv, SecurityStatement, None)
+    val metadataWithCsv: CashStatementFileMetadata =
+      CashStatementFileMetadata(startYear, month, Csv, SecurityStatement, None)
 
     val cashStatementFilePdf: CashStatementFile = CashStatementFile(
       fileName,
@@ -98,12 +99,7 @@ class CashStatementsByMonthSpec extends SpecBase with MustMatchers {
       eori
     )
 
-    val cashStatementFileCsv: CashStatementFile = CashStatementFile(fileName,
-      downloadUrl,
-      size,
-      metadataWithCsv,
-      eori
-    )
+    val cashStatementFileCsv: CashStatementFile = CashStatementFile(fileName, downloadUrl, size, metadataWithCsv, eori)
 
     val cashStatementByMonthWithPdf: CashStatementsByMonth =
       CashStatementsByMonth(date, Seq(cashStatementFilePdf))

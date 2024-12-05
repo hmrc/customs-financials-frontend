@@ -20,10 +20,7 @@ import play.api.libs.json._
 
 import javax.inject.Inject
 
-case class FileInformation(filename: String,
-                           downloadURL: String,
-                           fileSize: Long,
-                           metadata: Metadata)
+case class FileInformation(filename: String, downloadURL: String, fileSize: Long, metadata: Metadata)
 
 @Inject
 object FileInformation {

@@ -32,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConnector) {
+class AuditingService @Inject() (appConfig: AppConfig, auditConnector: AuditConnector) {
 
   val log: LoggerLike = Logger(this.getClass)
 
@@ -41,15 +41,18 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
 
   private val referrer: HeaderCarrier => String = _.headers(Seq(HeaderNames.REFERER)).headOption.fold(hyphen)(_._2)
 
-  def auditFiles[T <: SdesFile](files: Seq[T], eori: String)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Seq[AuditResult]] = {
+  def auditFiles[T <: SdesFile](files: Seq[T], eori: String)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext
+  ): Future[Seq[AuditResult]] = {
     Future.sequence(files.map { file => audit(file.auditModelFor(eori)) })
   }
 
   def audit(auditModel: AuditModel)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val dataEvent = toExtendedDataEvent(appConfig.appName, auditModel, referrer(hc))
 
-    auditConnector.sendExtendedEvent(dataEvent)
+    auditConnector
+      .sendExtendedEvent(dataEvent)
       .map { auditResult =>
         logAuditResult(auditResult)
         auditResult
@@ -57,8 +60,8 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
   }
 
   def viewAccount(user: SignedInUser)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val historicEoriAuditDetails: Seq[AuditEori] = user.allEoriHistory.map(
-      eoriHistory => AuditEori(eoriHistory.eori, isHistoric = true))
+    val historicEoriAuditDetails: Seq[AuditEori] =
+      user.allEoriHistory.map(eoriHistory => AuditEori(eoriHistory.eori, isHistoric = true))
 
     val eoriAuditDetails: AuditEori = AuditEori(user.eori, isHistoric = false)
     val eoriList = eoriAuditDetails +: historicEoriAuditDetails
@@ -67,14 +70,15 @@ class AuditingService @Inject()(appConfig: AppConfig, auditConnector: AuditConne
     audit(auditEvent)
   }
 
-  private def toExtendedDataEvent(appName: String,
-                                  auditModel: AuditModel,
-                                  path: String)(implicit hc: HeaderCarrier): ExtendedDataEvent =
+  private def toExtendedDataEvent(appName: String, auditModel: AuditModel, path: String)(implicit
+      hc: HeaderCarrier
+  ): ExtendedDataEvent =
     ExtendedDataEvent(
       auditSource = appName,
       auditType = auditModel.auditType,
       tags = AuditExtensions.auditHeaderCarrier(hc).toAuditTags(auditModel.transactionName, path),
-      detail = auditModel.detail)
+      detail = auditModel.detail
+    )
 
   private def logAuditResult(auditResult: AuditResult): Unit = auditResult match {
     case Success =>

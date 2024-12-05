@@ -35,7 +35,7 @@ import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialApiConnectorSpec
-  extends SpecBase
+    extends SpecBase
     with ScalaFutures
     with FutureAwaits
     with DefaultAwaitTimeout
@@ -73,11 +73,13 @@ class CustomsFinancialApiConnectorSpec
 
     when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
-    val app: Application = application().overrides(
-      bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      bind[HttpClientV2].toInstance(mockHttpClient),
-      bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        bind[HttpClientV2].toInstance(mockHttpClient),
+        bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val customsFinancialsApiConnector: CustomsFinancialsApiConnector =
       app.injector.instanceOf[CustomsFinancialsApiConnector]

@@ -16,7 +16,6 @@
 
 package domain
 
-
 import utils.SpecBase
 import utils.MustMatchers
 

@@ -18,16 +18,24 @@ package viewmodels
 
 import config.AppConfig
 import domain.{
-  AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
-  DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+  AccountLink,
+  AccountStatusOpen,
+  AccountStatusSuspended,
+  CDSAccounts,
+  DefermentAccountAvailable,
+  DirectDebitMandateCancelled,
+  DutyDefermentAccount,
+  DutyDefermentBalance
 }
 import org.scalatest.Assertion
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.{
-  duty_deferment_account_direct_debit_setup, duty_deferment_balance_details,
-  duty_deferment_balances, duty_deferment_inaccurate_balances_message
+  duty_deferment_account_direct_debit_setup,
+  duty_deferment_balance_details,
+  duty_deferment_balances,
+  duty_deferment_inaccurate_balances_message
 }
 import views.html.components.{account_status, hidden_status}
 import utils.MustMatchers
@@ -70,49 +78,58 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
     }
   }
 
-  private def shouldContainInaccurateBalancesMsg(viewModel: DutyDefermentAccountsViewModel)
-                                                (implicit msgs: Messages, appConfig: AppConfig): Assertion = {
+  private def shouldContainInaccurateBalancesMsg(
+      viewModel: DutyDefermentAccountsViewModel
+  )(implicit msgs: Messages, appConfig: AppConfig): Assertion = {
     val expectedBalanceMsg = new duty_deferment_inaccurate_balances_message().apply()
 
     viewModel.inaccurateBalancesMsg mustBe expectedBalanceMsg
   }
 
-  private def expectedAccountSectionRow(finHomeModel: FinancialsHomeModel)
-                                       (implicit msgs: Messages, appConfig: AppConfig): DutyDefermentAccountRowModel = {
+  private def expectedAccountSectionRow(
+      finHomeModel: FinancialsHomeModel
+  )(implicit msgs: Messages, appConfig: AppConfig): DutyDefermentAccountRowModel = {
     val headerRowModel =
       HeaderRowModel(
         "dan-DAN01234",
         s"${msgs("cf.account")} DAN01234",
         new hidden_status().apply(AccountStatusOpen),
-        new account_status().apply(AccountStatusOpen, "duty-deferment"))
+        new account_status().apply(AccountStatusOpen, "duty-deferment")
+      )
 
     val posBalance =
-      PositiveBalanceModel(pId = "duty-deferment-balance-DAN01234",
-        availableBalanceValue = Some("£100"), availableBalanceMsg = Some(msgs("cf.available")))
+      PositiveBalanceModel(
+        pId = "duty-deferment-balance-DAN01234",
+        availableBalanceValue = Some("£100"),
+        availableBalanceMsg = Some(msgs("cf.available"))
+      )
 
     val accAvailableModel = AccountAvailableModel(positiveBalanceValue = Some(posBalance))
 
-    val nonDDContent = NonDirectDebitContent(accountLimit = accAvailableModel,
-      balances = Some(new duty_deferment_balances(
-        new duty_deferment_balance_details).apply(finHomeModel.dutyDefermentAccounts.head, finHomeModel)),
-
-      viewStatements =
-        Some(
-          FooterLinkModel(
-            id = "duty-deferment-account-DAN01234",
-            href = finHomeModel.dutyDefermentAccountDetailsLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
-            displayValue = msgs("cf.accounts.viewStatements"),
-            hiddenMsg = msgs("cf.accounts.label.dan", "DAN01234"))),
-
+    val nonDDContent = NonDirectDebitContent(
+      accountLimit = accAvailableModel,
+      balances = Some(
+        new duty_deferment_balances(new duty_deferment_balance_details)
+          .apply(finHomeModel.dutyDefermentAccounts.head, finHomeModel)
+      ),
+      viewStatements = Some(
+        FooterLinkModel(
+          id = "duty-deferment-account-DAN01234",
+          href =
+            finHomeModel.dutyDefermentAccountDetailsLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
+          displayValue = msgs("cf.accounts.viewStatements"),
+          hiddenMsg = msgs("cf.accounts.label.dan", "DAN01234")
+        )
+      ),
       paymentDetails = Some(
         FooterLinkModel(
           id = "payment-details-DAN01234",
-          href = finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
+          href =
+            finHomeModel.dutyDefermentAccountDDSetupLinks()(appConfig)(("test_eori", "DAN01234"): (String, String)),
           displayValue = msgs("cf.accounts.contact.details"),
           hiddenMsg = msgs("cf.accounts.label.contact.details", "DAN01234")
         )
       ),
-
       topUp = Some(
         FooterLinkModel(
           id = emptyString,
@@ -122,26 +139,29 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
           hiddenMsg = msgs("cf.accounts.label.topUp", "DAN01234")
         )
       ),
-      pendingAccountGuidance = None)
+      pendingAccountGuidance = None
+    )
 
     val contentRowModel = ContentRowModel(directDebitSetupComponent = None, nonDirectDebitContent = Some(nonDDContent))
 
     DutyDefermentAccountRowModel(headerRowModel, contentRowModel)
   }
 
-  private def expectedAccountSectionRowWithDirectDebitSetup(finHomeModel: FinancialsHomeModel)
-                                                           (implicit msgs: Messages,
-                                                            appConfig: AppConfig): DutyDefermentAccountRowModel = {
+  private def expectedAccountSectionRowWithDirectDebitSetup(
+      finHomeModel: FinancialsHomeModel
+  )(implicit msgs: Messages, appConfig: AppConfig): DutyDefermentAccountRowModel = {
     val headerRowModel =
       HeaderRowModel(
         "dan-DAN01234",
         s"${msgs("cf.account")} DAN01234",
         new hidden_status().apply(AccountStatusSuspended),
-        new account_status().apply(AccountStatusSuspended, "duty-deferment"))
+        new account_status().apply(AccountStatusSuspended, "duty-deferment")
+      )
 
     val ddSetupComponent = Some(
-      new duty_deferment_account_direct_debit_setup().apply(
-        finHomeModel.dutyDefermentAccounts.head, finHomeModel.dutyDefermentAccountDDSetupLinks()))
+      new duty_deferment_account_direct_debit_setup()
+        .apply(finHomeModel.dutyDefermentAccounts.head, finHomeModel.dutyDefermentAccountDDSetupLinks())
+    )
 
     val contentRowModel = ContentRowModel(directDebitSetupComponent = ddSetupComponent, nonDirectDebitContent = None)
 
@@ -179,13 +199,16 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusOpen,
             DefermentAccountAvailable,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
+            isIsleOfMan = false
+          )
         )
       ),
-
       CDSAccounts(
         eoriNumber,
         None,
@@ -197,11 +220,16 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusOpen,
             DefermentAccountAvailable,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
-        ))
+            isIsleOfMan = false
+          )
+        )
+      )
     )
 
     val cdsAccounts2: Seq[CDSAccounts] = Seq(
@@ -216,10 +244,14 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusOpen,
             DefermentAccountAvailable,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
+            isIsleOfMan = false
+          )
         )
       )
     )
@@ -236,10 +268,14 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusSuspended,
             DirectDebitMandateCancelled,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
+            isIsleOfMan = false
+          )
         )
       )
     )
@@ -256,13 +292,16 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusOpen,
             DefermentAccountAvailable,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
+            isIsleOfMan = false
+          )
         )
       ),
-
       CDSAccounts(
         eoriNumber,
         None,
@@ -274,30 +313,40 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
             AccountStatusOpen,
             DefermentAccountAvailable,
             DutyDefermentBalance(
-              Some(amountLimit), Some(amountLimit), Some(amountLimit), Some(amountLimit)
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit),
+              Some(amountLimit)
             ),
             viewBalanceIsGranted = true,
-            isIsleOfMan = false)
-        ))
+            isIsleOfMan = false
+          )
+        )
+      )
     )
 
     val accountLinks: Seq[AccountLink] = Seq(
-      AccountLink(sessionId = sessionId,
+      AccountLink(
+        sessionId = sessionId,
         eori = eoriNumber,
         isNiAccount = false,
         accountNumber = dan1,
         accountStatus = AccountStatusOpen,
         accountStatusId = Some(DefermentAccountAvailable),
         linkId = linkId,
-        lastUpdated = date),
-      AccountLink(sessionId = sessionId,
+        lastUpdated = date
+      ),
+      AccountLink(
+        sessionId = sessionId,
         eori = eoriNumber,
         isNiAccount = false,
         accountNumber = dan2,
         accountStatus = AccountStatusOpen,
         accountStatusId = Some(DefermentAccountAvailable),
         linkId = linkId,
-        lastUpdated = date))
+        lastUpdated = date
+      )
+    )
 
     val finHomeModel1: FinancialsHomeModel =
       FinancialsHomeModel(eoriNumber, companyName, cdsAccounts1, notificationMessageKeys = List(), accountLinks, None)

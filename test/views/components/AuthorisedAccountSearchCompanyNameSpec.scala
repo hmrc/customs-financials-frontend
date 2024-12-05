@@ -32,10 +32,12 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase with MustMatchers 
   "AuthorisedAccountSearchCompanyName view" should {
     "load correctly and display correct guidance" in new Setup {
 
-      val view: Document = Jsoup.parse(app.injector.instanceOf[authorised_account_search_company_name].apply(
-        Option("TestCompnay"),
-        Option("GBN45365789211"),
-        displayLink = true).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_account_search_company_name]
+          .apply(Option("TestCompnay"), Option("GBN45365789211"), displayLink = true)
+          .body
+      )
 
       view.getElementsByTag("p").html() mustBe
         messages(app)("cf.search.authorities.result.inset2")
@@ -43,20 +45,24 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase with MustMatchers 
 
     "display correct guidance when company name is unavailable and displayLink is false" in new Setup {
 
-      val view: Document = Jsoup.parse(app.injector.instanceOf[authorised_account_search_company_name].apply(
-        None,
-        Option("GBN45365789211"),
-        displayLink = false).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_account_search_company_name]
+          .apply(None, Option("GBN45365789211"), displayLink = false)
+          .body
+      )
 
       view.getElementsByTag("p").html() mustBe
         messages(app)("cf.search.authorities.result.inset1")
     }
 
     "display only GB EORI when only GB EORI is present" in new Setup {
-      val view: Document = Jsoup.parse(app.injector.instanceOf[authorised_account_search_company_name].apply(
-        Option("TestCompnay"),
-        Option("GBN45365789211"),
-        displayLink = true).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_account_search_company_name]
+          .apply(Option("TestCompnay"), Option("GBN45365789211"), displayLink = true)
+          .body
+      )
 
       view.getElementsByTag("p").html() mustBe
         messages(app)("cf.search.authorities.result.inset2")
@@ -70,11 +76,12 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase with MustMatchers 
     }
 
     "display only XI EORI when only XI EORI is present" in new Setup {
-      val view: Document = Jsoup.parse(app.injector.instanceOf[authorised_account_search_company_name].apply(
-        Option("TestCompnay"),
-        None,
-        displayLink = true,
-        Option("XI45365789211")).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_account_search_company_name]
+          .apply(Option("TestCompnay"), None, displayLink = true, Option("XI45365789211"))
+          .body
+      )
 
       view.getElementsByTag("p").html() mustBe
         messages(app)("cf.search.authorities.result.inset2")
@@ -88,11 +95,12 @@ class AuthorisedAccountSearchCompanyNameSpec extends SpecBase with MustMatchers 
     }
 
     "display both GB and XI EORI when both are present" in new Setup {
-      val view: Document = Jsoup.parse(app.injector.instanceOf[authorised_account_search_company_name].apply(
-        Option("TestCompnay"),
-        Option("GBN45365789211"),
-        displayLink = true,
-        Option("XI45365789211")).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_account_search_company_name]
+          .apply(Option("TestCompnay"), Option("GBN45365789211"), displayLink = true, Option("XI45365789211"))
+          .body
+      )
 
       view.getElementsByTag("p").html() mustBe
         messages(app)("cf.search.authorities.result.inset2")

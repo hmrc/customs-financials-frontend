@@ -39,10 +39,15 @@ class LayoutSpec extends SpecBase with MustMatchers {
         val titleMsg = "test_title"
         val linkUrl = "test.com"
 
-        val layoutView: Document = Jsoup.parse(app.injector.instanceOf[Layout].apply(
-          pageTitle = Some(titleMsg),
-          backLink = Some(linkUrl)
-        )(content).body)
+        val layoutView: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[Layout]
+            .apply(
+              pageTitle = Some(titleMsg),
+              backLink = Some(linkUrl)
+            )(content)
+            .body
+        )
 
         shouldContainCorrectTitle(layoutView, titleMsg)
         shouldContainCorrectServiceUrls(layoutView)
@@ -76,12 +81,13 @@ class LayoutSpec extends SpecBase with MustMatchers {
     viewDoc.html().contains("/accessibility-statement/customs-financials") mustBe true
   }
 
-  private def shouldContainCorrectBackLink(viewDoc: Document,
-                                           backLinkUrl: Option[String] = None) = {
+  private def shouldContainCorrectBackLink(viewDoc: Document, backLinkUrl: Option[String] = None) = {
 
     if (backLinkUrl.isDefined) {
       viewDoc.getElementsByClass("govuk-back-link").text() mustBe "Back"
-      viewDoc.getElementsByClass("govuk-back-link").attr("href")
+      viewDoc
+        .getElementsByClass("govuk-back-link")
+        .attr("href")
         .contains(backLinkUrl.get) mustBe true
     } else {
       viewDoc.getElementsByClass("govuk-back-link").size() mustBe 0
@@ -89,10 +95,12 @@ class LayoutSpec extends SpecBase with MustMatchers {
   }
 
   private def shouldContainCorrectBanners(viewDoc: Document) = {
-    viewDoc.getElementsByClass("govuk-phase-banner")
+    viewDoc
+      .getElementsByClass("govuk-phase-banner")
       .text() mustBe "BETA This is a new service – your feedback will help us to improve it."
 
-    viewDoc.getElementsByClass("hmrc-user-research-banner")
+    viewDoc
+      .getElementsByClass("hmrc-user-research-banner")
       .text() mustBe "Help make GOV.UK better Sign up to take part in research (opens in new tab)" +
       " Hide message Hide message. I do not want to take part in research"
   }

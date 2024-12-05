@@ -322,13 +322,16 @@ class PaginatedSpec extends SpecBase with MustMatchers {
 
 object PaginatorElement {
   def apply(e: Element): List[PaginatorElement] = {
-    e.select("li").asScala.map(li => {
-      val url = li.select("a").asScala.toList match {
-        case Nil => emptyString
-        case head :: _ => head.attr("href")
-      }
-      PaginatorElement(url, li.text())
-    }).toList
+    e.select("li")
+      .asScala
+      .map(li => {
+        val url = li.select("a").asScala.toList match {
+          case Nil       => emptyString
+          case head :: _ => head.attr("href")
+        }
+        PaginatorElement(url, li.text())
+      })
+      .toList
   }
 }
 
@@ -343,8 +346,10 @@ case class PaginatorElement(url: String, linkText: String)
 
 case class PaginatorParser(description: String, links: Seq[PaginatorElement])
 
-case class ExamplePaginatedViewModel(allItems: Seq[Int],
-                                     itemsPerPage: Int,
-                                     requestedPage: Int,
-                                     itemsDescription: String,
-                                     urlForPage: Int => String) extends Paginated[Int]
+case class ExamplePaginatedViewModel(
+    allItems: Seq[Int],
+    itemsPerPage: Int,
+    requestedPage: Int,
+    itemsDescription: String,
+    urlForPage: Int => String
+) extends Paginated[Int]

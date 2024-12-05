@@ -39,52 +39,53 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
-                                                checkEmailIsVerified: EmailAction,
-                                                apiService: ApiService,
-                                                auditingService: AuditingService,
-                                                dataStoreService: DataStoreService,
-                                                notificationService: NotificationService,
-                                                customsHomeView: customs_financials_home,
-                                                customsHomePartialView: customs_financials_partial_home,
-                                                accountNotAvailable: account_not_available,
-                                                sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                                secureMessageConnector: SecureMessageConnector,
-                                                customsManageAuthConnector: CustomsManageAuthoritiesConnector,
-                                                implicit val mcc: MessagesControllerComponents)
-                                               (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+class CustomsFinancialsHomeController @Inject() (
+    authenticate: IdentifierAction,
+    checkEmailIsVerified: EmailAction,
+    apiService: ApiService,
+    auditingService: AuditingService,
+    dataStoreService: DataStoreService,
+    notificationService: NotificationService,
+    customsHomeView: customs_financials_home,
+    customsHomePartialView: customs_financials_partial_home,
+    accountNotAvailable: account_not_available,
+    sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+    secureMessageConnector: SecureMessageConnector,
+    customsManageAuthConnector: CustomsManageAuthoritiesConnector,
+    implicit val mcc: MessagesControllerComponents
+)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
+    with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
 
-  def index: Action[AnyContent] = (authenticate andThen checkEmailIsVerified).async {
-    implicit request =>
+  def index: Action[AnyContent] = (authenticate andThen checkEmailIsVerified).async { implicit request =>
 
-      val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
-      val eori = request.user.eori
+    val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
+    val eori = request.user.eori
 
-      customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
+    customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
 
-      val result = for {
-        _ <- auditingService.viewAccount(request.user)
-        maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
-        xiEori <- dataStoreService.getXiEori(eori)
-        allAccounts <- getAllAccounts(eori, xiEori)
-        page <- if (allAccounts.nonEmpty) {
+    val result = for {
+      _ <- auditingService.viewAccount(request.user)
+      maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
+      xiEori <- dataStoreService.getXiEori(eori)
+      allAccounts <- getAllAccounts(eori, xiEori)
+      page <-
+        if (allAccounts.nonEmpty) {
           pageWithAccounts(eori, xiEori, allAccounts, maybeBannerPartial)
         } else {
           redirectToPageWithoutAccounts()
         }
-      } yield page
-      result.recover {
-        case TimeoutResponse =>
-          Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable)
-      }
+    } yield page
+    result.recover { case TimeoutResponse =>
+      Redirect(controllers.routes.CustomsFinancialsHomeController.showAccountUnavailable)
+    }
   }
 
-  private def getAllAccounts(eori: EORI,
-                             xiEori: Option[String])
-                            (implicit request: AuthenticatedRequest[AnyContent]): Future[Seq[CDSAccounts]] = {
+  private def getAllAccounts(eori: EORI, xiEori: Option[String])(implicit
+      request: AuthenticatedRequest[AnyContent]
+  ): Future[Seq[CDSAccounts]] = {
     val eoriList = Seq(eori, xiEori.getOrElse(emptyString)).filterNot(_ == emptyString)
     val seqOfEoriHistory = request.user.allEoriHistory.filterNot(_.eori == eori)
 
@@ -107,11 +108,12 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     Future.successful(Redirect(routes.CustomsFinancialsHomeController.pageWithoutAccounts))
   }
 
-  private def pageWithAccounts(eori: EORI,
-                               xiEori: Option[String],
-                               cdsAccountsList: Seq[CDSAccounts],
-                               maybeBannerPartial: Option[HtmlPartial])
-                              (implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
+  private def pageWithAccounts(
+      eori: EORI,
+      xiEori: Option[String],
+      cdsAccountsList: Seq[CDSAccounts],
+      maybeBannerPartial: Option[HtmlPartial]
+  )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
     for {
       notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
       companyName <- dataStoreService.getOwnCompanyName(eori)
@@ -142,23 +144,23 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
     )
   } yield accountLink
 
-  def pageWithoutAccounts: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      val eori = request.user.eori
+  def pageWithoutAccounts: Action[AnyContent] = authenticate.async { implicit request =>
+    val eori = request.user.eori
 
-      notificationService.fetchNotifications(eori)
-        .map(_.filterNot(v => (v.fileRole == DutyDefermentStatement) || (v.fileRole == StandingAuthority)))
-        .map(getNotificationMessageKeys)
-        .map(keys => Ok(customsHomePartialView(eori, keys)))
+    notificationService
+      .fetchNotifications(eori)
+      .map(_.filterNot(v => (v.fileRole == DutyDefermentStatement) || (v.fileRole == StandingAuthority)))
+      .map(getNotificationMessageKeys)
+      .map(keys => Ok(customsHomePartialView(eori, keys)))
   }
 
   def getNotificationMessageKeys(collectionOfDocumentAttributes: Seq[Notification]): Seq[String] = {
 
-    val requestedNotifications: Seq[Notification] = collectionOfDocumentAttributes.filter(
-      v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
+    val requestedNotifications: Seq[Notification] =
+      collectionOfDocumentAttributes.filter(v => v.isRequested && v.fileRole != PostponedVATAmendedStatement).distinct
 
-    val statementNotifications: Seq[Notification] = collectionOfDocumentAttributes.filterNot(
-      v => v.isRequested || v.fileRole == StandingAuthority)
+    val statementNotifications: Seq[Notification] =
+      collectionOfDocumentAttributes.filterNot(v => v.isRequested || v.fileRole == StandingAuthority)
 
     val authoritiesNotification: Seq[Notification] =
       collectionOfDocumentAttributes.filter(_.fileRole == StandingAuthority).distinct
@@ -167,7 +169,7 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
 
     val statementMessages = statementNotifications.groupBy(_.fileRole).toSeq.map {
       case (role, notifications) if notifications.size > 1 => s"multiple-${role.messageKey}"
-      case (role, _) => role.messageKey
+      case (role, _)                                       => role.messageKey
     }
 
     val authorityMessage = authoritiesNotification.map(notification => s"${notification.fileRole.messageKey}")
@@ -178,7 +180,8 @@ class CustomsFinancialsHomeController @Inject()(authenticate: IdentifierAction,
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>
     val eori = req.user.eori
 
-    notificationService.fetchNotifications(eori)
+    notificationService
+      .fetchNotifications(eori)
       .map(_.filterNot(_.fileRole == DutyDefermentStatement))
       .map(getNotificationMessageKeys)
       .map(keys => Ok(accountNotAvailable(eori, keys)))

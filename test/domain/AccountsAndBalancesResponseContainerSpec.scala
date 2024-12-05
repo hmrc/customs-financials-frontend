@@ -29,14 +29,7 @@ class AccountsAndBalancesResponseContainerSpec extends SpecBase with MustMatcher
         val eori = "GB12345678"
 
         val accResponseWithNoAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
-          AccountsAndBalancesResponse(
-            None,
-            domain.AccountResponseDetail(
-              Some(eori),
-              None,
-              None,
-              None,
-              None))
+          AccountsAndBalancesResponse(None, domain.AccountResponseDetail(Some(eori), None, None, None, None))
         )
 
         accResponseWithNoAccounts.toCdsAccounts(eori) mustBe CDSAccounts(eori, isNiAccount = Some(false), Seq.empty)

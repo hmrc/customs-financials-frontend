@@ -93,8 +93,11 @@ class AuditingServiceSpec extends SpecBase with ShouldMatchers {
 
     "create the correct data event for a user requesting VAT certificates" in new Setup {
       val model: AuditModel =
-        AuditModel(AUDIT_VAT_CERTIFICATES, AUDIT_VAT_CERTIFICATES_TRANSACTION,
-          Json.toJson(AuditEori(eori, isHistoric = true)))
+        AuditModel(
+          AUDIT_VAT_CERTIFICATES,
+          AUDIT_VAT_CERTIFICATES_TRANSACTION,
+          Json.toJson(AuditEori(eori, isHistoric = true))
+        )
 
       await(auditingService.audit(model))
 
@@ -110,8 +113,11 @@ class AuditingServiceSpec extends SpecBase with ShouldMatchers {
     }
 
     "create the correct data event for a user requesting postponed VAT certificates" in new Setup {
-      val model: AuditModel = AuditModel(AUDIT_POSTPONED_VAT_STATEMENTS, AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION,
-        Json.toJson(AuditEori(eori, isHistoric = false)))
+      val model: AuditModel = AuditModel(
+        AUDIT_POSTPONED_VAT_STATEMENTS,
+        AUDIT_POSTPONED_VAT_STATEMENTS_TRANSACTION,
+        Json.toJson(AuditEori(eori, isHistoric = false))
+      )
 
       await(auditingService.audit(model))
 
@@ -127,8 +133,11 @@ class AuditingServiceSpec extends SpecBase with ShouldMatchers {
     }
 
     "create the correct data event for a user requesting security statements" in new Setup {
-      val model = AuditModel(AUDIT_SECURITY_STATEMENTS, AUDIT_SECURITY_STATEMENTS_TRANSACTION,
-        Json.toJson(AuditEori(eori, isHistoric = false)))
+      val model = AuditModel(
+        AUDIT_SECURITY_STATEMENTS,
+        AUDIT_SECURITY_STATEMENTS_TRANSACTION,
+        Json.toJson(AuditEori(eori, isHistoric = false))
+      )
 
       await(auditingService.audit(model))
 

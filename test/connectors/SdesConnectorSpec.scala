@@ -46,10 +46,12 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
       "make a GET request to sdesStandingAuthorityFilesUrl" in new Setup {
         val url: String = sdesStandingAuthorityFileUrl
 
-        val app: Application = application().overrides(
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        val app: Application = application()
+          .overrides(
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder)
+          )
+          .build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
@@ -80,11 +82,13 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
 
         when(sdesGatekeeperServiceSpy.convertTo(any())).thenCallRealMethod()
 
-        val app: Application = application().overrides(
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder),
-          inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
-        ).build()
+        val app: Application = application()
+          .overrides(
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder),
+            inject.bind[SdesGatekeeperService].toInstance(sdesGatekeeperServiceSpy)
+          )
+          .build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
@@ -96,17 +100,20 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
       "filter out unknown file types" in new Setup {
         val url: String = sdesStandingAuthorityFileUrl
 
-        val app: Application = application().overrides(
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder)
-        ).build()
+        val app: Application = application()
+          .overrides(
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder)
+          )
+          .build()
 
         val sdesService: SdesConnector = app.injector.instanceOf[SdesConnector]
 
         when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
           .thenReturn(
             Future.successful(
-              HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString()))
+              HttpResponse(Status.OK, Json.toJson(standingAuthoritiesFilesWithUnknownFiletypesSdesResponse).toString())
+            )
           )
 
         when(requestBuilder.setHeader(any[(String, String)]())).thenReturn(requestBuilder)
@@ -135,38 +142,96 @@ class SdesConnectorSpec extends SpecBase with MustMatchers {
       "http://localhost:9754/customs-financials-sdes-stub/files-available/list/StandingAuthority"
 
     val standingAuthorityFiles: List[StandingAuthorityFile] = List(
-      StandingAuthorityFile("name_01", "download_url_01", FILE_SIZE_111,
-        StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority), emptyString),
-      StandingAuthorityFile("name_02", "download_url_02", FILE_SIZE_115,
-        StandingAuthorityMetadata(YEAR_2022, MONTH_5, DAY_25, Csv, StandingAuthority), emptyString)
+      StandingAuthorityFile(
+        "name_01",
+        "download_url_01",
+        FILE_SIZE_111,
+        StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority),
+        emptyString
+      ),
+      StandingAuthorityFile(
+        "name_02",
+        "download_url_02",
+        FILE_SIZE_115,
+        StandingAuthorityMetadata(YEAR_2022, MONTH_5, DAY_25, Csv, StandingAuthority),
+        emptyString
+      )
     )
 
     val standingAuthoritiesFilesSdesResponse: List[FileInformation] = List(
-      FileInformation("name_01", "download_url_01", FILE_SIZE_111,
-        Metadata(List(MetadataItem("PeriodStartYear", "2022"),
-          MetadataItem("PeriodStartMonth", "6"),
-          MetadataItem("PeriodStartDay", "1"), MetadataItem("FileType", "csv"),
-          MetadataItem("FileRole", "StandingAuthority")))),
-      FileInformation("name_02", "download_url_02", FILE_SIZE_115,
-        Metadata(List(MetadataItem("PeriodStartYear", "2022"),
-          MetadataItem("PeriodStartMonth", "5"),
-          MetadataItem("PeriodStartDay", "25"), MetadataItem("FileType", "csv"),
-          MetadataItem("FileRole", "StandingAuthority"))))
+      FileInformation(
+        "name_01",
+        "download_url_01",
+        FILE_SIZE_111,
+        Metadata(
+          List(
+            MetadataItem("PeriodStartYear", "2022"),
+            MetadataItem("PeriodStartMonth", "6"),
+            MetadataItem("PeriodStartDay", "1"),
+            MetadataItem("FileType", "csv"),
+            MetadataItem("FileRole", "StandingAuthority")
+          )
+        )
+      ),
+      FileInformation(
+        "name_02",
+        "download_url_02",
+        FILE_SIZE_115,
+        Metadata(
+          List(
+            MetadataItem("PeriodStartYear", "2022"),
+            MetadataItem("PeriodStartMonth", "5"),
+            MetadataItem("PeriodStartDay", "25"),
+            MetadataItem("FileType", "csv"),
+            MetadataItem("FileRole", "StandingAuthority")
+          )
+        )
+      )
     )
 
     val standingAuthoritiesFilesWithUnknownFiletypesSdesResponse: List[FileInformation] = List(
-      FileInformation("name_01", "download_url_01", FILE_SIZE_111,
-        Metadata(List(MetadataItem("PeriodStartYear", "2022"),
-          MetadataItem("PeriodStartMonth", "6"), MetadataItem("PeriodStartDay", "1"),
-          MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority")))),
-      FileInformation("name_02", "download_url_02", FILE_SIZE_115,
-        Metadata(List(MetadataItem("PeriodStartYear", "2022"),
-          MetadataItem("PeriodStartMonth", "5"), MetadataItem("PeriodStartDay", "25"),
-          MetadataItem("FileType", "csv"), MetadataItem("FileRole", "StandingAuthority")))),
-      FileInformation("name_03", "download_url_03", FILE_SIZE_115,
-        Metadata(List(MetadataItem("PeriodStartYear", "2022"),
-          MetadataItem("PeriodStartMonth", "4"), MetadataItem("PeriodStartDay", "25"),
-          MetadataItem("FileType", "pdf"), MetadataItem("FileRole", "StandingAuthority"))))
+      FileInformation(
+        "name_01",
+        "download_url_01",
+        FILE_SIZE_111,
+        Metadata(
+          List(
+            MetadataItem("PeriodStartYear", "2022"),
+            MetadataItem("PeriodStartMonth", "6"),
+            MetadataItem("PeriodStartDay", "1"),
+            MetadataItem("FileType", "csv"),
+            MetadataItem("FileRole", "StandingAuthority")
+          )
+        )
+      ),
+      FileInformation(
+        "name_02",
+        "download_url_02",
+        FILE_SIZE_115,
+        Metadata(
+          List(
+            MetadataItem("PeriodStartYear", "2022"),
+            MetadataItem("PeriodStartMonth", "5"),
+            MetadataItem("PeriodStartDay", "25"),
+            MetadataItem("FileType", "csv"),
+            MetadataItem("FileRole", "StandingAuthority")
+          )
+        )
+      ),
+      FileInformation(
+        "name_03",
+        "download_url_03",
+        FILE_SIZE_115,
+        Metadata(
+          List(
+            MetadataItem("PeriodStartYear", "2022"),
+            MetadataItem("PeriodStartMonth", "4"),
+            MetadataItem("PeriodStartDay", "25"),
+            MetadataItem("FileType", "pdf"),
+            MetadataItem("FileRole", "StandingAuthority")
+          )
+        )
+      )
     )
 
     val sdesGatekeeperServiceSpy: SdesGatekeeperService = spy(new SdesGatekeeperService())

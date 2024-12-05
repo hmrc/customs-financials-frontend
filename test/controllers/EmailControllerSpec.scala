@@ -58,11 +58,13 @@ class EmailControllerSpec extends SpecBase with MustMatchers {
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-      override val app: Application = application().overrides(
-        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-        bind[HttpClientV2].toInstance(mockHttpClient),
-        bind[RequestBuilder].toInstance(requestBuilder)
-      ).build()
+      override val app: Application = application()
+        .overrides(
+          bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+          bind[HttpClientV2].toInstance(mockHttpClient),
+          bind[RequestBuilder].toInstance(requestBuilder)
+        )
+        .build()
 
       val connector: CustomsDataStoreConnector = app.injector.instanceOf[CustomsDataStoreConnector]
 
@@ -93,11 +95,13 @@ class EmailControllerSpec extends SpecBase with MustMatchers {
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-      val app = application().overrides(
-        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-        bind[HttpClientV2].toInstance(mockHttpClient),
-        bind[RequestBuilder].toInstance(requestBuilder)
-      ).build()
+      val app = application()
+        .overrides(
+          bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+          bind[HttpClientV2].toInstance(mockHttpClient),
+          bind[RequestBuilder].toInstance(requestBuilder)
+        )
+        .build()
 
       val request = fakeRequest(GET, routes.EmailController.showUndeliverable().url)
       val result = route(app, request).value
@@ -120,10 +124,12 @@ class EmailControllerSpec extends SpecBase with MustMatchers {
 
     when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-    val app: Application = application().overrides(
-      bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      bind[HttpClientV2].toInstance(mockHttpClient),
-      bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        bind[HttpClientV2].toInstance(mockHttpClient),
+        bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
   }
 }

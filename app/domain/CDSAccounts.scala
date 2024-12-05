@@ -23,13 +23,16 @@ case class CDSAccounts(eori: String, isNiAccount: Option[Boolean], accounts: Seq
 
 object CDSAccounts {
   val filterDutyDefermentAccounts: Seq[CDSAccount] => Seq[DutyDefermentAccount] = _.collect {
-    case dutyDefermentAccount: DutyDefermentAccount => dutyDefermentAccount }
+    case dutyDefermentAccount: DutyDefermentAccount => dutyDefermentAccount
+  }
 
   val filterGuaranteeAccounts: Seq[CDSAccount] => Seq[GeneralGuaranteeAccount] = _.collect {
-    case guaranteeAccount: GeneralGuaranteeAccount => guaranteeAccount }
+    case guaranteeAccount: GeneralGuaranteeAccount => guaranteeAccount
+  }
 
-  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect {
-    case cashAccount: CashAccount => cashAccount }
+  val filterCashAccounts: Seq[CDSAccount] => Seq[CashAccount] = _.collect { case cashAccount: CashAccount =>
+    cashAccount
+  }
 
   val filterByAccountNumber: String => Seq[CDSAccount] => Seq[CDSAccount] =
     accountNumber => accounts => accounts.filter(_.number == accountNumber)

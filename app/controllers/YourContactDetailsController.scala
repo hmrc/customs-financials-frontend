@@ -32,16 +32,15 @@ import views.html.your_contact_details.your_contact_details
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
-                                             override val messagesApi: MessagesApi,
-                                             dataStoreService: DataStoreService,
-                                             view: your_contact_details,
-                                             sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                             secureMessageConnector: SecureMessageConnector)
-                                            (implicit val appConfig: AppConfig,
-                                             ec: ExecutionContext,
-                                             mcc: MessagesControllerComponents)
-  extends FrontendController(mcc)
+class YourContactDetailsController @Inject() (
+    authenticate: IdentifierAction,
+    override val messagesApi: MessagesApi,
+    dataStoreService: DataStoreService,
+    view: your_contact_details,
+    sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+    secureMessageConnector: SecureMessageConnector
+)(implicit val appConfig: AppConfig, ec: ExecutionContext, mcc: MessagesControllerComponents)
+    extends FrontendController(mcc)
     with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
@@ -55,19 +54,18 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent],
-                                       headerId: SessionId)
-                                      (implicit hc: HeaderCarrier,
-                                       messages: Messages,
-                                       appConfig: AppConfig,
-                                       requestHeader: RequestHeader): Future[Result] = {
+  private def verifySessionAndViewPage(request: AuthenticatedRequest[AnyContent], headerId: SessionId)(implicit
+      hc: HeaderCarrier,
+      messages: Messages,
+      appConfig: AppConfig,
+      requestHeader: RequestHeader
+  ): Future[Result] = {
 
     sessionCacheConnector.getSessionId(headerId.value).flatMap {
       case Some(cacheId) =>
         if (cacheId.body == headerId.value) {
           generateView(request, headerId)
-        }
-        else {
+        } else {
           redirectToHomePage()
         }
 
@@ -77,19 +75,19 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
     }
   }
 
-  private def generateView(request: AuthenticatedRequest[AnyContent],
-                           localSessionId: SessionId)
-                          (implicit hc: HeaderCarrier,
-                           messages: Messages,
-                           appConfig: AppConfig,
-                           requestHeader: RequestHeader): Future[Result] = {
+  private def generateView(request: AuthenticatedRequest[AnyContent], localSessionId: SessionId)(implicit
+      hc: HeaderCarrier,
+      messages: Messages,
+      appConfig: AppConfig,
+      requestHeader: RequestHeader
+  ): Future[Result] = {
     val returnToUrl =
       s"${appConfig.financialsFrontendUrl}${controllers.routes.YourContactDetailsController.onPageLoad()}"
 
     for {
       email <- dataStoreService.getEmail(request.user.eori).flatMap {
         case Right(email) => Future.successful(email.value)
-        case Left(_) => Future.successful(InternalServerError)
+        case Left(_)      => Future.successful(InternalServerError)
       }
 
       companyName <- dataStoreService.getOwnCompanyName(request.user.eori)
@@ -101,18 +99,21 @@ class YourContactDetailsController @Inject()(authenticate: IdentifierAction,
         streetAndNumber = companyAddress.streetAndNumber,
         city = companyAddress.city,
         postalCode = companyAddress.postalCode,
-        countryCode = companyAddress.countryCode)
+        countryCode = companyAddress.countryCode
+      )
 
       accountLinks <- sessionCacheConnector.getAccontLinks(localSessionId.value)
       messageBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
     } yield {
       Ok(
-        view(request.user.eori,
+        view(
+          request.user.eori,
           accountLinks.getOrElse(Seq.empty[AccountLinkWithoutDate]),
           companyName,
           address,
           email.toString,
-          messageBannerPartial.map(_.successfulContentOrEmpty))(request, messages, appConfig)
+          messageBannerPartial.map(_.successfulContentOrEmpty)
+        )(request, messages, appConfig)
       )
     }
   }

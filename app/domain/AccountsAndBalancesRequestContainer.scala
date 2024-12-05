@@ -25,8 +25,8 @@ case class AccountsAndBalancesRequestContainer(accountsAndBalancesRequest: Accou
 object AccountsAndBalancesRequestContainer {
   implicit val format: OFormat[AccountsAndBalancesRequestContainer] = Json.format[AccountsAndBalancesRequestContainer]
 
-    implicit def jsonBodyWritable[T](implicit
-                                     writes: Writes[T],
-                                     jsValueBodyWritable: BodyWritable[JsValue]
-                                    ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+  implicit def jsonBodyWritable[T](implicit
+      writes: Writes[T],
+      jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

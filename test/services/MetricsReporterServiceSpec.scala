@@ -140,15 +140,18 @@ class MetricsReporterServiceSpec extends SpecBase {
     val mockMetrics: Metrics = mock[Metrics]
     when(mockMetrics.defaultRegistry).thenReturn(mockRegistry)
 
-    val app: Application = GuiceApplicationBuilder().overrides(
-      inject.bind[DateTimeService].toInstance(mockDateTimeService),
-      inject.bind[Histogram].toInstance(mockHistogram),
-      inject.bind[Metrics].toInstance(mockMetrics)
-    ).configure(
-      "microservice.metrics.enabled" -> false,
-      "metrics.enabled" -> false,
-      "auditing.enabled" -> false
-    ).build()
+    val app: Application = GuiceApplicationBuilder()
+      .overrides(
+        inject.bind[DateTimeService].toInstance(mockDateTimeService),
+        inject.bind[Histogram].toInstance(mockHistogram),
+        inject.bind[Metrics].toInstance(mockMetrics)
+      )
+      .configure(
+        "microservice.metrics.enabled" -> false,
+        "metrics.enabled" -> false,
+        "auditing.enabled" -> false
+      )
+      .build()
 
     val service: MetricsReporterService = app.injector.instanceOf[MetricsReporterService]
   }

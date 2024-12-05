@@ -55,7 +55,8 @@ class AccountResponseDetailSpec extends SpecBase with MustMatchers {
         Some(referenceDate),
         Some(Seq(ddAccRes)),
         Some(Seq(ggAccRes)),
-        Some(Seq(cashAccRes)))
+        Some(Seq(cashAccRes))
+      )
 
     val accResDetailObWithNoAccount: AccountResponseDetail =
       AccountResponseDetail(Some(eori), Some(referenceDate), None, None, None)

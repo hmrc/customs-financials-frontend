@@ -46,7 +46,7 @@ object AccountsRequestCommon {
   implicit val format: OFormat[AccountsRequestCommon] = Json.format[AccountsRequestCommon]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+      writes: Writes[T],
+      jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

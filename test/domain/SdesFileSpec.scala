@@ -67,7 +67,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     "return correct output for unapply method" in new Setup {
       val fileRoleName: String = FileRole("DutyDefermentStatement") match {
         case FileRole(name) => name
-        case _ => emptyString
+        case _              => emptyString
       }
 
       fileRoleName mustBe "DutyDefermentStatement"
@@ -125,7 +125,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     "return correct value for unapply method" in new Setup {
       val exciseTypeName: String = DDStatementType("Excise") match {
         case DDStatementType(name) => name
-        case _ => emptyString
+        case _                     => emptyString
       }
 
       exciseTypeName mustBe "Excise"
@@ -140,34 +140,33 @@ class SdesFileSpec extends SpecBase with MustMatchers {
   "SecurityStatementFile" should {
     "return correct output for startDate, endDate and formattedSize" in new Setup {
 
-      val secStatFile: SecurityStatementFile = SecurityStatementFile("test_file_name",
-        "test_url",
-        FILE_SIZE_2064,
-        secureMetaData)
+      val secStatFile: SecurityStatementFile =
+        SecurityStatementFile("test_file_name", "test_url", FILE_SIZE_2064, secureMetaData)
 
       secStatFile.startDate mustBe LocalDate.of(
         secureMetaData.periodStartYear,
         secureMetaData.periodStartMonth,
-        secureMetaData.periodStartDay)
+        secureMetaData.periodStartDay
+      )
 
       secStatFile.endDate mustBe LocalDate.of(
         secureMetaData.periodEndYear,
         secureMetaData.periodEndMonth,
-        secureMetaData.periodEndDay)
+        secureMetaData.periodEndDay
+      )
 
       secStatFile.formattedSize mustBe Formatters.fileSize(FILE_SIZE_DEFAULT)
     }
 
     "sort correctly" in new Setup {
-      val secStatFile1: SecurityStatementFile = SecurityStatementFile(fileName,
-        downloadUrl,
-        size,
-        secureMetaData)
+      val secStatFile1: SecurityStatementFile = SecurityStatementFile(fileName, downloadUrl, size, secureMetaData)
 
-      val secStatFile2: SecurityStatementFile = SecurityStatementFile(fileName,
+      val secStatFile2: SecurityStatementFile = SecurityStatementFile(
+        fileName,
         downloadUrl,
         size,
-        secureMetaData.copy(periodStartYear = secureMetaData.periodStartYear + 1))
+        secureMetaData.copy(periodStartYear = secureMetaData.periodStartYear + 1)
+      )
 
       List(secStatFile2, secStatFile1).sorted mustBe List(secStatFile1, secStatFile2)
     }
@@ -183,7 +182,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     "return correct value for unapply method" in new Setup {
       val pdfFileFormatName: String = FileFormat("PDF") match {
         case FileFormat(name) => name
-        case _ => emptyString
+        case _                => emptyString
       }
 
       pdfFileFormatName mustBe "PDF"
@@ -200,17 +199,15 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     }
 
     "sort the files correctly" in new Setup {
-      val vatCerFile1: VatCertificateFile = VatCertificateFile(fileName,
-        downloadUrl,
-        size,
-        vatCerMetaData,
-        eori)
+      val vatCerFile1: VatCertificateFile = VatCertificateFile(fileName, downloadUrl, size, vatCerMetaData, eori)
 
-      val vatCerFile2: VatCertificateFile = VatCertificateFile(fileName,
+      val vatCerFile2: VatCertificateFile = VatCertificateFile(
+        fileName,
         downloadUrl,
         size,
         vatCerMetaData.copy(periodStartYear = secureMetaData.periodStartYear + 1, fileFormat = Csv),
-        eori)
+        eori
+      )
 
       List(vatCerFile1, vatCerFile2).sorted mustBe List(vatCerFile2, vatCerFile1)
     }
@@ -218,17 +215,16 @@ class SdesFileSpec extends SpecBase with MustMatchers {
 
   "StandingAuthorityFile" should {
     "sort the files correctly" in new Setup {
-      val standAuthFile1: StandingAuthorityFile = StandingAuthorityFile(fileName,
-        downloadUrl,
-        size,
-        standAuthMetaData,
-        eori)
+      val standAuthFile1: StandingAuthorityFile =
+        StandingAuthorityFile(fileName, downloadUrl, size, standAuthMetaData, eori)
 
-      val standAuthFile2: StandingAuthorityFile = StandingAuthorityFile(fileName,
+      val standAuthFile2: StandingAuthorityFile = StandingAuthorityFile(
+        fileName,
         downloadUrl,
         size,
         standAuthMetaData.copy(periodStartYear = standAuthMetaData.periodStartYear + 1),
-        eori)
+        eori
+      )
 
       List(standAuthFile2, standAuthFile1).sorted mustBe List(standAuthFile1, standAuthFile2)
     }
@@ -236,17 +232,16 @@ class SdesFileSpec extends SpecBase with MustMatchers {
 
   "PostponedVatStatementFile" should {
     "sort the files correctly" in new Setup {
-      val pVatStatFile1: PostponedVatStatementFile = PostponedVatStatementFile(fileName,
-        downloadUrl,
-        size,
-        pVatStataMetaData,
-        eori)
+      val pVatStatFile1: PostponedVatStatementFile =
+        PostponedVatStatementFile(fileName, downloadUrl, size, pVatStataMetaData, eori)
 
-      val pVatStatFile2: PostponedVatStatementFile = PostponedVatStatementFile(fileName,
+      val pVatStatFile2: PostponedVatStatementFile = PostponedVatStatementFile(
+        fileName,
         downloadUrl,
         size,
         pVatStataMetaData.copy(periodStartYear = pVatStataMetaData.periodStartYear + 1, fileFormat = Csv),
-        eori)
+        eori
+      )
 
       List(pVatStatFile1, pVatStatFile2).sorted mustBe List(pVatStatFile2, pVatStatFile1)
     }
@@ -281,8 +276,7 @@ class SdesFileSpec extends SpecBase with MustMatchers {
         eori = eori
       )
 
-      List(cashStatementFile1, cashStatementFile2)
-        .sorted mustBe List(cashStatementFile1, cashStatementFile2)
+      List(cashStatementFile1, cashStatementFile2).sorted mustBe List(cashStatementFile1, cashStatementFile2)
     }
   }
 
@@ -314,8 +308,20 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     val eori = "test_eori"
 
     val secureMetaData: SecurityStatementFileMetadata =
-      SecurityStatementFileMetadata(YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2, Csv,
-        FileRole.SecurityStatement, "GB1234567890", FILE_SIZE_DEFAULT, "check it", Some("thing"))
+      SecurityStatementFileMetadata(
+        YEAR_1972,
+        MONTH_2,
+        DAY_20,
+        YEAR_2010,
+        MONTH_1,
+        DAY_2,
+        Csv,
+        FileRole.SecurityStatement,
+        "GB1234567890",
+        FILE_SIZE_DEFAULT,
+        "check it",
+        Some("thing")
+      )
 
     val standAuthMetaData: StandingAuthorityMetadata =
       StandingAuthorityMetadata(startYear, month, day, Pdf, StandingAuthority)
@@ -332,18 +338,16 @@ class SdesFileSpec extends SpecBase with MustMatchers {
     val cashStatementFileMetadata: CashStatementFileMetadata =
       CashStatementFileMetadata(startYear, month, Csv, FileRole.CDSCashAccount, None)
 
-    val vatCertFile: VatCertificateFile = VatCertificateFile("test_file_name",
-      "test_url",
-      FILE_SIZE_2164,
-      vatCertificateFileMetadata,
-      "test_eori")
+    val vatCertFile: VatCertificateFile =
+      VatCertificateFile("test_file_name", "test_url", FILE_SIZE_2164, vatCertificateFileMetadata, "test_eori")
 
     val cashStatementFile: CashStatementFile = CashStatementFile(
       filename = "test_file_name",
       downloadURL = "test_url",
       size = FILE_SIZE_2164,
       metadata = cashStatementFileMetadata,
-      eori = "test_eori")
+      eori = "test_eori"
+    )
 
     def randomInt(limit: Int): Int = Random.nextInt(limit)
 
@@ -353,9 +357,21 @@ class SdesFileSpec extends SpecBase with MustMatchers {
       s"${randomString(LENGTH_8)}.${randomString(3)}",
       s"http://${randomString(LENGTH_8)}.com/",
       size,
-      DutyDefermentStatementFileMetadata(randomInt(YEAR_2017) + 1, randomInt(LENGTH_11) + 1, randomInt(LENGTH_27) + 1,
-        randomInt(YEAR_2017) + 1, randomInt(LENGTH_11) + 1, randomInt(LENGTH_27) + 1, Pdf, DutyDefermentStatement,
-        Weekly, Some(true), Some("BACS"), s"${randomInt(LENGTH_8)}", None)
+      DutyDefermentStatementFileMetadata(
+        randomInt(YEAR_2017) + 1,
+        randomInt(LENGTH_11) + 1,
+        randomInt(LENGTH_27) + 1,
+        randomInt(YEAR_2017) + 1,
+        randomInt(LENGTH_11) + 1,
+        randomInt(LENGTH_27) + 1,
+        Pdf,
+        DutyDefermentStatement,
+        Weekly,
+        Some(true),
+        Some("BACS"),
+        s"${randomInt(LENGTH_8)}",
+        None
+      )
     )
   }
 

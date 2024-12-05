@@ -18,14 +18,16 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class GeneralGuaranteeAccountResponse(account: AccountResponse,
-                                           guaranteeLimit: Option[String],
-                                           availableGuaranteeBalance: Option[String]) {
+case class GeneralGuaranteeAccountResponse(
+    account: AccountResponse,
+    guaranteeLimit: Option[String],
+    availableGuaranteeBalance: Option[String]
+) {
   def toDomain: domain.GeneralGuaranteeAccount = {
     val balance = (guaranteeLimit, availableGuaranteeBalance) match {
       case (Some(limit), Some(guarantee)) => Some(GeneralGuaranteeBalance(BigDecimal(limit), BigDecimal(guarantee)))
-      case (None, Some(guarantee)) => Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(guarantee)))
-      case _ => None
+      case (None, Some(guarantee))        => Some(GeneralGuaranteeBalance(BigDecimal(0), BigDecimal(guarantee)))
+      case _                              => None
     }
 
     domain.GeneralGuaranteeAccount(
@@ -33,7 +35,8 @@ case class GeneralGuaranteeAccountResponse(account: AccountResponse,
       account.owner,
       account.accountStatus.getOrElse(AccountStatusOpen),
       account.accountStatusID.getOrElse(DefermentAccountAvailable),
-      balance)
+      balance
+    )
   }
 }
 
