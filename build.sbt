@@ -1,4 +1,4 @@
-import uk.gov.hmrc.DefaultBuildSettings.{itSettings, targetJvm}
+import uk.gov.hmrc.DefaultBuildSettings.itSettings
 
 val appName = "customs-financials-frontend"
 
@@ -32,7 +32,6 @@ lazy val microservice = Project(appName, file("."))
   )
   .settings(scoverageSettings *)
   .settings(
-    targetJvm := "jvm-11",
     Test / fork := false,
     Test/ parallelExecution := false,
     TwirlKeys.templateImports ++= Seq(
