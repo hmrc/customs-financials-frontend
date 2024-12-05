@@ -20,12 +20,14 @@ import config.AppConfig
 import domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
 import domain._
 
-case class FinancialsHomeModel(eori: EORI,
-                               companyName: Option[String],
-                               accounts: Seq[CDSAccounts],
-                               notificationMessageKeys: Seq[String],
-                               accountLinks: Seq[AccountLink],
-                               xiEori: Option[String] = None) {
+case class FinancialsHomeModel(
+    eori: EORI,
+    companyName: Option[String],
+    accounts: Seq[CDSAccounts],
+    notificationMessageKeys: Seq[String],
+    accountLinks: Seq[AccountLink],
+    xiEori: Option[String] = None
+) {
 
   private val allMyAccounts: Seq[CDSAccount] = accounts.flatMap(_.myAccounts)
   val dutyDefermentAccounts: Seq[DutyDefermentAccount] = filterDutyDefermentAccounts(allMyAccounts)

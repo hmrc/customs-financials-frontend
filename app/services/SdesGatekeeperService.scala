@@ -36,10 +36,12 @@ class SdesGatekeeperService() {
         metadata("PeriodStartMonth").toInt,
         metadata("PeriodStartDay").toInt,
         FileFormat(metadata("FileType")),
-        FileRole(metadata("FileRole"))),
+        FileRole(metadata("FileRole"))
+      ),
       emptyString
     )
   }
 
-  def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] = _.map(converter)
+  def convertTo[T <: SdesFile](implicit converter: FileInformation => T): Seq[FileInformation] => Seq[T] =
+    _.map(converter)
 }

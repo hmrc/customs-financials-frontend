@@ -82,21 +82,27 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
     val expectedBackLinkPath = "/customs/payment-records/authorized-to-view"
 
     val viewWithBackLink: Document = Jsoup.parse(
-      app.injector.instanceOf[error_template].apply(
-        pageTitle = messages("cf.error.technicalDifficulties.title"),
-        heading = messages("cf.error.technicalDifficulties.heading"),
-        backLink = Some(expectedBackLinkPath),
-        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
-      ).body
+      app.injector
+        .instanceOf[error_template]
+        .apply(
+          pageTitle = messages("cf.error.technicalDifficulties.title"),
+          heading = messages("cf.error.technicalDifficulties.heading"),
+          backLink = Some(expectedBackLinkPath),
+          details = Seq(messages("cf.error.technicalDifficulties.message")): _*
+        )
+        .body
     )
 
     val viewWithoutBackLink: Document = Jsoup.parse(
-      app.injector.instanceOf[error_template].apply(
-        pageTitle = messages("cf.error.technicalDifficulties.title"),
-        heading = messages("cf.error.technicalDifficulties.heading"),
-        backLink = None,
-        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
-      ).body
+      app.injector
+        .instanceOf[error_template]
+        .apply(
+          pageTitle = messages("cf.error.technicalDifficulties.title"),
+          heading = messages("cf.error.technicalDifficulties.heading"),
+          backLink = None,
+          details = Seq(messages("cf.error.technicalDifficulties.message")): _*
+        )
+        .body
     )
 
     val backLinkWithLink: Option[Element] =

@@ -18,8 +18,14 @@ package views.components
 
 import config.AppConfig
 import domain.{
-  AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended,
-  DefermentAccountAvailable, DirectDebitMandateCancelled, GeneralGuaranteeAccount, GeneralGuaranteeBalance
+  AccountCancelled,
+  AccountStatusClosed,
+  AccountStatusOpen,
+  AccountStatusSuspended,
+  DefermentAccountAvailable,
+  DirectDebitMandateCancelled,
+  GeneralGuaranteeAccount,
+  GeneralGuaranteeBalance
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -53,7 +59,8 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
     "include a link to the guarantee account details page when guarantee account details" in new Setup {
       running(app) {
         content().getElementsByTag("a").text mustBe "View general guarantee account"
-        content().getElementsByTag("a")
+        content()
+          .getElementsByTag("a")
           .attr("href") mustBe "http://localhost:9395/customs/guarantee-account"
       }
     }
@@ -72,11 +79,8 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
   }
 
   "Guarantee Account Card with no gurantee balances" should {
-    val newGuaranteeAccount = GeneralGuaranteeAccount("123456",
-      "owner",
-      AccountStatusOpen,
-      DefermentAccountAvailable,
-      None)
+    val newGuaranteeAccount =
+      GeneralGuaranteeAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable, None)
 
     "include guarantee limit remaining" in new Setup {
       running(app) {
@@ -96,7 +100,8 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
         "owner",
         AccountStatusOpen,
         DefermentAccountAvailable,
-        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499)))
+      )
 
       "not display open account status" in new Setup {
         running(app) {
@@ -111,13 +116,17 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
         "owner",
         AccountStatusSuspended,
         DirectDebitMandateCancelled,
-        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499)))
+      )
 
       "hidden status-description for screen readers" in new Setup {
         running(app) {
           val status = content(newGuaranteeAccount).select(".guarantee-account").first
-          status.getElementsByTag("span").first
-            .getElementsByClass("govuk-visually-hidden").isEmpty mustBe false
+          status
+            .getElementsByTag("span")
+            .first
+            .getElementsByClass("govuk-visually-hidden")
+            .isEmpty mustBe false
         }
       }
 
@@ -129,11 +138,13 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
     }
 
     "account is closed" should {
-      val newGuaranteeAccount = GeneralGuaranteeAccount("123456",
+      val newGuaranteeAccount = GeneralGuaranteeAccount(
+        "123456",
         "owner",
         AccountStatusClosed,
         AccountCancelled,
-        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
+        Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499)))
+      )
 
       "not display limit bar" in new Setup {
         running(app) {
@@ -159,11 +170,13 @@ class GuaranteeAccountCardSpec extends SpecBase with MustMatchers {
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
-    val guaranteeAccount: GeneralGuaranteeAccount = GeneralGuaranteeAccount("123456",
+    val guaranteeAccount: GeneralGuaranteeAccount = GeneralGuaranteeAccount(
+      "123456",
       "owner",
       AccountStatusOpen,
       DefermentAccountAvailable,
-      Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499))))
+      Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_999), BigDecimal(BALANCE_499)))
+    )
 
     def content(guaranteeAccount: GeneralGuaranteeAccount = guaranteeAccount): Document =
       Jsoup.parse(app.injector.instanceOf[guarantee_account_cards].apply(Seq(guaranteeAccount)).body)

@@ -25,30 +25,34 @@ import domain.{EmailUnverifiedResponse, EmailVerifiedResponse}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsDataStoreConnector @Inject()(appConfig: AppConfig,
-                                          httpClient: HttpClientV2)(implicit ec: ExecutionContext) {
+class CustomsDataStoreConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2)(implicit
+    ec: ExecutionContext
+) {
 
   def isEmailVerified(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
-    httpClient.get(url"${appConfig.customsDataStore}/subscriptions/subscriptionsdisplay")
+    httpClient
+      .get(url"${appConfig.customsDataStore}/subscriptions/subscriptionsdisplay")
       .execute[EmailVerifiedResponse]
-      .flatMap {
-        response => Future.successful(response)
+      .flatMap { response =>
+        Future.successful(response)
       }
   }
 
   def getEmailAddress(implicit hc: HeaderCarrier): Future[EmailVerifiedResponse] = {
-    httpClient.get(url"${appConfig.customsDataStore}/subscriptions/email-display")
+    httpClient
+      .get(url"${appConfig.customsDataStore}/subscriptions/email-display")
       .execute[EmailVerifiedResponse]
-      .flatMap {
-        response => Future.successful(response)
+      .flatMap { response =>
+        Future.successful(response)
       }
   }
 
   def isEmailUnverified(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    httpClient.get(url"${appConfig.customsDataStore}/subscriptions/unverified-email-display")
+    httpClient
+      .get(url"${appConfig.customsDataStore}/subscriptions/unverified-email-display")
       .execute[EmailUnverifiedResponse]
-      .flatMap {
-        res => Future.successful(res.unVerifiedEmail)
+      .flatMap { res =>
+        Future.successful(res.unVerifiedEmail)
       }
   }
 }

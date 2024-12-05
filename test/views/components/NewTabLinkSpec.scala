@@ -74,8 +74,12 @@ class NewTabLinkSpec extends SpecBase with MustMatchers {
     val viewDoc: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href, Some(preLinkMessage)).body)
 
-    val viewDocWithAllOptionals: Document = Jsoup.parse(app.injector.instanceOf[newTabLink].apply(
-        linkMessage, href, Some(preLinkMessage), Some(postLinkMessage), Some(pId), Some(style)).body)
+    val viewDocWithAllOptionals: Document = Jsoup.parse(
+      app.injector
+        .instanceOf[newTabLink]
+        .apply(linkMessage, href, Some(preLinkMessage), Some(postLinkMessage), Some(pId), Some(style))
+        .body
+    )
 
     val viewDocWithNoPreLinkMessage: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href).body)

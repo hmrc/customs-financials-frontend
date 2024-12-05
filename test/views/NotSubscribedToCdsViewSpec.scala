@@ -34,14 +34,14 @@ class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
   "Not subscribed to cds view" should {
     "display header as non-link text" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-header__link")
-          .text mustBe "GOV.UK Manage import duties and VAT accounts"
+        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK Manage import duties and VAT accounts"
       }
     }
 
     "display page heading" in new Setup {
       running(app) {
-        view.getElementsByTag("h1")
+        view
+          .getElementsByTag("h1")
           .text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
       }
     }
@@ -50,7 +50,8 @@ class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
       running(app) {
         view.containsLinkWithText(
           "/customs/register-for-cds",
-          "Economic Operator and Registration Identification (EORI) number (opens in a new window or tab)")
+          "Economic Operator and Registration Identification (EORI) number (opens in a new window or tab)"
+        )
 
         view.containsLinkWithText(appConfig.subscribeCdsUrl, "get access to CDS (opens in a new window or tab)")
       }

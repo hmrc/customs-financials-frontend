@@ -32,12 +32,12 @@ trait Constraints {
   protected def checkEORI(invalidFormatErrorKey: String): Constraint[String] =
     Constraint {
       case str if stripWhitespace(str).matches(gbnEoriRegex) => Valid
-      case str if stripWhitespace(str).matches(eoriRegex) => Valid
-      case str if stripWhitespace(str).matches(danRegex) => Valid
-      case str if stripWhitespace(str).matches(canRegex) => Valid
-      case str if stripWhitespace(str).matches(ganRegex) => Valid
-      case str if stripWhitespace(str).matches(xiEoriRegex) => Valid
-      case _ => Invalid(invalidFormatErrorKey, eoriRegex)
+      case str if stripWhitespace(str).matches(eoriRegex)    => Valid
+      case str if stripWhitespace(str).matches(danRegex)     => Valid
+      case str if stripWhitespace(str).matches(canRegex)     => Valid
+      case str if stripWhitespace(str).matches(ganRegex)     => Valid
+      case str if stripWhitespace(str).matches(xiEoriRegex)  => Valid
+      case _                                                 => Invalid(invalidFormatErrorKey, eoriRegex)
     }
 
   protected def stripWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase

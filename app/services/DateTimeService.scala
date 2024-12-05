@@ -23,7 +23,7 @@ import java.time._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DateTimeService @Inject()(appConfig: AppConfig) {
+class DateTimeService @Inject() (appConfig: AppConfig) {
 
   def getTimeStamp: OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
 

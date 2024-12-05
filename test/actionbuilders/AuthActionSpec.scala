@@ -36,7 +36,7 @@ import utils.MustMatchers
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase with MustMatchers{
+class AuthActionSpec extends SpecBase with MustMatchers {
 
   "the action" should {
 
@@ -99,21 +99,22 @@ class AuthActionSpec extends SpecBase with MustMatchers{
 
     "redirect the user to unauthorised controller when has insufficient enrolments" in new Setup {
       when(
-        mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[Email]
-          ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(
+        mockAuthConnector.authorise[
+          Option[Credentials] ~ Option[Name] ~ Option[Email] ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments
+        ](any, any)(
           any,
           any
         )
       ).thenReturn(
-          Future.successful(
-            Some(Credentials("someProviderId", "someProviderType")) ~
-              Some(Name(Some("someName"), Some("someLastName"))) ~
-              Some(Email("some@email.com")) ~
-              Some(AffinityGroup.Individual) ~
-              Some("id") ~
-              Enrolments(Set.empty)
-          )
+        Future.successful(
+          Some(Credentials("someProviderId", "someProviderType")) ~
+            Some(Name(Some("someName"), Some("someLastName"))) ~
+            Some(Email("some@email.com")) ~
+            Some(AffinityGroup.Individual) ~
+            Some("id") ~
+            Enrolments(Set.empty)
         )
+      )
 
       val authAction = new AuthAction(
         mockAuthConnector,
@@ -212,7 +213,8 @@ class AuthActionSpec extends SpecBase with MustMatchers{
       .overrides(
         inject.bind[AuditingService].toInstance(mockAuditingService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
+      )
+      .build()
 
     val config: AppConfig = app.injector.instanceOf[AppConfig]
     val bodyParsers: BodyParsers.Default = application().injector().instanceOf[BodyParsers.Default]
@@ -222,15 +224,16 @@ class AuthActionSpec extends SpecBase with MustMatchers{
     }
 
     implicit class Ops[A](a: A) {
-      def ~[B](b: B): A ~ B = new~(a, b) //scalastyle:off
+      def ~[B](b: B): A ~ B = new ~(a, b) // scalastyle:off
     }
 
-    class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
+    class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {
       val serviceUrl: String = emptyString
 
-      override def authorise[A](predicate: Predicate,
-                                retrieval: Retrieval[A]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+      override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+          hc: HeaderCarrier,
+          ec: ExecutionContext
+      ): Future[A] =
         Future.failed(exceptionToReturn)
     }
   }

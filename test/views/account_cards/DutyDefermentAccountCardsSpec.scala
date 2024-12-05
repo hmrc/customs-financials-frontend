@@ -18,8 +18,15 @@ package views.account_cards
 
 import config.AppConfig
 import domain.{
-  AccountLink, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSAccounts,
-  DefermentAccountAvailable, DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
+  AccountLink,
+  AccountStatusClosed,
+  AccountStatusOpen,
+  AccountStatusSuspended,
+  CDSAccounts,
+  DefermentAccountAvailable,
+  DirectDebitMandateCancelled,
+  DutyDefermentAccount,
+  DutyDefermentBalance
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.{Document, Element}
@@ -53,9 +60,7 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
           s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")}"
 
         viewDoc(model).getElementsByClass("card-header").text() mustBe
-          s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")} ${
-            msgs("cf.account.status.AccountStatusClosed")
-          }"
+          s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")} ${msgs("cf.account.status.AccountStatusClosed")}"
 
         val ddBalanceElem: Element = viewDoc(model).getElementById(s"duty-deferment-balance-$dan1")
 
@@ -88,8 +93,10 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
         viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
           msgs("cf.duty-deferment.outOfDateBalance.chiefText")
 
-        viewDoc(model).getElementsByTag("h3").text().contains(
-          s"${msgs("cf.NiAccount")} $dan1 ${msgs("cf.account.status.aria.AccountStatusSuspended")}")
+        viewDoc(model)
+          .getElementsByTag("h3")
+          .text()
+          .contains(s"${msgs("cf.NiAccount")} $dan1 ${msgs("cf.account.status.aria.AccountStatusSuspended")}")
 
         val ddDirectDebitElementHtml: String = viewDoc(model).html()
 
@@ -119,7 +126,12 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
     val periodAvailableAccountBalance: BigDecimal = BigDecimal(100.0)
 
     val ddAccount1WithEori1: DutyDefermentAccount =
-      DutyDefermentAccount(dan1, eori1, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
+      DutyDefermentAccount(
+        dan1,
+        eori1,
+        isNiAccount = false,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -127,10 +139,16 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     val ddAccount1WithEori1WithNIAccountAndDirectDebitCancelled: DutyDefermentAccount =
-      DutyDefermentAccount(dan1, eori1, isNiAccount = true, AccountStatusSuspended, DirectDebitMandateCancelled,
+      DutyDefermentAccount(
+        dan1,
+        eori1,
+        isNiAccount = true,
+        AccountStatusSuspended,
+        DirectDebitMandateCancelled,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -138,10 +156,16 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     val ddAccount1WithEori2: DutyDefermentAccount =
-      DutyDefermentAccount(dan2, eori2, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
+      DutyDefermentAccount(
+        dan2,
+        eori2,
+        isNiAccount = false,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -149,7 +173,8 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     val accounts: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori2)))
     val accountsWithEori1: Seq[CDSAccounts] =
@@ -162,7 +187,8 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
           None,
           Seq(
             ddAccount1WithEori1WithNIAccountAndDirectDebitCancelled,
-            ddAccount1WithEori1WithNIAccountAndDirectDebitCancelled)
+            ddAccount1WithEori1WithNIAccountAndDirectDebitCancelled
+          )
         )
       )
 
@@ -175,7 +201,8 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = LocalDateTime.now())
+        lastUpdated = LocalDateTime.now()
+      )
     )
 
     val accountLinksWithNiAccount: Seq[AccountLink] = Seq(
@@ -187,11 +214,13 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
         linkId = "linkId",
         accountStatus = AccountStatusSuspended,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = LocalDateTime.now())
+        lastUpdated = LocalDateTime.now()
+      )
     )
 
     def viewDoc(model: FinancialsHomeModel): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_cards].apply(
-        DutyDefermentAccountsViewModel(model)).body)
+      Jsoup.parse(
+        app.injector.instanceOf[duty_deferment_account_cards].apply(DutyDefermentAccountsViewModel(model)).body
+      )
   }
 }

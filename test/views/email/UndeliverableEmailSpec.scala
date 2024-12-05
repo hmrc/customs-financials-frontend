@@ -68,11 +68,9 @@ class UndeliverableEmailSpec extends SpecBase with MustMatchers {
     implicit val msg: Messages = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
-    val view: Document = Jsoup.parse(
-      app.injector.instanceOf[undeliverable_email].apply(nextPageUrl, email).body)
+    val view: Document = Jsoup.parse(app.injector.instanceOf[undeliverable_email].apply(nextPageUrl, email).body)
 
-    val viewWithNoEmail: Document = Jsoup.parse(
-      app.injector.instanceOf[undeliverable_email].apply(nextPageUrl).body)
+    val viewWithNoEmail: Document = Jsoup.parse(app.injector.instanceOf[undeliverable_email].apply(nextPageUrl).body)
 
   }
 }

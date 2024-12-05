@@ -27,17 +27,18 @@ class EoriHistorySpec extends SpecBase with MustMatchers {
 
   "it" should {
     "parse ISO_LOCAL_DATE" in {
-      val eoriHistory = new EoriHistory("GB11111",
-        Some(LocalDate.parse("2019-03-01", DateTimeFormatter.ISO_LOCAL_DATE)),
-        None)
+      val eoriHistory =
+        new EoriHistory("GB11111", Some(LocalDate.parse("2019-03-01", DateTimeFormatter.ISO_LOCAL_DATE)), None)
 
       eoriHistory.validFrom.get.toString mustBe "2019-03-01"
     }
 
     "parse ISO_INSTANT" in {
-      val eoriHistory = new EoriHistory("GB11111",
+      val eoriHistory = new EoriHistory(
+        "GB11111",
         Some(LocalDateTime.parse("1985-03-20T19:30:51Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME).toLocalDate),
-        None)
+        None
+      )
 
       eoriHistory.validFrom.get.toString mustBe "1985-03-20"
     }

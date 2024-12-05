@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 import utils.SpecBase
 import utils.MustMatchers
 
-class StaticPagesControllerSpec extends SpecBase with MustMatchers{
+class StaticPagesControllerSpec extends SpecBase with MustMatchers {
 
   "accessibility page" should {
     "return OK / 303" in {

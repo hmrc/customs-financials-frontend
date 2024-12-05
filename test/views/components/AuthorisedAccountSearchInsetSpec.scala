@@ -54,8 +54,7 @@ class AuthorisedAccountSearchInsetSpec extends SpecBase with MustMatchers {
     val firstLineMsg = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
     val secondLineMsg = "cf.customs-financials-home.notification.adjustments"
 
-    def viewDoc(firstLine: String,
-                secondLine: Option[String] = None): Document =
+    def viewDoc(firstLine: String, secondLine: Option[String] = None): Document =
       Jsoup.parse(app.injector.instanceOf[authorised_account_search_inset].apply(firstLine, secondLine).body)
   }
 }

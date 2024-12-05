@@ -34,12 +34,16 @@ class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
   "AuthoritiesNotificationPanel view" should {
     "display the correct guidance when only GB authority file exists" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorities_notification_panel].apply(
-          Option("gbURL"),
-          None,
-          date,
-          fileExists = true
-        ).body)
+        app.injector
+          .instanceOf[authorities_notification_panel]
+          .apply(
+            Option("gbURL"),
+            None,
+            date,
+            fileExists = true
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-body")
       elements.size() mustBe 2
@@ -56,12 +60,16 @@ class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
 
     "display the correct guidance when both GB and XI authorities' file exist" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorities_notification_panel].apply(
-          Option("gbURL"),
-          Option("xiURL"),
-          date,
-          fileExists = true
-        ).body)
+        app.injector
+          .instanceOf[authorities_notification_panel]
+          .apply(
+            Option("gbURL"),
+            Option("xiURL"),
+            date,
+            fileExists = true
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-body")
       elements.size() mustBe 2
@@ -82,8 +90,8 @@ class AuthoritiesNotificationPanelSpec extends SpecBase with MustMatchers {
 
     "not display the guidance when file does not exists" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorities_notification_panel].apply(
-          None, None, date, fileExists = false).body)
+        app.injector.instanceOf[authorities_notification_panel].apply(None, None, date, fileExists = false).body
+      )
 
       Option(view.getElementById("notification-panel")) mustBe None
 

@@ -33,7 +33,7 @@ import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsDataStoreConnectorSpec
-  extends SpecBase
+    extends SpecBase
     with ScalaFutures
     with FutureAwaits
     with DefaultAwaitTimeout
@@ -124,10 +124,12 @@ class CustomsDataStoreConnectorSpec
 
     when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
-    val app: Application = application().overrides(
-      bind[HttpClientV2].toInstance(mockHttpClient),
-      bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        bind[HttpClientV2].toInstance(mockHttpClient),
+        bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val customsDataStoreConnector: CustomsDataStoreConnector =
       app.injector.instanceOf[CustomsDataStoreConnector]

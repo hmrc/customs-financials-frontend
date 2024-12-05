@@ -66,8 +66,9 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.getElementsContainingText("You have a new Import VAT (C79) certificate").isEmpty mustBe true
-        content.getElementsContainingText(
-          "Your requested import VAT certificates (C79) are available to view").isEmpty mustBe true
+        content
+          .getElementsContainingText("Your requested import VAT certificates (C79) are available to view")
+          .isEmpty mustBe true
       }
 
     }
@@ -104,8 +105,9 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content.getElementsContainingText("You have a new Duty Deferment statement").isEmpty mustBe true
-        content.getElementsContainingText(
-          "Your requested Duty Deferment statements are available to view").isEmpty mustBe true
+        content
+          .getElementsContainingText("Your requested Duty Deferment statements are available to view")
+          .isEmpty mustBe true
       }
 
     }
@@ -127,7 +129,8 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
         content
-          .getElementsContainingText("You have a new Postponed import VAT statement").isEmpty mustBe true
+          .getElementsContainingText("You have a new Postponed import VAT statement")
+          .isEmpty mustBe true
       }
     }
 
@@ -156,8 +159,7 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.getElementsContainingText(
-          "cf.customs-financials-home.notification.adjustments").isEmpty mustBe true
+        content.getElementsContainingText("cf.customs-financials-home.notification.adjustments").isEmpty mustBe true
       }
     }
 
@@ -176,8 +178,7 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.getElementsContainingText(
-          "cf.customs-financials-home.notification.authorities").isEmpty mustBe true
+        content.getElementsContainingText("cf.customs-financials-home.notification.authorities").isEmpty mustBe true
       }
     }
 
@@ -196,8 +197,7 @@ class NotificationPanelSpec extends SpecBase with MustMatchers {
         val messageKeys = List()
         val content = Jsoup.parse(views.html.components.notification_panel(messageKeys).body)
 
-        content.getElementsContainingText(
-          "cf.customs-financials-home.notification.cash-statement").isEmpty mustBe true
+        content.getElementsContainingText("cf.customs-financials-home.notification.cash-statement").isEmpty mustBe true
       }
     }
   }

@@ -22,7 +22,15 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.{Application, inject}
-import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers.{
+  GET,
+  contentAsString,
+  defaultAwaitTimeout,
+  route,
+  running,
+  status,
+  writeableOf_AnyContentAsEmpty
+}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import utils.{ShouldMatchers, SpecBase}
@@ -88,7 +96,9 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).configure("features.new-agent-view-enabled" -> false).build()
+      )
+      .configure("features.new-agent-view-enabled" -> false)
+      .build()
 
     val controller: AuthorizedRequestReceivedController = app.injector.instanceOf[AuthorizedRequestReceivedController]
   }

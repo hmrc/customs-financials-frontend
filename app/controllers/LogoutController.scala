@@ -26,37 +26,42 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LogoutController @Inject()(override val authConnector: AuthConnector,
-                                 sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
-                                 mcc: MessagesControllerComponents)
-                                (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc)
+class LogoutController @Inject() (
+    override val authConnector: AuthConnector,
+    sessionCacheConnector: CustomsFinancialsSessionCacheConnector,
+    mcc: MessagesControllerComponents
+)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with AuthorisedFunctions {
 
   private val feedbackLink: String = appConfig.feedbackService
   val log: LoggerLike = Logger(this.getClass)
 
-  def logout: Action[AnyContent] = Action async { implicit request => {
-    hc.sessionId match {
-      case Some(id) =>
-        sessionCacheConnector.removeSession(id.value).map(
-          _ => Redirect(appConfig.signOutUrl, Map("continue" -> Seq(feedbackLink))))
+  def logout: Action[AnyContent] = Action async { implicit request =>
+    {
+      hc.sessionId match {
+        case Some(id) =>
+          sessionCacheConnector
+            .removeSession(id.value)
+            .map(_ => Redirect(appConfig.signOutUrl, Map("continue" -> Seq(feedbackLink))))
 
-      case None =>
-        Future.successful(Redirect(appConfig.signOutUrl, Map("continue" -> Seq(feedbackLink))))
+        case None =>
+          Future.successful(Redirect(appConfig.signOutUrl, Map("continue" -> Seq(feedbackLink))))
+      }
     }
   }
-  }
 
-  def logoutNoSurvey: Action[AnyContent] = Action async { implicit request => {
-    hc.sessionId match {
-      case Some(id) =>
-        sessionCacheConnector.removeSession(id.value).map(
-          _ => Results.Redirect(appConfig.signOutUrl, Map("continue" -> Seq(appConfig.loginContinueUrl))))
+  def logoutNoSurvey: Action[AnyContent] = Action async { implicit request =>
+    {
+      hc.sessionId match {
+        case Some(id) =>
+          sessionCacheConnector
+            .removeSession(id.value)
+            .map(_ => Results.Redirect(appConfig.signOutUrl, Map("continue" -> Seq(appConfig.loginContinueUrl))))
 
-      case None =>
-        Future.successful(Redirect(appConfig.signOutUrl, Map("continue" -> Seq(appConfig.loginContinueUrl))))
+        case None =>
+          Future.successful(Redirect(appConfig.signOutUrl, Map("continue" -> Seq(appConfig.loginContinueUrl))))
+      }
     }
-  }
   }
 }

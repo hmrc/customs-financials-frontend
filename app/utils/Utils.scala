@@ -37,11 +37,13 @@ object Utils {
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&
       !inputStr.startsWith(gbnEORIPrefix) &&
-      !inputStr.startsWith(xiEORIPrefix) && (
-      inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr.matches(ganRegex))
+      !inputStr.startsWith(xiEORIPrefix) && (inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr
+        .matches(ganRegex))
 
-  def partitionCsvFilesByFileNamePattern(csvFiles: Seq[StandingAuthorityFile],
-                                         fileNamePattern: String = xiCsvFileNameRegEx): CsvFiles = {
+  def partitionCsvFilesByFileNamePattern(
+      csvFiles: Seq[StandingAuthorityFile],
+      fileNamePattern: String = xiCsvFileNameRegEx
+  ): CsvFiles = {
     val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.matches(fileNamePattern))
     CsvFiles(partitionedList._2, partitionedList._1)
   }

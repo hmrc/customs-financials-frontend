@@ -16,8 +16,15 @@
 
 package viewmodels
 
-import domain.{AccountLink, AccountStatusClosed, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink,
+  AccountStatusClosed,
+  AccountStatusOpen,
+  CDSAccounts,
+  DefermentAccountAvailable,
+  DutyDefermentAccount,
+  DutyDefermentBalance
+}
 import utils.SpecBase
 
 import java.time.LocalDateTime
@@ -51,7 +58,12 @@ class FinancialsHomeModelSpec extends SpecBase with MustMatchers {
     val periodAvailableAccountBalance: BigDecimal = BigDecimal(100.0)
 
     val ddAccount1WithEori1: DutyDefermentAccount =
-      DutyDefermentAccount(dan1, eori1, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
+      DutyDefermentAccount(
+        dan1,
+        eori1,
+        isNiAccount = false,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -59,10 +71,16 @@ class FinancialsHomeModelSpec extends SpecBase with MustMatchers {
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     val ddAccount1WithEori2: DutyDefermentAccount =
-      DutyDefermentAccount(dan2, eori2, isNiAccount = false, AccountStatusClosed, DefermentAccountAvailable,
+      DutyDefermentAccount(
+        dan2,
+        eori2,
+        isNiAccount = false,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -70,7 +88,8 @@ class FinancialsHomeModelSpec extends SpecBase with MustMatchers {
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     val accounts: Seq[CDSAccounts] = Seq(CDSAccounts(eori1, None, Seq(ddAccount1WithEori1, ddAccount1WithEori2)))
 
@@ -83,7 +102,8 @@ class FinancialsHomeModelSpec extends SpecBase with MustMatchers {
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = LocalDateTime.now())
+        lastUpdated = LocalDateTime.now()
+      )
     )
 
     val homeModel: FinancialsHomeModel = FinancialsHomeModel(eori1, None, accounts, Nil, accountLinks)

@@ -34,20 +34,18 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
 
     "display correct contents" when {
       "periodAvailableAccountBalance has some value" in new Setup {
-        val availableAccountBalanceText: String = viewDoc(
-          ddAccount1WithEori,
-          periodAvailableBalance = false).getElementsByClass(
-          "accountLimitRemaining search-results__item").text()
+        val availableAccountBalanceText: String = viewDoc(ddAccount1WithEori, periodAvailableBalance = false)
+          .getElementsByClass("accountLimitRemaining search-results__item")
+          .text()
 
         availableAccountBalanceText.contains(msgs("cf.account.authorized-to-view.account-limit-remaining"))
         availableAccountBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableAccountBalance))
       }
 
       "periodAvailableGuaranteeBalance has some value" in new Setup {
-        val availableGuaranteeBalanceText: String = viewDoc(
-          ddAccount1WithEori,
-          periodAvailableBalance = false).getElementsByClass(
-          "guaranteeLimitRemaining search-results__item").text()
+        val availableGuaranteeBalanceText: String = viewDoc(ddAccount1WithEori, periodAvailableBalance = false)
+          .getElementsByClass("guaranteeLimitRemaining search-results__item")
+          .text()
 
         availableGuaranteeBalanceText.contains(msgs("cf.account.authorized-to-view.guarantee-limit-remaining"))
         availableGuaranteeBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableGuaranteeBalance))
@@ -80,7 +78,8 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
         accountNumber,
         eori,
         isNiAccount = false,
-        AccountStatusClosed, DefermentAccountAvailable,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -88,12 +87,18 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     def viewDoc(account: DutyDefermentAccount, periodAvailableBalance: Boolean): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_limit_remaining].apply(
-        account,
-        periodAvailableBalance
-      ).body)
+      Jsoup.parse(
+        app.injector
+          .instanceOf[duty_deferment_account_limit_remaining]
+          .apply(
+            account,
+            periodAvailableBalance
+          )
+          .body
+      )
   }
 }

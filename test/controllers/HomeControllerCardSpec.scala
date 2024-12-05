@@ -18,8 +18,17 @@ package controllers
 
 import connectors.CustomsFinancialsSessionCacheConnector
 import domain.{
-  AccountStatusOpen, CDSAccount, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
+  AccountStatusOpen,
+  CDSAccount,
+  CDSAccounts,
+  CDSCashBalance,
+  CashAccount,
+  DefermentAccountAvailable,
+  DutyDefermentAccount,
+  DutyDefermentBalance,
+  GeneralGuaranteeAccount,
+  GeneralGuaranteeBalance,
+  XiEoriAddressInformation
 }
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -95,7 +104,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/adjustments",
-            "View notification of adjustment statements") mustBe true
+            "View notification of adjustment statements"
+          ) mustBe true
         }
       }
 
@@ -107,7 +117,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
-            "View postponed import VAT statements") mustBe true
+            "View postponed import VAT statements"
+          ) mustBe true
         }
       }
     }
@@ -121,7 +132,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/import-vat",
-            "View import VAT certificates (C79)") mustBe true
+            "View import VAT certificates (C79)"
+          ) mustBe true
         }
       }
 
@@ -133,7 +145,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/import-vat",
-            "View import VAT certificates (C79)") mustBe true
+            "View import VAT certificates (C79)"
+          ) mustBe true
         }
       }
     }
@@ -147,7 +160,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/adjustments",
-            "View notification of adjustment statements") mustBe true
+            "View notification of adjustment statements"
+          ) mustBe true
         }
       }
 
@@ -159,7 +173,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/adjustments",
-            "View notification of adjustment statements") mustBe true
+            "View notification of adjustment statements"
+          ) mustBe true
         }
       }
     }
@@ -173,7 +188,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
-            "View postponed import VAT statements") mustBe true
+            "View postponed import VAT statements"
+          ) mustBe true
         }
       }
 
@@ -185,22 +201,35 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
 
           html.containsLinkWithText(
             "http://localhost:9398/customs/documents/postponed-vat?location=CDS",
-            "View postponed import VAT statements") mustBe true
+            "View postponed import VAT statements"
+          ) mustBe true
         }
       }
     }
 
     "show the historic eori duty deferment cards" in {
 
-      val currentEoriDDAccount = DutyDefermentAccount("678910", "11111",
-        isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
-        DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00),
-          Some(41.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+      val currentEoriDDAccount = DutyDefermentAccount(
+        "678910",
+        "11111",
+        isNiAccount = false,
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        DutyDefermentBalance(Some(110.00), Some(210.00), Some(31.00), Some(41.00)),
+        viewBalanceIsGranted = true,
+        isIsleOfMan = false
+      )
 
-      val historicEoriDDAccount = DutyDefermentAccount("12345", "22222",
-        isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
-        DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00),
-          Some(40.00)), viewBalanceIsGranted = true, isIsleOfMan = false)
+      val historicEoriDDAccount = DutyDefermentAccount(
+        "12345",
+        "22222",
+        isNiAccount = false,
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        DutyDefermentBalance(Some(100.00), Some(200.00), Some(30.00), Some(40.00)),
+        viewBalanceIsGranted = true,
+        isIsleOfMan = false
+      )
 
       val add = XiEoriAddressInformation(emptyString, Some(emptyString), None, None, Some(emptyString))
       val xi = XiEoriInformationReponse("Some XiEori", "yes", add)
@@ -221,37 +250,45 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-        Future.successful(Right(Email("last.man@standing.co.uk"))))
+      when(mockDataStoreService.getEmail(any)(any))
+        .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
       when(mockSessionCacheConnector.storeSession(any, any)(any))
         .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
       when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
-      when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(
-        Future.successful(Some("Test Own Company Name")))
+      when(mockDataStoreService.getOwnCompanyName(any)(any))
+        .thenReturn(Future.successful(Some("Test Own Company Name")))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService),
-        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
+        )
+        .build()
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementsByClass("duty-deferment-account").tagName(
-          "h3").asScala.exists(_.text.contains("Account: 678910")) mustBe true
+        html
+          .getElementsByClass("duty-deferment-account")
+          .tagName("h3")
+          .asScala
+          .exists(_.text.contains("Account: 678910")) mustBe true
 
-        html.getElementsByClass("duty-deferment-account").tagName(
-          "h3").asScala.exists(_.text.contains("Account: 12345")) mustBe true
+        html
+          .getElementsByClass("duty-deferment-account")
+          .tagName("h3")
+          .asScala
+          .exists(_.text.contains("Account: 12345")) mustBe true
       }
     }
   }
@@ -273,9 +310,13 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
         DefermentAccountAvailable,
         Some(GeneralGuaranteeBalance(BigDecimal(someGuaranteeLimit), BigDecimal(someAvailableGuaranteeBalance)))
       )
-      val someCashAccount = CashAccount("1000001", eoriNumber,
-        AccountStatusOpen, DefermentAccountAvailable,
-        CDSCashBalance(Some(BigDecimal(FILE_SIZE_888))))
+      val someCashAccount = CashAccount(
+        "1000001",
+        eoriNumber,
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        CDSCashBalance(Some(BigDecimal(FILE_SIZE_888)))
+      )
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
@@ -288,8 +329,11 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
-            Some(BigDecimal(Random.nextFloat().toDouble))),
-          viewBalanceIsGranted = true, isIsleOfMan = false)
+            Some(BigDecimal(Random.nextFloat().toDouble))
+          ),
+          viewBalanceIsGranted = true,
+          isIsleOfMan = false
+        )
       }.toList
 
       val authorizedToViewAccounts = (1 until 2).map { _ =>
@@ -303,8 +347,11 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
-            Some(BigDecimal(Random.nextFloat().toDouble)))
-          , viewBalanceIsGranted = true, isIsleOfMan = false)
+            Some(BigDecimal(Random.nextFloat().toDouble))
+          ),
+          viewBalanceIsGranted = true,
+          isIsleOfMan = false
+        )
       }.toList
 
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
@@ -335,15 +382,17 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
-    when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(
-      Future.successful(HttpResponse(Status.OK, emptyString)))
+    when(mockSessionCacheConnector.storeSession(any, any)(any))
+      .thenReturn(Future.successful(HttpResponse(Status.OK, emptyString)))
 
-    val app: Application = application().overrides(
-      inject.bind[CDSAccounts].toInstance(mockAccounts),
-      inject.bind[ApiService].toInstance(mockApiService),
-      inject.bind[NotificationService].toInstance(mockNotificationService),
-      inject.bind[DataStoreService].toInstance(mockDataStoreService),
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[CDSAccounts].toInstance(mockAccounts),
+        inject.bind[ApiService].toInstance(mockApiService),
+        inject.bind[NotificationService].toInstance(mockNotificationService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
+      )
+      .build()
   }
 }

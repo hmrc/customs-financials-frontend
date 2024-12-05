@@ -110,8 +110,7 @@ object TestData {
 
   val TEST_EORI = "GB12345678"
 
-  lazy val TEST_MESSAGE_BANNER: Html = Html(
-    """<html>
+  lazy val TEST_MESSAGE_BANNER: Html = Html("""<html>
       | <head></head>
       | <body>
       |  <div class="govuk-!-padding-bottom-3 govuk-!-padding-top-3 notifications-bar">

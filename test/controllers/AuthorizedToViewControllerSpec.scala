@@ -30,8 +30,18 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ShouldMatchers, SpecBase}
-import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1,
-  FILE_SIZE_500, MONTH_6, YEAR_2022}
+import utils.TestData.{
+  BALANCE_100,
+  BALANCE_20,
+  BALANCE_200,
+  BALANCE_300,
+  BALANCE_50,
+  BALANCE_500,
+  DAY_1,
+  FILE_SIZE_500,
+  MONTH_6,
+  YEAR_2022
+}
 
 import scala.concurrent.Future
 
@@ -51,9 +61,12 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "show the search EORI view when the feature flag is enabled" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        )
+        .configure("features.new-agent-view-enabled" -> true)
+        .build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -68,9 +81,12 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        )
+        .configure("features.new-agent-view-enabled" -> true)
+        .build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -92,31 +108,34 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "display the search EORI view with GB and XI authority link when there are" +
       "GB and XI authorities' csv files" in new Setup {
 
-      val suthCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
+        val suthCsvFiles: Seq[StandingAuthorityFile] =
+          Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
+        when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+        val newApp: Application = application()
+          .overrides(
+            inject.bind[SdesConnector].toInstance(mockSdesConnector)
+          )
+          .configure("features.new-agent-view-enabled" -> true)
+          .build()
 
-      running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
-        val result = route(newApp, request).value
-        status(result) should be(OK)
+        running(newApp) {
+          val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+          val result = route(newApp, request).value
+          status(result) should be(OK)
 
-        val html = Jsoup.parse(contentAsString(result))
+          val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+          html.getElementById("gb-csv-authority-link").html() shouldBe
+            messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+          html.getElementById("xi-csv-authority-link").html() shouldBe
+            messages(app)("cf.authorities.notification-panel.a.xi-authority")
+          html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+        }
       }
-    }
 
     "return OK when correct email is returned from dataStoreService" in new Setup {
 
@@ -173,9 +192,12 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "download authorities csv page when requests all accounts" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("microservice.services.sdes.context" -> true).build()
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        )
+        .configure("microservice.services.sdes.context" -> true)
+        .build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -190,8 +212,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-      val filesWithNames: List[EORI] = List("CS_000000000154_csv.csv",
-        "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
+      val filesWithNames: List[EORI] =
+        List("CS_000000000154_csv.csv", "CS_000000000152_csv.csv", "CS_000000000153_csv.csv", "CS_000000000151_csv.csv")
       val filesseperated: List[EORI] = filesWithNames.map(x => x.split("_")(1))
 
       filesseperated.sortWith(_ < _).headOption
@@ -210,15 +232,18 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account(
-          "1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("100.0", "200.0")))
+        AuthorisedDutyDefermentAccount(
+          Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("100.0", "200.0"))
+        )
 
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities(
-          "3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(
+          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+        )
 
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
@@ -226,8 +251,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB123456789012")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> "GB123456789012")
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -245,15 +270,18 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account(
-          "1234", "GeneralGuarantee", "GB000000000000"), Some(AuthorisedBalances("1000.0", "0.0")))
+        AuthorisedDutyDefermentAccount(
+          Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("1000.0", "0.0"))
+        )
 
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities(
-          "3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(
+          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+        )
 
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
@@ -261,8 +289,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
@@ -280,8 +308,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -293,75 +321,81 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "return OK if there are authorities returned for both GB and XI EORI and both SearchAuthorities " +
       "have no balance" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
-      val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+        val cashAccount: AuthorisedCashAccount =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Right(SearchedAuthorities("3",
-          Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
-        .thenReturn(Future.successful(Right(SearchedAuthorities("3",
-          Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> "GB123456789012")
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "GB123456789012")
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe OK
-        html.text().contains("Search results for GB123456789012") shouldBe true
+          status(result) shouldBe OK
+          html.text().contains("Search results for GB123456789012") shouldBe true
+        }
       }
-    }
 
     "return OK if there are no authorities returned for both GB/XI EORI for a account and" +
       " display no authorities page" in new Setup {
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(Left(NoAuthorities)))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(NoAuthorities)))
+          .thenReturn(Future.successful(Left(NoAuthorities)))
 
-      running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "1000000")
 
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe OK
-        html.text().contains("There are no matching results for '1000000'") shouldBe true
+          status(result) shouldBe OK
+          html.text().contains("There are no matching results for '1000000'") shouldBe true
+        }
       }
-    }
 
     "return OK if there is XI EORI associated with the GB EORI and authorities are returned for account" in new Setup {
       val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
         AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
       val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("100.0", "200.0")))
+        AuthorisedDutyDefermentAccount(
+          Account("1234", "GeneralGuarantee", "GB000000000000"),
+          Some(AuthorisedBalances("100.0", "200.0"))
+        )
       val cashAccount: AuthorisedCashAccount =
         AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
       when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        .thenReturn(
+          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+        )
       when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> "1234567")
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
@@ -376,78 +410,86 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
       "GB EORI but not for XI EORI for an account number" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("100.0", "200.0")))
-      val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(
+            Account("1234", "GeneralGuarantee", "GB000000000000"),
+            Some(AuthorisedBalances("100.0", "200.0"))
+          )
+        val cashAccount: AuthorisedCashAccount =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))).thenReturn(
-          Future.successful(Left(NoAuthorities))
-        )
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
+          .thenReturn(
+            Future.successful(Left(NoAuthorities))
+          )
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-      running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "1234567")
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe OK
+          status(result) shouldBe OK
 
-        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
-        html.text().contains("£100.0") shouldBe true
-        html.text().contains("£200.0") shouldBe true
-        html.text().contains(messages(app)("cf.search.authorities.result.eori.number")) shouldBe true
+          html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+          html.text().contains("£100.0") shouldBe true
+          html.text().contains("£200.0") shouldBe true
+          html.text().contains(messages(app)("cf.search.authorities.result.eori.number")) shouldBe true
+        }
       }
-    }
 
     "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
       "XI EORI but not for GB EORI for an account number" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("100.0", "200.0")))
-      val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(
+            Account("1234", "GeneralGuarantee", "GB000000000000"),
+            Some(AuthorisedBalances("100.0", "200.0"))
+          )
+        val cashAccount: AuthorisedCashAccount =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities))).thenReturn(Future.successful(
-          Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)))))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(NoAuthorities)))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-      running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1234567")
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "1234567")
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe OK
+          status(result) shouldBe OK
 
-        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
-        html.text().contains("£100.0") shouldBe true
-        html.text().contains("£200.0") shouldBe true
-        html.text().contains(messages(app)("cf.search.authorities.result.xiEori.number")) shouldBe true
+          html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+          html.text().contains("£100.0") shouldBe true
+          html.text().contains("£200.0") shouldBe true
+          html.text().contains(messages(app)("cf.search.authorities.result.xiEori.number")) shouldBe true
+        }
       }
-    }
 
     "return BAD_REQUEST if an invalid payload sent" in new Setup {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
       running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> "ERROR")
+        val request =
+          fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
 
         val result = route(app, request).value
         status(result) shouldBe BAD_REQUEST
@@ -460,8 +502,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
       running(app) {
-        val request = fakeRequest(
-          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+        val request =
+          fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -481,78 +523,79 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
       "if an invalid payload sent" in new Setup {
 
-      val authCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
+        val authCsvFiles: Seq[StandingAuthorityFile] =
+          Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
-      running(app) {
-        val request = fakeRequest(
-          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+        when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "ERROR")
 
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe BAD_REQUEST
+          status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+          html.getElementById("gb-csv-authority-link").html() shouldBe
+            messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+          html.getElementById("xi-csv-authority-link").html() shouldBe
+            messages(app)("cf.authorities.notification-panel.a.xi-authority")
+          html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+        }
       }
-    }
 
     "return BAD_REQUEST with correct error msg when agent is not registered for his own XI EORI" +
       " and search authority using trader's XI EORI" in new Setup {
 
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
-      when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
+        when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
+        when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
-      running(app) {
-        val request = fakeRequest(
-          POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "XI123456789012")
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "XI123456789012")
 
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+          val result = route(app, request).value
+          val html = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe BAD_REQUEST
+          status(result) shouldBe BAD_REQUEST
 
-        html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
+          html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
+        }
       }
-    }
 
     "return Internal Server Error and go to view search no result page when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for EORI" in new Setup {
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(SearchError)))
+          .thenReturn(Future.successful(Left(SearchError)))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
-      running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "GB12345678")
-        val result = route(app, request).value
-        status(result) shouldBe 500
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "GB12345678")
+          val result = route(app, request).value
+          status(result) shouldBe 500
+        }
       }
-    }
 
     "return Internal Server Error when there are errors from the API while" +
       "retrieving authorities for GB and XI EORI for input account number" in new Setup {
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(SearchError))).thenReturn(Future.successful(Left(SearchError)))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(SearchError)))
+          .thenReturn(Future.successful(Left(SearchError)))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
-      running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "1000000")
-        val result = route(app, request).value
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        running(app) {
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> "1000000")
+          val result = route(app, request).value
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
       }
-    }
 
     "Display error message if searching your own EORI number" in new Setup {
       val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
@@ -561,9 +604,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> newUser().eori)
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> newUser().eori)
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -585,9 +627,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> "XI123456789912")
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> "XI123456789912")
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -610,9 +651,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .thenReturn(Future.successful(xiCdsAccounts))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> accounts.map(_.number).head)
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> accounts.map(_.number).head)
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -631,9 +671,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .thenReturn(Future.successful(xiCdsAccounts))
 
       running(app) {
-        val request = fakeRequest(POST,
-          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
-          "value" -> xiAccounts.map(_.number).head)
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> xiAccounts.map(_.number).head)
 
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
@@ -674,39 +713,94 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   trait Setup {
 
-    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", newUser().eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(BALANCE_200)),
-        Some(BigDecimal(BALANCE_100)), Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))),
-      viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd1: DutyDefermentAccount = DutyDefermentAccount(
+      "1231231231",
+      newUser().eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)),
+        Some(BigDecimal(BALANCE_20))
+      ),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", newUser().eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable,
+    val dd2: DutyDefermentAccount = DutyDefermentAccount(
+      "7567567567",
+      newUser().eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
       DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)), None, None),
-      viewBalanceIsGranted = true, isIsleOfMan = false)
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", "testEori10", isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
-        Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd3: DutyDefermentAccount = DutyDefermentAccount(
+      "7897897897",
+      "testEori10",
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)),
+        Some(BigDecimal(BALANCE_20))
+      ),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", "testEori11", isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable,
+    val dd4: DutyDefermentAccount = DutyDefermentAccount(
+      "1112223334",
+      "testEori11",
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
       DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)), None, None),
-      viewBalanceIsGranted = true, isIsleOfMan = false)
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val xiDd: DutyDefermentAccount = DutyDefermentAccount("1231231000", newUser().xiEori.get, isNiAccount = true,
-      AccountStatusOpen, DefermentAccountAvailable,
-      DutyDefermentBalance(Some(BigDecimal(BALANCE_200)), Some(BigDecimal(BALANCE_100)),
-        Some(BigDecimal(BALANCE_50)), Some(BigDecimal(BALANCE_20))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val xiDd: DutyDefermentAccount = DutyDefermentAccount(
+      "1231231000",
+      newUser().xiEori.get,
+      isNiAccount = true,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(
+        Some(BigDecimal(BALANCE_200)),
+        Some(BigDecimal(BALANCE_100)),
+        Some(BigDecimal(BALANCE_50)),
+        Some(BigDecimal(BALANCE_20))
+      ),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val cashAccount1: CashAccount = CashAccount("1000000", "testEori10", AccountStatusOpen, DefermentAccountAvailable,
-      CDSCashBalance(Some(BigDecimal(BALANCE_100))))
+    val cashAccount1: CashAccount = CashAccount(
+      "1000000",
+      "testEori10",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      CDSCashBalance(Some(BigDecimal(BALANCE_100)))
+    )
 
-    val cashAccount2: CashAccount = CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable,
-      CDSCashBalance(None))
+    val cashAccount2: CashAccount =
+      CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(None))
 
-    val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_500), BigDecimal(BALANCE_300))))
+    val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount(
+      "1234444",
+      "testEori12",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      Some(GeneralGuaranteeBalance(BigDecimal(BALANCE_500), BigDecimal(BALANCE_300)))
+    )
 
     val ggAccount2: GeneralGuaranteeAccount =
       GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
@@ -729,15 +823,25 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     val standAuthMetadata: StandingAuthorityMetadata =
       StandingAuthorityMetadata(YEAR_2022, MONTH_6, DAY_1, Csv, StandingAuthority)
 
-    val gbStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000153_csv.csv", gbStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
-    val gbStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_000000000154_csv.csv", gbStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
+    val gbStandingAuth1: StandingAuthorityFile =
+      StandingAuthorityFile("SA_000000000153_csv.csv", gbStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
+    val gbStandingAuth2: StandingAuthorityFile =
+      StandingAuthorityFile("SA_000000000154_csv.csv", gbStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, gbEORI)
 
     val xiStandingAuth1: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000153_csv.csv", xiStanAuthFile153Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
+      "SA_XI_000000000153_csv.csv",
+      xiStanAuthFile153Url,
+      FILE_SIZE_500,
+      standAuthMetadata,
+      xiEORI
+    )
     val xiStandingAuth2: StandingAuthorityFile = StandingAuthorityFile(
-      "SA_XI_000000000154_XI_csv.csv", xiStanAuthFile154Url, FILE_SIZE_500, standAuthMetadata, xiEORI)
+      "SA_XI_000000000154_XI_csv.csv",
+      xiStanAuthFile154Url,
+      FILE_SIZE_500,
+      standAuthMetadata,
+      xiEORI
+    )
 
     val emailId = "test@test.com"
 
@@ -759,6 +863,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService),
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> false).build()
+      )
+      .configure("features.new-agent-view-enabled" -> false)
+      .build()
   }
 }

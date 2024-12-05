@@ -41,7 +41,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
       appConfig.helpMakeGovUkBetterUrl shouldBe
         "https://signup.take-part-in-research.service.gov.uk?" +
-          "utm_campaign=CDSfinancials&utm_source=Other&utm_medium=other&t=HMRC&id=249"
+        "utm_campaign=CDSfinancials&utm_source=Other&utm_medium=other&t=HMRC&id=249"
 
       appConfig.subscribeCdsUrl shouldBe
         "https://www.tax.service.gov.uk/customs-enrolment-services/cds/subscribe"

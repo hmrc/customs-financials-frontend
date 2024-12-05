@@ -18,17 +18,21 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class DutyDefermentAccountResponse(account: AccountResponse,
-                                        isIomAccount: Option[Boolean] = Some(false),
-                                        isNiAccount: Option[Boolean] = Some(false),
-                                        limits: Option[Limits], balances: Option[DefermentBalancesResponse]) {
+case class DutyDefermentAccountResponse(
+    account: AccountResponse,
+    isIomAccount: Option[Boolean] = Some(false),
+    isNiAccount: Option[Boolean] = Some(false),
+    limits: Option[Limits],
+    balances: Option[DefermentBalancesResponse]
+) {
 
   def toDomain: domain.DutyDefermentAccount = {
     val balance = domain.DutyDefermentBalance(
       limits.map(limit => BigDecimal(limit.periodGuaranteeLimit)),
       limits.map(limit => BigDecimal(limit.periodAccountLimit)),
       balances.map(balance => BigDecimal(balance.periodAvailableGuaranteeBalance)),
-      balances.map(balance => BigDecimal(balance.periodAvailableAccountBalance)))
+      balances.map(balance => BigDecimal(balance.periodAvailableAccountBalance))
+    )
 
     val isIomFlag = if (account.isleOfManFlag.isDefined) {
       account.isleOfManFlag
@@ -36,10 +40,16 @@ case class DutyDefermentAccountResponse(account: AccountResponse,
       isIomAccount
     }
 
-    domain.DutyDefermentAccount(account.number, account.owner,
-      isNiAccount.getOrElse(false), account.accountStatus.getOrElse(AccountStatusOpen),
-      account.accountStatusID.getOrElse(DefermentAccountAvailable), balance,
-      account.viewBalanceIsGranted, isIomFlag.getOrElse(false))
+    domain.DutyDefermentAccount(
+      account.number,
+      account.owner,
+      isNiAccount.getOrElse(false),
+      account.accountStatus.getOrElse(AccountStatusOpen),
+      account.accountStatusID.getOrElse(DefermentAccountAvailable),
+      balance,
+      account.viewBalanceIsGranted,
+      isIomFlag.getOrElse(false)
+    )
   }
 }
 

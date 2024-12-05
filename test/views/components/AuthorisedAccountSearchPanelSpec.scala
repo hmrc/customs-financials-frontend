@@ -32,12 +32,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
   "AuthorisedAccountSearchPanel view" should {
     "load correctly with correct guidance when using duty deferement" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "DutyDeferment",
-          accountNumber,
-          Option("16000"),
-          Option("17000")
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "DutyDeferment",
+            accountNumber,
+            Option("16000"),
+            Option("17000")
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -53,12 +57,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
     "load correctly with correct guidance with using CDSCash" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "CDSCash",
-          accountNumber,
-          Option("16000"),
-          Option("17000")
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "CDSCash",
+            accountNumber,
+            Option("16000"),
+            Option("17000")
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -74,12 +82,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
     "display accountBalance and related elements when it is present" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "CDSCash",
-          accountNumber,
-          Option("16000"),
-          Option("17000")
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "CDSCash",
+            accountNumber,
+            Option("16000"),
+            Option("17000")
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -99,12 +111,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
     "not display accountBalance and related elements when it is not present" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "CDSCash",
-          accountNumber,
-          None,
-          None
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "CDSCash",
+            accountNumber,
+            None,
+            None
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -126,12 +142,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
     "display guaranteeBalanceAvailable and related elements when it is present" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "CDSCash",
-          accountNumber,
-          Option("16000"),
-          Option("17000")
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "CDSCash",
+            accountNumber,
+            Option("16000"),
+            Option("17000")
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -151,12 +171,16 @@ class AuthorisedAccountSearchPanelSpec extends SpecBase with MustMatchers {
 
     "not display guaranteeBalanceAvailable and related elements when it is not present" in new Setup {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_account_search_panel].apply(
-          "CDSCash",
-          accountNumber,
-          Option("16000"),
-          None
-        ).body)
+        app.injector
+          .instanceOf[authorised_account_search_panel]
+          .apply(
+            "CDSCash",
+            accountNumber,
+            Option("16000"),
+            None
+          )
+          .body
+      )
 
       val elements: Elements = view.getElementsByClass("govuk-summary-list__row")
 

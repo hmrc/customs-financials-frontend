@@ -50,11 +50,7 @@ class FakeMetrics extends Metrics {
   override val defaultRegistry: MetricRegistry = new MetricRegistry
 }
 
-trait SpecBase extends AnyWordSpecLike
-  with MockitoSugar
-  with OptionValues
-  with ScalaFutures
-  with IntegrationPatience {
+trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with ScalaFutures with IntegrationPatience {
 
   val emptyString = ""
 
@@ -89,20 +85,23 @@ trait SpecBase extends AnyWordSpecLike
       LocalDate.parse(dateAsString, dateFormatter)
     } match {
       case Success(date) => Some(date)
-      case Failure(_) => None
+      case Failure(_)    => None
     }
   }
 
-  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty
-                 ): GuiceApplicationBuilder = new GuiceApplicationBuilder().overrides(
-    inject.bind[IdentifierAction].toInstance(
-      new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
-    api.inject.bind[Metrics].toInstance(new FakeMetrics)
-  ).configure("auditing.enabled" -> "false")
+  def application(allEoriHistory: Seq[EoriHistory] = Seq.empty): GuiceApplicationBuilder = new GuiceApplicationBuilder()
+    .overrides(
+      inject
+        .bind[IdentifierAction]
+        .toInstance(new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
+      api.inject.bind[Metrics].toInstance(new FakeMetrics)
+    )
+    .configure("auditing.enabled" -> "false")
 
   @implicitNotFound("Pass a type for the identifier action")
-  def applicationBuilder[IA <: IdentifierAction](disableAuth: Boolean = false)(
-    implicit c: ClassTag[IA]): GuiceApplicationBuilder = {
+  def applicationBuilder[IA <: IdentifierAction](
+      disableAuth: Boolean = false
+  )(implicit c: ClassTag[IA]): GuiceApplicationBuilder = {
 
     val overrides: List[GuiceableModule] = List(bind[Metrics].toInstance(new FakeMetrics))
     val optionalOverrides: List[GuiceableModule] = if (disableAuth) {
@@ -113,19 +112,24 @@ trait SpecBase extends AnyWordSpecLike
 
     new GuiceApplicationBuilder()
       .overrides(overrides ::: optionalOverrides: _*)
-      .configure("play.filters.csp.nonce.enabled" -> false,
+      .configure(
+        "play.filters.csp.nonce.enabled" -> false,
         "auditing.enabled" -> "false",
         "microservice.metrics.graphite.enabled" -> "false",
-        "metrics.enabled" -> "false")
+        "metrics.enabled" -> "false"
+      )
   }
 
   def fakeRequest(method: String = emptyString, path: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
 
-  def fakeRequestWithSession(method: String = emptyString,
-                             path: String = emptyString,
-                             sessionIdValue: String = emptyString): FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest(method, path).withCSRFToken.asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
+  def fakeRequestWithSession(
+      method: String = emptyString,
+      path: String = emptyString,
+      sessionIdValue: String = emptyString
+  ): FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest(method, path).withCSRFToken
+      .asInstanceOf[FakeRequest[AnyContentAsEmpty.type]]
       .withSession(("sessionId", sessionIdValue))
 
   def newUser(allEoriHistory: Seq[EoriHistory] = Seq.empty): SignedInUser = {

@@ -32,11 +32,12 @@ import utils.MustMatchers
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 
-class CustomsManageAuthoritiesConnectorSpec extends SpecBase
-  with ScalaFutures
-  with FutureAwaits
-  with DefaultAwaitTimeout
-  with MustMatchers {
+class CustomsManageAuthoritiesConnectorSpec
+    extends SpecBase
+    with ScalaFutures
+    with FutureAwaits
+    with DefaultAwaitTimeout
+    with MustMatchers {
 
   "fetchAndSaveAccountAuthoritiesInCache" should {
 
@@ -122,9 +123,11 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val app: Application = application().overrides(
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
   }
 }

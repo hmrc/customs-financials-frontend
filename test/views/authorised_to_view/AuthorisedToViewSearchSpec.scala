@@ -36,14 +36,18 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     "display correct title and guidance" in new SetUp {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = false
-        ).body)
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option("url"),
+            None,
+            date,
+            fileExists = true,
+            isXiEoriEnabled = false
+          )
+          .body
+      )
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
@@ -57,14 +61,18 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     "display correct title and XI Eori guidance" in new SetUp {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option("url"),
+            None,
+            date,
+            fileExists = true,
+            isXiEoriEnabled = true
+          )
+          .body
+      )
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
@@ -78,14 +86,18 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     "display correct link for CSV file" in new SetUp {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option("url"),
-          None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option("url"),
+            None,
+            date,
+            fileExists = true,
+            isXiEoriEnabled = true
+          )
+          .body
+      )
 
       view.getElementById("authorised-request-csv-link").html() mustBe
         messages(app)("cf.search.authorities.link")
@@ -100,14 +112,18 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       val gbAuthUrl = "gbURL"
 
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option(gbAuthUrl),
-          None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option(gbAuthUrl),
+            None,
+            date,
+            fileExists = true,
+            isXiEoriEnabled = true
+          )
+          .body
+      )
 
       view.getElementById("authorised-request-csv-link").html() mustBe
         messages(app)("cf.search.authorities.link")
@@ -127,14 +143,18 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       val xiAuthUrl = "xiURL"
 
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search].apply(
-          form,
-          Option(gbAuthUrl),
-          Option(xiAuthUrl),
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
-        ).body)
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option(gbAuthUrl),
+            Option(xiAuthUrl),
+            date,
+            fileExists = true,
+            isXiEoriEnabled = true
+          )
+          .body
+      )
 
       view.getElementById("authorised-request-csv-link").html() mustBe
         messages(app)("cf.search.authorities.link")
@@ -171,11 +191,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     val authorisedToViewInstance: authorised_to_view_search = app.injector.instanceOf[authorised_to_view_search]
 
-    val sampleView: Document = Jsoup.parse(authorisedToViewInstance.apply(
-        form = form,
-        date = date,
-        fileExists = true,
-        isXiEoriEnabled = true)
-      .body)
+    val sampleView: Document = Jsoup.parse(
+      authorisedToViewInstance.apply(form = form, date = date, fileExists = true, isXiEoriEnabled = true).body
+    )
   }
 }

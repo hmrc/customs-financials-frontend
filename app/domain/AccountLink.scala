@@ -18,17 +18,20 @@ package domain
 
 import java.time.LocalDateTime
 
-case class AccountLink(sessionId: String,
-                       eori: EORI,
-                       isNiAccount: Boolean,
-                       accountNumber: String,
-                       accountStatus: CDSAccountStatus,
-                       accountStatusId: Option[CDSAccountStatusId],
-                       linkId: String,
-                       lastUpdated: LocalDateTime) {
+case class AccountLink(
+    sessionId: String,
+    eori: EORI,
+    isNiAccount: Boolean,
+    accountNumber: String,
+    accountStatus: CDSAccountStatus,
+    accountStatusId: Option[CDSAccountStatusId],
+    linkId: String,
+    lastUpdated: LocalDateTime
+) {
 
   def this(id: String, sessionCacheAccountLink: SessionCacheAccountLink) = {
-    this(id,
+    this(
+      id,
       sessionCacheAccountLink.eori,
       sessionCacheAccountLink.isNiAccount,
       sessionCacheAccountLink.accountNumber,

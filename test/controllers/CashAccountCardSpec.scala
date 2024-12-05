@@ -18,8 +18,14 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  XiEoriAddressInformation}
+import domain.{
+  AccountStatusOpen,
+  CDSAccounts,
+  CDSCashBalance,
+  CashAccount,
+  DefermentAccountAvailable,
+  XiEoriAddressInformation
+}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -56,7 +62,8 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
         val result = route(app, request).value
         val html = Jsoup.parse(contentAsString(result))
 
-        html.getElementById(s"cash-account-$someCashAccountNumber")
+        html
+          .getElementById(s"cash-account-$someCashAccountNumber")
           .attr("id") mustBe "cash-account-123456789"
       }
     }
@@ -84,18 +91,19 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
 
-    val app: Application = application().overrides(
-      inject.bind[CDSAccounts].toInstance(mockAccounts),
-      inject.bind[ApiService].toInstance(mockApiService),
-      inject.bind[NotificationService].toInstance(mockNotificationService),
-      inject.bind[DataStoreService].toInstance(mockDataStoreService),
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[CDSAccounts].toInstance(mockAccounts),
+        inject.bind[ApiService].toInstance(mockApiService),
+        inject.bind[NotificationService].toInstance(mockNotificationService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
+      )
+      .build()
 
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET,
-        routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
+      fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))

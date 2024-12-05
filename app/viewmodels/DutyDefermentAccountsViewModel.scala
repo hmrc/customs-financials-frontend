@@ -27,48 +27,62 @@ import views.html.components.{account_status, hidden_status}
 
 import scala.collection.immutable.Seq
 
-case class PositiveBalanceModel(pId: String,
-                                cyAvailableBalanceValue: Option[String] = None,
-                                cyAvailableBalanceMsg: Option[String] = None,
-                                cyAvailableBalancePreMsg: Option[String] = None,
-                                cyAvailableBalancePostMsg: Option[String] = None,
-                                availableBalanceValue: Option[String] = None,
-                                availableBalanceMsg: Option[String] = None)
+case class PositiveBalanceModel(
+    pId: String,
+    cyAvailableBalanceValue: Option[String] = None,
+    cyAvailableBalanceMsg: Option[String] = None,
+    cyAvailableBalancePreMsg: Option[String] = None,
+    cyAvailableBalancePostMsg: Option[String] = None,
+    availableBalanceValue: Option[String] = None,
+    availableBalanceMsg: Option[String] = None
+)
 
-case class FooterLinkModel(id: String = emptyString,
-                           classValue: String = "govuk-link govuk-!-margin-right-2",
-                           href: String,
-                           displayValue: String,
-                           hiddenMsg: String)
+case class FooterLinkModel(
+    id: String = emptyString,
+    classValue: String = "govuk-link govuk-!-margin-right-2",
+    href: String,
+    displayValue: String,
+    hiddenMsg: String
+)
 
-case class AccountAvailableModel(positiveBalanceValue: Option[PositiveBalanceModel] = None,
-                                 negativeBalanceValue: Option[String] = None)
+case class AccountAvailableModel(
+    positiveBalanceValue: Option[PositiveBalanceModel] = None,
+    negativeBalanceValue: Option[String] = None
+)
 
-case class NonDirectDebitContent(accountLimit: AccountAvailableModel,
-                                 balances: Option[HtmlFormat.Appendable] = None,
-                                 viewStatements: Option[FooterLinkModel] = None,
-                                 paymentDetails: Option[FooterLinkModel] = None,
-                                 topUp: Option[FooterLinkModel] = None,
-                                 pendingAccountGuidance: Option[HtmlFormat.Appendable] = None)
+case class NonDirectDebitContent(
+    accountLimit: AccountAvailableModel,
+    balances: Option[HtmlFormat.Appendable] = None,
+    viewStatements: Option[FooterLinkModel] = None,
+    paymentDetails: Option[FooterLinkModel] = None,
+    topUp: Option[FooterLinkModel] = None,
+    pendingAccountGuidance: Option[HtmlFormat.Appendable] = None
+)
 
-case class HeaderRowModel(id: String,
-                          accountHeadingMsg: String,
-                          hiddenStatus: HtmlFormat.Appendable,
-                          accountStatus: HtmlFormat.Appendable)
+case class HeaderRowModel(
+    id: String,
+    accountHeadingMsg: String,
+    hiddenStatus: HtmlFormat.Appendable,
+    accountStatus: HtmlFormat.Appendable
+)
 
-case class ContentRowModel(directDebitSetupComponent: Option[HtmlFormat.Appendable] = None,
-                           nonDirectDebitContent: Option[NonDirectDebitContent] = None)
+case class ContentRowModel(
+    directDebitSetupComponent: Option[HtmlFormat.Appendable] = None,
+    nonDirectDebitContent: Option[NonDirectDebitContent] = None
+)
 
-case class DutyDefermentAccountRowModel(headerRow: HeaderRowModel,
-                                        contentRow: ContentRowModel)
+case class DutyDefermentAccountRowModel(headerRow: HeaderRowModel, contentRow: ContentRowModel)
 
-case class DutyDefermentAccountsViewModel(titleMsg: String,
-                                          inaccurateBalancesMsg: HtmlFormat.Appendable,
-                                          accountSectionRows: Seq[DutyDefermentAccountRowModel] = Nil)
+case class DutyDefermentAccountsViewModel(
+    titleMsg: String,
+    inaccurateBalancesMsg: HtmlFormat.Appendable,
+    accountSectionRows: Seq[DutyDefermentAccountRowModel] = Nil
+)
 
 object DutyDefermentAccountsViewModel {
-  def apply(finHomeModel: FinancialsHomeModel)(implicit messages: Messages,
-                                               appConfig: AppConfig): DutyDefermentAccountsViewModel = {
+  def apply(
+      finHomeModel: FinancialsHomeModel
+  )(implicit messages: Messages, appConfig: AppConfig): DutyDefermentAccountsViewModel = {
     DutyDefermentAccountsViewModel(
       titleMsg(finHomeModel.dutyDefermentAccounts),
       new duty_deferment_inaccurate_balances_message().apply(),
@@ -84,25 +98,27 @@ object DutyDefermentAccountsViewModel {
     }
   }
 
-  private def populateAccountSectionRows(finHomeModel: FinancialsHomeModel)
-                                        (implicit messages: Messages,
-                                         appConfig: AppConfig): Seq[DutyDefermentAccountRowModel] = {
-    finHomeModel.dutyDefermentAccounts.map {
-      ddAccount => populateAccountRowModel(ddAccount, finHomeModel)
+  private def populateAccountSectionRows(
+      finHomeModel: FinancialsHomeModel
+  )(implicit messages: Messages, appConfig: AppConfig): Seq[DutyDefermentAccountRowModel] = {
+    finHomeModel.dutyDefermentAccounts.map { ddAccount =>
+      populateAccountRowModel(ddAccount, finHomeModel)
     }
   }
 
-  private def populateAccountRowModel(account: DutyDefermentAccount,
-                                      finHomeModel: FinancialsHomeModel)
-                                     (implicit messages: Messages, appConfig: AppConfig): DutyDefermentAccountRowModel = {
+  private def populateAccountRowModel(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages,
+      appConfig: AppConfig
+  ): DutyDefermentAccountRowModel = {
     DutyDefermentAccountRowModel(
       headerRow = headerRow(account, finHomeModel),
       contentRow = contentRow(account, finHomeModel)
     )
   }
 
-  private def headerRow(account: DutyDefermentAccount,
-                        finHomeModel: FinancialsHomeModel)(implicit messages: Messages): HeaderRowModel = {
+  private def headerRow(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages
+  ): HeaderRowModel = {
     val accountHeadingMsg =
       if (finHomeModel.isNiAccountIndicator((account.owner, account.number): (String, String))) {
         s"${messages("cf.NiAccount")} ${account.number}"
@@ -118,12 +134,14 @@ object DutyDefermentAccountsViewModel {
       id = s"dan-${account.number}",
       accountHeadingMsg = accountHeadingMsg,
       hiddenStatus = hiddenStatus,
-      accountStatus = accountStatus)
+      accountStatus = accountStatus
+    )
   }
 
-  private def contentRow(account: DutyDefermentAccount,
-                         finHomeModel: FinancialsHomeModel)
-                        (implicit messages: Messages, appConfig: AppConfig): ContentRowModel = {
+  private def contentRow(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages,
+      appConfig: AppConfig
+  ): ContentRowModel = {
 
     val directDebitSetupComponent: Option[HtmlFormat.Appendable] =
       if (account.status == AccountStatusSuspended && account.isDirectDebitSetupRequired) {
@@ -134,18 +152,18 @@ object DutyDefermentAccountsViewModel {
 
     ContentRowModel(
       directDebitSetupComponent = directDebitSetupComponent,
-      nonDirectDebitContent =
-        if (directDebitSetupComponent.isEmpty) {
-          nonDirectDebitContent(account, finHomeModel)
-        } else {
-          None
-        }
+      nonDirectDebitContent = if (directDebitSetupComponent.isEmpty) {
+        nonDirectDebitContent(account, finHomeModel)
+      } else {
+        None
+      }
     )
   }
 
-  private def nonDirectDebitContent(account: DutyDefermentAccount,
-                                    finHomeModel: FinancialsHomeModel)
-                                   (implicit messages: Messages, appConfig: AppConfig): Option[NonDirectDebitContent] = {
+  private def nonDirectDebitContent(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages,
+      appConfig: AppConfig
+  ): Option[NonDirectDebitContent] = {
 
     val balances = if (account.status != AccountStatusPending) {
       Some(new duty_deferment_balances(new duty_deferment_balance_details)(account, finHomeModel))
@@ -167,11 +185,11 @@ object DutyDefermentAccountsViewModel {
         paymentDetails = paymentDetails(account, finHomeModel),
         topUp = topUp(account),
         pendingAccountGuidance = pendingAccountGuidance
-      ))
+      )
+    )
   }
 
-  private def accountLimit(account: DutyDefermentAccount)
-                          (implicit messages: Messages): AccountAvailableModel = {
+  private def accountLimit(account: DutyDefermentAccount)(implicit messages: Messages): AccountAvailableModel = {
 
     val positiveBalance: Option[PositiveBalanceModel] = positiveBalanceValue(account)
 
@@ -182,14 +200,13 @@ object DutyDefermentAccountsViewModel {
         None
       }
 
-    AccountAvailableModel(
-      positiveBalanceValue = positiveBalance,
-      negativeBalanceValue = negativeBalanceValue)
+    AccountAvailableModel(positiveBalanceValue = positiveBalance, negativeBalanceValue = negativeBalanceValue)
   }
 
-  private def viewStatements(account: DutyDefermentAccount,
-                             finHomeModel: FinancialsHomeModel)
-                            (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
+  private def viewStatements(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages,
+      appConfig: AppConfig
+  ): Option[FooterLinkModel] = {
     if (account.status != AccountStatusPending) {
       Some(
         FooterLinkModel(
@@ -197,16 +214,18 @@ object DutyDefermentAccountsViewModel {
           href = finHomeModel
             .dutyDefermentAccountDetailsLinks()(appConfig)((account.owner, account.number): (String, String)),
           displayValue = messages("cf.accounts.viewStatements"),
-          hiddenMsg = messages("cf.accounts.label.dan", account.number))
+          hiddenMsg = messages("cf.accounts.label.dan", account.number)
+        )
       )
     } else {
       None
     }
   }
 
-  private def paymentDetails(account: DutyDefermentAccount,
-                             finHomeModel: FinancialsHomeModel)
-                            (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
+  private def paymentDetails(account: DutyDefermentAccount, finHomeModel: FinancialsHomeModel)(implicit
+      messages: Messages,
+      appConfig: AppConfig
+  ): Option[FooterLinkModel] = {
     if (!List(AccountStatusPending, AccountStatusClosed).contains(account.status)) {
       Some(
         FooterLinkModel(
@@ -214,30 +233,34 @@ object DutyDefermentAccountsViewModel {
           href = finHomeModel
             .dutyDefermentAccountDDSetupLinks()(appConfig)((account.owner, account.number): (String, String)),
           displayValue = messages("cf.accounts.contact.details"),
-          hiddenMsg = messages("cf.accounts.label.contact.details", account.number))
+          hiddenMsg = messages("cf.accounts.label.contact.details", account.number)
+        )
       )
     } else {
       None
     }
   }
 
-  private def topUp(account: DutyDefermentAccount)
-                   (implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
+  private def topUp(
+      account: DutyDefermentAccount
+  )(implicit messages: Messages, appConfig: AppConfig): Option[FooterLinkModel] = {
     if (account.status != AccountStatusPending) {
       Some(
         FooterLinkModel(
           classValue = "govuk-link",
           href = appConfig.dutyDefermentTopUpLink,
           displayValue = messages("cf.accounts.topUp"),
-          hiddenMsg = messages("cf.accounts.label.topUp", account.number))
+          hiddenMsg = messages("cf.accounts.label.topUp", account.number)
+        )
       )
     } else {
       None
     }
   }
 
-  private def positiveBalanceValue(account: DutyDefermentAccount)
-                                  (implicit messages: Messages): Option[PositiveBalanceModel] = {
+  private def positiveBalanceValue(
+      account: DutyDefermentAccount
+  )(implicit messages: Messages): Option[PositiveBalanceModel] = {
     if (account.balances.availableBalance >= 0) {
       populatePositiveBalanceModel(account, messages)
     } else {
@@ -245,8 +268,10 @@ object DutyDefermentAccountsViewModel {
     }
   }
 
-  private def populatePositiveBalanceModel(account: DutyDefermentAccount,
-                                           messages: Messages): Option[PositiveBalanceModel] = {
+  private def populatePositiveBalanceModel(
+      account: DutyDefermentAccount,
+      messages: Messages
+  ): Option[PositiveBalanceModel] = {
     if (messages.lang == Lang("cy")) {
       positiveBalanceModelForWelsh(account, messages)
     } else {
@@ -254,8 +279,10 @@ object DutyDefermentAccountsViewModel {
     }
   }
 
-  private def positiveBalanceModelForWelsh(account: DutyDefermentAccount,
-                                           messages: Messages): Option[PositiveBalanceModel] = {
+  private def positiveBalanceModelForWelsh(
+      account: DutyDefermentAccount,
+      messages: Messages
+  ): Option[PositiveBalanceModel] = {
     if (account.status == AccountStatusPending) {
 
       val cyAvailableBalancePreMsg: Option[String] = if (account.balances.availableBalance > 0) {
@@ -277,7 +304,8 @@ object DutyDefermentAccountsViewModel {
           pId = s"duty-deferment-balance-${account.number}",
           cyAvailableBalancePreMsg = cyAvailableBalancePreMsg,
           cyAvailableBalancePostMsg = cyAvailableBalancePostMsg,
-          cyAvailableBalanceValue = cyAvailableBalanceValue)
+          cyAvailableBalanceValue = cyAvailableBalanceValue
+        )
       )
 
     } else {
@@ -293,13 +321,16 @@ object DutyDefermentAccountsViewModel {
         PositiveBalanceModel(
           pId = s"duty-deferment-balance-${account.number}",
           cyAvailableBalanceValue = cyAvailableBalanceValue,
-          cyAvailableBalanceMsg = cyAvailableBalanceMsg)
+          cyAvailableBalanceMsg = cyAvailableBalanceMsg
+        )
       )
     }
   }
 
-  private def positiveBalanceModelForEnglish(account: DutyDefermentAccount,
-                                             messages: Messages): Option[PositiveBalanceModel] = {
+  private def positiveBalanceModelForEnglish(
+      account: DutyDefermentAccount,
+      messages: Messages
+  ): Option[PositiveBalanceModel] = {
     val availBalanceValue = Some(Formatters.formatCurrencyAmount(account.balances.availableBalance))
 
     val availBalanceMsg =
@@ -313,7 +344,8 @@ object DutyDefermentAccountsViewModel {
       PositiveBalanceModel(
         pId = s"duty-deferment-balance-${account.number}",
         availableBalanceValue = availBalanceValue,
-        availableBalanceMsg = availBalanceMsg)
+        availableBalanceMsg = availBalanceMsg
+      )
     )
   }
 }

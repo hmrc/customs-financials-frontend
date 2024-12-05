@@ -20,11 +20,13 @@ import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDateTime
 
-case class UndeliverableInformation(subject: String,
-                                    eventId: String,
-                                    groupId: String,
-                                    timestamp: LocalDateTime,
-                                    event: UndeliverableInformationEvent)
+case class UndeliverableInformation(
+    subject: String,
+    eventId: String,
+    groupId: String,
+    timestamp: LocalDateTime,
+    event: UndeliverableInformationEvent
+)
 
 object UndeliverableInformation {
   implicit val format: OFormat[UndeliverableInformation] = Json.format[UndeliverableInformation]

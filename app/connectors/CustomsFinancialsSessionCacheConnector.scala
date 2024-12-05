@@ -31,22 +31,22 @@ import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-case class AccountLinksRequest(sessionId: String,
-                               accountLinks: Seq[SessionCacheAccountLink])
+case class AccountLinksRequest(sessionId: String, accountLinks: Seq[SessionCacheAccountLink])
 
 object AccountLinksRequest {
   implicit val format: OFormat[AccountLinksRequest] = Json.format[AccountLinksRequest]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+      writes: Writes[T],
+      jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }
 
-class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
-                                                       appConfig: AppConfig,
-                                                       metricsReporter: MetricsReporterService)
-                                                      (implicit executionContext: ExecutionContext) {
+class CustomsFinancialsSessionCacheConnector @Inject() (
+    httpClient: HttpClientV2,
+    appConfig: AppConfig,
+    metricsReporter: MetricsReporterService
+)(implicit executionContext: ExecutionContext) {
 
   def storeSession(id: String, accountLinks: Seq[AccountLink])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = s"${appConfig.customsFinancialsSessionCacheUrl}/update-links"
@@ -54,7 +54,8 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.update-links") {
       val request: AccountLinksRequest = AccountLinksRequest(id, toSessionCacheAccountLinks(accountLinks))
 
-      httpClient.post(url"$sessionCacheUrl")
+      httpClient
+        .post(url"$sessionCacheUrl")
         .withBody[AccountLinksRequest](request)
         .execute[HttpResponse]
         .flatMap {
@@ -64,28 +65,33 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
   }
 
   def getAccontLinks(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[Seq[AccountLinkWithoutDate]]] =
-    httpClient.get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/$sessionId")
+    httpClient
+      .get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/$sessionId")
       .execute[Seq[AccountLinkWithoutDate]]
-      .flatMap {
-        res => Future.successful(Some(res))
-      }.recover {
-      case _ => None
-    }
+      .flatMap { res =>
+        Future.successful(Some(res))
+      }
+      .recover { case _ =>
+        None
+      }
 
   def getSessionId(sessionId: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] =
-    httpClient.get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/session/$sessionId")
+    httpClient
+      .get(url"${appConfig.customsFinancialsSessionCacheUrl}/account-links/session/$sessionId")
       .execute[HttpResponse]
-      .flatMap {
-        res => Future.successful(Some(res))
-      }.recover {
-      case _ => None
-    }
+      .flatMap { res =>
+        Future.successful(Some(res))
+      }
+      .recover { case _ =>
+        None
+      }
 
   def removeSession(id: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val sessionCacheUrl = s"${appConfig.customsFinancialsSessionCacheUrl}/remove/$id"
 
     metricsReporter.withResponseTimeLogging("customs-financials-session-cache.remove") {
-      httpClient.delete(url"$sessionCacheUrl")
+      httpClient
+        .delete(url"$sessionCacheUrl")
         .execute[HttpResponse]
         .flatMap {
           Future.successful
@@ -95,11 +101,13 @@ class CustomsFinancialsSessionCacheConnector @Inject()(httpClient: HttpClientV2,
 
   private def toSessionCacheAccountLinks(accountLinks: Seq[AccountLink]): Seq[SessionCacheAccountLink] = for {
     accountLink <- accountLinks
-    sessionAccountLink = SessionCacheAccountLink(accountLink.eori,
+    sessionAccountLink = SessionCacheAccountLink(
+      accountLink.eori,
       accountLink.isNiAccount,
       accountLink.accountNumber,
       accountLink.accountStatus,
       accountLink.accountStatusId,
-      accountLink.linkId)
+      accountLink.linkId
+    )
   } yield sessionAccountLink
 }

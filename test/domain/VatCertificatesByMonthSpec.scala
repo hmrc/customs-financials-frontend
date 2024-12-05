@@ -84,11 +84,11 @@ class VatCertificatesByMonthSpec extends SpecBase with MustMatchers {
     val app: Application = application().build()
     implicit val msgs: Messages = messages(app)
 
-    val metadataWithPdf: VatCertificateFileMetadata = VatCertificateFileMetadata(
-      startYear, month, Pdf, SecurityStatement, None)
+    val metadataWithPdf: VatCertificateFileMetadata =
+      VatCertificateFileMetadata(startYear, month, Pdf, SecurityStatement, None)
 
-    val metadataWithCsv: VatCertificateFileMetadata = VatCertificateFileMetadata(
-      startYear, month, Csv, SecurityStatement, None)
+    val metadataWithCsv: VatCertificateFileMetadata =
+      VatCertificateFileMetadata(startYear, month, Csv, SecurityStatement, None)
 
     val vatSecurityFilePdf: VatCertificateFile = VatCertificateFile(fileName, downloadUrl, size, metadataWithPdf, eori)
     val vatSecurityFileCsv: VatCertificateFile = VatCertificateFile(fileName, downloadUrl, size, metadataWithCsv, eori)

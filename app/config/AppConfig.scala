@@ -23,14 +23,12 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesConfig) {
+class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesConfig) {
 
   lazy val appName: String = config.get[String]("appName")
 
-  lazy val emailFrontendService: String = s"${servicesConfig.baseUrl("customs-email-frontend")}${
-    config.get[String](
-      "microservice.services.customs-email-frontend.context")
-  }"
+  lazy val emailFrontendService: String =
+    s"${servicesConfig.baseUrl("customs-email-frontend")}${config.get[String]("microservice.services.customs-email-frontend.context")}"
 
   lazy val timeout: Int = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
@@ -66,10 +64,8 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
   lazy val manageAuthoritiesFrontendUrl: String =
     config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
 
-  lazy val manageAuthoritiesServiceUrl = s"${servicesConfig.baseUrl("customs-manage-authorities-frontend")}${
-    config.get[String](
-      "microservice.services.customs-manage-authorities-frontend.context")
-  }"
+  lazy val manageAuthoritiesServiceUrl =
+    s"${servicesConfig.baseUrl("customs-manage-authorities-frontend")}${config.get[String]("microservice.services.customs-manage-authorities-frontend.context")}"
 
   lazy val guaranteeAccountUrl: String =
     config.get[String]("microservice.services.customs-guarantee-account-frontend.url")

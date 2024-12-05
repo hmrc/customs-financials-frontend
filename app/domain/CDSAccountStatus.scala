@@ -49,10 +49,10 @@ object CDSAccountStatus {
 
     override def reads(json: JsValue): JsResult[CDSAccountStatus] = {
       json.as[String] match {
-        case status if status.equalsIgnoreCase("Open") => JsSuccess(AccountStatusOpen)
+        case status if status.equalsIgnoreCase("Open")      => JsSuccess(AccountStatusOpen)
         case status if status.equalsIgnoreCase("Suspended") => JsSuccess(AccountStatusSuspended)
-        case status if status.equalsIgnoreCase("Closed") => JsSuccess(AccountStatusClosed)
-        case status if status.equalsIgnoreCase("Pending") => JsSuccess(AccountStatusPending)
+        case status if status.equalsIgnoreCase("Closed")    => JsSuccess(AccountStatusClosed)
+        case status if status.equalsIgnoreCase("Pending")   => JsSuccess(AccountStatusPending)
         case unknown => logger.warn(s"Invalid account status: $unknown"); JsSuccess(AccountStatusOpen)
       }
     }

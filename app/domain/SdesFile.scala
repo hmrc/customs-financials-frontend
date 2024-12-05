@@ -51,10 +51,8 @@ object FileFormat {
   val log: LoggerLike = Logger(this.getClass)
   val authorityFileFormats: SortedSet[FileFormat] = SortedSet(Csv)
 
-  def filterFileFormats[T <: SdesFile](
-                                        allowedFileFormats: SortedSet[FileFormat])(
-                                        files: Seq[T]): Seq[T] = files.filter(
-    file => allowedFileFormats(file.metadata.fileFormat))
+  def filterFileFormats[T <: SdesFile](allowedFileFormats: SortedSet[FileFormat])(files: Seq[T]): Seq[T] =
+    files.filter(file => allowedFileFormats(file.metadata.fileFormat))
 
   def apply(name: String): FileFormat = name.toUpperCase match {
     case Pdf.name => Pdf
@@ -99,9 +97,9 @@ object DDStatementType {
   }
 
   def apply(name: String): DDStatementType = name match {
-    case Weekly.name => Weekly
+    case Weekly.name        => Weekly
     case Supplementary.name => Supplementary
-    case Excise.name => Excise
+    case Excise.name        => Excise
     case _ =>
       log.warn(s"Unknown duty deferment statement type: $name")
       UnknownStatementType
@@ -110,53 +108,61 @@ object DDStatementType {
   def unapply(arg: DDStatementType): Option[String] = Some(arg.name)
 }
 
-sealed abstract class FileRole(val name: String,
-                               val featureName: String,
-                               val transactionName: String,
-                               val messageKey: String)
+sealed abstract class FileRole(
+    val name: String,
+    val featureName: String,
+    val transactionName: String,
+    val messageKey: String
+)
 
 object FileRole {
 
-  case object DutyDefermentStatement extends FileRole(
-    "DutyDefermentStatement", "duty-deferment",
-    "Download duty deferment statement", "duty-deferment")
+  case object DutyDefermentStatement
+      extends FileRole(
+        "DutyDefermentStatement",
+        "duty-deferment",
+        "Download duty deferment statement",
+        "duty-deferment"
+      )
 
-  case object C79Certificate extends FileRole(
-    "C79Certificate", "import-vat",
-    "Download import VAT statement", "c79")
+  case object C79Certificate extends FileRole("C79Certificate", "import-vat", "Download import VAT statement", "c79")
 
-  case object PostponedVATStatement extends FileRole(
-    "PostponedVATStatement", "postponed-vat",
-    "Download postponed VAT statement", "postponed-vat")
+  case object PostponedVATStatement
+      extends FileRole("PostponedVATStatement", "postponed-vat", "Download postponed VAT statement", "postponed-vat")
 
-  case object PostponedVATAmendedStatement extends FileRole(
-    "PostponedVATAmendedStatement", "postponed-vat",
-    "Download postponed VAT amend statement", "postponed-vat")
+  case object PostponedVATAmendedStatement
+      extends FileRole(
+        "PostponedVATAmendedStatement",
+        "postponed-vat",
+        "Download postponed VAT amend statement",
+        "postponed-vat"
+      )
 
-  case object SecurityStatement extends FileRole(
-    "SecurityStatement", "adjustments",
-    "Download adjustments statement", "adjustments")
+  case object SecurityStatement
+      extends FileRole("SecurityStatement", "adjustments", "Download adjustments statement", "adjustments")
 
-  case object StandingAuthority extends FileRole(
-    "StandingAuthority", "authorities",
-    "Display standing authorities csv", "authorities")
+  case object StandingAuthority
+      extends FileRole("StandingAuthority", "authorities", "Display standing authorities csv", "authorities")
 
-  case object CDSCashAccount extends FileRole(
-    "CDSCashAccount", "cash-statement",
-    "Display Cash Statements", "requested-cash-statement"
-  )
+  case object CDSCashAccount
+      extends FileRole(
+        "CDSCashAccount",
+        "cash-statement",
+        "Display Cash Statements",
+        "requested-cash-statement"
+      )
 
   val log: LoggerLike = Logger(this.getClass)
 
   def apply(name: String): FileRole = name match {
-    case "DutyDefermentStatement" => DutyDefermentStatement
-    case "C79Certificate" => C79Certificate
-    case "PostponedVATStatement" => PostponedVATStatement
+    case "DutyDefermentStatement"       => DutyDefermentStatement
+    case "C79Certificate"               => C79Certificate
+    case "PostponedVATStatement"        => PostponedVATStatement
     case "PostponedVATAmendedStatement" => PostponedVATAmendedStatement
-    case "SecurityStatement" => SecurityStatement
-    case "StandingAuthority" => StandingAuthority
-    case "CDSCashAccount" => CDSCashAccount
-    case _ => throw new Exception(s"Unknown file role: $name")
+    case "SecurityStatement"            => SecurityStatement
+    case "StandingAuthority"            => StandingAuthority
+    case "CDSCashAccount"               => CDSCashAccount
+    case _                              => throw new Exception(s"Unknown file role: $name")
   }
 
   def unapply(fileRole: FileRole): Option[String] = Some(fileRole.name)
@@ -170,25 +176,25 @@ object FileRole {
   implicit val pathBinder: PathBindable[FileRole] = new PathBindable[FileRole] {
     override def bind(key: String, value: String): Either[String, FileRole] = {
       value match {
-        case "import-vat" => Right(C79Certificate)
-        case "postponed-vat" => Right(PostponedVATStatement)
+        case "import-vat"     => Right(C79Certificate)
+        case "postponed-vat"  => Right(PostponedVATStatement)
         case "duty-deferment" => Right(DutyDefermentStatement)
-        case "adjustments" => Right(SecurityStatement)
-        case "authorities" => Right(StandingAuthority)
+        case "adjustments"    => Right(SecurityStatement)
+        case "authorities"    => Right(StandingAuthority)
         case "cash-statement" => Right(CDSCashAccount)
-        case fileRole => Left(s"unknown file role: ${fileRole}")
+        case fileRole         => Left(s"unknown file role: ${fileRole}")
       }
     }
 
     override def unbind(key: String, fileRole: FileRole): String = {
       fileRole match {
-        case C79Certificate => "import-vat"
-        case PostponedVATStatement => "postponed-vat"
+        case C79Certificate         => "import-vat"
+        case PostponedVATStatement  => "postponed-vat"
         case DutyDefermentStatement => "duty-deferment"
-        case SecurityStatement => "adjustments"
-        case StandingAuthority => "authorities"
-        case CDSCashAccount => "cash-statement"
-        case _ => "unsupported-file-role"
+        case SecurityStatement      => "adjustments"
+        case StandingAuthority      => "authorities"
+        case CDSCashAccount         => "cash-statement"
+        case _                      => "unsupported-file-role"
       }
     }
   }
@@ -229,11 +235,13 @@ trait SdesFile {
   }
 }
 
-case class DutyDefermentStatementFile(filename: String,
-                                      downloadURL: String,
-                                      size: Long,
-                                      metadata: DutyDefermentStatementFileMetadata)
-  extends Ordered[DutyDefermentStatementFile] with SdesFile {
+case class DutyDefermentStatementFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: DutyDefermentStatementFileMetadata
+) extends Ordered[DutyDefermentStatementFile]
+    with SdesFile {
 
   def compare(that: DutyDefermentStatementFile): Int = fileFormat.compare(that.fileFormat)
 
@@ -241,25 +249,29 @@ case class DutyDefermentStatementFile(filename: String,
   val endDate: LocalDate = LocalDate.of(metadata.periodEndYear, metadata.periodEndMonth, metadata.periodEndDay)
 }
 
-case class DutyDefermentStatementFileMetadata(periodStartYear: Int,
-                                              periodStartMonth: Int,
-                                              periodStartDay: Int,
-                                              periodEndYear: Int,
-                                              periodEndMonth: Int,
-                                              periodEndDay: Int,
-                                              fileFormat: FileFormat,
-                                              fileRole: FileRole,
-                                              defermentStatementType: DDStatementType,
-                                              dutyOverLimit: Option[Boolean],
-                                              dutyPaymentType: Option[String],
-                                              dan: String,
-                                              statementRequestId: Option[String]) extends SdesFileMetadata
+case class DutyDefermentStatementFileMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    periodStartDay: Int,
+    periodEndYear: Int,
+    periodEndMonth: Int,
+    periodEndDay: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole,
+    defermentStatementType: DDStatementType,
+    dutyOverLimit: Option[Boolean],
+    dutyPaymentType: Option[String],
+    dan: String,
+    statementRequestId: Option[String]
+) extends SdesFileMetadata
 
-case class SecurityStatementFile(filename: String,
-                                 downloadURL: String,
-                                 size: Long,
-                                 metadata: SecurityStatementFileMetadata
-                                ) extends Ordered[SecurityStatementFile] with SdesFile {
+case class SecurityStatementFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: SecurityStatementFileMetadata
+) extends Ordered[SecurityStatementFile]
+    with SdesFile {
 
   val startDate: LocalDate = LocalDate.of(metadata.periodStartYear, metadata.periodStartMonth, metadata.periodStartDay)
   val endDate: LocalDate = LocalDate.of(metadata.periodEndYear, metadata.periodEndMonth, metadata.periodEndDay)
@@ -268,42 +280,52 @@ case class SecurityStatementFile(filename: String,
   def compare(that: SecurityStatementFile): Int = startDate.compareTo(that.startDate)
 }
 
-case class SecurityStatementFileMetadata(periodStartYear: Int,
-                                         periodStartMonth: Int,
-                                         periodStartDay: Int,
-                                         periodEndYear: Int,
-                                         periodEndMonth: Int,
-                                         periodEndDay: Int,
-                                         fileFormat: FileFormat,
-                                         fileRole: FileRole,
-                                         eoriNumber: String,
-                                         fileSize: Long,
-                                         checksum: String,
-                                         statementRequestId: Option[String]) extends SdesFileMetadata
+case class SecurityStatementFileMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    periodStartDay: Int,
+    periodEndYear: Int,
+    periodEndMonth: Int,
+    periodEndDay: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole,
+    eoriNumber: String,
+    fileSize: Long,
+    checksum: String,
+    statementRequestId: Option[String]
+) extends SdesFileMetadata
 
-case class StandingAuthorityMetadata(periodStartYear: Int,
-                                     periodStartMonth: Int,
-                                     periodStartDay: Int,
-                                     fileFormat: FileFormat,
-                                     fileRole: FileRole) extends SdesFileMetadata
+case class StandingAuthorityMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    periodStartDay: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole
+) extends SdesFileMetadata
 
-case class StandingAuthorityFile(filename: String,
-                                 downloadURL: String,
-                                 size: Long,
-                                 metadata: StandingAuthorityMetadata,
-                                 eori: String) extends Ordered[StandingAuthorityFile] with SdesFile {
+case class StandingAuthorityFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: StandingAuthorityMetadata,
+    eori: String
+) extends Ordered[StandingAuthorityFile]
+    with SdesFile {
 
   val startDate: LocalDate = LocalDate.of(metadata.periodStartYear, metadata.periodStartMonth, metadata.periodStartDay)
 
   def compare(that: StandingAuthorityFile): Int = startDate.compareTo(that.startDate)
 }
 
-case class VatCertificateFile(filename: String,
-                              downloadURL: String,
-                              size: Long,
-                              metadata: VatCertificateFileMetadata,
-                              eori: String)(implicit messages: Messages) extends Ordered[VatCertificateFile]
-  with SdesFile {
+case class VatCertificateFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: VatCertificateFileMetadata,
+    eori: String
+)(implicit messages: Messages)
+    extends Ordered[VatCertificateFile]
+    with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
@@ -311,33 +333,43 @@ case class VatCertificateFile(filename: String,
   def compare(that: VatCertificateFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
 
-case class PostponedVatStatementFile(filename: String,
-                                     downloadURL: String,
-                                     size: Long,
-                                     metadata: PostponedVatStatementFileMetadata,
-                                     eori: String) extends Ordered[PostponedVatStatementFile] with SdesFile {
+case class PostponedVatStatementFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: PostponedVatStatementFileMetadata,
+    eori: String
+) extends Ordered[PostponedVatStatementFile]
+    with SdesFile {
   def compare(that: PostponedVatStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
 
-case class VatCertificateFileMetadata(periodStartYear: Int,
-                                      periodStartMonth: Int,
-                                      fileFormat: FileFormat,
-                                      fileRole: FileRole,
-                                      statementRequestId: Option[String]) extends SdesFileMetadata
+case class VatCertificateFileMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole,
+    statementRequestId: Option[String]
+) extends SdesFileMetadata
 
-case class PostponedVatStatementFileMetadata(periodStartYear: Int,
-                                             periodStartMonth: Int,
-                                             fileFormat: FileFormat,
-                                             fileRole: FileRole,
-                                             source: String,
-                                             statementRequestId: Option[String]) extends SdesFileMetadata
+case class PostponedVatStatementFileMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole,
+    source: String,
+    statementRequestId: Option[String]
+) extends SdesFileMetadata
 
-case class CashStatementFile(filename: String,
-                             downloadURL: String,
-                             size: Long,
-                             metadata: CashStatementFileMetadata,
-                             eori: String)(implicit messages: Messages) extends Ordered[CashStatementFile]
-  with SdesFile {
+case class CashStatementFile(
+    filename: String,
+    downloadURL: String,
+    size: Long,
+    metadata: CashStatementFileMetadata,
+    eori: String
+)(implicit messages: Messages)
+    extends Ordered[CashStatementFile]
+    with SdesFile {
 
   val formattedSize: String = Formatters.fileSize(size)
   val formattedMonth: String = Formatters.dateAsMonth(monthAndYear)
@@ -345,8 +377,10 @@ case class CashStatementFile(filename: String,
   def compare(that: CashStatementFile): Int = that.metadata.fileFormat.compare(metadata.fileFormat)
 }
 
-case class CashStatementFileMetadata(periodStartYear: Int,
-                                     periodStartMonth: Int,
-                                     fileFormat: FileFormat,
-                                     fileRole: FileRole,
-                                     statementRequestId: Option[String]) extends SdesFileMetadata
+case class CashStatementFileMetadata(
+    periodStartYear: Int,
+    periodStartMonth: Int,
+    fileFormat: FileFormat,
+    fileRole: FileRole,
+    statementRequestId: Option[String]
+) extends SdesFileMetadata
