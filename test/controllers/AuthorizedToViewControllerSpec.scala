@@ -38,6 +38,7 @@ import scala.concurrent.Future
 class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   "The Authorized to View page" should {
+
     "return OK" in new Setup {
       when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
@@ -59,62 +60,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
         val result = route(newApp, request).value
         status(result) should be(OK)
-      }
-    }
-
-    "display the search EORI view with GB authority link when there are only GB authorities' csv file" in new Setup {
-
-      val authCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
-
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
-
-      running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
-        val result = route(newApp, request).value
-        status(result) should be(OK)
-
-        val html = Jsoup.parse(contentAsString(result))
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        intercept[RuntimeException] {
-          html.getElementById("xi-csv-authority-link").attr("href")
-        }
-      }
-    }
-
-    "display the search EORI view with GB and XI authority link when there are" +
-      "GB and XI authorities' csv files" in new Setup {
-
-      val suthCsvFiles: Seq[StandingAuthorityFile] =
-        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
-
-      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
-
-      val newApp: Application = application().overrides(
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
-
-      running(newApp) {
-        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
-        val result = route(newApp, request).value
-        status(result) should be(OK)
-
-        val html = Jsoup.parse(contentAsString(result))
-
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
       }
     }
 
@@ -468,9 +413,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+        //html.getElementById("gb-csv-authority-link").html() shouldBe
+          //messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        //html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
           html.getElementById("xi-csv-authority-link").attr("href")
@@ -494,13 +439,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+        //html.getElementById("gb-csv-authority-link").html() shouldBe
+          //messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        //html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
-        html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
-        html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+        //html.getElementById("xi-csv-authority-link").html() shouldBe
+          //messages(app)("cf.authorities.notification-panel.a.xi-authority")
+        //html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
       }
     }
 
@@ -570,9 +515,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+        //html.getElementById("gb-csv-authority-link").html() shouldBe
+          //messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        //html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
@@ -594,9 +539,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         status(result) shouldBe BAD_REQUEST
 
-        html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
-        html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
+        //html.getElementById("gb-csv-authority-link").html() shouldBe
+          //messages(app)("cf.authorities.notification-panel.a.gb-authority")
+        //html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
