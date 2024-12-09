@@ -42,7 +42,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           None,
           date,
           fileExists = true,
-          isXiEoriEnabled = false
+          isXiEoriEnabled = false,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
@@ -63,7 +64,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           None,
           date,
           fileExists = true,
-          isXiEoriEnabled = true
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
@@ -84,7 +86,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           None,
           date,
           fileExists = true,
-          isXiEoriEnabled = true
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -106,7 +109,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           None,
           date,
           fileExists = true,
-          isXiEoriEnabled = true
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -133,7 +137,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           Option(xiAuthUrl),
           date,
           fileExists = true,
-          isXiEoriEnabled = true
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -175,7 +180,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
         form = form,
         date = date,
         fileExists = true,
-        isXiEoriEnabled = true)
+        isXiEoriEnabled = true,
+        isNotificationPanelEnabled = true)
       .body)
   }
 }

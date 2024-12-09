@@ -72,8 +72,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       val date = Formatters.dateAsDayMonthAndYear(
         Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
       val isXiEoriEnabled = appConfig.xiEoriEnabled
+      val isNotificationPanelEnabled = appConfig.isAuthoritiesNotificationPanelEnabled
 
-      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
+      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled,isNotificationPanelEnabled))
     }
   }
 
@@ -92,8 +93,9 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
           val date = Formatters.dateAsDayMonthAndYear(
             Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
           val isXiEoriEnabled = appConfig.xiEoriEnabled
+          val isNotificationPanelEnabled = appConfig.isAuthoritiesNotificationPanelEnabled
 
-          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
+          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled,isNotificationPanelEnabled))
         },
       query => processSearchQuery(request, query)
     )
@@ -170,7 +172,8 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       xiAuthUrl,
       LocalDate.now.toString,
       fileExists,
-      appConfig.xiEoriEnabled)(request, messages, appConfig)))
+      appConfig.xiEoriEnabled,
+      appConfig.isAuthoritiesNotificationPanelEnabled)(request, messages, appConfig)))
 
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
                                              searchQuery: EORI,
