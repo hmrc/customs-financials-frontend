@@ -40,9 +40,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = false
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = false,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
@@ -61,9 +62,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
@@ -82,9 +84,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -104,9 +107,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option(gbAuthUrl),
           None,
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -131,9 +135,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option(gbAuthUrl),
           Option(xiAuthUrl),
-          date,
-          fileExists = true,
-          isXiEoriEnabled = true
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = true
         ).body)
 
       view.getElementById("authorised-request-csv-link").html() mustBe
@@ -173,9 +178,10 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     val sampleView: Document = Jsoup.parse(authorisedToViewInstance.apply(
         form = form,
-        date = date,
-        fileExists = true,
-        isXiEoriEnabled = true)
+        date = Some(date),
+        fileExists = Some(true),
+        isXiEoriEnabled = true,
+        isNotificationPanelEnabled = true)
       .body)
   }
 }

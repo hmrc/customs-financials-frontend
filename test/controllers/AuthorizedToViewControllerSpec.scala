@@ -30,8 +30,10 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ShouldMatchers, SpecBase}
-import utils.TestData.{BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1,
-  FILE_SIZE_500, MONTH_6, YEAR_2022}
+import utils.TestData.{
+  BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1,
+  FILE_SIZE_500, MONTH_6, YEAR_2022
+}
 
 import scala.concurrent.Future
 
@@ -62,7 +64,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
 
-    "display the search EORI view with GB authority link when there are only GB authorities' csv file" in new Setup {
+    "display the search EORI view with GB authority link " +
+      "when there are only GB authorities' csv file " +
+      "and authorities-notification-panel-enabled feature flag is true" in new Setup {
 
       val authCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
 
@@ -70,7 +74,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+      ).configure(
+        "features.new-agent-view-enabled" -> true,
+        "features.authorities-notification-panel-enabled" -> true
+      ).build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -89,8 +96,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
 
-    "display the search EORI view with GB and XI authority link when there are" +
-      "GB and XI authorities' csv files" in new Setup {
+    "display the search EORI view with GB and XI authority link " +
+      "when there are GB and XI authorities' csv files " +
+      "and authorities-notification-panel-enabled feature flag is true" in new Setup {
 
       val suthCsvFiles: Seq[StandingAuthorityFile] =
         Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
@@ -99,7 +107,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
       val newApp: Application = application().overrides(
         inject.bind[SdesConnector].toInstance(mockSdesConnector)
-      ).configure("features.new-agent-view-enabled" -> true).build()
+      ).configure(
+        "features.new-agent-view-enabled" -> true,
+        "features.authorities-notification-panel-enabled" -> true
+      ).build()
 
       running(newApp) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -115,6 +126,33 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         html.getElementById("xi-csv-authority-link").html() shouldBe
           messages(app)("cf.authorities.notification-panel.a.xi-authority")
         html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+      }
+    }
+
+    "display the search EORI view without GB and XI authority link " +
+      "when authorities-notification-panel-enabled feature flag is false" in new Setup {
+
+      val suthCsvFiles: Seq[StandingAuthorityFile] =
+        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(suthCsvFiles))
+
+      val newApp: Application = application().overrides(
+        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+      ).configure(
+        "features.new-agent-view-enabled" -> true,
+        "features.authorities-notification-panel-enabled" -> false
+      ).build()
+
+      running(newApp) {
+        val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
+        val result = route(newApp, request).value
+        status(result) should be(OK)
+
+        val html = Jsoup.parse(contentAsString(result))
+
+        Option(html.getElementById("gb-csv-authority-link")) shouldBe None
+        Option(html.getElementById("xi-csv-authority-link")) shouldBe None
       }
     }
 
@@ -454,22 +492,35 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
 
-    "return BAD_REQUEST with correct CSV links for GB authorities if an invalid payload sent" in new Setup {
+    "return BAD_REQUEST with correct CSV links for GB authorities " +
+      "if an invalid payload sent " +
+      "when authorities-notification-panel-enabled feature flag is true" in new Setup {
 
       val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
-      running(app) {
+
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> true
+        ).build()
+
+      running(newApp) {
         val request = fakeRequest(
           POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
 
-        val result = route(app, request).value
+        val result = route(newApp, request).value
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
         html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         intercept[RuntimeException] {
@@ -479,28 +530,73 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
-      "if an invalid payload sent" in new Setup {
+      "if an invalid payload sent " +
+      "and authorities-notification-panel-enabled feature flag is true" in new Setup {
 
       val authCsvFiles: Seq[StandingAuthorityFile] =
         Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
-      running(app) {
+
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> true
+        ).build()
+
+      running(newApp) {
         val request = fakeRequest(
           POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
 
-        val result = route(app, request).value
+        val result = route(newApp, request).value
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
         html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.getElementById("xi-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.xi-authority")
+          messages(newApp)("cf.authorities.notification-panel.a.xi-authority")
         html.getElementById("xi-csv-authority-link").attr("href") shouldBe xiStanAuthFile154Url
+      }
+    }
+
+    "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
+      "if an invalid payload sent " +
+      "and authorities-notification-panel-enabled feature flag is false" in new Setup {
+
+      val authCsvFiles: Seq[StandingAuthorityFile] =
+        Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
+
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(authCsvFiles))
+
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> false
+        ).build()
+
+      running(newApp) {
+        val request = fakeRequest(
+          POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+
+        val result = route(newApp, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe BAD_REQUEST
+
+        Option(html.getElementById("gb-csv-authority-link")) shouldBe None
+        Option(html.getElementById("xi-csv-authority-link")) shouldBe None
       }
     }
 
@@ -554,50 +650,104 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
 
-    "Display error message if searching your own EORI number" in new Setup {
+    "Display error message if searching your own EORI number" +
+      "when authorities-notification-panel-enabled feature flag is true" in new Setup {
       val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
-      running(app) {
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> true
+        ).build()
+
+      running(newApp) {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
           "value" -> newUser().eori)
 
-        val result = route(app, request).value
+        val result = route(newApp, request).value
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
         html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
     }
 
-    "Display error message if searching your own XI EORI number" in new Setup {
+    "Display error message if searching your own XI EORI number " +
+      "when authorities-notification-panel-enabled feature flag is true" in new Setup {
       val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
-      running(app) {
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> true
+        ).build()
+
+      running(newApp) {
         val request = fakeRequest(POST,
           routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
           "value" -> "XI123456789912")
 
-        val result = route(app, request).value
+        val result = route(newApp, request).value
         val html = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe BAD_REQUEST
 
         html.getElementById("gb-csv-authority-link").html() shouldBe
-          messages(app)("cf.authorities.notification-panel.a.gb-authority")
+          messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
         html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
 
+        html.text().contains("You cannot search your own EORI number") shouldBe true
+      }
+    }
+
+    "Display error message if searching your own XI EORI number " +
+      "when authorities-notification-panel-enabled feature flag is false" in new Setup {
+      val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
+      when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
+
+      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
+
+      val newApp: Application = application()
+        .overrides(
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        ).configure(
+          "features.new-agent-view-enabled" -> false,
+          "features.authorities-notification-panel-enabled" -> false
+        ).build()
+
+      running(newApp) {
+        val request = fakeRequest(POST,
+          routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody(
+          "value" -> "XI123456789912")
+
+        val result = route(newApp, request).value
+        val html = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe BAD_REQUEST
+
+        Option(html.getElementById("gb-csv-authority-link")) shouldBe None
         html.text().contains("You cannot search your own EORI number") shouldBe true
       }
     }

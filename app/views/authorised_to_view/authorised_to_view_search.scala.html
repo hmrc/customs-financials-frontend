@@ -36,9 +36,10 @@
     form: Form[_],
     gbAuthCsvUrl: Option[String] = None,
     xiAuthCsvUrl: Option[String] = None,
-    date: String,
-    fileExists: Boolean,
-    isXiEoriEnabled: Boolean
+    date: Option[String] = None,
+    fileExists: Option[Boolean] = None,
+    isXiEoriEnabled: Boolean,
+    isNotificationPanelEnabled: Boolean,
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(
@@ -50,7 +51,11 @@
     @formHelper(action = controllers.routes.AuthorizedToViewController.onSubmit()) {
         @errorSummary(form.errors, None)
         @h1("cf.search.authorities", classes = "govuk-heading-xl")
-        @notificationPanel(gbAuthCsvUrl, xiAuthCsvUrl, date, fileExists)
+
+        @if(isNotificationPanelEnabled){
+            @notificationPanel(gbAuthCsvUrl, xiAuthCsvUrl, date.get, fileExists.get)
+        }
+
         @p("cf.search.authorities.p")
 
         <ul class="govuk-list govuk-list--bullet">
