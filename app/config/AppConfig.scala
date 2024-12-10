@@ -40,6 +40,8 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
   lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
   lazy val isCashAccountV2FeatureFlagEnabled: Boolean = config.get[Boolean]("features.cash-account-v2-enabled")
   lazy val isHomePageLinksEnabled: Boolean = config.get[Boolean]("features.home-page-links-enabled")
+  lazy val isAuthoritiesNotificationPanelEnabled: Boolean =
+    config.get[Boolean]("features.authorities-notification-panel-enabled")
 
   lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
   lazy val reportChangeCdsUrl: String = config.get[String]("external-urls.reportChangeUrl")

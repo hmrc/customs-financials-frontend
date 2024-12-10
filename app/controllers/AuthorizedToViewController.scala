@@ -60,40 +60,57 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
   def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
 
-    for {
-      csvFiles: Seq[StandingAuthorityFile] <- getCsvFile()
-    } yield {
-      val viewModel = csvFiles
-      val fileExists = csvFiles.nonEmpty
-      val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+    getCsvFile().map { csvFiles =>
+      val isNotificationPanelEnabled = appConfig.isAuthoritiesNotificationPanelEnabled
 
-      val gbAuthUrl = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-      val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-      val date = Formatters.dateAsDayMonthAndYear(
-        Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-      val isXiEoriEnabled = appConfig.xiEoriEnabled
+      val (gbAuthUrl, xiAuthUrl, date, fileExists) =
+        if (isNotificationPanelEnabled) {
+          val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(csvFiles)
 
-      Ok(authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
+          val gbAuthUrlOpt = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+          val xiAuthUrlOpt = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+          val dateOpt = Formatters.dateAsDayMonthAndYear(
+            Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+          val fileExistsOpt = csvFiles.nonEmpty
+
+          (gbAuthUrlOpt, xiAuthUrlOpt, Some(dateOpt), Some(fileExistsOpt))
+        } else {
+          (None, None, None, None)
+        }
+
+      Ok(
+        authorisedToViewSearch(form, gbAuthUrl, xiAuthUrl, date, fileExists,
+          appConfig.xiEoriEnabled, isNotificationPanelEnabled)
+      )
     }
   }
 
   def onSubmit(): Action[AnyContent] = authenticate async { implicit request =>
     form.bindFromRequest().fold(
       formWithErrors =>
-        for {
-          csvFiles <- getCsvFile()
-        } yield {
-          val viewModel = csvFiles
-          val fileExists = csvFiles.nonEmpty
-          val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(viewModel)
+        getCsvFile().map { csvFiles =>
+          val isAuthoritiesNotificationPanelEnabled = appConfig.isAuthoritiesNotificationPanelEnabled
 
-          val gbAuthUrl: Option[EORI] = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
-          val xiAuthUrl = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
-          val date = Formatters.dateAsDayMonthAndYear(
-            Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
-          val isXiEoriEnabled = appConfig.xiEoriEnabled
+          val (gbAuthUrl, xiAuthUrl, date, fileExists) =
+            if (isAuthoritiesNotificationPanelEnabled) {
 
-          BadRequest(authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists, isXiEoriEnabled))
+              val csvFilesForGBAndXI: CsvFiles = partitionCsvFilesByFileNamePattern(csvFiles)
+
+              val gbAuthUrlOpt = csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.downloadURL)
+              val xiAuthUrlOpt = csvFilesForGBAndXI.xiCsvFiles.headOption.map(_.downloadURL)
+              val dateOpt = Formatters.dateAsDayMonthAndYear(
+                Some(csvFilesForGBAndXI.gbCsvFiles.headOption.map(_.startDate).getOrElse(LocalDate.now)).get)
+              val fileExistsOpt = csvFiles.nonEmpty
+
+              (gbAuthUrlOpt, xiAuthUrlOpt, Some(dateOpt), Some(fileExistsOpt))
+            } else {
+              (None, None, None, None)
+            }
+
+          BadRequest(
+            authorisedToViewSearch(formWithErrors, gbAuthUrl, xiAuthUrl, date, fileExists,
+              appConfig.xiEoriEnabled, isAuthoritiesNotificationPanelEnabled)
+          )
         },
       query => processSearchQuery(request, query)
     )
@@ -128,22 +145,22 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
             xiAuthUrl)(request, messages, appConfig)
 
         case (_, true, _) => displayErrorView(query,
-            "cf.account.authorized-to-view.search-own-accountnumber",
-            fileExists,
-            gbAuthUrl,
-            xiAuthUrl)(request, messages, appConfig)
+          "cf.account.authorized-to-view.search-own-accountnumber",
+          fileExists,
+          gbAuthUrl,
+          xiAuthUrl)(request, messages, appConfig)
 
         case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) => displayErrorView(query,
-            "cf.search.authorities.error.register-xi-eori",
-            fileExists,
-            gbAuthUrl,
-            xiAuthUrl)(request, messages, appConfig)
+          "cf.search.authorities.error.register-xi-eori",
+          fileExists,
+          gbAuthUrl,
+          xiAuthUrl)(request, messages, appConfig)
 
         case _ => if (xiEORI.nonEmpty) {
-            searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
-          } else {
-            searchAuthoritiesForValidInput(request, searchQuery)
-          }
+          searchAuthoritiesForValidInput(request, searchQuery, xiEORI)
+        } else {
+          searchAuthoritiesForValidInput(request, searchQuery)
+        }
       }
     }
 
@@ -168,9 +185,10 @@ class AuthorizedToViewController @Inject()(authenticate: IdentifierAction,
       form.withError("value", msgKey).fill(query),
       gbAuthUrl,
       xiAuthUrl,
-      LocalDate.now.toString,
-      fileExists,
-      appConfig.xiEoriEnabled)(request, messages, appConfig)))
+      Some(LocalDate.now.toString),
+      Some(fileExists),
+      appConfig.xiEoriEnabled,
+      appConfig.isAuthoritiesNotificationPanelEnabled)(request, messages, appConfig)))
 
   private def searchAuthoritiesForValidInput(request: AuthenticatedRequest[AnyContent],
                                              searchQuery: EORI,
