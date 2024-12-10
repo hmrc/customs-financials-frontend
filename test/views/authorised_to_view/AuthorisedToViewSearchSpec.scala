@@ -158,6 +158,25 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       view.getElementById("xi-csv-authority-link").attr("href") mustBe xiAuthUrl
     }
 
+    "hide notification panel when isNotificationPanelEnabled is false" in new SetUp {
+      val gbAuthUrl = "gbURL"
+      val xiAuthUrl = "xiURL"
+
+      val view: Document = Jsoup.parse(
+        app.injector.instanceOf[authorised_to_view_search].apply(
+          form,
+          Option(gbAuthUrl),
+          Option(xiAuthUrl),
+          Some(date),
+          fileExists = Some(true),
+          isXiEoriEnabled = true,
+          isNotificationPanelEnabled = false
+        ).body)
+
+      Option(view.getElementById("gb-csv-authority-link")) mustBe None
+      Option(view.getElementById("xi-csv-authority-link")) mustBe None
+    }
+
     "have a correct back link to manage authorities page" in new SetUp {
       val backLink: Elements = sampleView.select("a.govuk-back-link")
 
