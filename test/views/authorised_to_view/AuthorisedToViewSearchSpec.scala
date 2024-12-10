@@ -40,8 +40,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
+          Some(date),
+          fileExists = Some(true),
           isXiEoriEnabled = false,
           isNotificationPanelEnabled = true
         ).body)
@@ -62,8 +62,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
+          Some(date),
+          fileExists = Some(true),
           isXiEoriEnabled = true,
           isNotificationPanelEnabled = true
         ).body)
@@ -84,8 +84,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option("url"),
           None,
-          date,
-          fileExists = true,
+          Some(date),
+          fileExists = Some(true),
           isXiEoriEnabled = true,
           isNotificationPanelEnabled = true
         ).body)
@@ -107,8 +107,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option(gbAuthUrl),
           None,
-          date,
-          fileExists = true,
+          Some(date),
+          fileExists = Some(true),
           isXiEoriEnabled = true,
           isNotificationPanelEnabled = true
         ).body)
@@ -135,8 +135,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form,
           Option(gbAuthUrl),
           Option(xiAuthUrl),
-          date,
-          fileExists = true,
+          Some(date),
+          fileExists = Some(true),
           isXiEoriEnabled = true,
           isNotificationPanelEnabled = true
         ).body)
@@ -178,8 +178,8 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
     val sampleView: Document = Jsoup.parse(authorisedToViewInstance.apply(
         form = form,
-        date = date,
-        fileExists = true,
+        date = Some(date),
+        fileExists = Some(true),
         isXiEoriEnabled = true,
         isNotificationPanelEnabled = true)
       .body)
