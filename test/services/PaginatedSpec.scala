@@ -32,14 +32,14 @@ import scala.jdk.CollectionConverters._
 
 class PaginatedSpec extends SpecBase with MustMatchers {
 
-  val app: Application = application().build()
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val messages: Messages = messagesApi.preferred(FakeRequest("GET", "/"))
+  val app: Application                 = application().build()
+  val messagesApi: MessagesApi         = app.injector.instanceOf[MessagesApi]
+  implicit val messages: Messages      = messagesApi.preferred(FakeRequest("GET", "/"))
   private def getUriForPage(page: Int) = s"/foo/bar?foo=bar&page=$page"
-  private val someDescription = "approved accounts"
+  private val someDescription          = "approved accounts"
 
   def somePaginatedViewModel(numberOfItems: Int, requestedPage: Int): ExamplePaginatedViewModel = {
-    val allItems = List.range(1, numberOfItems + 1)
+    val allItems     = List.range(1, numberOfItems + 1)
     val itemsPerPage = 25
     ExamplePaginatedViewModel(allItems, itemsPerPage, requestedPage, someDescription, getUriForPage)
   }
@@ -47,7 +47,7 @@ class PaginatedSpec extends SpecBase with MustMatchers {
   "The paginator" should {
     "Be empty if less than one page of items are available" in {
       val model = somePaginatedViewModel(ITEMS_20, PAGE_1)
-      val html = views.html.components.pager(model).toString()
+      val html  = views.html.components.pager(model).toString()
 
       html.trim must be(emptyString)
     }
@@ -56,7 +56,7 @@ class PaginatedSpec extends SpecBase with MustMatchers {
       val model = somePaginatedViewModel(ITEMS_40, PAGE_1)
       model.visibleItems mustBe (1 to 25)
 
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html            = Jsoup.parse(views.html.components.pager(model).toString())
       val paginatorParser = PaginatorParser(html)
 
       paginatorParser.description mustBe "Showing 1 – 25 of 40 approved accounts"
@@ -70,9 +70,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 2 pages, and we are on the 2nd, display: Prev,1,2" in {
-      val model = somePaginatedViewModel(ITEMS_45, PAGE_2)
+      val model  = somePaginatedViewModel(ITEMS_45, PAGE_2)
       model.visibleItems mustBe (26 to 45)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 26 – 45 of 45 approved accounts"
@@ -89,7 +89,7 @@ class PaginatedSpec extends SpecBase with MustMatchers {
       val model = somePaginatedViewModel(ITEMS_245, PAGE_1)
       model.visibleItems mustBe (1 to 25)
 
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 1 – 25 of 245 approved accounts"
@@ -109,9 +109,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages, and we are on the 2nd, display: Prev,1,2,3,4,Next" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_2)
+      val model  = somePaginatedViewModel(ITEMS_245, PAGE_2)
       model.visibleItems mustBe (26 to 50)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 26 – 50 of 245 approved accounts"
@@ -136,7 +136,7 @@ class PaginatedSpec extends SpecBase with MustMatchers {
       val model = somePaginatedViewModel(ITEMS_245, PAGE_3)
       model.visibleItems mustBe (51 to 75)
 
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 51 – 75 of 245 approved accounts"
@@ -158,9 +158,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages, and we are on the 5th, display: Prev,3,4,5,6,7,Next" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_5)
+      val model  = somePaginatedViewModel(ITEMS_245, PAGE_5)
       model.visibleItems mustBe (101 to 125)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 101 – 125 of 245 approved accounts"
@@ -182,9 +182,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages, and we are on the 8th, display: Prev,6,7,8,9,10,Next" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_8)
+      val model  = somePaginatedViewModel(ITEMS_245, PAGE_8)
       model.visibleItems mustBe (176 to 200)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 176 – 200 of 245 approved accounts"
@@ -206,9 +206,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages, and we are on the 9th, display: Prev6,7,8,9,10,Next" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_9)
+      val model  = somePaginatedViewModel(ITEMS_245, PAGE_9)
       model.visibleItems mustBe (201 to 225)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 201 – 225 of 245 approved accounts"
@@ -230,9 +230,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages, and we are on the 10th, display: Prev,6,7,8,9,10" in {
-      val model = somePaginatedViewModel(ITEMS_245, PAGE_10)
+      val model  = somePaginatedViewModel(ITEMS_245, PAGE_10)
       model.visibleItems mustBe (226 to 245)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 226 – 245 of 245 approved accounts"
@@ -252,9 +252,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 10 pages and 250 elements, and we are on the 10th, display: Prev,6,7,8,9,10, no 11th page" in {
-      val model = somePaginatedViewModel(ITEMS_250, PAGE_10)
+      val model  = somePaginatedViewModel(ITEMS_250, PAGE_10)
       model.visibleItems mustBe (226 to 250)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.description mustBe "Showing 226 – 250 of 250 approved accounts"
@@ -274,9 +274,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 2 pages, and we erroneously open the 0th page, display: 1,2,Next" in {
-      val model = somePaginatedViewModel(ITEMS_40, PAGE_0)
+      val model  = somePaginatedViewModel(ITEMS_40, PAGE_0)
       model.visibleItems mustBe (1 to 25)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.links.length mustBe 3
@@ -289,9 +289,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 2 pages, and we erroneously open the -50th page, display: 1,2,Next" in {
-      val model = somePaginatedViewModel(ITEMS_40, PAGE_NEGATIVE_50)
+      val model  = somePaginatedViewModel(ITEMS_40, PAGE_NEGATIVE_50)
       model.visibleItems mustBe (1 to 25)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.links.length mustBe 3
@@ -304,9 +304,9 @@ class PaginatedSpec extends SpecBase with MustMatchers {
     }
 
     "In case of 2 pages, and we erroneously open the 50th page, display: Prev,1,2" in {
-      val model = somePaginatedViewModel(ITEMS_40, PAGE_50)
+      val model  = somePaginatedViewModel(ITEMS_40, PAGE_50)
       model.visibleItems mustBe (26 to 40)
-      val html = Jsoup.parse(views.html.components.pager(model).toString())
+      val html   = Jsoup.parse(views.html.components.pager(model).toString())
       val parsed = PaginatorParser(html)
 
       parsed.links.length mustBe 3
@@ -321,15 +321,17 @@ class PaginatedSpec extends SpecBase with MustMatchers {
 }
 
 object PaginatorElement {
-  def apply(e: Element): List[PaginatorElement] = {
-    e.select("li").asScala.map(li => {
-      val url = li.select("a").asScala.toList match {
-        case Nil => emptyString
-        case head :: _ => head.attr("href")
+  def apply(e: Element): List[PaginatorElement] =
+    e.select("li")
+      .asScala
+      .map { li =>
+        val url = li.select("a").asScala.toList match {
+          case Nil       => emptyString
+          case head :: _ => head.attr("href")
+        }
+        PaginatorElement(url, li.text())
       }
-      PaginatorElement(url, li.text())
-    }).toList
-  }
+      .toList
 }
 
 object PaginatorParser {
@@ -343,8 +345,10 @@ case class PaginatorElement(url: String, linkText: String)
 
 case class PaginatorParser(description: String, links: Seq[PaginatorElement])
 
-case class ExamplePaginatedViewModel(allItems: Seq[Int],
-                                     itemsPerPage: Int,
-                                     requestedPage: Int,
-                                     itemsDescription: String,
-                                     urlForPage: Int => String) extends Paginated[Int]
+case class ExamplePaginatedViewModel(
+  allItems: Seq[Int],
+  itemsPerPage: Int,
+  requestedPage: Int,
+  itemsDescription: String,
+  urlForPage: Int => String
+) extends Paginated[Int]

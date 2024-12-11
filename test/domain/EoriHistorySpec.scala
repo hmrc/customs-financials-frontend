@@ -27,17 +27,18 @@ class EoriHistorySpec extends SpecBase with MustMatchers {
 
   "it" should {
     "parse ISO_LOCAL_DATE" in {
-      val eoriHistory = new EoriHistory("GB11111",
-        Some(LocalDate.parse("2019-03-01", DateTimeFormatter.ISO_LOCAL_DATE)),
-        None)
+      val eoriHistory =
+        new EoriHistory("GB11111", Some(LocalDate.parse("2019-03-01", DateTimeFormatter.ISO_LOCAL_DATE)), None)
 
       eoriHistory.validFrom.get.toString mustBe "2019-03-01"
     }
 
     "parse ISO_INSTANT" in {
-      val eoriHistory = new EoriHistory("GB11111",
+      val eoriHistory = new EoriHistory(
+        "GB11111",
         Some(LocalDateTime.parse("1985-03-20T19:30:51Z", DateTimeFormatter.ISO_OFFSET_DATE_TIME).toLocalDate),
-        None)
+        None
+      )
 
       eoriHistory.validFrom.get.toString mustBe "1985-03-20"
     }
@@ -105,22 +106,22 @@ class EoriHistorySpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val eori = "test_eori"
-    val year = 2023
-    val month = 10
-    val day = 8
-    val dateInISOOffsetPatternString = "2011-12-03T10:15:30+01:00"
+    val eori                           = "test_eori"
+    val year                           = 2023
+    val month                          = 10
+    val day                            = 8
+    val dateInISOOffsetPatternString   = "2011-12-03T10:15:30+01:00"
     val dateInUnacceptableFormatString = "2011-12-03T10:15:30"
 
-    val date: LocalDate = LocalDate.of(year, month, day)
+    val date: LocalDate                   = LocalDate.of(year, month, day)
     val dateInISOOffsetPattern: LocalDate =
       LocalDate.parse(dateInISOOffsetPatternString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
     val dateInUnacceptablePattern: LocalDate =
       LocalDate.parse(dateInUnacceptableFormatString, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
-    val eoriHistoryOb: EoriHistory = EoriHistory(eori, Some(date), Some(date))
-    val eoriHistoryObWithEmptyDates: EoriHistory = EoriHistory(eori, None, None)
+    val eoriHistoryOb: EoriHistory                            = EoriHistory(eori, Some(date), Some(date))
+    val eoriHistoryObWithEmptyDates: EoriHistory              = EoriHistory(eori, None, None)
     val eoriHistoryObWithDatesInISOOffsetPattern: EoriHistory =
       EoriHistory(eori, Some(dateInISOOffsetPattern), Some(dateInISOOffsetPattern))
 

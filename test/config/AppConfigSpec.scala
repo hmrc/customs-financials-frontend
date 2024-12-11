@@ -23,10 +23,10 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "AppConfig" should {
     "contain correct values for the provided configuration" in new Setup {
-      appConfig.appName shouldBe "customs-financials-frontend"
-      appConfig.loginUrl shouldBe "http://localhost:9553/bas-gateway/sign-in"
+      appConfig.appName          shouldBe "customs-financials-frontend"
+      appConfig.loginUrl         shouldBe "http://localhost:9553/bas-gateway/sign-in"
       appConfig.loginContinueUrl shouldBe "http://localhost:9876/customs/payment-records"
-      appConfig.signOutUrl shouldBe "http://localhost:9553/bas-gateway/sign-out-without-state"
+      appConfig.signOutUrl       shouldBe "http://localhost:9553/bas-gateway/sign-out-without-state"
 
       appConfig.cashAccountTopUpGuidanceUrl shouldBe
         "https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations"
@@ -36,12 +36,12 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
       appConfig.feedbackService shouldBe
         "https://www.development.tax.service.gov.uk/feedback/CDS-FIN"
-      appConfig.timeout shouldBe 900
-      appConfig.countdown shouldBe 120
+      appConfig.timeout         shouldBe 900
+      appConfig.countdown       shouldBe 120
 
       appConfig.helpMakeGovUkBetterUrl shouldBe
         "https://signup.take-part-in-research.service.gov.uk?" +
-          "utm_campaign=CDSfinancials&utm_source=Other&utm_medium=other&t=HMRC&id=249"
+        "utm_campaign=CDSfinancials&utm_source=Other&utm_medium=other&t=HMRC&id=249"
 
       appConfig.subscribeCdsUrl shouldBe
         "https://www.tax.service.gov.uk/customs-enrolment-services/cds/subscribe"
@@ -98,7 +98,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val app: Application     = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   }
 }

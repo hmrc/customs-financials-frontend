@@ -20,9 +20,8 @@ import domain.FileFormat.Pdf
 
 import java.time.LocalDate
 
-case class SecurityStatementsByPeriod(startDate: LocalDate,
-                                      endDate: LocalDate,
-                                      files: Seq[SecurityStatementFile]) extends Ordered[SecurityStatementsByPeriod] {
+case class SecurityStatementsByPeriod(startDate: LocalDate, endDate: LocalDate, files: Seq[SecurityStatementFile])
+    extends Ordered[SecurityStatementsByPeriod] {
   val pdf: Option[SecurityStatementFile] = files.find(_.fileFormat == Pdf)
 
   override def compare(that: SecurityStatementsByPeriod): Int = startDate.compareTo(that.startDate)

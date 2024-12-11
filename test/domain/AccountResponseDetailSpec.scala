@@ -36,9 +36,9 @@ class AccountResponseDetailSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val eori = "test_eori"
+    val eori          = "test_eori"
     val referenceDate = "2023-10-12"
-    val accNumber = "12345678"
+    val accNumber     = "12345678"
 
     val accRes: AccountResponse = AccountResponse(accNumber, "dd", CDS, None, None, viewBalanceIsGranted = true)
 
@@ -55,7 +55,8 @@ class AccountResponseDetailSpec extends SpecBase with MustMatchers {
         Some(referenceDate),
         Some(Seq(ddAccRes)),
         Some(Seq(ggAccRes)),
-        Some(Seq(cashAccRes)))
+        Some(Seq(cashAccRes))
+      )
 
     val accResDetailObWithNoAccount: AccountResponseDetail =
       AccountResponseDetail(Some(eori), Some(referenceDate), None, None, None)

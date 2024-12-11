@@ -66,17 +66,20 @@ class EoriBannerSpec extends SpecBase with MustMatchers {
 
     implicit val msgs: Messages = messages(app)
 
-    val eori = "test_eori"
+    val eori        = "test_eori"
     val companyName = "test_company"
-    val xiEori = "XI12345678"
+    val xiEori      = "XI12345678"
 
-    def viewDoc(eori: Option[String] = None,
-                companyName: Option[String] = None,
-                xiEori: String): Document =
-      Jsoup.parse(app.injector.instanceOf[eori_banner].apply(
-        eori,
-        companyName,
-        xiEori
-      ).body)
+    def viewDoc(eori: Option[String] = None, companyName: Option[String] = None, xiEori: String): Document =
+      Jsoup.parse(
+        app.injector
+          .instanceOf[eori_banner]
+          .apply(
+            eori,
+            companyName,
+            xiEori
+          )
+          .body
+      )
   }
 }

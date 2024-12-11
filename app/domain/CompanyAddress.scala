@@ -18,10 +18,7 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CompanyAddress(streetAndNumber: String,
-                          city: String,
-                          postalCode: Option[String],
-                          countryCode: String)
+case class CompanyAddress(streetAndNumber: String, city: String, postalCode: Option[String], countryCode: String)
 
 object CompanyAddress {
   implicit val format: OFormat[CompanyAddress] = Json.format[CompanyAddress]

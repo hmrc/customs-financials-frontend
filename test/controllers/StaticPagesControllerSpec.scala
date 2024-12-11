@@ -20,7 +20,7 @@ import play.api.test.Helpers._
 import utils.SpecBase
 import utils.MustMatchers
 
-class StaticPagesControllerSpec extends SpecBase with MustMatchers{
+class StaticPagesControllerSpec extends SpecBase with MustMatchers {
 
   "accessibility page" should {
     "return OK / 303" in {
@@ -28,7 +28,7 @@ class StaticPagesControllerSpec extends SpecBase with MustMatchers{
 
       running(app) {
         val request = fakeRequest(GET, routes.StaticPagesController.accessibility.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) mustBe SEE_OTHER
       }

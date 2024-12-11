@@ -33,14 +33,19 @@ class InputTextSpec extends SpecBase with MustMatchers {
   "InputText" should {
     "display the correct view" in new Setup {
       running(app) {
-        val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
-          form = validForm,
-          id = id,
-          name = name,
-          label = labelMsgKey,
-          isPageHeading = false,
-          hint = None
-        ).body)
+        val view: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[inputText]
+            .apply(
+              form = validForm,
+              id = id,
+              name = name,
+              label = labelMsgKey,
+              isPageHeading = false,
+              hint = None
+            )
+            .body
+        )
 
         view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
         view.getElementById("value").`val`() mustBe "GB123456789012"
@@ -52,28 +57,38 @@ class InputTextSpec extends SpecBase with MustMatchers {
     }
 
     "display the correct hint" in new Setup {
-      val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
-        form = validForm,
-        id = id,
-        name = name,
-        label = labelMsgKey,
-        isPageHeading = false,
-        hint = Some(hintText)
-      ).body)
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[inputText]
+          .apply(
+            form = validForm,
+            id = id,
+            name = name,
+            label = labelMsgKey,
+            isPageHeading = false,
+            hint = Some(hintText)
+          )
+          .body
+      )
 
       view.getElementById("value-hint").html() mustBe hintText
     }
 
     "display error if form has any error" in new Setup {
       running(app) {
-        val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
-          form = invalidForm,
-          id = id,
-          name = name,
-          label = labelMsgKey,
-          isPageHeading = false,
-          hint = None
-        ).body)
+        val view: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[inputText]
+            .apply(
+              form = invalidForm,
+              id = id,
+              name = name,
+              label = labelMsgKey,
+              isPageHeading = false,
+              hint = None
+            )
+            .body
+        )
 
         view.getElementById("value-error").childNodes().size() must be > 0
         view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
@@ -81,14 +96,18 @@ class InputTextSpec extends SpecBase with MustMatchers {
     }
 
     "display label with govuk-label--xl class" in new Setup {
-      val view: Document = Jsoup.parse(app.injector.instanceOf[inputText].apply(
-        form = validForm,
-        id = id,
-        name = name,
-        label = labelMsgKey,
-        isPageHeading = true,
-        hint = None
-      ).body
+      val view: Document = Jsoup.parse(
+        app.injector
+          .instanceOf[inputText]
+          .apply(
+            form = validForm,
+            id = id,
+            name = name,
+            label = labelMsgKey,
+            isPageHeading = true,
+            hint = None
+          )
+          .body
       )
 
       view.getElementsByClass("govuk-label--xl").text() mustBe msgs(labelMsgKey)
@@ -98,14 +117,14 @@ class InputTextSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val app: Application        = application().build()
     implicit val msgs: Messages = messages(app)
 
     val labelMsgKey = "cf.search.authorities"
-    val id = "value"
-    val name = "value"
+    val id          = "value"
+    val name        = "value"
 
-    val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "GB123456789012"))
+    val validForm: Form[String]   = new EoriNumberFormProvider().apply().bind(Map("value" -> "GB123456789012"))
     val invalidForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "ABC"))
 
     val hintText = "hint text"

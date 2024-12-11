@@ -30,26 +30,27 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AuthorizedRequestReceivedController @Inject()(authenticate: IdentifierAction,
-                                                    apiService: ApiService,
-                                                    errorHandler: ErrorHandler,
-                                                    customsDataStore: DataStoreService,
-                                                    implicit val mcc: MessagesControllerComponents,
-                                                    authorisedToViewRequestReceived: authorised_to_view_request_received,
-                                                    eoriNumberFormProvider: EoriNumberFormProvider)
-                                                   (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport {
+class AuthorizedRequestReceivedController @Inject() (
+  authenticate: IdentifierAction,
+  apiService: ApiService,
+  errorHandler: ErrorHandler,
+  customsDataStore: DataStoreService,
+  implicit val mcc: MessagesControllerComponents,
+  authorisedToViewRequestReceived: authorised_to_view_request_received,
+  eoriNumberFormProvider: EoriNumberFormProvider
+)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
+    with I18nSupport {
 
-  val log: LoggerLike = Logger(this.getClass)
+  val log: LoggerLike    = Logger(this.getClass)
   val form: Form[String] = eoriNumberFormProvider()
 
   def requestAuthoritiesCsv(): Action[AnyContent] = authenticate async { implicit req =>
-
     customsDataStore.getEmail(req.user.eori).flatMap {
       case Right(email) =>
         apiService.requestAuthoritiesCsv(req.user.eori, req.user.xiEori).flatMap {
           case Right(_) => Future.successful(Ok(authorisedToViewRequestReceived(email.value)))
-          case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
+          case _        => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))
         }
 
       case _ => Future.successful(InternalServerError(errorHandler.technicalDifficulties()))

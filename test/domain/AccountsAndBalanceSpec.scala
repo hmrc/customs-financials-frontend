@@ -27,13 +27,13 @@ class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
     "be able parse account status from json" in {
 
       val statusAndCode = List(
-        "Open" -> AccountStatusOpen,
-        "open" -> AccountStatusOpen,
+        "Open"      -> AccountStatusOpen,
+        "open"      -> AccountStatusOpen,
         "Suspended" -> AccountStatusSuspended,
         "suspended" -> AccountStatusSuspended,
-        "Closed" -> AccountStatusClosed,
-        "closed" -> AccountStatusClosed,
-        "Unknown" -> AccountStatusOpen
+        "Closed"    -> AccountStatusClosed,
+        "closed"    -> AccountStatusClosed,
+        "Unknown"   -> AccountStatusOpen
       )
 
       statusAndCode.foreach { case (statusCode, status) =>
@@ -49,8 +49,14 @@ class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
         val account = Json.parse(json).as[AccountResponse]
 
         val expectedAccount =
-          AccountResponse("123456", "GeneralGuarantee", "EORI1234", Some(status), viewBalanceIsGranted = true,
-            accountStatusID = None)
+          AccountResponse(
+            "123456",
+            "GeneralGuarantee",
+            "EORI1234",
+            Some(status),
+            viewBalanceIsGranted = true,
+            accountStatusID = None
+          )
 
         account mustBe expectedAccount
       }
@@ -68,7 +74,14 @@ class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
       val account = Json.parse(json).as[AccountResponse]
 
       val expectedAccount =
-        AccountResponse("123456", "DutyDeferment", "EORI1234", None, viewBalanceIsGranted = true, accountStatusID = None)
+        AccountResponse(
+          "123456",
+          "DutyDeferment",
+          "EORI1234",
+          None,
+          viewBalanceIsGranted = true,
+          accountStatusID = None
+        )
 
       account mustBe expectedAccount
     }
@@ -85,8 +98,15 @@ class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
 
       val account = Json.parse(json).as[AccountResponse]
 
-      val expectedAccount = AccountResponse("123456", "DutyDeferment", "EORI1234", None,
-        viewBalanceIsGranted = true, accountStatusID = None, isleOfManFlag = Some(true))
+      val expectedAccount = AccountResponse(
+        "123456",
+        "DutyDeferment",
+        "EORI1234",
+        None,
+        viewBalanceIsGranted = true,
+        accountStatusID = None,
+        isleOfManFlag = Some(true)
+      )
 
       account mustBe expectedAccount
     }
@@ -103,7 +123,7 @@ class AccountsAndBalanceSpec extends SpecBase with MustMatchers {
 
       val initialAccountStatusID: CDSAccountStatusId = DefermentAccountAvailable
 
-      val js = Json.toJson(initialAccountStatusID)
+      val js       = Json.toJson(initialAccountStatusID)
       val fromJson = Json.fromJson[CDSAccountStatusId](js).get
 
       fromJson mustBe initialAccountStatusID

@@ -34,14 +34,14 @@ class PartialHomeViewSpec extends SpecBase with MustMatchers {
   "Customs Financials Partial Home View" should {
     "display header as a link text" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-header__link")
-          .text mustBe "GOV.UK Manage import duties and VAT accounts"
+        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK Manage import duties and VAT accounts"
       }
     }
 
     "display a heading" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-heading-xl")
+        view
+          .getElementsByClass("govuk-heading-xl")
           .text mustBe "Sorry, some parts of the service are unavailable at the moment"
       }
     }
@@ -74,12 +74,12 @@ class PartialHomeViewSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup extends I18nSupport {
-    val eori: String = "EORI0123"
+    val eori: String                   = "EORI0123"
     val notificationsKeys: Seq[String] = Seq("c79")
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     def view: Document =
       Jsoup.parse(app.injector.instanceOf[customs_financials_partial_home].apply(eori, notificationsKeys).body)

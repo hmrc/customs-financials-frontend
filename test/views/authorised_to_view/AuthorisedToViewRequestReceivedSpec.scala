@@ -78,7 +78,8 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
 
       "display link with correct href" in new Setup {
         running(app) {
-          val linkElement = view.getElementById("cf.authorities.request.received.link")
+          val linkElement = view
+            .getElementById("cf.authorities.request.received.link")
             .getElementsByTag("a")
             .first()
 
@@ -91,10 +92,9 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val eori: String = "EORI0123"
-    val email = "email@emailland.com"
+    val email        = "email@emailland.com"
 
-    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-      eori, false, "123", "1", Some(1), "2345678")
+    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(eori, false, "123", "1", Some(1), "2345678")
 
     val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink, accountLink)
 
@@ -102,16 +102,16 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
       streetAndNumber = "123Street",
       city = "city",
       postalCode = Some("postcode"),
-      countryCode = "CountryCode")
+      countryCode = "CountryCode"
+    )
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     val expectedUrl: String = appConfig.manageAuthoritiesFrontendUrl
 
-    def view: Document = Jsoup.parse(
-      app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
+    def view: Document = Jsoup.parse(app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
 
     implicit val msg: Messages = messages(app)
   }

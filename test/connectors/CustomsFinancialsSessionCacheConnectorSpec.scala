@@ -34,7 +34,7 @@ import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialsSessionCacheConnectorSpec
-  extends SpecBase
+    extends SpecBase
     with ScalaFutures
     with FutureAwaits
     with DefaultAwaitTimeout
@@ -104,11 +104,9 @@ class CustomsFinancialsSessionCacheConnectorSpec
 
         val result: Option[HttpResponse] = await(connector.getSessionId(sessionId.value))
 
-        result.map {
-          res => {
-            res.status mustBe OK
-            res.body mustBe "Some_String"
-          }
+        result.map { res =>
+          res.status mustBe OK
+          res.body mustBe "Some_String"
         }
       }
     }
@@ -129,40 +127,84 @@ class CustomsFinancialsSessionCacheConnectorSpec
   }
 
   trait Setup {
-    val sessionId: SessionId = SessionId(UUID.randomUUID().toString)
-    val url = "/some-url"
+    val sessionId: SessionId                            = SessionId(UUID.randomUUID().toString)
+    val url                                             = "/some-url"
     val sessionCacheLinks: Seq[SessionCacheAccountLink] = Seq(
-      SessionCacheAccountLink("eori1", isNiAccount = false, "dan1", AccountStatusOpen,
-        Option(DefermentAccountAvailable), "link1"),
-      SessionCacheAccountLink("eori2", isNiAccount = false, "dan2", AccountStatusClosed,
-        Option(AccountCancelled), "link1")
+      SessionCacheAccountLink(
+        "eori1",
+        isNiAccount = false,
+        "dan1",
+        AccountStatusOpen,
+        Option(DefermentAccountAvailable),
+        "link1"
+      ),
+      SessionCacheAccountLink(
+        "eori2",
+        isNiAccount = false,
+        "dan2",
+        AccountStatusClosed,
+        Option(AccountCancelled),
+        "link1"
+      )
     )
 
     val someLinks: Seq[AccountLink] = Seq(
-      AccountLink(sessionId.value, "eori1", isNiAccount = false, "dan1",
-        AccountStatusOpen, Option(DefermentAccountAvailable), "link1", LocalDateTime.now),
-      AccountLink(sessionId.value, "eori2", isNiAccount = false, "dan2",
-        AccountStatusClosed, Option(AccountCancelled), "link1", LocalDateTime.now)
+      AccountLink(
+        sessionId.value,
+        "eori1",
+        isNiAccount = false,
+        "dan1",
+        AccountStatusOpen,
+        Option(DefermentAccountAvailable),
+        "link1",
+        LocalDateTime.now
+      ),
+      AccountLink(
+        sessionId.value,
+        "eori2",
+        isNiAccount = false,
+        "dan2",
+        AccountStatusClosed,
+        Option(AccountCancelled),
+        "link1",
+        LocalDateTime.now
+      )
     )
 
-    val accountLinkRequest = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
-    val mockAppConfig: AppConfig = mock[AppConfig]
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val accountLinkRequest             = new AccountLinksRequest(sessionId.value, sessionCacheLinks)
+    val mockAppConfig: AppConfig       = mock[AppConfig]
+    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val accountLink: AccountLink = AccountLink(sessionId.value, "eori1", isNiAccount = false, "1234567",
-      AccountStatusOpen, Option(DefermentAccountAvailable), "link1", LocalDateTime.now)
+    val accountLink: AccountLink = AccountLink(
+      sessionId.value,
+      "eori1",
+      isNiAccount = false,
+      "1234567",
+      AccountStatusOpen,
+      Option(DefermentAccountAvailable),
+      "link1",
+      LocalDateTime.now
+    )
 
-    val sessionAccountCacheLink: SessionCacheAccountLink = SessionCacheAccountLink("eori1", isNiAccount = false,
-      "1234567", AccountStatusOpen, Option(DefermentAccountAvailable), "link1")
+    val sessionAccountCacheLink: SessionCacheAccountLink = SessionCacheAccountLink(
+      "eori1",
+      isNiAccount = false,
+      "1234567",
+      AccountStatusOpen,
+      Option(DefermentAccountAvailable),
+      "link1"
+    )
 
     when(mockAppConfig.customsFinancialsSessionCacheUrl).thenReturn(url)
 
-    val app: Application = application().overrides(
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
   }
 }

@@ -44,12 +44,12 @@ class AccountNotAvailableSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val app: Application = application().build()
-    val eori = "GB000000000001"
+    val app: Application                     = application().build()
+    val eori                                 = "GB000000000001"
     val notificationMessageKeys: Seq[String] = Seq("key1", "key2")
 
-    implicit val appConfig: AppConfig = app.injector.instanceOf[config.AppConfig]
-    implicit val msg: Messages = messages(app)
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[config.AppConfig]
+    implicit val msg: Messages                                = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
     val view: Document = Jsoup.parse(

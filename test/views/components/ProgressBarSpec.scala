@@ -31,13 +31,13 @@ class ProgressBarSpec extends SpecBase with MustMatchers {
   "ProgressBar" should {
 
     "should generate correct HTML" in {
-      val usedPercentage = 90
+      val usedPercentage   = 90
       val app: Application = application().build()
 
       running(app) {
-        val view = app.injector.instanceOf[progress_bar]
+        val view                          = app.injector.instanceOf[progress_bar]
         val output: HtmlFormat.Appendable = view(usedPercentage)
-        val html: Document = Jsoup.parse(contentAsString(output))
+        val html: Document                = Jsoup.parse(contentAsString(output))
 
         html.getElementsByTag("span").attr("class") must include("graph-90")
       }

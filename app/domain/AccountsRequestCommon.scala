@@ -29,24 +29,23 @@ case class AccountsRequestCommon(receiptDate: String, acknowledgementReference: 
 
 object AccountsRequestCommon {
   private val MDG_ACK_REF_LENGTH = 32
-  private val RANDOM_INT_LENGTH = 10
+  private val RANDOM_INT_LENGTH  = 10
 
   def generate: AccountsRequestCommon = {
-    val isoLocalDateTime = DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS))
+    val isoLocalDateTime  = DateTimeFormatter.ISO_INSTANT.format(Instant.now().truncatedTo(ChronoUnit.SECONDS))
     val acknowledgmentRef = generateStringOfRandomDigits(MDG_ACK_REF_LENGTH)
-    val regime = CDS
+    val regime            = CDS
 
     AccountsRequestCommon(isoLocalDateTime, acknowledgmentRef, regime)
   }
 
-  private def generateStringOfRandomDigits(length: Int): String = {
+  private def generateStringOfRandomDigits(length: Int): String =
     (1 to length).map(_ => Random.nextInt(RANDOM_INT_LENGTH)).mkString
-  }
 
   implicit val format: OFormat[AccountsRequestCommon] = Json.format[AccountsRequestCommon]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+    writes: Writes[T],
+    jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

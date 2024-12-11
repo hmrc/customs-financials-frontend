@@ -46,39 +46,78 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "CustomsFinancialsHomeController" should {
     val eori1 = "EORI0123"
     val eori2 = "EORI3210"
-    val dan1 = "DAN01234"
-    val dan2 = "DAN43210"
+    val dan1  = "DAN01234"
+    val dan2  = "DAN43210"
 
     "FinancialsHomeModel generate links for each Duty Deferment Account" in {
       def randomFloat: Float = Random.nextFloat()
 
       def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
-      val sessionId = SessionId("session")
-      val eoriNumber = newUser(Seq.empty).eori
+      val sessionId   = SessionId("session")
+      val eoriNumber  = newUser(Seq.empty).eori
       val companyName = Some("Company Name 1")
 
       val cdsAccounts = Seq(
-        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan1, eori1, isNiAccount = false,
-          AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal),
-            Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)),
-          viewBalanceIsGranted = true, isIsleOfMan = false))),
-
-        CDSAccounts(eoriNumber, None, Seq(DutyDefermentAccount(dan2, eori2, isNiAccount = false,
-          AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal),
-            Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal)),
-          viewBalanceIsGranted = true, isIsleOfMan = false)))
+        CDSAccounts(
+          eoriNumber,
+          None,
+          Seq(
+            DutyDefermentAccount(
+              dan1,
+              eori1,
+              isNiAccount = false,
+              AccountStatusOpen,
+              DefermentAccountAvailable,
+              DutyDefermentBalance(
+                Some(randomBigDecimal),
+                Some(randomBigDecimal),
+                Some(randomBigDecimal),
+                Some(randomBigDecimal)
+              ),
+              viewBalanceIsGranted = true,
+              isIsleOfMan = false
+            )
+          )
+        ),
+        CDSAccounts(
+          eoriNumber,
+          None,
+          Seq(
+            DutyDefermentAccount(
+              dan2,
+              eori2,
+              isNiAccount = false,
+              AccountStatusOpen,
+              DefermentAccountAvailable,
+              DutyDefermentBalance(
+                Some(randomBigDecimal),
+                Some(randomBigDecimal),
+                Some(randomBigDecimal),
+                Some(randomBigDecimal)
+              ),
+              viewBalanceIsGranted = true,
+              isIsleOfMan = false
+            )
+          )
+        )
       )
 
-      val newApp = application().build()
+      val newApp    = application().build()
       val appConfig = newApp.injector.instanceOf[AppConfig]
 
       running(newApp) {
-        val controller = newApp.injector.instanceOf[CustomsFinancialsHomeController]
+        val controller   = newApp.injector.instanceOf[CustomsFinancialsHomeController]
         val accountLinks = controller.createAccountLinks(sessionId, cdsAccounts)
 
-        val model = FinancialsHomeModel(eoriNumber,
-          companyName, cdsAccounts, notificationMessageKeys = List(), accountLinks, None)
+        val model = FinancialsHomeModel(
+          eoriNumber,
+          companyName,
+          cdsAccounts,
+          notificationMessageKeys = List(),
+          accountLinks,
+          None
+        )
 
         model.dutyDefermentAccountDetailsLinks()(appConfig)((eori1, dan1))
         model.dutyDefermentAccountDetailsLinks()(appConfig)((eori2, dan2))
@@ -90,8 +129,8 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     "display 'Your customs financial accounts' and EORI" in new Setup {
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
         html.getElementsByTag("h1").text mustBe "Your import duties and VAT accounts"
       }
@@ -101,8 +140,8 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "have the Import VAT section heading" in new Setup {
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.getElementsContainingText("Import VAT certificates (C79)").isEmpty mustBe false
     }
@@ -111,13 +150,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "not show notification even when there is new C97Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(C79Certificate, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.getElementsByClass("notification-panel").isEmpty mustBe true
     }
@@ -126,13 +164,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new C97Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(C79Certificate, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.containsElementById("notification-panel")
     }
@@ -142,11 +179,10 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     "show the Import adjustments section heading" in new Setup {
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
-        html.getElementsByTag("h2")
-          .asScala.exists(_.text == "Notification of adjustment statements") mustBe true
+        html.getElementsByTag("h2").asScala.exists(_.text == "Notification of adjustment statements") mustBe true
       }
     }
   }
@@ -155,13 +191,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
     val notifications: List[Notification] = List(Notification(SecurityStatement, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.containsElementById("notification-panel")
     }
@@ -171,8 +206,8 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     "omit the Import adjustments section heading" in new Setup {
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
         html.getElementsByTag("h2").asScala.exists(_.text.contains("Import adjustments")) mustBe false
       }
@@ -182,24 +217,22 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show the Import VAT section heading" in new Setup {
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
-      html.getElementsByTag("h2")
-        .asScala.exists(_.text.contains("Postponed import VAT statements")) mustBe true
+      html.getElementsByTag("h2").asScala.exists(_.text.contains("Postponed import VAT statements")) mustBe true
     }
   }
 
   "show notification when there is new Postponed VAT Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(PostponedVATStatement, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
       html.containsElementById("notification-panel")
     }
   }
@@ -207,13 +240,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new Standing authorities csv file available" in new Setup {
     val notifications: List[Notification] = List(Notification(StandingAuthority, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.containsElementById("notification-panel")
     }
@@ -222,13 +254,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new Cash Account Statement file available" in new Setup {
     val notifications: List[Notification] = List(Notification(CDSCashAccount, isRequested = true))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.containsElementById("notification-panel")
     }
@@ -241,13 +272,12 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
       Notification(CDSCashAccount, isRequested = true)
     )
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-      Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-      val result = route(app, request).value
-      val html = Jsoup.parse(contentAsString(result))
+      val result  = route(app, request).value
+      val html    = Jsoup.parse(contentAsString(result))
 
       html.containsElementById("notification-panel")
     }
@@ -256,81 +286,91 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "partial landing page" should {
     "show error message as heading text" in {
 
-      val mockAccounts = mock[CDSAccounts]
-      val mockApiService = mock[ApiService]
+      val mockAccounts            = mock[CDSAccounts]
+      val mockApiService          = mock[ApiService]
       val mockNotificationService = mock[NotificationService]
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService)
+        )
+        .build()
 
       val eoriNumber = newUser(Seq.empty).eori
 
-      when(mockNotificationService.fetchNotifications(
-        eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
+      when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
-        html.getElementsByClass("govuk-heading-xl")
+        html
+          .getElementsByClass("govuk-heading-xl")
           .text mustBe "Sorry, some parts of the service are unavailable at the moment"
       }
     }
 
     "show notifications for only C79 PVAT & Securities statements" in {
 
-      val mockAccounts = mock[CDSAccounts]
-      val mockApiService = mock[ApiService]
+      val mockAccounts            = mock[CDSAccounts]
+      val mockApiService          = mock[ApiService]
       val mockNotificationService = mock[NotificationService]
-      val mockDataStoreService = mock[DataStoreService]
+      val mockDataStoreService    = mock[DataStoreService]
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService)
+        )
+        .build()
 
-      val notifications = List(Notification(C79Certificate, isRequested = false),
+      val notifications = List(
+        Notification(C79Certificate, isRequested = false),
         Notification(PostponedVATStatement, isRequested = false),
         Notification(SecurityStatement, isRequested = false),
         Notification(DutyDefermentStatement, isRequested = true),
         Notification(DutyDefermentStatement, isRequested = false),
-        Notification(StandingAuthority, isRequested = false))
+        Notification(StandingAuthority, isRequested = false)
+      )
 
       val eoriNumber = newUser(Seq.empty).eori
 
-      when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(
-        Future.successful(notifications))
+      when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any))
+        .thenReturn(Future.successful(notifications))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val request           = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
+        val result            = route(app, request).value
+        val html              = Jsoup.parse(contentAsString(result))
         val notificationsText = html.select("#notification-panel p").asScala.map(_.text()).toList
 
-        notificationsText mustBe List("You have a new import adjustments statement",
+        notificationsText mustBe List(
+          "You have a new import adjustments statement",
           "You have a new import VAT (C79) certificate",
-          "You have a new postponed import VAT statement")
+          "You have a new postponed import VAT statement"
+        )
       }
     }
 
     "show multiple notification message when multiple of the same notifications are present" in {
-      val mockAccounts = mock[CDSAccounts]
-      val mockApiService = mock[ApiService]
+      val mockAccounts            = mock[CDSAccounts]
+      val mockApiService          = mock[ApiService]
       val mockNotificationService = mock[NotificationService]
-      val mockDataStoreService = mock[DataStoreService]
+      val mockDataStoreService    = mock[DataStoreService]
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService)
+        )
+        .build()
 
       val notifications = List(
         Notification(C79Certificate, isRequested = false),
@@ -342,14 +382,15 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
         Notification(SecurityStatement, isRequested = false),
         Notification(SecurityStatement, isRequested = false),
         Notification(SecurityStatement, isRequested = true),
-        Notification(SecurityStatement, isRequested = true))
+        Notification(SecurityStatement, isRequested = true)
+      )
 
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(notifications))
 
       running(app) {
-        val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val request           = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
+        val result            = route(app, request).value
+        val html              = Jsoup.parse(contentAsString(result))
         val notificationsText = html.select("#notification-panel p").asScala.map(_.text()).toList
 
         notificationsText mustBe List(
@@ -365,34 +406,35 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
   "redirect to partial landing page" when {
     "failed to get all accounts" in {
-      val mockAccounts = mock[CDSAccounts]
-      val mockApiService = mock[ApiService]
-      val mockNotificationService = mock[NotificationService]
-      val mockDataStoreService = mock[DataStoreService]
+      val mockAccounts                   = mock[CDSAccounts]
+      val mockApiService                 = mock[ApiService]
+      val mockNotificationService        = mock[NotificationService]
+      val mockDataStoreService           = mock[DataStoreService]
       val mockManageAuthoritiesConnector = mock[CustomsManageAuthoritiesConnector]
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService),
-        inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService),
+          inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
+        )
+        .build()
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-        Future.successful(Right(Email("last.man@standing.co.uk"))))
+      when(mockDataStoreService.getEmail(any)(any))
+        .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
-      when(mockApiService.getAccounts(any)(any)).thenReturn(
-        Future.failed(new InternalServerException("SPS is Down")))
+      when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new InternalServerException("SPS is Down")))
 
       when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
         .thenReturn(Future.successful(Ok))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.pageWithoutAccounts.url
@@ -402,11 +444,11 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
   "get message keys" should {
     "find supported sdes notification" in {
-      val app = application().overrides().build()
+      val app        = application().overrides().build()
       val controller = app.injector.instanceOf[CustomsFinancialsHomeController]
 
       running(app) {
-        val notifications = List(Notification(C79Certificate, isRequested = false))
+        val notifications             = List(Notification(C79Certificate, isRequested = false))
         val actualResult: Seq[String] = controller.getNotificationMessageKeys(notifications)
 
         actualResult mustBe Seq("c79")
@@ -414,11 +456,11 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     }
 
     "ignore the unsupported sdes notification" in {
-      val app = application().overrides().build()
+      val app        = application().overrides().build()
       val controller = app.injector.instanceOf[CustomsFinancialsHomeController]
 
       running(app) {
-        val notifications = List(Notification(PostponedVATAmendedStatement, isRequested = true))
+        val notifications             = List(Notification(PostponedVATAmendedStatement, isRequested = true))
         val actualResult: Seq[String] = controller.getNotificationMessageKeys(notifications)
 
         actualResult mustBe Seq()
@@ -428,29 +470,30 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
   "redirect to account unavailable page " when {
     "failed to get all accounts" in {
-      val mockAccounts = mock[CDSAccounts]
-      val mockApiService = mock[ApiService]
+      val mockAccounts            = mock[CDSAccounts]
+      val mockApiService          = mock[ApiService]
       val mockNotificationService = mock[NotificationService]
-      val mockDataStoreService = mock[DataStoreService]
+      val mockDataStoreService    = mock[DataStoreService]
 
-      val app = application().overrides(
-        inject.bind[CDSAccounts].toInstance(mockAccounts),
-        inject.bind[ApiService].toInstance(mockApiService),
-        inject.bind[NotificationService].toInstance(mockNotificationService),
-        inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
+      val app = application()
+        .overrides(
+          inject.bind[CDSAccounts].toInstance(mockAccounts),
+          inject.bind[ApiService].toInstance(mockApiService),
+          inject.bind[NotificationService].toInstance(mockNotificationService),
+          inject.bind[DataStoreService].toInstance(mockDataStoreService)
+        )
+        .build()
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(
-
-        Right(Email("last.man@standing.co.uk"))))
+      when(mockDataStoreService.getEmail(any)(any))
+        .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
       when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
 
-      when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(
-        new GatewayTimeoutException("Request Timeout")))
+      when(mockApiService.getAccounts(any)(any))
+        .thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe routes.CustomsFinancialsHomeController.showAccountUnavailable.url
       }
@@ -464,10 +507,10 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     val eoriNumber = "testEori1"
 
     val someAccounts: List[CDSAccount] = {
-      val someGuaranteeAccountNumber = "1234567"
-      val someGuaranteeLimit = 56789
+      val someGuaranteeAccountNumber    = "1234567"
+      val someGuaranteeLimit            = 56789
       val someAvailableGuaranteeBalance = 98765.43
-      val someGuaranteeAccount = GeneralGuaranteeAccount(
+      val someGuaranteeAccount          = GeneralGuaranteeAccount(
         someGuaranteeAccountNumber,
         eoriNumber,
         AccountStatusOpen,
@@ -475,21 +518,30 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
         Some(GeneralGuaranteeBalance(BigDecimal(someGuaranteeLimit), BigDecimal(someAvailableGuaranteeBalance)))
       )
 
-      val someCashAccount = CashAccount("1000001", eoriNumber, AccountStatusOpen,
-        DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(BALANCE_888))))
+      val someCashAccount = CashAccount(
+        "1000001",
+        eoriNumber,
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        CDSCashBalance(Some(BigDecimal(BALANCE_888)))
+      )
 
       val ownAccounts = (1 until 3).map { _ =>
         DutyDefermentAccount(
           Random.alphanumeric.take(LENGTH_8).mkString,
-          eoriNumber, isNiAccount = false,
+          eoriNumber,
+          isNiAccount = false,
           AccountStatusOpen,
           DefermentAccountAvailable,
           DutyDefermentBalance(
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
-            Some(BigDecimal(Random.nextFloat().toDouble))),
-          viewBalanceIsGranted = true, isIsleOfMan = false)
+            Some(BigDecimal(Random.nextFloat().toDouble))
+          ),
+          viewBalanceIsGranted = true,
+          isIsleOfMan = false
+        )
       }.toList
 
       val authorizedToViewAccounts = (1 until 2).map { _ =>
@@ -503,8 +555,11 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
             Some(BigDecimal(Random.nextFloat().toDouble)),
-            Some(BigDecimal(Random.nextFloat().toDouble)))
-          , viewBalanceIsGranted = true, isIsleOfMan = false)
+            Some(BigDecimal(Random.nextFloat().toDouble))
+          ),
+          viewBalanceIsGranted = true,
+          isIsleOfMan = false
+        )
       }.toList
 
       ownAccounts ++ authorizedToViewAccounts ++ List(someGuaranteeAccount) ++ List(someCashAccount)
@@ -515,10 +570,10 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
     val xi: XiEoriInformationReponse = XiEoriInformationReponse("Some XiEori", "yes", add)
 
-    val mockAccounts: CDSAccounts = mock[CDSAccounts]
-    val mockApiService: ApiService = mock[ApiService]
-    val mockNotificationService: NotificationService = mock[NotificationService]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockAccounts: CDSAccounts                                         = mock[CDSAccounts]
+    val mockApiService: ApiService                                        = mock[ApiService]
+    val mockNotificationService: NotificationService                      = mock[NotificationService]
+    val mockDataStoreService: DataStoreService                            = mock[DataStoreService]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
     val mockManageAuthoritiesConnector: CustomsManageAuthoritiesConnector = mock[CustomsManageAuthoritiesConnector]
 
@@ -529,26 +584,27 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
 
-    when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-      Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
     when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
 
-    when(mockSessionCacheConnector.storeSession(any, any)(any)).thenReturn(
-      Future.successful(HttpResponse(Status.OK, emptyString)))
+    when(mockSessionCacheConnector.storeSession(any, any)(any))
+      .thenReturn(Future.successful(HttpResponse(Status.OK, emptyString)))
 
     when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
     when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
       .thenReturn(Future.successful(Ok))
 
-    val app: Application = application().overrides(
-      inject.bind[CDSAccounts].toInstance(mockAccounts),
-      inject.bind[ApiService].toInstance(mockApiService),
-      inject.bind[NotificationService].toInstance(mockNotificationService),
-      inject.bind[DataStoreService].toInstance(mockDataStoreService),
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
-      inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[CDSAccounts].toInstance(mockAccounts),
+        inject.bind[ApiService].toInstance(mockApiService),
+        inject.bind[NotificationService].toInstance(mockNotificationService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
+        inject.bind[CustomsManageAuthoritiesConnector].toInstance(mockManageAuthoritiesConnector)
+      )
+      .build()
   }
 }

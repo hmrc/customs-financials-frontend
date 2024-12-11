@@ -40,7 +40,7 @@ class DateConvertersSpec extends SpecBase with MustMatchers {
 
     "OrderLocalDate returns -1 when passed different date" in new Setup {
       val diffDate: LocalDate = LocalDate.of(YEAR_2023, MONTH_1, DAY_2)
-      private val convert = DateConverters.OrderedLocalDate(localDate).compare(diffDate)
+      private val convert     = DateConverters.OrderedLocalDate(localDate).compare(diffDate)
 
       convert mustBe -1
     }
@@ -53,7 +53,7 @@ class DateConvertersSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val date: Date = new SimpleDateFormat("mm/dd/yyyy").parse("01/02/2022")
+    val date: Date           = new SimpleDateFormat("mm/dd/yyyy").parse("01/02/2022")
     val localDate: LocalDate = LocalDate.of(YEAR_2022, MONTH_1, DAY_2)
   }
 }

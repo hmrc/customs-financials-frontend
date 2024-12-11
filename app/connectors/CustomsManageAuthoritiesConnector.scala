@@ -30,42 +30,44 @@ import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomsManageAuthoritiesConnector @Inject()(httpClient: HttpClientV2,
-                                                  appConfig: AppConfig,
-                                                  headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
-                                                 (implicit executionContext: ExecutionContext) extends Logging {
+class CustomsManageAuthoritiesConnector @Inject() (
+  httpClient: HttpClientV2,
+  appConfig: AppConfig,
+  headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
+)(implicit executionContext: ExecutionContext)
+    extends Logging {
 
   def fetchAndSaveAccountAuthoritiesInCache(eori: EORI)(implicit request: RequestHeader): Future[Results.Status] = {
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
 
     val endPointUrl = s"${appConfig.manageAuthoritiesServiceUrl}/account-authorities/fetch-authorities/$eori"
 
-    httpClient.get(url"$endPointUrl")
+    httpClient
+      .get(url"$endPointUrl")
       .execute[HttpResponse]
-      .flatMap {
-        res =>
-          res.status match {
-            case OK =>
-              logger.info(s"Authorities' details have been successfully saved in the cache for $eori")
-              Future.successful(Ok)
+      .flatMap { res =>
+        res.status match {
+          case OK =>
+            logger.info(s"Authorities' details have been successfully saved in the cache for $eori")
+            Future.successful(Ok)
 
-            case NO_CONTENT =>
-              logger.info(s"No data found for $eori")
-              Future.successful(Ok)
+          case NO_CONTENT =>
+            logger.info(s"No data found for $eori")
+            Future.successful(Ok)
 
-            case INTERNAL_SERVER_ERROR =>
-              logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
-              Future.successful(InternalServerError)
+          case INTERNAL_SERVER_ERROR =>
+            logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
+            Future.successful(InternalServerError)
 
-            case _ =>
-              logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
-              Future.successful(ServiceUnavailable)
-          }
-      }.recover {
-      case _ =>
+          case _ =>
+            logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
+            Future.successful(ServiceUnavailable)
+        }
+      }
+      .recover { case _ =>
         logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
         InternalServerError
-    }
+      }
 
   }
 }

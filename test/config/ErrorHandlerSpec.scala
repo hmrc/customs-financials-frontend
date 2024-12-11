@@ -21,9 +21,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
 
-class ErrorHandlerSpec extends AnyWordSpec
-  with Matchers
-  with GuiceOneAppPerSuite {
+class ErrorHandlerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
@@ -35,16 +33,16 @@ class ErrorHandlerSpec extends AnyWordSpec
     "render standard error template HTML" in {
       val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
 
-      html.map {
-        htmlContent => htmlContent.contentType shouldBe "text/html"
+      html.map { htmlContent =>
+        htmlContent.contentType shouldBe "text/html"
       }
     }
 
     "render not found template HTML" in {
       val html = handler.notFoundTemplate(fakeRequest)
 
-      html.map {
-        htmlContent => htmlContent.contentType shouldBe "text/html"
+      html.map { htmlContent =>
+        htmlContent.contentType shouldBe "text/html"
       }
     }
 

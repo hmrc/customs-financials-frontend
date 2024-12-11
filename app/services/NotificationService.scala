@@ -23,12 +23,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class NotificationService @Inject()(apiService: ApiService)(implicit ec: ExecutionContext) {
+class NotificationService @Inject() (apiService: ApiService)(implicit ec: ExecutionContext) {
 
   def fetchNotifications(eori: String)(implicit hc: HeaderCarrier): Future[Seq[Notification]] =
-    apiService.getEnabledNotifications(eori).map(_.map(
-      notification => Notification(notification.fileRole, notification.isRequested))
-    )
+    apiService
+      .getEnabledNotifications(eori)
+      .map(_.map(notification => Notification(notification.fileRole, notification.isRequested)))
 }
 
 case class Notification(fileRole: FileRole, isRequested: Boolean)

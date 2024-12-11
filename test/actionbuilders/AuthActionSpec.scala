@@ -22,11 +22,11 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.{Application, inject}
 import play.api.mvc.{Action, AnyContent, BodyParsers, Result, Results}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{AuditingService, DataStoreService}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.retrieve.{~, *}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.auth.core.Enrolments
 import utils.SpecBase
@@ -36,7 +36,7 @@ import utils.MustMatchers
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase with MustMatchers{
+class AuthActionSpec extends SpecBase with MustMatchers {
 
   "the action" should {
 
@@ -98,22 +98,24 @@ class AuthActionSpec extends SpecBase with MustMatchers{
     }
 
     "redirect the user to unauthorised controller when has insufficient enrolments" in new Setup {
+      type AuthDetails = Option[Credentials] ~ Option[Name] ~ Option[Email] ~ Option[AffinityGroup] ~ Option[String] ~
+        Enrolments
+
       when(
-        mockAuthConnector.authorise[Option[Credentials] ~ Option[Name] ~ Option[Email]
-          ~ Option[AffinityGroup] ~ Option[String] ~ Enrolments](any, any)(
+        mockAuthConnector.authorise[AuthDetails](any, any)(
           any,
           any
         )
       ).thenReturn(
-          Future.successful(
-            Some(Credentials("someProviderId", "someProviderType")) ~
-              Some(Name(Some("someName"), Some("someLastName"))) ~
-              Some(Email("some@email.com")) ~
-              Some(AffinityGroup.Individual) ~
-              Some("id") ~
-              Enrolments(Set.empty)
-          )
+        Future.successful(
+          Some(Credentials("someProviderId", "someProviderType")) ~
+            Some(Name(Some("someName"), Some("someLastName"))) ~
+            Some(Email("some@email.com")) ~
+            Some(AffinityGroup.Individual) ~
+            Some("id") ~
+            Enrolments(Set.empty)
         )
+      )
 
       val authAction = new AuthAction(
         mockAuthConnector,
@@ -142,7 +144,7 @@ class AuthActionSpec extends SpecBase with MustMatchers{
         mockDataStoreService
       )
 
-      val controller = new Harness(authAction)
+      val controller             = new Harness(authAction)
       val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
@@ -159,7 +161,7 @@ class AuthActionSpec extends SpecBase with MustMatchers{
         mockDataStoreService
       )
 
-      val controller = new Harness(authAction)
+      val controller             = new Harness(authAction)
       val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
@@ -176,7 +178,7 @@ class AuthActionSpec extends SpecBase with MustMatchers{
         mockDataStoreService
       )
 
-      val controller = new Harness(authAction)
+      val controller             = new Harness(authAction)
       val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
@@ -193,7 +195,7 @@ class AuthActionSpec extends SpecBase with MustMatchers{
         mockDataStoreService
       )
 
-      val controller = new Harness(authAction)
+      val controller             = new Harness(authAction)
       val result: Future[Result] = controller.onPageLoad()(fakeRequest())
 
       running(app) {
@@ -204,33 +206,35 @@ class AuthActionSpec extends SpecBase with MustMatchers{
   }
 
   trait Setup {
-    val mockAuditingService: AuditingService = mock[AuditingService]
+    val mockAuditingService: AuditingService   = mock[AuditingService]
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    val mockAuthConnector: AuthConnector       = mock[AuthConnector]
 
     val app: Application = application()
       .overrides(
         inject.bind[AuditingService].toInstance(mockAuditingService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).build()
+      )
+      .build()
 
-    val config: AppConfig = app.injector.instanceOf[AppConfig]
+    val config: AppConfig                = app.injector.instanceOf[AppConfig]
     val bodyParsers: BodyParsers.Default = application().injector().instanceOf[BodyParsers.Default]
 
     class Harness(authAction: IdentifierAction) {
-      def onPageLoad(): Action[AnyContent] = authAction { _ => Results.Ok }
+      def onPageLoad(): Action[AnyContent] = authAction(_ => Results.Ok)
     }
 
     implicit class Ops[A](a: A) {
-      def ~[B](b: B): A ~ B = new~(a, b) //scalastyle:off
+      def ~[B](b: B): A ~ B = new ~(a, b) // scalastyle:off
     }
 
-    class FakeFailingAuthConnector @Inject()(exceptionToReturn: Throwable) extends AuthConnector {
+    class FakeFailingAuthConnector @Inject() (exceptionToReturn: Throwable) extends AuthConnector {
       val serviceUrl: String = emptyString
 
-      override def authorise[A](predicate: Predicate,
-                                retrieval: Retrieval[A]
-                               )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[A] =
+      override def authorise[A](predicate: Predicate, retrieval: Retrieval[A])(implicit
+        hc: HeaderCarrier,
+        ec: ExecutionContext
+      ): Future[A] =
         Future.failed(exceptionToReturn)
     }
   }

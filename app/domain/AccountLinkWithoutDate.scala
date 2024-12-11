@@ -18,12 +18,14 @@ package domain
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AccountLinkWithoutDate(eori: String,
-                                  isNiAccount: Boolean,
-                                  accountNumber: String,
-                                  accountStatus: String,
-                                  accountStatusId: Option[Int],
-                                  linkId: String)
+case class AccountLinkWithoutDate(
+  eori: String,
+  isNiAccount: Boolean,
+  accountNumber: String,
+  accountStatus: String,
+  accountStatusId: Option[Int],
+  linkId: String
+)
 
 object AccountLinkWithoutDate {
   implicit val format: OFormat[AccountLinkWithoutDate] = Json.format[AccountLinkWithoutDate]
