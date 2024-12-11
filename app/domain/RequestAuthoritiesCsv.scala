@@ -25,7 +25,7 @@ object RequestAuthoritiesCsv {
   implicit val format: OFormat[RequestAuthoritiesCsv] = Json.format[RequestAuthoritiesCsv]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+    writes: Writes[T],
+    jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

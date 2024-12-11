@@ -22,7 +22,9 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.http.Status.{INTERNAL_SERVER_ERROR, OK}
 import play.api.{Application, inject}
-import play.api.test.Helpers.{GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers.{
+  GET, contentAsString, defaultAwaitTimeout, route, running, status, writeableOf_AnyContentAsEmpty
+}
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import utils.{ShouldMatchers, SpecBase}
@@ -35,10 +37,10 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
     "should be sent to authorisedToViewRequestReceived when request successful" in new Setup {
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe OK
+        status(result)                           shouldBe OK
         html.text().contains("Request received") shouldBe true
       }
     }
@@ -48,12 +50,12 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result)                                                           shouldBe INTERNAL_SERVER_ERROR
         html.text().contains("Sorry, we’re experiencing technical difficulties") shouldBe true
-        html.text().contains("Please try again in a few minutes.") shouldBe true
+        html.text().contains("Please try again in a few minutes.")               shouldBe true
       }
     }
 
@@ -63,19 +65,19 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
-        val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val result  = route(app, request).value
+        val html    = Jsoup.parse(contentAsString(result))
 
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        status(result)                                                           shouldBe INTERNAL_SERVER_ERROR
         html.text().contains("Sorry, we’re experiencing technical difficulties") shouldBe true
-        html.text().contains("Please try again in a few minutes.") shouldBe true
+        html.text().contains("Please try again in a few minutes.")               shouldBe true
       }
     }
   }
 
   trait Setup {
-    val mockApiService: ApiService = mock[ApiService]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockApiService: ApiService                                 = mock[ApiService]
+    val mockDataStoreService: DataStoreService                     = mock[DataStoreService]
     val requestAuthorityCsvResponse: RequestAuthoritiesCsvResponse = RequestAuthoritiesCsvResponse("date")
 
     when(mockApiService.requestAuthoritiesCsv(any, any)(any))
@@ -88,7 +90,9 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService)
-      ).configure("features.new-agent-view-enabled" -> false).build()
+      )
+      .configure("features.new-agent-view-enabled" -> false)
+      .build()
 
     val controller: AuthorizedRequestReceivedController = app.injector.instanceOf[AuthorizedRequestReceivedController]
   }

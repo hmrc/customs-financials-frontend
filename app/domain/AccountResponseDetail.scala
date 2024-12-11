@@ -18,11 +18,13 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class AccountResponseDetail(EORINo: Option[String],
-                                 referenceDate: Option[String],
-                                 dutyDefermentAccount: Option[Seq[DutyDefermentAccountResponse]],
-                                 generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccountResponse]],
-                                 cdsCashAccount: Option[Seq[CdsCashAccountResponse]]) {
+case class AccountResponseDetail(
+  EORINo: Option[String],
+  referenceDate: Option[String],
+  dutyDefermentAccount: Option[Seq[DutyDefermentAccountResponse]],
+  generalGuaranteeAccount: Option[Seq[GeneralGuaranteeAccountResponse]],
+  cdsCashAccount: Option[Seq[CdsCashAccountResponse]]
+) {
 
   val totalNumberOfAccounts: Int = dutyDefermentAccount.fold(0)(_.size) +
     generalGuaranteeAccount.fold(0)(_.size) +

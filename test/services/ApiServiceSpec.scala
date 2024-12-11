@@ -17,8 +17,10 @@
 package services
 
 import domain.FileRole.{C79Certificate, DutyDefermentStatement, PostponedVATStatement, SecurityStatement}
-import domain.{AccountResponse, AccountsAndBalancesResponseContainer, Limits, CdsCashAccountResponse => CA,
-  DefermentBalancesResponse => Bal, DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA, *}
+import domain.{
+  AccountResponse, AccountsAndBalancesResponseContainer, CdsCashAccountResponse => CA, DefermentBalancesResponse => Bal,
+  DutyDefermentAccountResponse => DDA, GeneralGuaranteeAccountResponse => GGA, Limits, *
+}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
 import org.scalatest.concurrent.ScalaFutures
@@ -35,12 +37,7 @@ import utils.SpecBase
 import utils.TestData.FILE_SIZE_1000
 import utils.MustMatchers
 
-class ApiServiceSpec
-  extends SpecBase
-    with FutureAwaits
-    with DefaultAwaitTimeout
-    with ScalaFutures
-    with MustMatchers {
+class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout with ScalaFutures with MustMatchers {
 
   "ApiService" should {
 
@@ -62,29 +59,46 @@ class ApiServiceSpec
 
       "log response time metric" in {
         implicit val hc: HeaderCarrier = HeaderCarrier()
-        val mockHttpClient = mock[HttpClientV2]
-        val requestBuilder = mock[RequestBuilder]
+        val mockHttpClient             = mock[HttpClientV2]
+        val requestBuilder             = mock[RequestBuilder]
         val mockMetricsReporterService = mock[MetricsReporterService]
 
-        val appTest = application().overrides(
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder),
-          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
-        ).build()
+        val appTest = application()
+          .overrides(
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder),
+            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
+          )
+          .build()
 
-        val traderEori = "12345678"
-        val guaranteeAccount = GGA(AccountResponse("G123456", emptyString, traderEori, None, None,
-          viewBalanceIsGranted = false), Some("1000000"), Some("200000"))
+        val traderEori       = "12345678"
+        val guaranteeAccount = GGA(
+          AccountResponse("G123456", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+          Some("1000000"),
+          Some("200000")
+        )
 
-        val dd1 = DDA(AccountResponse("1231231231", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
-          Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
+        val dd1 = DDA(
+          AccountResponse("1231231231", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+          Some(false),
+          Some(false),
+          Some(Limits("200", "100")),
+          Some(Bal("50", "20"))
+        )
 
-        val dd2 = DDA(AccountResponse("7567567567", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
-          Some(false), Some(false), Some(Limits("200", "100")), None)
+        val dd2 = DDA(
+          AccountResponse("7567567567", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+          Some(false),
+          Some(false),
+          Some(Limits("200", "100")),
+          None
+        )
 
         val cashAccountNumber = "987654"
-        val cashAccount = CA(AccountResponse(cashAccountNumber, emptyString, traderEori, None, None,
-          viewBalanceIsGranted = false), Some("999.99"))
+        val cashAccount       = CA(
+          AccountResponse(cashAccountNumber, emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+          Some("999.99")
+        )
 
         val accounts = AccountsAndBalancesResponseContainer(
           domain.AccountsAndBalancesResponse(
@@ -216,8 +230,14 @@ class ApiServiceSpec
         running(app) {
           val result = await(service.searchAuthorities(traderEori, traderEori))
 
-          result mustBe Right(SearchedAuthorities("1", List(AuthorisedGeneralGuaranteeAccount(Account(
-            "1234", "GeneralGuarantee", "GB000000000000"), Some("10.0")))))
+          result mustBe Right(
+            SearchedAuthorities(
+              "1",
+              List(
+                AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+              )
+            )
+          )
         }
       }
     }
@@ -243,24 +263,27 @@ class ApiServiceSpec
 
     "log response time metric" in {
       implicit val hc: HeaderCarrier = HeaderCarrier()
-      val traderEori = "12345678"
+      val traderEori                 = "12345678"
       val mockMetricsReporterService = mock[MetricsReporterService]
 
       val notification = List(
         DocumentAttributes(traderEori, C79Certificate, "new file", FILE_SIZE_1000, Map.empty),
         DocumentAttributes(traderEori, DutyDefermentStatement, "new file", FILE_SIZE_1000, Map.empty),
         DocumentAttributes(traderEori, SecurityStatement, "new file", FILE_SIZE_1000, Map.empty),
-        DocumentAttributes(traderEori, PostponedVATStatement, "new file", FILE_SIZE_1000, Map.empty))
+        DocumentAttributes(traderEori, PostponedVATStatement, "new file", FILE_SIZE_1000, Map.empty)
+      )
 
-      val notifications = SdesNotificationsForEori(traderEori, notification)
+      val notifications  = SdesNotificationsForEori(traderEori, notification)
       val mockHttpClient = mock[HttpClientV2]
       val requestBuilder = mock[RequestBuilder]
 
-      val appTest = application().overrides(
-        inject.bind[HttpClientV2].toInstance(mockHttpClient),
-        inject.bind[RequestBuilder].toInstance(requestBuilder),
-        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
-      ).build()
+      val appTest = application()
+        .overrides(
+          inject.bind[HttpClientV2].toInstance(mockHttpClient),
+          inject.bind[RequestBuilder].toInstance(requestBuilder),
+          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
+        )
+        .build()
 
       when[Future[Seq[DocumentAttributes]]](mockMetricsReporterService.withResponseTimeLogging(any)(any)(any))
         .thenReturn(Future.successful(notification))
@@ -275,8 +298,9 @@ class ApiServiceSpec
       running(appTest) {
         await(service.getEnabledNotifications(traderEori))
 
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
-          "customs-financials-api.get.notifications"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.notifications"))(
+          any
+        )(any)
       }
     }
 
@@ -298,16 +322,18 @@ class ApiServiceSpec
 
     "log response time metric" in {
       implicit val hc: HeaderCarrier = HeaderCarrier()
-      val traderEori = "12345678"
-      val mockHttpClient = mock[HttpClientV2]
-      val requestBuilder = mock[RequestBuilder]
+      val traderEori                 = "12345678"
+      val mockHttpClient             = mock[HttpClientV2]
+      val requestBuilder             = mock[RequestBuilder]
       val mockMetricsReporterService = mock[MetricsReporterService]
 
-      val appTest = application().overrides(
-        inject.bind[HttpClientV2].toInstance(mockHttpClient),
-        inject.bind[RequestBuilder].toInstance(requestBuilder),
-        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
-      ).build()
+      val appTest = application()
+        .overrides(
+          inject.bind[HttpClientV2].toInstance(mockHttpClient),
+          inject.bind[RequestBuilder].toInstance(requestBuilder),
+          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
+        )
+        .build()
 
       when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
       when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
@@ -323,8 +349,9 @@ class ApiServiceSpec
       running(appTest) {
         await(service.deleteNotification(traderEori, C79Certificate))
 
-        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo(
-          "customs-financials-api.delete.notification"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.delete.notification"))(
+          any
+        )(any)
       }
     }
 
@@ -396,25 +423,40 @@ class ApiServiceSpec
   }
 
   trait Setup {
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier     = HeaderCarrier()
 
     val traderEori = "12345678"
-    val agentEori = "09876543"
+    val agentEori  = "09876543"
 
-    val guaranteeAccount: GGA = GGA(AccountResponse("G123456", emptyString, traderEori, None, None,
-      viewBalanceIsGranted = false), Some("1000000"), Some("200000"))
+    val guaranteeAccount: GGA = GGA(
+      AccountResponse("G123456", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+      Some("1000000"),
+      Some("200000")
+    )
 
-    val dd1: DDA = DDA(AccountResponse("1231231231", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
-      Some(false), Some(false), Some(Limits("200", "100")), Some(Bal("50", "20")))
+    val dd1: DDA = DDA(
+      AccountResponse("1231231231", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+      Some(false),
+      Some(false),
+      Some(Limits("200", "100")),
+      Some(Bal("50", "20"))
+    )
 
-    val dd2: DDA = DDA(AccountResponse("7567567567", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
-      Some(false), Some(false), Some(Limits("200", "100")), None)
+    val dd2: DDA = DDA(
+      AccountResponse("7567567567", emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+      Some(false),
+      Some(false),
+      Some(Limits("200", "100")),
+      None
+    )
 
     val cashAccountNumber = "987654"
-    val cashAccount: CA = CA(AccountResponse(cashAccountNumber, emptyString, traderEori, None, None,
-      viewBalanceIsGranted = false), Some("999.99"))
+    val cashAccount: CA   = CA(
+      AccountResponse(cashAccountNumber, emptyString, traderEori, None, None, viewBalanceIsGranted = false),
+      Some("999.99")
+    )
 
     val traderAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
       domain.AccountsAndBalancesResponse(
@@ -442,10 +484,12 @@ class ApiServiceSpec
       )
     )
 
-    val app: Application = application().overrides(
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val service: ApiService = app.injector.instanceOf[ApiService]
   }

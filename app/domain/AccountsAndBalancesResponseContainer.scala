@@ -29,7 +29,7 @@ case class AccountsAndBalancesResponseContainer(accountsAndBalancesResponse: Acc
       details.generalGuaranteeAccount.fold(Seq.empty[domain.GeneralGuaranteeAccount])(_.map(_.toDomain))
 
     val cashAccounts: Seq[CashAccount] = details.cdsCashAccount.fold(Seq.empty[CashAccount])(_.map(_.toDomain))
-    val isNiAccount = dutyDefermentAccounts.map(_.isNiAccount).headOption.getOrElse(false)
+    val isNiAccount                    = dutyDefermentAccounts.map(_.isNiAccount).headOption.getOrElse(false)
 
     domain.CDSAccounts(eori, Some(isNiAccount), dutyDefermentAccounts ++ generalGuaranteeAccounts ++ cashAccounts)
   }

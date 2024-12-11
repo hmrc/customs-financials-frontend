@@ -27,11 +27,12 @@ import views.html.error_states.not_subscribed_to_cds
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class UnauthorisedController @Inject()(override val authConnector: AuthConnector,
-                                       notSubscribedView: not_subscribed_to_cds,
-                                       implicit val mcc: MessagesControllerComponents)
-                                      (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc)
+class UnauthorisedController @Inject() (
+  override val authConnector: AuthConnector,
+  notSubscribedView: not_subscribed_to_cds,
+  implicit val mcc: MessagesControllerComponents
+)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport
     with AuthorisedFunctions {
 

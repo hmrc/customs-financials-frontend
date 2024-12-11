@@ -40,22 +40,22 @@ trait DateFormatters {
   def timeAsHourMinutesWithAmPm(dateTime: LocalDateTime): String =
     DateTimeFormatter.ofPattern("hh:mm a").format(dateTime)
 
-  def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String = {
-    Formatters.timeAsHourMinutesWithAmPm(dateTime)
-      .toLowerCase + " on " + Formatters.dateAsDayMonthAndYear(dateTime.toLocalDate)
-  }
+  def updatedDateTime(dateTime: LocalDateTime)(implicit messages: Messages): String =
+    Formatters.timeAsHourMinutesWithAmPm(dateTime).toLowerCase + " on " + Formatters.dateAsDayMonthAndYear(
+      dateTime.toLocalDate
+    )
 }
 
 trait CurrencyFormatters {
   def formatCurrencyAmount(amount: BigDecimal): String = {
     val numberFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.UK)
-    val outputDecimals = if (amount.isWhole) 0 else 2
+    val outputDecimals             = if (amount.isWhole) 0 else 2
     numberFormat.setMaximumFractionDigits(outputDecimals)
     numberFormat.setMinimumFractionDigits(outputDecimals)
     numberFormat.format(amount)
   }
 
-  def formatCurrencyAmountWithLeadingPlus(amount: BigDecimal): String ={
+  def formatCurrencyAmountWithLeadingPlus(amount: BigDecimal): String = {
     val formattedAmount = formatCurrencyAmount(amount)
     if (amount > 0) {
       "+" + formattedAmount
@@ -68,8 +68,8 @@ trait CurrencyFormatters {
 trait FileFormatters {
   def fileSize(size: Long): String = size match {
     case kb if 1000 until 1000000 contains kb => s"${kb / 1000}KB"
-    case mb if mb >= 1000000 => f"${mb / 1000000.0}%.1fMB"
-    case _ => "1KB"
+    case mb if mb >= 1000000                  => f"${mb / 1000000.0}%.1fMB"
+    case _                                    => "1KB"
   }
 }
 

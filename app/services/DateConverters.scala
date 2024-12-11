@@ -26,7 +26,6 @@ object DateConverters {
     def compare(that: LocalDate): Int = date.compareTo(that)
   }
 
-  implicit def toJavaTime(date: LocalDate): LocalDate = {
+  implicit def toJavaTime(date: LocalDate): LocalDate =
     java.util.Date.from(date.atStartOfDay().toInstant(ZoneOffset.UTC))
-  }
 }

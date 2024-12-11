@@ -61,8 +61,10 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
     "display link to report a change" in new Setup {
       running(app) {
-        view().containsLinkWithText(appConfig.reportChangeCdsUrl,
-          "Report a change to your company details (opens in new tab)")
+        view().containsLinkWithText(
+          appConfig.reportChangeCdsUrl,
+          "Report a change to your company details (opens in new tab)"
+        )
       }
     }
 
@@ -70,12 +72,12 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
       running(app) {
         view().getElementById("contact-report-change-link").text() mustBe
           "This is the contact address you gave us when you registered for your EORI number." +
-            " You can fill in an enquiry form (opens in a new tab) to change this address."
+          " You can fill in an enquiry form (opens in a new tab) to change this address."
       }
     }
 
     "display the message banner partial when provided" in new Setup {
-      val pageView: Document = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
+      val pageView: Document        = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
       val bannerComponent: Elements = pageView.getElementsByClass("notifications-bar")
 
       bannerComponent.size() must be > 0
@@ -83,20 +85,24 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
       assert(pageView.containsLinkWithText("http://localhost:9876/customs/payment-records", "Home"))
       assert(pageView.containsLink("http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url"))
 
-      assert(pageView.containsLinkWithText(
-        "http://localhost:9876/customs/payment-records/your-contact-details", "Your contact details"))
-      assert(pageView.containsLinkWithText(
-        "http://localhost:9000/customs/manage-authorities", "Your account authorities"))
+      assert(
+        pageView.containsLinkWithText(
+          "http://localhost:9876/customs/payment-records/your-contact-details",
+          "Your contact details"
+        )
+      )
+      assert(
+        pageView.containsLinkWithText("http://localhost:9000/customs/manage-authorities", "Your account authorities")
+      )
     }
   }
 
   trait Setup extends I18nSupport {
-    val eori: String = "EORI0123"
-    val email = "email@emailland.com"
+    val eori: String              = "EORI0123"
+    val email                     = "email@emailland.com"
     val companyName: Some[String] = Some("CompanyName")
 
-    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(
-      eori, false, "123", "1", Some(1), "2345678")
+    val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(eori, false, "123", "1", Some(1), "2345678")
 
     val accountNumbers: Seq[AccountLinkWithoutDate] = Seq(accountLink, accountLink)
 
@@ -108,17 +114,16 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
     )
 
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     def view(messageBannerPartial: Option[HtmlFormat.Appendable] = None): Document =
-      Jsoup.parse(app.injector.instanceOf[your_contact_details].apply(
-        eori,
-        accountNumbers,
-        companyName,
-        companyAddress,
-        email,
-        messageBannerPartial).body)
+      Jsoup.parse(
+        app.injector
+          .instanceOf[your_contact_details]
+          .apply(eori, accountNumbers, companyName, companyAddress, email, messageBannerPartial)
+          .body
+      )
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   }

@@ -19,16 +19,18 @@ package domain
 import play.api.libs.json.{Format, JsValue, Json, OFormat, Writes}
 import play.api.libs.ws.BodyWritable
 
-case class AccountsRequestDetail(EORINo: String,
-                                 accountType: Option[String],
-                                 accountNumber: Option[String],
-                                 referenceDate: Option[String])
+case class AccountsRequestDetail(
+  EORINo: String,
+  accountType: Option[String],
+  accountNumber: Option[String],
+  referenceDate: Option[String]
+)
 
 object AccountsRequestDetail {
   implicit val format: OFormat[AccountsRequestDetail] = Json.format[AccountsRequestDetail]
 
   implicit def jsonBodyWritable[T](implicit
-                                   writes: Writes[T],
-                                   jsValueBodyWritable: BodyWritable[JsValue]
-                                  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
+    writes: Writes[T],
+    jsValueBodyWritable: BodyWritable[JsValue]
+  ): BodyWritable[T] = jsValueBodyWritable.map(writes.writes)
 }

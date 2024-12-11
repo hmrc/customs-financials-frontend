@@ -30,32 +30,33 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait IdentifierAction extends ActionBuilder[AuthenticatedRequest, AnyContent]
-  with ActionRefiner[Request, AuthenticatedRequest]
+trait IdentifierAction
+    extends ActionBuilder[AuthenticatedRequest, AnyContent]
+    with ActionRefiner[Request, AuthenticatedRequest]
 
-class AuthAction @Inject()(val authConnector: AuthConnector,
-                           appConfig: AppConfig,
-                           val parser: BodyParsers.Default,
-                           dataStoreService: DataStoreService)
-                          (implicit val executionContext: ExecutionContext)
-  extends IdentifierAction
+class AuthAction @Inject() (
+  val authConnector: AuthConnector,
+  appConfig: AppConfig,
+  val parser: BodyParsers.Default,
+  dataStoreService: DataStoreService
+)(implicit val executionContext: ExecutionContext)
+    extends IdentifierAction
     with AuthorisedFunctions {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.allEnrolments) {
-      allEnrolments =>
-        allEnrolments.getEnrolment("HMRC-CUS-ORG").flatMap(_.getIdentifier("EORINumber")) match {
-          case Some(eori) =>
-            for {
-              allEoriHistory <- dataStoreService.getAllEoriHistory(eori.value)
-              xiEori <- dataStoreService.getXiEori(eori.value)
-              signedInUser = SignedInUser(eori.value, allEoriHistory, xiEori)
-            } yield Right(AuthenticatedRequest(request, signedInUser))
+    authorised().retrieve(Retrievals.allEnrolments) { allEnrolments =>
+      allEnrolments.getEnrolment("HMRC-CUS-ORG").flatMap(_.getIdentifier("EORINumber")) match {
+        case Some(eori) =>
+          for {
+            allEoriHistory <- dataStoreService.getAllEoriHistory(eori.value)
+            xiEori         <- dataStoreService.getXiEori(eori.value)
+            signedInUser    = SignedInUser(eori.value, allEoriHistory, xiEori)
+          } yield Right(AuthenticatedRequest(request, signedInUser))
 
-          case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad)))
-        }
+        case None => Future.successful(Left(Redirect(routes.UnauthorisedController.onPageLoad)))
+      }
     }
   } recover {
     case _: NoActiveSession =>

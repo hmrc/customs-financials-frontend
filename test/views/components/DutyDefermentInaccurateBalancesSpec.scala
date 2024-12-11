@@ -37,9 +37,9 @@ class DutyDefermentInaccurateBalancesSpec extends SpecBase {
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val app: Application              = application().build()
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    implicit val messages: Messages = Helpers.stubMessages()
-    val view: Document = Jsoup.parse(app.injector.instanceOf[duty_deferment_inaccurate_balances_message].apply().body)
+    implicit val messages: Messages   = Helpers.stubMessages()
+    val view: Document                = Jsoup.parse(app.injector.instanceOf[duty_deferment_inaccurate_balances_message].apply().body)
   }
 }

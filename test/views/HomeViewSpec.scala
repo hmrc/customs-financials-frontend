@@ -17,7 +17,9 @@
 package views
 
 import config.AppConfig
-import domain.{AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance}
+import domain.{
+  AccountLink, AccountStatusOpen, CDSAccounts, DefermentAccountAvailable, DutyDefermentAccount, DutyDefermentBalance
+}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.Application
@@ -127,49 +129,109 @@ class HomeViewSpec extends SpecBase {
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
     val companyName: Option[String] = Some("Company Name 1")
-    val eori = "EORI0123"
-    val eori1 = "EORI01234"
-    val dan1 = "DAN01234"
-    val dan2 = "DAN43210"
+    val eori                        = "EORI0123"
+    val eori1                       = "EORI01234"
+    val dan1                        = "DAN01234"
+    val dan2                        = "DAN43210"
 
     def randomFloat: Float = Random.nextFloat()
 
     def randomBigDecimal: BigDecimal = BigDecimal(randomFloat.toString)
 
     val accounts: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, isNiAccount = false, AccountStatusOpen,
-        DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
-          Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
-
-        DutyDefermentAccount(dan2, eori1, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
-          DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
-            Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+      CDSAccounts(
+        eori,
+        None,
+        Seq(
+          DutyDefermentAccount(
+            dan1,
+            eori,
+            isNiAccount = false,
+            AccountStatusOpen,
+            DefermentAccountAvailable,
+            DutyDefermentBalance(
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal)
+            ),
+            viewBalanceIsGranted = true,
+            isIsleOfMan = false
+          ),
+          DutyDefermentAccount(
+            dan2,
+            eori1,
+            isNiAccount = false,
+            AccountStatusOpen,
+            DefermentAccountAvailable,
+            DutyDefermentBalance(
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal)
+            ),
+            viewBalanceIsGranted = true,
+            isIsleOfMan = false
+          )
+        )
+      )
     )
 
     val accountsWithNoAgent: Seq[CDSAccounts] = Seq(
-      CDSAccounts(eori, None, Seq(DutyDefermentAccount(dan1, eori, isNiAccount = false, AccountStatusOpen,
-        DefermentAccountAvailable, DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal),
-          Some(randomBigDecimal), Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false),
-
-        DutyDefermentAccount(dan2, eori, isNiAccount = false, AccountStatusOpen, DefermentAccountAvailable,
-          DutyDefermentBalance(Some(randomBigDecimal), Some(randomBigDecimal), Some(randomBigDecimal),
-            Some(randomBigDecimal)), viewBalanceIsGranted = true, isIsleOfMan = false)))
+      CDSAccounts(
+        eori,
+        None,
+        Seq(
+          DutyDefermentAccount(
+            dan1,
+            eori,
+            isNiAccount = false,
+            AccountStatusOpen,
+            DefermentAccountAvailable,
+            DutyDefermentBalance(
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal)
+            ),
+            viewBalanceIsGranted = true,
+            isIsleOfMan = false
+          ),
+          DutyDefermentAccount(
+            dan2,
+            eori,
+            isNiAccount = false,
+            AccountStatusOpen,
+            DefermentAccountAvailable,
+            DutyDefermentBalance(
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal),
+              Some(randomBigDecimal)
+            ),
+            viewBalanceIsGranted = true,
+            isIsleOfMan = false
+          )
+        )
+      )
     )
 
     val accountLinks: Seq[AccountLink] = Seq(
-      AccountLink(sessionId = "sessionId",
+      AccountLink(
+        sessionId = "sessionId",
         eori,
         isNiAccount = false,
         accountNumber = dan1,
         linkId = "linkId",
         accountStatus = AccountStatusOpen,
         accountStatusId = Option(DefermentAccountAvailable),
-        lastUpdated = LocalDateTime.now()))
+        lastUpdated = LocalDateTime.now()
+      )
+    )
 
     val modelWithAgentAccess: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
 
-    def page(viewModel: FinancialsHomeModel,
-             maybeBannerPartial: Option[HtmlFormat.Appendable]): Document =
+    def page(viewModel: FinancialsHomeModel, maybeBannerPartial: Option[HtmlFormat.Appendable]): Document =
       Jsoup.parse(app.injector.instanceOf[customs_financials_home].apply(viewModel, maybeBannerPartial).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

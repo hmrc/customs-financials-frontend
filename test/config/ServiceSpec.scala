@@ -23,8 +23,8 @@ class ServiceSpec extends SpecBase with ShouldMatchers {
 
   "should be loaded from configuration correctly" in {
     val config = Configuration(
-      "service.host" -> "localhost",
-      "service.port" -> "8080",
+      "service.host"     -> "localhost",
+      "service.port"     -> "8080",
       "service.protocol" -> "http"
     )
 
@@ -33,7 +33,7 @@ class ServiceSpec extends SpecBase with ShouldMatchers {
   }
 
   "should convert to string correctly" in {
-    val service = Service("localhost", "8080", "http")
+    val service     = Service("localhost", "8080", "http")
     val expectedUrl = "http://localhost:8080"
 
     service.toString shouldEqual expectedUrl
@@ -49,8 +49,8 @@ class ServiceSpec extends SpecBase with ShouldMatchers {
   }
 
   trait Setup {
-    val host = "localhost"
-    val port = "8080"
+    val host     = "localhost"
+    val port     = "8080"
     val protocol = "http"
 
     val serviceOb: Service = Service(host, port, protocol)

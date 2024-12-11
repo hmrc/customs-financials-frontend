@@ -17,6 +17,6 @@
 package domain
 
 object DutyPaymentMethod {
-  val CDS = "CDS"
+  val CDS   = "CDS"
   val CHIEF = "CHIEF"
 }

@@ -38,20 +38,24 @@ class AccountResponseSpec extends SpecBase with MustMatchers {
 
   trait Setup {
 
-    val accResWithDefaultIOMFlag: AccountResponse = AccountResponse(number = "12345678",
+    val accResWithDefaultIOMFlag: AccountResponse = AccountResponse(
+      number = "12345678",
       `type` = "DutyDeferment",
       owner = "test_eori",
       accountStatus = Some(AccountStatusSuspended),
       accountStatusID = Some(DirectDebitMandateCancelled),
-      viewBalanceIsGranted = true)
+      viewBalanceIsGranted = true
+    )
 
-    val accResWithIOMFlag: AccountResponse = AccountResponse(number = "12345678",
+    val accResWithIOMFlag: AccountResponse = AccountResponse(
+      number = "12345678",
       `type` = "DutyDeferment",
       owner = "test_eori",
       accountStatus = Some(AccountStatusSuspended),
       accountStatusID = Some(DirectDebitMandateCancelled),
       viewBalanceIsGranted = true,
-      isleOfManFlag = Some(true))
+      isleOfManFlag = Some(true)
+    )
 
     val accResResponseWithIOMValueString: String =
       """{

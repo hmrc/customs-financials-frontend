@@ -28,8 +28,8 @@ class AccountSpec extends SpecBase with ShouldMatchers {
       val jsonAccount: JsValue = Json.toJson(account)
 
       (jsonAccount \ "accountNumber").as[String] shouldBe "123456"
-      (jsonAccount \ "accountType").as[String] shouldBe "GeneralGuarantee"
-      (jsonAccount \ "accountOwner").as[String] shouldBe "EORI1234"
+      (jsonAccount \ "accountType").as[String]   shouldBe "GeneralGuarantee"
+      (jsonAccount \ "accountOwner").as[String]  shouldBe "EORI1234"
 
       val parsedAccount = jsonAccount.as[Account]
 
