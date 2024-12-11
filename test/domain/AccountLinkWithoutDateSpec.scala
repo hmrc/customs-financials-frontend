@@ -28,12 +28,12 @@ class AccountLinkWithoutDateSpec extends SpecBase with ShouldMatchers {
 
       val jsonAccountLinkWithoutDate: JsValue = Json.toJson(accountLinkWithoutDate)
 
-      (jsonAccountLinkWithoutDate \ "eori").as[String] shouldBe "EORI123456"
-      (jsonAccountLinkWithoutDate \ "isNiAccount").as[Boolean] shouldBe true
-      (jsonAccountLinkWithoutDate \ "accountNumber").as[String] shouldBe "123456"
-      (jsonAccountLinkWithoutDate \ "accountStatus").as[String] shouldBe "Active"
+      (jsonAccountLinkWithoutDate \ "eori").as[String]            shouldBe "EORI123456"
+      (jsonAccountLinkWithoutDate \ "isNiAccount").as[Boolean]    shouldBe true
+      (jsonAccountLinkWithoutDate \ "accountNumber").as[String]   shouldBe "123456"
+      (jsonAccountLinkWithoutDate \ "accountStatus").as[String]   shouldBe "Active"
       (jsonAccountLinkWithoutDate \ "accountStatusId").asOpt[Int] shouldBe Some(1)
-      (jsonAccountLinkWithoutDate \ "linkId").as[String] shouldBe "linkId123"
+      (jsonAccountLinkWithoutDate \ "linkId").as[String]          shouldBe "linkId123"
 
       val parsedAccountLinkWithoutDate = jsonAccountLinkWithoutDate.as[AccountLinkWithoutDate]
 

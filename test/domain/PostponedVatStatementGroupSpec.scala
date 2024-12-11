@@ -32,15 +32,15 @@ class PostponedVatStatementGroupSpec extends SpecBase with MustMatchers {
   "collectFiles" should {
     "return correct output when amended is true, file role is PostponedVATAmendedStatement " +
       "and source is CDS" in new Setup {
-      pVatStatGroupForCdsAndFileRolePostVatAmendStat.collectFiles(amended = true, CDS) mustBe
-        pVatFilesForSourceCdsAndFileRolePostVatAmendStat
-    }
+        pVatStatGroupForCdsAndFileRolePostVatAmendStat.collectFiles(amended = true, CDS) mustBe
+          pVatFilesForSourceCdsAndFileRolePostVatAmendStat
+      }
 
     "return correct output when amended is true, file role is PostponedVATAmendedStatement " +
       "and source is CHIEF" in new Setup {
-      pVatStatGroupForChiefAndFileRolePostVatAmendStat.collectFiles(amended = true, CHIEF) mustBe
-        pVatFilesForSourceChiefAndFileRolePostVatAmendStat
-    }
+        pVatStatGroupForChiefAndFileRolePostVatAmendStat.collectFiles(amended = true, CHIEF) mustBe
+          pVatFilesForSourceChiefAndFileRolePostVatAmendStat
+      }
 
     "return correct output when amended is false, file role is PostponedVATStatement and source is CDS" in new Setup {
       pVatStatGroupForCdsAndFileRolePostVatStat.collectFiles(amended = false, CDS) mustBe
@@ -74,8 +74,8 @@ class PostponedVatStatementGroupSpec extends SpecBase with MustMatchers {
       val year2021 = 2021
 
       val pVatStatGroupYear2023: PostponedVatStatementGroup = pVatStatGroupForChiefAndFileRolePostVatStat
-      val pVatStatGroupYear2021: PostponedVatStatementGroup = pVatStatGroupForChiefAndFileRolePostVatStat.copy(
-        startDate = LocalDate.of(year2021, month, day))
+      val pVatStatGroupYear2021: PostponedVatStatementGroup =
+        pVatStatGroupForChiefAndFileRolePostVatStat.copy(startDate = LocalDate.of(year2021, month, day))
 
       List(pVatStatGroupYear2023, pVatStatGroupYear2021).sorted mustBe
         List(pVatStatGroupYear2021, pVatStatGroupYear2023)
@@ -85,21 +85,21 @@ class PostponedVatStatementGroupSpec extends SpecBase with MustMatchers {
   trait Setup {
     val eori = "test_eori"
 
-    val year = 2023
+    val year  = 2023
     val month = 10
-    val day = 8
+    val day   = 8
 
-    val startYear = 2021
+    val startYear        = 2021
     val periodStartMonth = 10
-    val source = "test_source"
-    val fileName = "test_file"
-    val downloadUrl = "test_url.com"
-    val size = 2048L
+    val source           = "test_source"
+    val fileName         = "test_file"
+    val downloadUrl      = "test_url.com"
+    val size             = 2048L
 
     val app: Application = application().build()
 
     implicit val msgs: Messages = messages(app)
-    val date: LocalDate = LocalDate.of(year, month, day)
+    val date: LocalDate         = LocalDate.of(year, month, day)
 
     val metaDataWithSourceCdsAndFileRolePostVatAmendStat: PostponedVatStatementFileMetadata =
       PostponedVatStatementFileMetadata(startYear, periodStartMonth, Pdf, PostponedVATAmendedStatement, CDS, None)

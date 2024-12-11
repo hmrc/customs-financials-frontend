@@ -16,7 +16,6 @@
 
 package domain
 
-
 import utils.SpecBase
 import views.helpers.Formatters
 import utils.MustMatchers
@@ -30,22 +29,16 @@ class CDSAccountSpec extends SpecBase with MustMatchers {
         ddAccount.displayBalances(
           Some(BigDecimal(amountLimit)),
           Some(BigDecimal(amountLimitZero)),
-          Some(BigDecimal(amountLimit))) mustBe Some(DutyDefermentDisplayBalance(
-          Some(Formatters.formatCurrencyAmount(amountLimit)),
-          None,
-          None)
-        )
+          Some(BigDecimal(amountLimit))
+        ) mustBe Some(DutyDefermentDisplayBalance(Some(Formatters.formatCurrencyAmount(amountLimit)), None, None))
       }
 
       "periodAccountLimit is 0 and periodGuaranteeLimit is greater than 0 " in new Setup {
         ddAccount.displayBalances(
           Some(BigDecimal(amountLimitZero)),
           Some(BigDecimal(amountLimit)),
-          Some(BigDecimal(amountLimit))) mustBe Some(DutyDefermentDisplayBalance(
-          None,
-          Some(Formatters.formatCurrencyAmount(amountLimit)),
-          None)
-        )
+          Some(BigDecimal(amountLimit))
+        ) mustBe Some(DutyDefermentDisplayBalance(None, Some(Formatters.formatCurrencyAmount(amountLimit)), None))
       }
     }
 
@@ -65,20 +58,22 @@ class CDSAccountSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val accNum = "12345678"
-    val owner = "test"
+    val owner  = "test"
 
-    val amountLimit = 10
+    val amountLimit     = 10
     val amountLimitZero = 0
 
     val ddBalance: DutyDefermentBalance = DutyDefermentBalance(Some(BigDecimal(amountLimit)), None, None, None)
 
-    val ddAccount: DutyDefermentAccount = DutyDefermentAccount(accNum,
+    val ddAccount: DutyDefermentAccount = DutyDefermentAccount(
+      accNum,
       owner,
       isNiAccount = true,
       AccountStatusOpen,
       DefermentAccountAvailable,
       ddBalance,
       viewBalanceIsGranted = true,
-      isIsleOfMan = false)
+      isIsleOfMan = false
+    )
   }
 }

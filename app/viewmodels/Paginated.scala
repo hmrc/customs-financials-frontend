@@ -24,9 +24,9 @@ trait Paginated[T] {
   val urlForPage: Int => String
   val itemsDescription: String
 
-  private val FirstPage = 1
+  private val FirstPage  = 1
   private val FixedWidth = 5
-  private val lookAhead = FixedWidth / 2
+  private val lookAhead  = FixedWidth / 2
 
   private lazy val totalNumberOfItems: Int = allItems.length
 
@@ -38,12 +38,12 @@ trait Paginated[T] {
   lazy val currentPage: Int = requestedPage.max(FirstPage).min(lastPage)
 
   lazy val isFirstPage: Boolean = currentPage == FirstPage
-  lazy val isLastPage: Boolean = currentPage == lastPage
+  lazy val isLastPage: Boolean  = currentPage == lastPage
 
   lazy val dataFitsOnOnePage: Boolean = totalNumberOfItems <= itemsPerPage
 
   lazy val firstItemOnPage: Int = (currentPage - 1) * itemsPerPage
-  lazy val lastItemOnPage: Int = totalNumberOfItems.min(currentPage * itemsPerPage)
+  lazy val lastItemOnPage: Int  = totalNumberOfItems.min(currentPage * itemsPerPage)
 
   lazy val visibleItems: Seq[T] = allItems.slice(firstItemOnPage, lastItemOnPage)
 

@@ -37,7 +37,7 @@ class AccountStatusSpec extends SpecBase with MustMatchers {
 
     val html: Document = Jsoup.parse(contentAsString(output))
 
-    html.getElementsByClass("duty-deferment-status").text() must include("Pending Opening On CDS")
+    html.getElementsByClass("duty-deferment-status").text()  must include("Pending Opening On CDS")
     Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
@@ -49,7 +49,7 @@ class AccountStatusSpec extends SpecBase with MustMatchers {
 
     val html: Document = Jsoup.parse(contentAsString(output))
 
-    html.getElementsByClass("duty-deferment-status").text() must include("Closed")
+    html.getElementsByClass("duty-deferment-status").text()  must include("Closed")
     Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
@@ -61,7 +61,7 @@ class AccountStatusSpec extends SpecBase with MustMatchers {
 
     val html: Document = Jsoup.parse(contentAsString(output))
 
-    html.getElementsByClass("duty-deferment-status").text() must include("Action Required")
+    html.getElementsByClass("duty-deferment-status").text()  must include("Action Required")
     Option(html.getElementsByClass("account-status-header")) must not be empty
   }
 
@@ -78,7 +78,7 @@ class AccountStatusSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val app: Application     = application().build()
     val view: account_status = app.injector.instanceOf[account_status]
   }
 }

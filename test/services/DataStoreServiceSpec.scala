@@ -17,8 +17,10 @@
 package services
 
 import config.AppConfig
-import domain.{CompanyAddress, EoriHistory, UndeliverableEmail, UndeliverableInformation,
-  UndeliverableInformationEvent, UnverifiedEmail, XiEoriAddressInformation}
+import domain.{
+  CompanyAddress, EoriHistory, UndeliverableEmail, UndeliverableInformation, UndeliverableInformationEvent,
+  UnverifiedEmail, XiEoriAddressInformation
+}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
@@ -29,7 +31,9 @@ import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
 import java.net.URL
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{
+  HeaderCarrier, HttpReads, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse
+}
 import utils.SpecBase
 import utils.MustMatchers
 
@@ -41,8 +45,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
   "Data store service" should {
     "return json response" in new Setup {
-      implicit def stringToOptionLocalDate: String => Option[LocalDate] = in => Some(
-        LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
+      implicit def stringToOptionLocalDate: String => Option[LocalDate] =
+        in => Some(LocalDate.parse(in, DateTimeFormatter.ISO_LOCAL_DATE))
 
       val expectedEoriHistory: List[EoriHistory] =
         List(
@@ -50,8 +54,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
           EoriHistory("GB22222", "2018-01-01", "2019-02-28")
         )
 
-      val eoriHistory1: EoriHistory = EoriHistory("GB11111", validFrom = "2019-03-01", None)
-      val eoriHistory2: EoriHistory = EoriHistory("GB22222", validFrom = "2018-01-01", validUntil = "2019-02-28")
+      val eoriHistory1: EoriHistory                = EoriHistory("GB11111", validFrom = "2019-03-01", None)
+      val eoriHistory2: EoriHistory                = EoriHistory("GB22222", validFrom = "2018-01-01", validUntil = "2019-02-28")
       val eoriHistoryResponse: EoriHistoryResponse = EoriHistoryResponse(Seq(eoriHistory1, eoriHistory2))
 
       when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
@@ -61,7 +65,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val response = service.getAllEoriHistory(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result.toList must be(expectedEoriHistory)
       }
@@ -77,7 +81,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val response = service.getAllEoriHistory(eori)
-        val result = await(response)
+        val result   = await(response)
         result mustBe expectedResp
 
       }
@@ -93,7 +97,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val response = service.getAllEoriHistory(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe expectedResp.eoriHistory
       }
@@ -111,8 +115,9 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         val response = service.getAllEoriHistory(eori)
         await(response)
 
-        verify(mockMetricsReporterService).withResponseTimeLogging(ArgumentMatchers.eq(
-          "customs-data-store.get.eori-history"))(any)(any)
+        verify(mockMetricsReporterService).withResponseTimeLogging(
+          ArgumentMatchers.eq("customs-data-store.get.eori-history")
+        )(any)(any)
       }
     }
 
@@ -120,31 +125,23 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       val jsonResponse: String = """{"address":"someemail@mail.com"}""".stripMargin
 
       when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful((Json.parse(jsonResponse)).as[EmailResponse]))
+        .thenReturn(Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
         val response = service.getEmail(eori)
-        val result = await(response)
+        val result   = await(response)
         result mustBe Right(Email("someemail@mail.com"))
       }
     }
 
     "return Left(UndeliverableEmail) when there is undeliverable info" in new Setup {
-      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
-        emptyString,
-        emptyString,
-        emptyString,
-        None,
-        None,
-        emptyString)
+      val undeliverableEvent: UndeliverableInformationEvent =
+        UndeliverableInformationEvent(emptyString, emptyString, emptyString, emptyString, None, None, emptyString)
 
-      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
-        "test_event",
-        "test_event",
-        LocalDateTime.now(),
-        undeliverableEvent)
+      val undeliverableInfo: UndeliverableInformation =
+        UndeliverableInformation("test_sub", "test_event", "test_event", LocalDateTime.now(), undeliverableEvent)
 
       val emailAddress = "test"
 
@@ -157,26 +154,18 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val response = service.getEmail(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe Left(UndeliverableEmail(emailAddress))
       }
     }
 
     "return Left(UnverifiedEmail) when there is no address in response" in new Setup {
-      val undeliverableEvent: UndeliverableInformationEvent = UndeliverableInformationEvent(emptyString,
-        emptyString,
-        emptyString,
-        emptyString,
-        None,
-        None,
-        emptyString)
+      val undeliverableEvent: UndeliverableInformationEvent =
+        UndeliverableInformationEvent(emptyString, emptyString, emptyString, emptyString, None, None, emptyString)
 
-      val undeliverableInfo: UndeliverableInformation = UndeliverableInformation("test_sub",
-        "test_event",
-        "test_event",
-        LocalDateTime.now(),
-        undeliverableEvent)
+      val undeliverableInfo: UndeliverableInformation =
+        UndeliverableInformation("test_sub", "test_event", "test_event", LocalDateTime.now(), undeliverableEvent)
 
       val emailResponse: EmailResponse = EmailResponse(None, None, Some(undeliverableInfo))
 
@@ -187,7 +176,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val response = service.getEmail(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe Left(UnverifiedEmail)
       }
@@ -221,8 +210,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
     "CompanyName" should {
       "return company name" in new Setup {
-        val companyName = "Company name"
-        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName                                            = "Company name"
+        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "1", address)
 
@@ -233,14 +222,14 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getCompanyName(eori)
-          val result = await(response)
+          val result   = await(response)
           result must be(Some(companyName))
         }
       }
 
       "return None when consent is not given" in new Setup {
-        val companyName = "Company name"
-        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName                                            = "Company name"
+        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "0", address)
 
@@ -251,7 +240,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getCompanyName(eori)
-          val result = await(response)
+          val result   = await(response)
           result mustBe None
         }
       }
@@ -271,8 +260,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
     "OwnCompanyName" should {
       "return own company name" in new Setup {
-        val companyName = "Company name"
-        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName                                            = "Company name"
+        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "0", address)
 
@@ -283,14 +272,14 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getOwnCompanyName(eori)
-          val result = await(response)
+          val result   = await(response)
           result must be(Some(companyName))
         }
       }
 
       "return None when no company information is found" in new Setup {
         when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-        .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
 
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
@@ -303,9 +292,10 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
     "CompanyAddress" should {
       "return Company Address" in new Setup {
-        val companyName = "Company name"
-        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
-        val companyInformationResponse: CompanyInformationResponse = CompanyInformationResponse(companyName, "1", address)
+        val companyName                                            = "Company name"
+        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyInformationResponse: CompanyInformationResponse =
+          CompanyInformationResponse(companyName, "1", address)
 
         when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
           .thenReturn(Future.successful(companyInformationResponse))
@@ -314,7 +304,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getCompanyAddress(eori)
-          val result = await(response)
+          val result   = await(response)
           result must be(Some(address))
         }
       }
@@ -334,8 +324,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
     "XiEori" should {
       "return xi eori" in new Setup {
-        val xiEori = "XI123456789"
-        val xiAddress: XiEoriAddressInformation =
+        val xiEori                                   = "XI123456789"
+        val xiAddress: XiEoriAddressInformation      =
           XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
@@ -346,7 +336,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getXiEori(eori)
-          val result = await(response)
+          val result   = await(response)
           result must be(Some(xiEori))
         }
       }
@@ -364,8 +354,8 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       }
 
       "return None when retunred xi Eori is empty" in new Setup {
-        val xiEori: String = emptyString
-        val xiAddress: XiEoriAddressInformation =
+        val xiEori: String                           = emptyString
+        val xiAddress: XiEoriAddressInformation      =
           XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
@@ -376,22 +366,22 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         running(app) {
           val response = service.getXiEori(eori)
-          val result = await(response)
+          val result   = await(response)
 
           result mustBe None
         }
       }
 
       "return None when feature flag is false" in {
-        val mockMetricsReporterService = mock[MetricsReporterService]
-        val mockHttpClient = mock[HttpClientV2]
+        val mockMetricsReporterService     = mock[MetricsReporterService]
+        val mockHttpClient                 = mock[HttpClientV2]
         val requestBuilder: RequestBuilder = mock[RequestBuilder]
-        val mockAppConfig = mock[AppConfig]
-        implicit val hc: HeaderCarrier = HeaderCarrier()
+        val mockAppConfig                  = mock[AppConfig]
+        implicit val hc: HeaderCarrier     = HeaderCarrier()
 
-        val eori = "GB11111"
-        val xiEori = "XI123456789"
-        val xiAddress = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
+        val eori           = "GB11111"
+        val xiEori         = "XI123456789"
+        val xiAddress      = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
         when(requestBuilder.execute(any[HttpReads[XiEoriInformationReponse]], any[ExecutionContext]))
@@ -400,24 +390,26 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         when(mockMetricsReporterService.withResponseTimeLogging[Seq[EoriHistory]](any)(any)(any))
-          .thenAnswer((i: InvocationOnMock) => {
+          .thenAnswer { (i: InvocationOnMock) =>
             i.getArgument[Future[Seq[EoriHistory]]](1)
-          })
+          }
 
         when(mockAppConfig.customsDataStore).thenReturn("test/value")
         when(mockAppConfig.xiEoriEnabled).thenReturn(false)
 
-        val app = application().overrides(
-          inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-          inject.bind[HttpClientV2].toInstance(mockHttpClient),
-          inject.bind[RequestBuilder].toInstance(requestBuilder),
-          inject.bind[AppConfig].toInstance(mockAppConfig)
-        ).build()
+        val app = application()
+          .overrides(
+            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+            inject.bind[HttpClientV2].toInstance(mockHttpClient),
+            inject.bind[RequestBuilder].toInstance(requestBuilder),
+            inject.bind[AppConfig].toInstance(mockAppConfig)
+          )
+          .build()
 
         val service = app.injector.instanceOf[DataStoreService]
 
         val response = service.getXiEori(eori)
-        val result = await(response)
+        val result   = await(response)
 
         result mustBe None
       }
@@ -426,22 +418,24 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    val eori = "GB11111"
+    val mockHttpClient: HttpClientV2                       = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
+    implicit val hc: HeaderCarrier                         = HeaderCarrier()
+    val eori                                               = "GB11111"
 
-    val app: Application = application().overrides(
-      inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val service: DataStoreService = app.injector.instanceOf[DataStoreService]
 
     when(mockMetricsReporterService.withResponseTimeLogging[Seq[EoriHistory]](any)(any)(any))
-      .thenAnswer((i: InvocationOnMock) => {
+      .thenAnswer { (i: InvocationOnMock) =>
         i.getArgument[Future[Seq[EoriHistory]]](1)
-      })
+      }
   }
 }

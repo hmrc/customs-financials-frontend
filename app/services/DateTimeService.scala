@@ -23,11 +23,11 @@ import java.time._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DateTimeService @Inject()(appConfig: AppConfig) {
+class DateTimeService @Inject() (appConfig: AppConfig) {
 
   def getTimeStamp: OffsetDateTime = OffsetDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
 
-  def systemDateTime(): LocalDateTime = {
+  def systemDateTime(): LocalDateTime =
     if (appConfig.fixedDateTime) {
       LocalDateTime.of(
         LocalDate.of(FIXED_DATE_TIME_YEAR, FIXED_DATE_TIME_MONTH, FIXED_DATE_TIME_DAY),
@@ -36,5 +36,4 @@ class DateTimeService @Inject()(appConfig: AppConfig) {
     } else {
       LocalDateTime.now()
     }
-  }
 }

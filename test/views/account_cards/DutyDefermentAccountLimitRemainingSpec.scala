@@ -34,20 +34,18 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
 
     "display correct contents" when {
       "periodAvailableAccountBalance has some value" in new Setup {
-        val availableAccountBalanceText: String = viewDoc(
-          ddAccount1WithEori,
-          periodAvailableBalance = false).getElementsByClass(
-          "accountLimitRemaining search-results__item").text()
+        val availableAccountBalanceText: String = viewDoc(ddAccount1WithEori, periodAvailableBalance = false)
+          .getElementsByClass("accountLimitRemaining search-results__item")
+          .text()
 
         availableAccountBalanceText.contains(msgs("cf.account.authorized-to-view.account-limit-remaining"))
         availableAccountBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableAccountBalance))
       }
 
       "periodAvailableGuaranteeBalance has some value" in new Setup {
-        val availableGuaranteeBalanceText: String = viewDoc(
-          ddAccount1WithEori,
-          periodAvailableBalance = false).getElementsByClass(
-          "guaranteeLimitRemaining search-results__item").text()
+        val availableGuaranteeBalanceText: String = viewDoc(ddAccount1WithEori, periodAvailableBalance = false)
+          .getElementsByClass("guaranteeLimitRemaining search-results__item")
+          .text()
 
         availableGuaranteeBalanceText.contains(msgs("cf.account.authorized-to-view.guarantee-limit-remaining"))
         availableGuaranteeBalanceText.contains(Formatters.formatCurrencyAmount(periodAvailableGuaranteeBalance))
@@ -67,20 +65,21 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
 
     implicit val msgs: Messages = messages(app)
 
-    val periodGuaranteeLimit: BigDecimal = BigDecimal(100.0)
-    val periodAccountLimit: BigDecimal = BigDecimal(100.0)
+    val periodGuaranteeLimit: BigDecimal            = BigDecimal(100.0)
+    val periodAccountLimit: BigDecimal              = BigDecimal(100.0)
     val periodAvailableGuaranteeBalance: BigDecimal = BigDecimal(100.0)
-    val periodAvailableAccountBalance: BigDecimal = BigDecimal(100.0)
+    val periodAvailableAccountBalance: BigDecimal   = BigDecimal(100.0)
 
     val accountNumber = "DAN01234"
-    val eori = "test_eori"
+    val eori          = "test_eori"
 
     val ddAccount1WithEori: DutyDefermentAccount =
       DutyDefermentAccount(
         accountNumber,
         eori,
         isNiAccount = false,
-        AccountStatusClosed, DefermentAccountAvailable,
+        AccountStatusClosed,
+        DefermentAccountAvailable,
         DutyDefermentBalance(
           Some(periodGuaranteeLimit),
           Some(periodAccountLimit),
@@ -88,12 +87,18 @@ class DutyDefermentAccountLimitRemainingSpec extends SpecBase with MustMatchers 
           Some(periodAvailableAccountBalance)
         ),
         viewBalanceIsGranted = true,
-        isIsleOfMan = false)
+        isIsleOfMan = false
+      )
 
     def viewDoc(account: DutyDefermentAccount, periodAvailableBalance: Boolean): Document =
-      Jsoup.parse(app.injector.instanceOf[duty_deferment_account_limit_remaining].apply(
-        account,
-        periodAvailableBalance
-      ).body)
+      Jsoup.parse(
+        app.injector
+          .instanceOf[duty_deferment_account_limit_remaining]
+          .apply(
+            account,
+            periodAvailableBalance
+          )
+          .body
+      )
   }
 }

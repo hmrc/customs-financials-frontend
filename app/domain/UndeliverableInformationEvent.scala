@@ -18,16 +18,18 @@ package domain
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class UndeliverableInformationEvent(id: String,
-                                         event: String,
-                                         emailAddress: String,
-                                         detected: String,
-                                         code: Option[Int],
-                                         reason: Option[String],
-                                         enrolment: String)
+case class UndeliverableInformationEvent(
+  id: String,
+  event: String,
+  emailAddress: String,
+  detected: String,
+  code: Option[Int],
+  reason: Option[String],
+  enrolment: String
+)
 
 object UndeliverableInformationEvent {
 
-  implicit val reads: Reads[UndeliverableInformationEvent] = Json.reads[UndeliverableInformationEvent]
+  implicit val reads: Reads[UndeliverableInformationEvent]    = Json.reads[UndeliverableInformationEvent]
   implicit val writes: OWrites[UndeliverableInformationEvent] = Json.writes[UndeliverableInformationEvent]
 }

@@ -17,9 +17,9 @@
 package utils
 
 object Constants {
-  val FIXED_DATE_TIME_YEAR = 2027
-  val FIXED_DATE_TIME_MONTH = 12
-  val FIXED_DATE_TIME_DAY = 20
-  val FIXED_DATE_TIME_HOUR_OF_DAY = 12
+  val FIXED_DATE_TIME_YEAR            = 2027
+  val FIXED_DATE_TIME_MONTH           = 12
+  val FIXED_DATE_TIME_DAY             = 20
+  val FIXED_DATE_TIME_HOUR_OF_DAY     = 12
   val FIXED_DATE_TIME_MINUTES_OF_HOUR = 30
 }

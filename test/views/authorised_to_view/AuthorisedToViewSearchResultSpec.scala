@@ -17,7 +17,10 @@
 package views.authorised_to_view
 
 import config.AppConfig
-import domain.{Account, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount, SearchedAuthorities}
+import domain.{
+  Account, AuthorisedBalances, AuthorisedCashAccount, AuthorisedDutyDefermentAccount, AuthorisedGeneralGuaranteeAccount,
+  SearchedAuthorities
+}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -37,19 +40,21 @@ class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
     "display the correct title, header and company name" in new SetUp {
 
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search_result].apply(
-          "1100001",
-          Option("GBN45365789211"),
-          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
-          Option("TestCompany"),
-          displayLink = true).body)
+        app.injector
+          .instanceOf[authorised_to_view_search_result]
+          .apply(
+            "1100001",
+            Option("GBN45365789211"),
+            SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+            Option("TestCompany"),
+            displayLink = true
+          )
+          .body
+      )
 
       running(app) {
         view.title() mustBe
-          s"${
-            messages(app)(
-              "cf.search.authorities.result.title", "1100001")
-          } - ${messages(app)("service.name")} - GOV.UK"
+          s"${messages(app)("cf.search.authorities.result.title", "1100001")} - ${messages(app)("service.name")} - GOV.UK"
 
         view.getElementsByTag("h1").html() mustBe
           (messages(app)("cf.search.authorities.result.title", "1100001"))
@@ -65,13 +70,18 @@ class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
     "display both GB and XI EORI labels if authorities are returned for both" in new SetUp {
 
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search_result].apply(
-          "1100001",
-          Option("GBN45365789211"),
-          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
-          Option("TestCompany"),
-          displayLink = true,
-          Option("XI45365789211")).body)
+        app.injector
+          .instanceOf[authorised_to_view_search_result]
+          .apply(
+            "1100001",
+            Option("GBN45365789211"),
+            SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+            Option("TestCompany"),
+            displayLink = true,
+            Option("XI45365789211")
+          )
+          .body
+      )
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -86,12 +96,17 @@ class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
 
     "display only GB EORI label if authorities are available only for GB EORI" in new SetUp {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search_result].apply(
-          "1100001",
-          Option("GBN45365789211"),
-          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
-          Option("TestCompany"),
-          displayLink = true).body)
+        app.injector
+          .instanceOf[authorised_to_view_search_result]
+          .apply(
+            "1100001",
+            Option("GBN45365789211"),
+            SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+            Option("TestCompany"),
+            displayLink = true
+          )
+          .body
+      )
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -102,13 +117,18 @@ class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
 
     "display only XI EORI label if authorities are available for XI EORI" in new SetUp {
       val view: Document = Jsoup.parse(
-        app.injector.instanceOf[authorised_to_view_search_result].apply(
-          "1100001",
-          None,
-          SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
-          Option("TestCompany"),
-          displayLink = true,
-          Option("XI45365789211")).body)
+        app.injector
+          .instanceOf[authorised_to_view_search_result]
+          .apply(
+            "1100001",
+            None,
+            SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount)),
+            Option("TestCompany"),
+            displayLink = true,
+            Option("XI45365789211")
+          )
+          .body
+      )
 
       val summaryRowElements: Elements = view.getElementsByClass("govuk-summary-list__row")
 
@@ -119,17 +139,19 @@ class AuthorisedToViewSearchResultSpec extends SpecBase with MustMatchers {
   }
 
   trait SetUp {
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    implicit val msg: Messages = messages(app)
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
+    implicit val msg: Messages                                = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
     val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
       AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
     val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-      AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"),
-        Some(AuthorisedBalances("100.0", "200.0")))
+      AuthorisedDutyDefermentAccount(
+        Account("1234", "GeneralGuarantee", "GB000000000000"),
+        Some(AuthorisedBalances("100.0", "200.0"))
+      )
 
     val cashAccount: AuthorisedCashAccount =
       AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))

@@ -18,8 +18,8 @@ package views.components
 
 import config.AppConfig
 import domain.{
-  AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSCashBalance,
-  CashAccount, DefermentAccountAvailable, DirectDebitMandateCancelled
+  AccountCancelled, AccountStatusClosed, AccountStatusOpen, AccountStatusSuspended, CDSCashBalance, CashAccount,
+  DefermentAccountAvailable, DirectDebitMandateCancelled
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -64,8 +64,13 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
 
     "generate a hidden suspended status for screen readers" in new Setup {
       running(app) {
-        val newCashAccount = CashAccount("123456", "owner", AccountStatusSuspended, DirectDebitMandateCancelled,
-          CDSCashBalance(Some(BigDecimal(BALANCE_987))))
+        val newCashAccount = CashAccount(
+          "123456",
+          "owner",
+          AccountStatusSuspended,
+          DirectDebitMandateCancelled,
+          CDSCashBalance(Some(BigDecimal(BALANCE_987)))
+        )
 
         val status = content(newCashAccount).select(".cash-account").first
 
@@ -75,9 +80,14 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
 
     "generate a hidden closed status for screen readers" in new Setup {
       running(app) {
-        val newCashAccount = CashAccount("123456", "owner", AccountStatusClosed, AccountCancelled,
-          CDSCashBalance(Some(BigDecimal(BALANCE_876))))
-        val status = content(newCashAccount).select(".cash-account").first
+        val newCashAccount = CashAccount(
+          "123456",
+          "owner",
+          AccountStatusClosed,
+          AccountCancelled,
+          CDSCashBalance(Some(BigDecimal(BALANCE_876)))
+        )
+        val status         = content(newCashAccount).select(".cash-account").first
 
         status.getElementsByTag("span").hasClass("govuk-visually-hidden") mustBe true
       }
@@ -86,20 +96,27 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     "include a top up link" in new Setup {
       running(app) {
         content(cashAccount)
-          .containsLinkWithText("https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations",
-            "Top up")
+          .containsLinkWithText(
+            "https://www.gov.uk/guidance/paying-into-your-cash-account-for-cds-declarations",
+            "Top up"
+          )
       }
     }
   }
 
   trait Setup extends I18nSupport {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     val cashAccount: CashAccount =
-      CashAccount("123456", "owner", AccountStatusOpen, DefermentAccountAvailable,
-        CDSCashBalance(Some(BigDecimal(BALANCE_999))))
+      CashAccount(
+        "123456",
+        "owner",
+        AccountStatusOpen,
+        DefermentAccountAvailable,
+        CDSCashBalance(Some(BigDecimal(BALANCE_999)))
+      )
 
     def content(cashAccount: CashAccount): Document =
       Jsoup.parse(app.injector.instanceOf[cash_account_cards].apply(Seq(cashAccount)).body)

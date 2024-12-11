@@ -32,12 +32,12 @@ class HelpAndSupportMessageSpec extends SpecBase with MustMatchers {
     "display a help and support message with heading class as non-default" in {
       val page = Jsoup.parse(views.html.components.help_and_support_message("govuk-heading-s").body)
 
-      page.getElementById("help_and_support")
-        .text mustBe "cf.help-and-support.title cf.account.help-support.message" +
+      page.getElementById("help_and_support").text mustBe "cf.help-and-support.title cf.account.help-support.message" +
         " cf.account.help-support.numbers. cf.account.help-support.office-hours"
 
       page.getElementsByClass("govuk-heading-s").isEmpty mustBe false
-      page.getElementById("contact-number")
+      page
+        .getElementById("contact-number")
         .text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
       page.getElementById("office-hours").text mustBe "cf.account.help-support.office-hours"
     }
@@ -47,7 +47,8 @@ class HelpAndSupportMessageSpec extends SpecBase with MustMatchers {
 
       page.getElementById("help_and_support")
       page.getElementsByClass("govuk-heading-m").isEmpty mustBe false
-      page.getElementById("contact-number")
+      page
+        .getElementById("contact-number")
         .text mustBe "cf.account.help-support.message cf.account.help-support.numbers."
       page.getElementById("office-hours").text mustBe "cf.account.help-support.office-hours"
     }

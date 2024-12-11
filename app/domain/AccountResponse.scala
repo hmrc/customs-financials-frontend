@@ -18,13 +18,15 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class AccountResponse(number: String,
-                           `type`: String,
-                           owner: String,
-                           accountStatus: Option[CDSAccountStatus],
-                           accountStatusID: Option[CDSAccountStatusId],
-                           viewBalanceIsGranted: Boolean,
-                           isleOfManFlag: Option[Boolean] = None)
+case class AccountResponse(
+  number: String,
+  `type`: String,
+  owner: String,
+  accountStatus: Option[CDSAccountStatus],
+  accountStatusID: Option[CDSAccountStatusId],
+  viewBalanceIsGranted: Boolean,
+  isleOfManFlag: Option[Boolean] = None
+)
 
 object AccountResponse {
   implicit val reads: Reads[AccountResponse] = Json.reads[AccountResponse]

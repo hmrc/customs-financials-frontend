@@ -28,13 +28,14 @@ import views.html.email.{undeliverable_email, verify_your_email}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class EmailController @Inject()(authenticate: IdentifierAction,
-                                verifyEmailView: verify_your_email,
-                                undeliverableEmail: undeliverable_email,
-                                customsDataStoreConnector: CustomsDataStoreConnector,
-                                implicit val mcc: MessagesControllerComponents)
-                               (implicit val appConfig: AppConfig, ec: ExecutionContext)
-  extends FrontendController(mcc)
+class EmailController @Inject() (
+  authenticate: IdentifierAction,
+  verifyEmailView: verify_your_email,
+  undeliverableEmail: undeliverable_email,
+  customsDataStoreConnector: CustomsDataStoreConnector,
+  implicit val mcc: MessagesControllerComponents
+)(implicit val appConfig: AppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport {
 
   val log: LoggerLike = Logger(this.getClass)
@@ -44,8 +45,14 @@ class EmailController @Inject()(authenticate: IdentifierAction,
   }
 
   def showUndeliverable(): Action[AnyContent] = authenticate async { implicit request =>
-    customsDataStoreConnector.getEmailAddress.map(
-      verifiedEmailRes => Ok(undeliverableEmail(appConfig.emailFrontendUrl,
-        verifiedEmailRes.verifiedEmail)(request, request.messages, appConfig)))
+    customsDataStoreConnector.getEmailAddress.map(verifiedEmailRes =>
+      Ok(
+        undeliverableEmail(appConfig.emailFrontendUrl, verifiedEmailRes.verifiedEmail)(
+          request,
+          request.messages,
+          appConfig
+        )
+      )
+    )
   }
 }

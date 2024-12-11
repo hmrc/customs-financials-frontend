@@ -46,7 +46,7 @@ class PSpec extends SpecBase with MustMatchers {
           message = "Hello, world!",
           extraClasses = "custom-class"
         )(messages(app))
-        val html: Document = Jsoup.parse(contentAsString(output))
+        val html: Document                = Jsoup.parse(contentAsString(output))
 
         html.getElementsByClass("custom-class").text() must include("Hello, world!")
       }
@@ -55,6 +55,6 @@ class PSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val app: Application = application().build()
-    val pView: p = app.injector.instanceOf[p]
+    val pView: p         = app.injector.instanceOf[p]
   }
 }

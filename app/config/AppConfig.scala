@@ -23,36 +23,34 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesConfig) {
+class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesConfig) {
 
   lazy val appName: String = config.get[String]("appName")
 
-  lazy val emailFrontendService: String = s"${servicesConfig.baseUrl("customs-email-frontend")}${
-    config.get[String](
-      "microservice.services.customs-email-frontend.context")
-  }"
+  lazy val emailFrontendService: String =
+    s"${servicesConfig.baseUrl("customs-email-frontend")}${config.get[String]("microservice.services.customs-email-frontend.context")}"
 
-  lazy val timeout: Int = config.get[Int]("timeout.timeout")
+  lazy val timeout: Int   = config.get[Int]("timeout.timeout")
   lazy val countdown: Int = config.get[Int]("timeout.countdown")
 
-  lazy val xClientIdHeader: String = config.get[String]("microservice.services.sdes.x-client-id")
-  lazy val fixedDateTime: Boolean = config.get[Boolean]("features.fixed-system-time")
-  lazy val xiEoriEnabled: Boolean = config.get[Boolean]("features.xi-eori-enabaled")
-  lazy val isCashAccountV2FeatureFlagEnabled: Boolean = config.get[Boolean]("features.cash-account-v2-enabled")
-  lazy val isHomePageLinksEnabled: Boolean = config.get[Boolean]("features.home-page-links-enabled")
+  lazy val xClientIdHeader: String                        = config.get[String]("microservice.services.sdes.x-client-id")
+  lazy val fixedDateTime: Boolean                         = config.get[Boolean]("features.fixed-system-time")
+  lazy val xiEoriEnabled: Boolean                         = config.get[Boolean]("features.xi-eori-enabaled")
+  lazy val isCashAccountV2FeatureFlagEnabled: Boolean     = config.get[Boolean]("features.cash-account-v2-enabled")
+  lazy val isHomePageLinksEnabled: Boolean                = config.get[Boolean]("features.home-page-links-enabled")
   lazy val isAuthoritiesNotificationPanelEnabled: Boolean =
     config.get[Boolean]("features.authorities-notification-panel-enabled")
 
-  lazy val subscribeCdsUrl: String = config.get[String]("external-urls.cdsSubscribeUrl")
-  lazy val reportChangeCdsUrl: String = config.get[String]("external-urls.reportChangeUrl")
-  lazy val accessibilityLinkUrl: String = config.get[String]("external-urls.accessibility-statement")
+  lazy val subscribeCdsUrl: String             = config.get[String]("external-urls.cdsSubscribeUrl")
+  lazy val reportChangeCdsUrl: String          = config.get[String]("external-urls.reportChangeUrl")
+  lazy val accessibilityLinkUrl: String        = config.get[String]("external-urls.accessibility-statement")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
-  lazy val cashAccountWithdrawUrl: String = config.get[String]("external-urls.cashAccountWithdrawUrl")
+  lazy val cashAccountWithdrawUrl: String      = config.get[String]("external-urls.cashAccountWithdrawUrl")
 
   lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
-  lazy val loginUrl: String = config.get[String]("external-urls.login")
-  lazy val loginContinueUrl: String = config.get[String]("external-urls.loginContinue")
-  lazy val signOutUrl: String = config.get[String]("external-urls.signOut")
+  lazy val loginUrl: String               = config.get[String]("external-urls.login")
+  lazy val loginContinueUrl: String       = config.get[String]("external-urls.loginContinue")
+  lazy val signOutUrl: String             = config.get[String]("external-urls.signOut")
   lazy val helpMakeGovUkBetterUrl: String = config.get[String]("external-urls.helpMakeGovUkBetterUrl")
 
   lazy val financialsFrontendUrl: String =
@@ -68,22 +66,23 @@ class AppConfig @Inject()(val config: Configuration, servicesConfig: ServicesCon
   lazy val manageAuthoritiesFrontendUrl: String =
     config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
 
-  lazy val manageAuthoritiesServiceUrl = s"${servicesConfig.baseUrl("customs-manage-authorities-frontend")}${
-    config.get[String](
-      "microservice.services.customs-manage-authorities-frontend.context")
-  }"
+  private lazy val manageAuthoritiesServiceBaseUrl    = s"${servicesConfig.baseUrl("customs-manage-authorities-frontend")}"
+  private lazy val manageAuthoritiesServiceContextUrl =
+    s"${config.get[String]("microservice.services.customs-manage-authorities-frontend.context")}"
+
+  lazy val manageAuthoritiesServiceUrl = s"$manageAuthoritiesServiceBaseUrl$manageAuthoritiesServiceContextUrl"
 
   lazy val guaranteeAccountUrl: String =
     config.get[String]("microservice.services.customs-guarantee-account-frontend.url")
 
   lazy val emailFrontendUrl: String = s"$emailFrontendService/service/customs-finance"
-  lazy val documentsUrl: String =
+  lazy val documentsUrl: String     =
     config.get[String]("microservice.services.customs-financials-documents-frontend.url")
 
-  lazy val importVATAccountUrl: String = s"$documentsUrl/import-vat"
+  lazy val importVATAccountUrl: String    = s"$documentsUrl/import-vat"
   lazy val postponedVATAccountUrl: String = s"$documentsUrl/postponed-vat?location=CDS"
-  lazy val securitiesAccountUrl: String = s"$documentsUrl/adjustments"
-  lazy val changeEmailUrl: String = config.get[String]("external-urls.changeEmailAddressUrl")
+  lazy val securitiesAccountUrl: String   = s"$documentsUrl/adjustments"
+  lazy val changeEmailUrl: String         = config.get[String]("external-urls.changeEmailAddressUrl")
 
   lazy val feedbackService: String = config.get[String]("microservice.services.feedback.url") +
     config.get[String]("microservice.services.feedback.source")

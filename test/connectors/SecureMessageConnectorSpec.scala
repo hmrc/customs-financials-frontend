@@ -87,10 +87,10 @@ class SecureMessageConnectorSpec extends SpecBase with MustMatchers {
 
   trait Setup {
 
-    protected val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    protected val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     protected val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    protected val expectedUrl = "messageBannerEndpoint"
-    protected val returnTo = "backhere.com"
+    protected val expectedUrl                    = "messageBannerEndpoint"
+    protected val returnTo                       = "backhere.com"
 
     protected val app: Application = application()
       .overrides(bind[HttpClientV2].toInstance(mockHttpClient))

@@ -32,11 +32,12 @@ import utils.MustMatchers
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 
-class CustomsManageAuthoritiesConnectorSpec extends SpecBase
-  with ScalaFutures
-  with FutureAwaits
-  with DefaultAwaitTimeout
-  with MustMatchers {
+class CustomsManageAuthoritiesConnectorSpec
+    extends SpecBase
+    with ScalaFutures
+    with FutureAwaits
+    with DefaultAwaitTimeout
+    with MustMatchers {
 
   "fetchAndSaveAccountAuthoritiesInCache" should {
 
@@ -115,16 +116,18 @@ class CustomsManageAuthoritiesConnectorSpec extends SpecBase
   }
 
   trait Setup {
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
+    val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    val endPointUrl =
+    val endPointUrl                    =
       s"http://localhost:9000/customs/manage-authorities/account-authorities/fetch-authorities/$TEST_EORI"
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
-    val app: Application = application().overrides(
-      inject.bind[HttpClientV2].toInstance(mockHttpClient),
-      inject.bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[HttpClientV2].toInstance(mockHttpClient),
+        inject.bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
   }
 }

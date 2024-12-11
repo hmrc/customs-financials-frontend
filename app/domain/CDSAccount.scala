@@ -25,66 +25,67 @@ trait CDSAccount {
   val statusId: CDSAccountStatusId
 }
 
-case class DutyDefermentAccount(number: String,
-                                owner: String,
-                                isNiAccount: Boolean,
-                                status: CDSAccountStatus,
-                                statusId: CDSAccountStatusId,
-                                balances: DutyDefermentBalance,
-                                viewBalanceIsGranted: Boolean,
-                                isIsleOfMan: Boolean) extends Ordered[DutyDefermentAccount] with CDSAccount {
+case class DutyDefermentAccount(
+  number: String,
+  owner: String,
+  isNiAccount: Boolean,
+  status: CDSAccountStatus,
+  statusId: CDSAccountStatusId,
+  balances: DutyDefermentBalance,
+  viewBalanceIsGranted: Boolean,
+  isIsleOfMan: Boolean
+) extends Ordered[DutyDefermentAccount]
+    with CDSAccount {
   override def compare(that: DutyDefermentAccount): Int = number.compareTo(that.number)
 
-  def displayBalances(periodAccountLimit: Option[BigDecimal],
-                      periodGuaranteeLimit: Option[BigDecimal],
-                      periodGuaranteeLimitRemaining: Option[BigDecimal]): Option[DutyDefermentDisplayBalance] = {
-
+  def displayBalances(
+    periodAccountLimit: Option[BigDecimal],
+    periodGuaranteeLimit: Option[BigDecimal],
+    periodGuaranteeLimitRemaining: Option[BigDecimal]
+  ): Option[DutyDefermentDisplayBalance] =
     (periodAccountLimit, periodGuaranteeLimit, periodGuaranteeLimitRemaining) match {
       case (Some(accountLimit), Some(guaranteeLimit), Some(availableGuaranteeBalance))
-        if accountLimit > 0 && guaranteeLimit > 0 =>
+          if accountLimit > 0 && guaranteeLimit > 0 =>
         Some(
           DutyDefermentDisplayBalance(
             Some(Formatters.formatCurrencyAmount(accountLimit)),
             Some(Formatters.formatCurrencyAmount(guaranteeLimit)),
-            Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance)))
+            Some(Formatters.formatCurrencyAmount(availableGuaranteeBalance))
+          )
         )
 
       case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit > 0 && guaranteeLimit == 0 =>
         Some(
-          DutyDefermentDisplayBalance(
-            Some(Formatters.formatCurrencyAmount(accountLimit)),
-            None,
-            None)
+          DutyDefermentDisplayBalance(Some(Formatters.formatCurrencyAmount(accountLimit)), None, None)
         )
 
       case (Some(accountLimit), Some(guaranteeLimit), Some(_)) if accountLimit == 0 && guaranteeLimit > 0 =>
         Some(
-          DutyDefermentDisplayBalance(
-            None,
-            Some(Formatters.formatCurrencyAmount(guaranteeLimit)),
-            None)
+          DutyDefermentDisplayBalance(None, Some(Formatters.formatCurrencyAmount(guaranteeLimit)), None)
         )
 
       case _ => None
     }
-  }
 
-  val isDirectDebitSetupRequired: Boolean = {
+  val isDirectDebitSetupRequired: Boolean =
     (statusId, status, isIsleOfMan) match {
-      case (DirectDebitMandateCancelled, _, false) if (status != AccountStatusPending) => true
-      case _ => false
+      case (DirectDebitMandateCancelled, _, false) if status != AccountStatusPending => true
+      case _                                                                         => false
     }
-  }
 }
 
-case class GeneralGuaranteeAccount(number: String,
-                                   owner: String,
-                                   status: CDSAccountStatus,
-                                   statusId: CDSAccountStatusId,
-                                   balances: Option[GeneralGuaranteeBalance]) extends CDSAccount
+case class GeneralGuaranteeAccount(
+  number: String,
+  owner: String,
+  status: CDSAccountStatus,
+  statusId: CDSAccountStatusId,
+  balances: Option[GeneralGuaranteeBalance]
+) extends CDSAccount
 
-case class CashAccount(number: String,
-                       owner: String,
-                       status: CDSAccountStatus,
-                       statusId: CDSAccountStatusId,
-                       balances: CDSCashBalance) extends CDSAccount
+case class CashAccount(
+  number: String,
+  owner: String,
+  status: CDSAccountStatus,
+  statusId: CDSAccountStatusId,
+  balances: CDSCashBalance
+) extends CDSAccount

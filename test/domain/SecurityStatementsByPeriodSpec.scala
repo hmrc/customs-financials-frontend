@@ -44,21 +44,33 @@ class SecurityStatementsByPeriodSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val startYear = 2023
-    val endYear = 2023
+    val endYear   = 2023
 
-    val year = 2023
+    val year  = 2023
     val month = 10
-    val day = 8
-    val eori = "test_eori"
+    val day   = 8
+    val eori  = "test_eori"
 
-    val fileName = "test_file"
+    val fileName    = "test_file"
     val downloadUrl = "test_url"
-    val size = 2048
+    val size        = 2048
 
     val date: LocalDate = LocalDate.of(year, month, day)
 
     val metadata: SecurityStatementFileMetadata = SecurityStatementFileMetadata(
-      startYear, month, day, endYear, month, day, Pdf, SecurityStatement, eori, size, "checksum", None)
+      startYear,
+      month,
+      day,
+      endYear,
+      month,
+      day,
+      Pdf,
+      SecurityStatement,
+      eori,
+      size,
+      "checksum",
+      None
+    )
 
     val securityStatFile: SecurityStatementFile = SecurityStatementFile(fileName, downloadUrl, size, metadata)
 

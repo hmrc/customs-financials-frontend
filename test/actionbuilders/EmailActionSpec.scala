@@ -31,13 +31,13 @@ import utils.MustMatchers
 
 import scala.concurrent.Future
 
-class EmailActionSpec extends SpecBase with MustMatchers{
+class EmailActionSpec extends SpecBase with MustMatchers {
 
   "EmailAction" should {
     "Let requests with validated email through" in new Setup {
       running(app) {
-        when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-          Future.successful(Right(Email("last.man@standing.co.uk"))))
+        when(mockDataStoreService.getEmail(any)(any))
+          .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
@@ -45,8 +45,8 @@ class EmailActionSpec extends SpecBase with MustMatchers{
     }
 
     "Display undeliverable page when getEmail returns undeliverable" in new Setup {
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-        Future.successful(Left(UndeliverableEmail("some@email.com"))))
+      when(mockDataStoreService.getEmail(any)(any))
+        .thenReturn(Future.successful(Left(UndeliverableEmail("some@email.com"))))
 
       val response: Option[Result] = await(emailAction.filter(authenticatedRequest))
 
@@ -56,8 +56,8 @@ class EmailActionSpec extends SpecBase with MustMatchers{
 
     "Let request through, when getEmail throws service unavailable exception" in new Setup {
       running(app) {
-        when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-          Future.failed(new ServiceUnavailableException(emptyString)))
+        when(mockDataStoreService.getEmail(any)(any))
+          .thenReturn(Future.failed(new ServiceUnavailableException(emptyString)))
 
         val response = await(emailAction.filter(authenticatedRequest))
         response mustBe None
@@ -66,8 +66,7 @@ class EmailActionSpec extends SpecBase with MustMatchers{
 
     "Redirect users with unvalidated emails" in new Setup {
       running(app) {
-        when(mockDataStoreService.getEmail(any)(any)).thenReturn(
-          Future.successful(Left(UnverifiedEmail)))
+        when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
 
         val response = await(emailAction.filter(authenticatedRequest))
         response.get.header.status mustBe SEE_OTHER
@@ -79,11 +78,13 @@ class EmailActionSpec extends SpecBase with MustMatchers{
   trait Setup {
     val mockDataStoreService: DataStoreService = mock[DataStoreService]
 
-    val app: Application = application().overrides(
-      inject.bind[DataStoreService].toInstance(mockDataStoreService)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[DataStoreService].toInstance(mockDataStoreService)
+      )
+      .build()
 
-    val emailAction: EmailAction = app.injector.instanceOf[EmailAction]
+    val emailAction: EmailAction                                           = app.injector.instanceOf[EmailAction]
     val authenticatedRequest: AuthenticatedRequest[AnyContentAsEmpty.type] =
       AuthenticatedRequest(FakeRequest("GET", "/"), newUser())
   }

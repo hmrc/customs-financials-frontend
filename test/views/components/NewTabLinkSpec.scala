@@ -61,21 +61,25 @@ class NewTabLinkSpec extends SpecBase with MustMatchers {
   trait Setup {
     val app: Application = application().build()
 
-    implicit val msgs: Messages = messages(app)
+    implicit val msgs: Messages       = messages(app)
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
-    val linkMessage = "test_link_message"
-    val href: String = "test_link"
-    val preLinkMessage = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
+    val linkMessage     = "test_link_message"
+    val href: String    = "test_link"
+    val preLinkMessage  = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
     val postLinkMessage = "cf.not-subscribed-to-cds.detail.subscribe-cds.link"
-    val pId = "link-id"
-    val style = "govuk-body govuk-!-padding-bottom-9"
+    val pId             = "link-id"
+    val style           = "govuk-body govuk-!-padding-bottom-9"
 
     val viewDoc: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href, Some(preLinkMessage)).body)
 
-    val viewDocWithAllOptionals: Document = Jsoup.parse(app.injector.instanceOf[newTabLink].apply(
-        linkMessage, href, Some(preLinkMessage), Some(postLinkMessage), Some(pId), Some(style)).body)
+    val viewDocWithAllOptionals: Document = Jsoup.parse(
+      app.injector
+        .instanceOf[newTabLink]
+        .apply(linkMessage, href, Some(preLinkMessage), Some(postLinkMessage), Some(pId), Some(style))
+        .body
+    )
 
     val viewDocWithNoPreLinkMessage: Document =
       Jsoup.parse(app.injector.instanceOf[newTabLink].apply(linkMessage, href).body)
