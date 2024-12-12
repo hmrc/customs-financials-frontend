@@ -26,8 +26,8 @@ class OrderedByEoriHistorySpec extends SpecBase with ShouldMatchers {
   "OrderedByEoriHistory" should {
 
     "correctly compare two instances based on validFrom in EoriHistory" in new Setup {
-      val eori1 = "EORI1"
-      val eori2 = "EORI2"
+      val eori1                     = "EORI1"
+      val eori2                     = "EORI2"
       val eoriHistory1: EoriHistory = EoriHistory(eori1, Some(LocalDate.parse("2022-01-01")), None)
       val eoriHistory2: EoriHistory = EoriHistory(eori2, Some(LocalDate.parse("2023-01-01")), None)
 
@@ -35,12 +35,12 @@ class OrderedByEoriHistorySpec extends SpecBase with ShouldMatchers {
       val obj2 = new TestClass(eoriHistory2)
 
       obj1.compareTo(obj2) shouldEqual 1
-      obj2.compareTo(obj1) should be < 0
+      obj2.compareTo(obj1)      should be < 0
       obj1.compareTo(obj1) shouldEqual 0
     }
 
     "return 1 when validFrom is not available for both instances" in new Setup {
-      val eori = "EORI"
+      val eori                      = "EORI"
       val eoriHistory1: EoriHistory = EoriHistory(eori, None, None)
       val eoriHistory2: EoriHistory = EoriHistory(eori, None, None)
 

@@ -27,12 +27,11 @@ import scala.concurrent.ExecutionContext
 trait MockAuditingService extends SpecBase {
   lazy val mockAuditingService: AuditingService = mock[AuditingService]
 
-  def verifyAudit(model: AuditModel): Unit = {
+  def verifyAudit(model: AuditModel): Unit =
     verify(mockAuditingService).audit(
       ArgumentMatchers.eq(model)
     )(
       ArgumentMatchers.any[HeaderCarrier],
       ArgumentMatchers.any[ExecutionContext]
     )
-  }
 }

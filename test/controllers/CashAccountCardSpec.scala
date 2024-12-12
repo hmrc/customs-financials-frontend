@@ -18,8 +18,9 @@ package controllers
 
 import config.AppConfig
 import connectors.CustomsFinancialsSessionCacheConnector
-import domain.{AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable,
-  XiEoriAddressInformation}
+import domain.{
+  AccountStatusOpen, CDSAccounts, CDSCashBalance, CashAccount, DefermentAccountAvailable, XiEoriAddressInformation
+}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -43,7 +44,7 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     "show cash account card details" in new Setup {
       running(app) {
         val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val html   = Jsoup.parse(contentAsString(result))
 
         val expectedUrl = appConfig.cashAccountUrl
         html.containsLink(expectedUrl)
@@ -54,17 +55,18 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     "should render correct ID" in new Setup {
       running(app) {
         val result = route(app, request).value
-        val html = Jsoup.parse(contentAsString(result))
+        val html   = Jsoup.parse(contentAsString(result))
 
-        html.getElementById(s"cash-account-$someCashAccountNumber")
+        html
+          .getElementById(s"cash-account-$someCashAccountNumber")
           .attr("id") mustBe "cash-account-123456789"
       }
     }
   }
 
   trait Setup {
-    val someCashAccountNumber = "123456789"
-    val someAvailableCashBalance = 98765
+    val someCashAccountNumber        = "123456789"
+    val someAvailableCashBalance     = 98765
     val someCashAccount: CashAccount = CashAccount(
       someCashAccountNumber,
       newUser().eori,
@@ -78,24 +80,25 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
 
     val xi: XiEoriInformationReponse = XiEoriInformationReponse("SomeXiEori", "yes", add)
 
-    val mockAccounts: CDSAccounts = mock[CDSAccounts]
-    val mockApiService: ApiService = mock[ApiService]
-    val mockNotificationService: NotificationService = mock[NotificationService]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
+    val mockAccounts: CDSAccounts                                         = mock[CDSAccounts]
+    val mockApiService: ApiService                                        = mock[ApiService]
+    val mockNotificationService: NotificationService                      = mock[NotificationService]
+    val mockDataStoreService: DataStoreService                            = mock[DataStoreService]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
 
-    val app: Application = application().overrides(
-      inject.bind[CDSAccounts].toInstance(mockAccounts),
-      inject.bind[ApiService].toInstance(mockApiService),
-      inject.bind[NotificationService].toInstance(mockNotificationService),
-      inject.bind[DataStoreService].toInstance(mockDataStoreService),
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[CDSAccounts].toInstance(mockAccounts),
+        inject.bind[ApiService].toInstance(mockApiService),
+        inject.bind[NotificationService].toInstance(mockNotificationService),
+        inject.bind[DataStoreService].toInstance(mockDataStoreService),
+        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector)
+      )
+      .build()
 
-    val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
     val request: FakeRequest[AnyContentAsEmpty.type] =
-      fakeRequest(GET,
-        routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
+      fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url).withHeaders("X-Session-Id" -> "session-1234")
 
     when(mockAccounts.myAccounts).thenReturn(List(someCashAccount))
     when(mockAccounts.accounts).thenReturn(List(someCashAccount))

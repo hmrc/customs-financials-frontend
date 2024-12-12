@@ -41,7 +41,7 @@ class ImportVatCardSpec extends SpecBase with MustMatchers {
   trait Setup {
     val app: Application = application().build()
 
-    implicit val msgs: Messages = messages(app)
+    implicit val msgs: Messages       = messages(app)
     implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
 
     val viewDoc: Document = Jsoup.parse(app.injector.instanceOf[import_vat_card].apply().body)

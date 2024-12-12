@@ -20,18 +20,20 @@ import config.AppConfig
 import domain.CDSAccounts.{filterCashAccounts, filterDutyDefermentAccounts, filterGuaranteeAccounts}
 import domain._
 
-case class FinancialsHomeModel(eori: EORI,
-                               companyName: Option[String],
-                               accounts: Seq[CDSAccounts],
-                               notificationMessageKeys: Seq[String],
-                               accountLinks: Seq[AccountLink],
-                               xiEori: Option[String] = None) {
+case class FinancialsHomeModel(
+  eori: EORI,
+  companyName: Option[String],
+  accounts: Seq[CDSAccounts],
+  notificationMessageKeys: Seq[String],
+  accountLinks: Seq[AccountLink],
+  xiEori: Option[String] = None
+) {
 
-  private val allMyAccounts: Seq[CDSAccount] = accounts.flatMap(_.myAccounts)
-  val dutyDefermentAccounts: Seq[DutyDefermentAccount] = filterDutyDefermentAccounts(allMyAccounts)
+  private val allMyAccounts: Seq[CDSAccount]                   = accounts.flatMap(_.myAccounts)
+  val dutyDefermentAccounts: Seq[DutyDefermentAccount]         = filterDutyDefermentAccounts(allMyAccounts)
   val guaranteeAccountViewModels: Seq[GeneralGuaranteeAccount] = filterGuaranteeAccounts(allMyAccounts)
-  val cashAccounts: Seq[CashAccount] = filterCashAccounts(allMyAccounts)
-  val isAgent: Boolean = accounts.exists(_.isAgent)
+  val cashAccounts: Seq[CashAccount]                           = filterCashAccounts(allMyAccounts)
+  val isAgent: Boolean                                         = accounts.exists(_.isAgent)
 
   def dutyDefermentAccountDetailsLinks()(implicit appConfig: AppConfig): Map[(String, String), String] =
     accountLinks.map { accountLink =>
@@ -43,9 +45,8 @@ case class FinancialsHomeModel(eori: EORI,
       (accountLink.eori, accountLink.accountNumber) -> appConfig.directDebitUrl(accountLink.linkId)
     }.toMap
 
-  def isNiAccountIndicator: Map[(EORI, String), Boolean] = {
+  def isNiAccountIndicator: Map[(EORI, String), Boolean] =
     accountLinks.map { accountLink =>
       (accountLink.eori, accountLink.accountNumber) -> accountLink.isNiAccount
     }.toMap
-  }
 }

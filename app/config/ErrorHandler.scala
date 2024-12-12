@@ -27,14 +27,17 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ErrorHandler @Inject()(val messagesApi: MessagesApi,
-                             implicit val appConfig: AppConfig,
-                             notFoundView: not_found_template,
-                             errorTemplate: error_template)(protected val ec: ExecutionContext) extends FrontendErrorHandler {
+class ErrorHandler @Inject() (
+  val messagesApi: MessagesApi,
+  implicit val appConfig: AppConfig,
+  notFoundView: not_found_template,
+  errorTemplate: error_template
+)(protected val ec: ExecutionContext)
+    extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String,
-                                     heading: String,
-                                     message: String)(implicit requestHeader: RequestHeader): Future[Html] =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit
+    requestHeader: RequestHeader
+  ): Future[Html] =
     Future.successful(
       errorTemplate(
         pageTitle = Messages("cf.error.standard-error.title"),
@@ -46,20 +49,18 @@ class ErrorHandler @Inject()(val messagesApi: MessagesApi,
   override def notFoundTemplate(implicit requestHeader: RequestHeader): Future[Html] =
     Future.successful(notFoundView())
 
-  def unauthorized()(implicit requestHeader: RequestHeader): Html = {
+  def unauthorized()(implicit requestHeader: RequestHeader): Html =
     errorTemplate(
       pageTitle = Messages("cf.error.unauthorized.title"),
       heading = Messages("cf.error.unauthorized.heading"),
       details = Messages("cf.error.unauthorized.message")
     )
-  }
 
-  def technicalDifficulties()(implicit requestHeader: RequestHeader): Html = {
+  def technicalDifficulties()(implicit requestHeader: RequestHeader): Html =
     errorTemplate(
       pageTitle = Messages("cf.error.technicalDifficulties.title"),
       heading = Messages("cf.error.technicalDifficulties.heading"),
       backLink = Some(routes.AuthorizedToViewController.onPageLoad().url),
       details = Messages("cf.error.technicalDifficulties.message")
     )
-  }
 }

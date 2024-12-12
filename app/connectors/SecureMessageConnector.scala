@@ -31,11 +31,13 @@ import domain.SearchAuthoritiesRequest.jsonBodyWritable
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SecureMessageConnector @Inject()(httpClient: HttpClientV2,
-                                       appConfig: AppConfig,
-                                       headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
-                                      (implicit ec: ExecutionContext)
-  extends Logging with Status {
+class SecureMessageConnector @Inject() (
+  httpClient: HttpClientV2,
+  appConfig: AppConfig,
+  headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
+)(implicit ec: ExecutionContext)
+    extends Logging
+    with Status {
 
   private val log = Logger(this.getClass)
 
@@ -44,16 +46,17 @@ class SecureMessageConnector @Inject()(httpClient: HttpClientV2,
 
     val returnToQueryParameter = "return_to"
 
-    httpClient.get(url"${appConfig.customsSecureMessagingBannerEndpoint}")
+    httpClient
+      .get(url"${appConfig.customsSecureMessagingBannerEndpoint}")
       .transform(_.withQueryStringParameters(returnToQueryParameter -> returnToUrl))
       .execute[HtmlPartial]
       .flatMap {
-        case success@HtmlPartial.Success(_, _) => Future.successful(Some(success))
-        case HtmlPartial.Failure(_, _) => Future.successful(None)
-      }.recover {
-      exc =>
+        case success @ HtmlPartial.Success(_, _) => Future.successful(Some(success))
+        case HtmlPartial.Failure(_, _)           => Future.successful(None)
+      }
+      .recover { exc =>
         log.error(s"Problem loading message banner partial: ${exc.getMessage}")
         None
-    }
+      }
   }
 }

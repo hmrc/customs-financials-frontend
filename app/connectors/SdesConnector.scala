@@ -30,11 +30,13 @@ import config.Headers.{X_CLIENT_ID, X_SDES_KEY}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SdesConnector @Inject()(httpClient: HttpClientV2,
-                              appConfig: AppConfig,
-                              metricsReporterService: MetricsReporterService,
-                              sdesGatekeeperService: SdesGatekeeperService,
-                              auditingService: AuditingService)(implicit executionContext: ExecutionContext) {
+class SdesConnector @Inject() (
+  httpClient: HttpClientV2,
+  appConfig: AppConfig,
+  metricsReporterService: MetricsReporterService,
+  sdesGatekeeperService: SdesGatekeeperService,
+  auditingService: AuditingService
+)(implicit executionContext: ExecutionContext) {
 
   import sdesGatekeeperService._
 
@@ -49,29 +51,27 @@ class SdesConnector @Inject()(httpClient: HttpClientV2,
     )
   }
 
-  def getSdesFiles[A, B <: SdesFile](url: String,
-                                     key: String,
-                                     metricsName: String,
-                                     transform: Seq[A] => Seq[B])
-                                    (implicit reads: HttpReads[HttpResponse],
-                                     readSeq: HttpReads[Seq[A]],
-                                     hc: HeaderCarrier): Future[Seq[B]] = {
-
+  def getSdesFiles[A, B <: SdesFile](
+    url: String,
+    key: String,
+    metricsName: String,
+    transform: Seq[A] => Seq[B]
+  )(implicit reads: HttpReads[HttpResponse], readSeq: HttpReads[Seq[A]], hc: HeaderCarrier): Future[Seq[B]] =
     metricsReporterService.withResponseTimeLogging(metricsName) {
-      httpClient.get(url"$url")
+      httpClient
+        .get(url"$url")
         .setHeader(X_CLIENT_ID -> appConfig.xClientIdHeader, X_SDES_KEY -> key)
         .execute[HttpResponse]
-        .flatMap {
-          res =>
-            Future.successful {
+        .flatMap { res =>
+          Future
+            .successful {
               readSeq.read("GET", url, res)
-            }.map(transform)
-              .map {
-                files =>
-                  auditingService.auditFiles(files, key)
-                  files
-              }
+            }
+            .map(transform)
+            .map { files =>
+              auditingService.auditFiles(files, key)
+              files
+            }
         }
     }
-  }
 }

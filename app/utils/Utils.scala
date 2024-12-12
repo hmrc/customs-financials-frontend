@@ -21,27 +21,29 @@ import domain.StandingAuthorityFile
 import scala.collection.immutable.Seq
 
 object Utils {
-  val emptyString = ""
-  val gbEORIPrefix = "GB"
-  val gbnEORIPrefix = "GBN"
-  val xiEORIPrefix = "XI"
-  val danRegex = "^[0-9]{7}"
-  val canRegex = "^[0-9]{11}"
-  val ganRegex = "^[a-zA-Z0-9]{8,10}"
+  val emptyString        = ""
+  val gbEORIPrefix       = "GB"
+  val gbnEORIPrefix      = "GBN"
+  val xiEORIPrefix       = "XI"
+  val danRegex           = "^[0-9]{7}"
+  val canRegex           = "^[0-9]{11}"
+  val ganRegex           = "^[a-zA-Z0-9]{8,10}"
   val xiCsvFileNameRegEx = "SA_XI_[\\w]+_csv.csv$"
-  val xiEoriRegex = "XI\\d{12}"
-  val singleSpace = " "
-  val hyphen = "-"
-  val asterisk = "*"
+  val xiEoriRegex        = "XI\\d{12}"
+  val singleSpace        = " "
+  val hyphen             = "-"
+  val asterisk           = "*"
 
   def isSearchQueryAnAccountNumber(inputStr: String): Boolean =
     !inputStr.startsWith(gbEORIPrefix) &&
       !inputStr.startsWith(gbnEORIPrefix) &&
-      !inputStr.startsWith(xiEORIPrefix) && (
-      inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr.matches(ganRegex))
+      !inputStr.startsWith(xiEORIPrefix) && (inputStr.matches(danRegex) || inputStr.matches(canRegex) || inputStr
+        .matches(ganRegex))
 
-  def partitionCsvFilesByFileNamePattern(csvFiles: Seq[StandingAuthorityFile],
-                                         fileNamePattern: String = xiCsvFileNameRegEx): CsvFiles = {
+  def partitionCsvFilesByFileNamePattern(
+    csvFiles: Seq[StandingAuthorityFile],
+    fileNamePattern: String = xiCsvFileNameRegEx
+  ): CsvFiles = {
     val partitionedList = csvFiles.partition(stanAuth => stanAuth.filename.matches(fileNamePattern))
     CsvFiles(partitionedList._2, partitionedList._1)
   }

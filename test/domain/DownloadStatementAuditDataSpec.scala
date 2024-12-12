@@ -26,83 +26,112 @@ class DownloadStatementAuditDataSpec extends SpecBase with MustMatchers {
 
     "correctly map DutyDefermentStatementFileMetadata and include the eori" in {
       val dutyDefermentStatementFileMetadata = DutyDefermentStatementFileMetadata(
-        YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2,
-        FileFormat.Pdf, FileRole.DutyDefermentStatement, DDStatementType.Weekly,
-        Some(true), Some("GreenShieldStamps"), "12345678", Some("some request id")
+        YEAR_1972,
+        MONTH_2,
+        DAY_20,
+        YEAR_2010,
+        MONTH_1,
+        DAY_2,
+        FileFormat.Pdf,
+        FileRole.DutyDefermentStatement,
+        DDStatementType.Weekly,
+        Some(true),
+        Some("GreenShieldStamps"),
+        "12345678",
+        Some("some request id")
       )
 
       val sut = DownloadStatementAuditData(dutyDefermentStatementFileMetadata, "12345")
       sut.auditData mustBe Map(
-        "eori" -> "12345",
-        "periodStartYear" -> "1972",
-        "periodStartMonth" -> "2",
-        "periodStartDay" -> "20",
-        "periodEndYear" -> "2010",
-        "periodEndMonth" -> "1",
-        "periodEndDay" -> "2",
-        "fileFormat" -> "PDF",
-        "fileRole" -> "DutyDefermentStatement",
+        "eori"                   -> "12345",
+        "periodStartYear"        -> "1972",
+        "periodStartMonth"       -> "2",
+        "periodStartDay"         -> "20",
+        "periodEndYear"          -> "2010",
+        "periodEndMonth"         -> "1",
+        "periodEndDay"           -> "2",
+        "fileFormat"             -> "PDF",
+        "fileRole"               -> "DutyDefermentStatement",
         "defermentStatementType" -> "Weekly",
-        "dutyOverLimit" -> "Some(true)",
-        "dutyPaymentType" -> "Some(GreenShieldStamps)",
-        "dan" -> "12345678",
-        "statementRequestId" -> "Some(some request id)"
+        "dutyOverLimit"          -> "Some(true)",
+        "dutyPaymentType"        -> "Some(GreenShieldStamps)",
+        "dan"                    -> "12345678",
+        "statementRequestId"     -> "Some(some request id)"
       )
     }
 
     "correctly map VatCertificateFileMetadata and include the eori" in {
       val vatCertificateFileMetadata = VatCertificateFileMetadata(
-        YEAR_2010, MONTH_1, FileFormat.Csv, FileRole.C79Certificate, None
+        YEAR_2010,
+        MONTH_1,
+        FileFormat.Csv,
+        FileRole.C79Certificate,
+        None
       )
 
       val sut = DownloadStatementAuditData(vatCertificateFileMetadata, "12345")
       sut.auditData mustBe Map(
-        "eori" -> "12345",
-        "periodStartYear" -> "2010",
-        "periodStartMonth" -> "1",
-        "fileFormat" -> "CSV",
-        "fileRole" -> "C79Certificate",
+        "eori"               -> "12345",
+        "periodStartYear"    -> "2010",
+        "periodStartMonth"   -> "1",
+        "fileFormat"         -> "CSV",
+        "fileRole"           -> "C79Certificate",
         "statementRequestId" -> "None"
       )
     }
 
     "correctly map PostponedVatCertificateFileMetadata and include the eori" in {
       val postponedVatCertificateFileMetadata = PostponedVatStatementFileMetadata(
-        YEAR_2010, MONTH_2, FileFormat.Pdf, FileRole.PostponedVATStatement, "some HoDs", Some("some request Id")
+        YEAR_2010,
+        MONTH_2,
+        FileFormat.Pdf,
+        FileRole.PostponedVATStatement,
+        "some HoDs",
+        Some("some request Id")
       )
 
       val sut = DownloadStatementAuditData(postponedVatCertificateFileMetadata, "12345")
       sut.auditData mustBe Map(
-        "eori" -> "12345",
-        "periodStartYear" -> "2010",
-        "periodStartMonth" -> "2",
-        "fileFormat" -> "PDF",
-        "fileRole" -> "PostponedVATStatement",
-        "source" -> "some HoDs",
+        "eori"               -> "12345",
+        "periodStartYear"    -> "2010",
+        "periodStartMonth"   -> "2",
+        "fileFormat"         -> "PDF",
+        "fileRole"           -> "PostponedVATStatement",
+        "source"             -> "some HoDs",
         "statementRequestId" -> "Some(some request Id)"
       )
     }
 
     "correctly map SecurityStatementFileMetadata and include the eori" in {
       val securityStatementFileMetadata = SecurityStatementFileMetadata(
-        YEAR_1972, MONTH_2, DAY_20, YEAR_2010, MONTH_1, DAY_2, FileFormat.Csv, FileRole.SecurityStatement,
-        "GB1234567890", FILE_SIZE_DEFAULT, "check it", Some("thing")
+        YEAR_1972,
+        MONTH_2,
+        DAY_20,
+        YEAR_2010,
+        MONTH_1,
+        DAY_2,
+        FileFormat.Csv,
+        FileRole.SecurityStatement,
+        "GB1234567890",
+        FILE_SIZE_DEFAULT,
+        "check it",
+        Some("thing")
       )
 
       val sut = DownloadStatementAuditData(securityStatementFileMetadata, "12345")
       sut.auditData mustBe Map(
-        "eori" -> "12345",
-        "periodStartYear" -> "1972",
-        "periodStartMonth" -> "2",
-        "periodStartDay" -> "20",
-        "periodEndYear" -> "2010",
-        "periodEndMonth" -> "1",
-        "periodEndDay" -> "2",
-        "fileFormat" -> "CSV",
-        "fileRole" -> "SecurityStatement",
-        "eoriNumber" -> "GB1234567890",
-        "fileSize" -> "1234",
-        "checksum" -> "check it",
+        "eori"               -> "12345",
+        "periodStartYear"    -> "1972",
+        "periodStartMonth"   -> "2",
+        "periodStartDay"     -> "20",
+        "periodEndYear"      -> "2010",
+        "periodEndMonth"     -> "1",
+        "periodEndDay"       -> "2",
+        "fileFormat"         -> "CSV",
+        "fileRole"           -> "SecurityStatement",
+        "eoriNumber"         -> "GB1234567890",
+        "fileSize"           -> "1234",
+        "checksum"           -> "check it",
         "statementRequestId" -> "Some(thing)"
       )
     }

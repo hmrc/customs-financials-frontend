@@ -30,25 +30,28 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DataStoreService @Inject()(httpClient: HttpClientV2,
-                                 metricsReporter: MetricsReporterService)
-                                (implicit appConfig: AppConfig, ec: ExecutionContext) {
+class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: MetricsReporterService)(implicit
+  appConfig: AppConfig,
+  ec: ExecutionContext
+) {
 
   val log: Logger = Logger(this.getClass)
 
   def getAllEoriHistory(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/eori-history"
-    val emptyEoriHistory = Seq(EoriHistory(eori, None, None))
+    val emptyEoriHistory  = Seq(EoriHistory(eori, None, None))
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
-      httpClient.get(url"$dataStoreEndpoint")
+      httpClient
+        .get(url"$dataStoreEndpoint")
         .execute[EoriHistoryResponse]
-        .flatMap {
-          response => Future.successful(response.eoriHistory)
-        }.recover { case e =>
-        log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
-        emptyEoriHistory
-      }
+        .flatMap { response =>
+          Future.successful(response.eoriHistory)
+        }
+        .recover { case e =>
+          log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
+          emptyEoriHistory
+        }
     }
   }
 
@@ -56,15 +59,17 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/verified-email"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
-      httpClient.get(url"$dataStoreEndpoint")
+      httpClient
+        .get(url"$dataStoreEndpoint")
         .execute[EmailResponse]
         .flatMap {
-          case EmailResponse(Some(address), _, None) => Future.successful(Right(Email(address)))
+          case EmailResponse(Some(address), _, None)  => Future.successful(Right(Email(address)))
           case EmailResponse(Some(email), _, Some(_)) => Future.successful(Left(UndeliverableEmail(email)))
-          case _ => Future.successful(Left(UnverifiedEmail))
-        }.recover {
-        case UpstreamErrorResponse(_, NOT_FOUND, _, _) => Left(UnverifiedEmail)
-      }
+          case _                                      => Future.successful(Left(UnverifiedEmail))
+        }
+        .recover { case UpstreamErrorResponse(_, NOT_FOUND, _, _) =>
+          Left(UnverifiedEmail)
+        }
     }
   }
 
@@ -72,47 +77,55 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      httpClient.get(url"$dataStoreEndpoint")
+      httpClient
+        .get(url"$dataStoreEndpoint")
         .execute[CompanyInformationResponse]
-        .flatMap {
-          response => Future.successful(if (response.consent == "1") Some(response.name) else None)
-        }.recover { case e =>
-        log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
-        None
-      }
+        .flatMap { response =>
+          Future.successful(if (response.consent == "1") Some(response.name) else None)
+        }
+        .recover { case e =>
+          log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+          None
+        }
     }
   }
 
   def getOwnCompanyName(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
-    metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      httpClient.get(url"$dataStoreEndpoint")
-        .execute[CompanyInformationResponse]
-        .flatMap {
-          response => Future.successful(Some(response.name))
-        }
-    }.recover { case e =>
-      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
-      None
-    }
-  }
-
-  def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/xieori-information"
-    val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
-
-    if (isXiEoriEnabled) {
-      metricsReporter.withResponseTimeLogging("customs-data-store.get.xieori-information") {
-        httpClient.get(url"$dataStoreEndpoint")
-          .execute[XiEoriInformationReponse]
-          .flatMap {
-            response => Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
+    metricsReporter
+      .withResponseTimeLogging("customs-data-store.get.company-information") {
+        httpClient
+          .get(url"$dataStoreEndpoint")
+          .execute[CompanyInformationResponse]
+          .flatMap { response =>
+            Future.successful(Some(response.name))
           }
-      }.recover { case e =>
+      }
+      .recover { case e =>
         log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
         None
       }
+  }
+
+  def getXiEori(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint        = s"${appConfig.customsDataStore}/eori/$eori/xieori-information"
+    val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
+
+    if (isXiEoriEnabled) {
+      metricsReporter
+        .withResponseTimeLogging("customs-data-store.get.xieori-information") {
+          httpClient
+            .get(url"$dataStoreEndpoint")
+            .execute[XiEoriInformationReponse]
+            .flatMap { response =>
+              Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
+            }
+        }
+        .recover { case e =>
+          log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+          None
+        }
     } else {
       Future.successful(None)
     }
@@ -121,22 +134,27 @@ class DataStoreService @Inject()(httpClient: HttpClientV2,
   def getCompanyAddress(eori: EORI)(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
-    metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
-      httpClient.get(url"$dataStoreEndpoint")
-        .execute[CompanyInformationResponse]
-        .flatMap {
-          response => Future.successful(Some(response.address))
-        }
-    }.recover { case e =>
-      log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
-      None
-    }
+    metricsReporter
+      .withResponseTimeLogging("customs-data-store.get.company-information") {
+        httpClient
+          .get(url"$dataStoreEndpoint")
+          .execute[CompanyInformationResponse]
+          .flatMap { response =>
+            Future.successful(Some(response.address))
+          }
+      }
+      .recover { case e =>
+        log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+        None
+      }
   }
 }
 
-case class EmailResponse(address: Option[String],
-                         timestamp: Option[String],
-                         undeliverable: Option[UndeliverableInformation])
+case class EmailResponse(
+  address: Option[String],
+  timestamp: Option[String],
+  undeliverable: Option[UndeliverableInformation]
+)
 
 object EmailResponse {
   implicit val format: OFormat[EmailResponse] = Json.format[EmailResponse]
@@ -148,9 +166,7 @@ object EoriHistoryResponse {
   implicit val format: OFormat[EoriHistoryResponse] = Json.format[EoriHistoryResponse]
 }
 
-case class CompanyInformationResponse(name: String,
-                                      consent: String,
-                                      address: CompanyAddress)
+case class CompanyInformationResponse(name: String, consent: String, address: CompanyAddress)
 
 object CompanyInformationResponse {
   implicit val format: OFormat[CompanyInformationResponse] = Json.format[CompanyInformationResponse]

@@ -28,15 +28,15 @@ class PageTitleSpec extends SpecBase with ShouldMatchers {
 
     "generate full page title with provided title" in {
       val messages: Messages = messagesApi.preferred(Seq.empty)
-      val title = Some("Page Title")
-      val fullTitle = PageTitle.fullPageTitle(title)(messages)
+      val title              = Some("Page Title")
+      val fullTitle          = PageTitle.fullPageTitle(title)(messages)
       fullTitle shouldBe Some("Page Title - Manage import duties and VAT accounts - GOV.UK")
     }
 
     "generate full page title without provided title" in {
       val messages: Messages = messagesApi.preferred(Seq.empty)
-      val title = None
-      val fullTitle = PageTitle.fullPageTitle(title)(messages)
+      val title              = None
+      val fullTitle          = PageTitle.fullPageTitle(title)(messages)
 
       fullTitle shouldBe Some("Manage import duties and VAT accounts - GOV.UK")
     }

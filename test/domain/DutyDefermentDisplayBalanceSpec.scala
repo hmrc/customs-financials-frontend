@@ -26,20 +26,20 @@ class DutyDefermentDisplayBalanceSpec extends SpecBase with ShouldMatchers {
     "correctly handle None values for accountLimit, guaranteeLimit, and guaranteeLimitRemaining" in {
       val balance = DutyDefermentDisplayBalance(None, None, None)
 
-      balance.accountLimit shouldBe None
-      balance.guaranteeLimit shouldBe None
+      balance.accountLimit            shouldBe None
+      balance.guaranteeLimit          shouldBe None
       balance.guaranteeLimitRemaining shouldBe None
     }
 
     "correctly handle Some values for accountLimit, guaranteeLimit, and guaranteeLimitRemaining" in {
-      val accountLimit = Some("1000.00")
-      val guaranteeLimit = Some("500.00")
+      val accountLimit            = Some("1000.00")
+      val guaranteeLimit          = Some("500.00")
       val guaranteeLimitRemaining = Some("200.00")
 
       val balance = DutyDefermentDisplayBalance(accountLimit, guaranteeLimit, guaranteeLimitRemaining)
 
-      balance.accountLimit shouldBe accountLimit
-      balance.guaranteeLimit shouldBe guaranteeLimit
+      balance.accountLimit            shouldBe accountLimit
+      balance.guaranteeLimit          shouldBe guaranteeLimit
       balance.guaranteeLimitRemaining shouldBe guaranteeLimitRemaining
     }
   }

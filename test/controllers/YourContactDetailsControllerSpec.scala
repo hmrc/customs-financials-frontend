@@ -46,14 +46,13 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionId))))
+      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
       when(mockSecureMessageConnector.getMessageCountBanner(any)(any)).thenReturn(Future.successful(None))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
-        routes.YourContactDetailsController.onPageLoad().url,
-        sessionId)
+      val request: FakeRequest[AnyContentAsEmpty.type] =
+        fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionId)
 
       val result: Future[Result] = route(app, request).value
       status(result) should be(OK)
@@ -67,15 +66,14 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionId))))
+      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
       when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
         .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
-        routes.YourContactDetailsController.onPageLoad().url,
-        sessionId)
+      val request: FakeRequest[AnyContentAsEmpty.type] =
+        fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionId)
 
       val result: Future[Result] = route(app, request).value
       status(result) should be(OK)
@@ -92,16 +90,15 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(
-        Option(HttpResponse(OK, sessionId))))
+      when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier]))
+        .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
-        routes.YourContactDetailsController.onPageLoad().url,
-        sessionHeaderValue)
+      val request: FakeRequest[AnyContentAsEmpty.type] =
+        fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionHeaderValue)
 
       val result: Future[Result] = route(app, request).value
 
-      status(result) should be(SEE_OTHER)
+      status(result)           should be(SEE_OTHER)
       redirectLocation(result) should be(Option(routes.CustomsFinancialsHomeController.index.url))
     }
 
@@ -115,13 +112,12 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequestWithSession(GET,
-        routes.YourContactDetailsController.onPageLoad().url,
-        sessionHeaderValue)
+      val request: FakeRequest[AnyContentAsEmpty.type] =
+        fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionHeaderValue)
 
       val result: Future[Result] = route(app, request).value
 
-      status(result) should be(SEE_OTHER)
+      status(result)           should be(SEE_OTHER)
       redirectLocation(result) should be(Option(routes.CustomsFinancialsHomeController.index.url))
     }
 
@@ -133,12 +129,12 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
       when(mockSessionCache.getSessionId(any)(any)).thenReturn(Future.successful(None))
 
-      val request: FakeRequest[AnyContentAsEmpty.type] = fakeRequest(GET,
-        routes.YourContactDetailsController.onPageLoad().url)
+      val request: FakeRequest[AnyContentAsEmpty.type] =
+        fakeRequest(GET, routes.YourContactDetailsController.onPageLoad().url)
 
       val result: Future[Result] = route(app, request).value
 
-      status(result) should be(SEE_OTHER)
+      status(result)           should be(SEE_OTHER)
       redirectLocation(result) should be(Option(routes.CustomsFinancialsHomeController.index.url))
     }
   }
@@ -158,53 +154,92 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
     val n3 = 50
     val n4 = 10
 
-    val dd1: DutyDefermentAccount = DutyDefermentAccount("1231231231", newUser().eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
-        Some(BigDecimal(n3)), Some(BigDecimal(n4))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd1: DutyDefermentAccount = DutyDefermentAccount(
+      "1231231231",
+      newUser().eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)), Some(BigDecimal(n3)), Some(BigDecimal(n4))),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd2: DutyDefermentAccount = DutyDefermentAccount("7567567567", newUser().eori, isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
-        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd2: DutyDefermentAccount = DutyDefermentAccount(
+      "7567567567",
+      newUser().eori,
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)), None, None),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd3: DutyDefermentAccount = DutyDefermentAccount("7897897897", "testEori10", isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
-        Some(BigDecimal(n3)), Some(BigDecimal(n4))), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd3: DutyDefermentAccount = DutyDefermentAccount(
+      "7897897897",
+      "testEori10",
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)), Some(BigDecimal(n3)), Some(BigDecimal(n4))),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val dd4: DutyDefermentAccount = DutyDefermentAccount("1112223334", "testEori11", isNiAccount = false,
-      AccountStatusOpen, DefermentAccountAvailable, DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)),
-        None, None), viewBalanceIsGranted = true, isIsleOfMan = false)
+    val dd4: DutyDefermentAccount = DutyDefermentAccount(
+      "1112223334",
+      "testEori11",
+      isNiAccount = false,
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      DutyDefermentBalance(Some(BigDecimal(n1)), Some(BigDecimal(n2)), None, None),
+      viewBalanceIsGranted = true,
+      isIsleOfMan = false
+    )
 
-    val cashAccount1: CashAccount = CashAccount("1000000", "testEori10", AccountStatusOpen,
-      DefermentAccountAvailable, CDSCashBalance(Some(BigDecimal(n2))))
+    val cashAccount1: CashAccount = CashAccount(
+      "1000000",
+      "testEori10",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      CDSCashBalance(Some(BigDecimal(n2)))
+    )
 
-    val cashAccount2: CashAccount = CashAccount("2000000", "testEori11", AccountStatusOpen,
-      DefermentAccountAvailable, CDSCashBalance(None))
+    val cashAccount2: CashAccount =
+      CashAccount("2000000", "testEori11", AccountStatusOpen, DefermentAccountAvailable, CDSCashBalance(None))
 
-    val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount("1234444", "testEori12", AccountStatusOpen,
-      DefermentAccountAvailable, Some(GeneralGuaranteeBalance(BigDecimal(n2 * 5), BigDecimal(n2 * 3))))
+    val ggAccount1: GeneralGuaranteeAccount = GeneralGuaranteeAccount(
+      "1234444",
+      "testEori12",
+      AccountStatusOpen,
+      DefermentAccountAvailable,
+      Some(GeneralGuaranteeBalance(BigDecimal(n2 * 5), BigDecimal(n2 * 3)))
+    )
 
-    val ggAccount2: GeneralGuaranteeAccount = GeneralGuaranteeAccount(
-      "2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
+    val ggAccount2: GeneralGuaranteeAccount =
+      GeneralGuaranteeAccount("2235555", "testEori13", AccountStatusOpen, DefermentAccountAvailable, None)
 
     val accounts: List[CDSAccount] = List(dd1, dd2, dd3, dd4, cashAccount1, cashAccount2, ggAccount1, ggAccount2)
-    val cdsAccounts: CDSAccounts = CDSAccounts(newUser().eori, None, accounts)
+    val cdsAccounts: CDSAccounts   = CDSAccounts(newUser().eori, None, accounts)
 
-    val mockApiService: ApiService = mock[ApiService]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val mockSdesConnector: SdesConnector = mock[SdesConnector]
-    val mockSecureMessageConnector: SecureMessageConnector = mock[SecureMessageConnector]
+    val mockApiService: ApiService                               = mock[ApiService]
+    val mockDataStoreService: DataStoreService                   = mock[DataStoreService]
+    val mockSdesConnector: SdesConnector                         = mock[SdesConnector]
+    val mockSecureMessageConnector: SecureMessageConnector       = mock[SecureMessageConnector]
     val mockSessionCache: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
-    val email: Email = Email("email@123.com")
+    val mockHttpClient: HttpClientV2                             = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder                           = mock[RequestBuilder]
+    val email: Email                                             = Email("email@123.com")
 
     when(mockSessionCache.getAccontLinks(any)(any)).thenReturn(Future.successful(Option(Seq())))
-    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any)).thenReturn(Future.successful(cdsAccounts))
+    when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
+      .thenReturn(Future.successful(cdsAccounts))
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
     when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(email)))
     when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("companyName")))
-    when(mockDataStoreService.getCompanyAddress(any)(any)).thenReturn(
-      Future.successful(Option(CompanyAddress(emptyString, emptyString, None, "GB"))))
+    when(mockDataStoreService.getCompanyAddress(any)(any))
+      .thenReturn(Future.successful(Option(CompanyAddress(emptyString, emptyString, None, "GB"))))
 
     val app: Application = application()
       .overrides(
@@ -213,6 +248,8 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
         inject.bind[SdesConnector].toInstance(mockSdesConnector),
         inject.bind[SecureMessageConnector].toInstance(mockSecureMessageConnector),
         inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCache)
-      ).configure("features.new-agent-view-enabled" -> false).build()
+      )
+      .configure("features.new-agent-view-enabled" -> false)
+      .build()
   }
 }

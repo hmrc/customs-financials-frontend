@@ -44,13 +44,13 @@ class NotSubscribedToCdsSpec extends SpecBase with MustMatchers {
   trait Setup {
     val app: Application = application().build()
 
-    implicit val appConfig: AppConfig = app.injector.instanceOf[config.AppConfig]
-    implicit val msg: Messages = messages(app)
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[config.AppConfig]
+    implicit val msg: Messages                                = messages(app)
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
 
     val view: Document = Jsoup.parse(
       app.injector.instanceOf[not_subscribed_to_cds].apply().body
     )
-    val htmlText = view.text()
+    val htmlText       = view.text()
   }
 }

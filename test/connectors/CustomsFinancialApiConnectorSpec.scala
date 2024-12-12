@@ -35,7 +35,7 @@ import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 
 class CustomsFinancialApiConnectorSpec
-  extends SpecBase
+    extends SpecBase
     with ScalaFutures
     with FutureAwaits
     with DefaultAwaitTimeout
@@ -55,17 +55,17 @@ class CustomsFinancialApiConnectorSpec
 
   trait Setup {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    val mockHttpClient: HttpClientV2 = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder = mock[RequestBuilder]
+    implicit val hc: HeaderCarrier                         = HeaderCarrier()
+    val mockHttpClient: HttpClientV2                       = mock[HttpClientV2]
+    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
     when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
     when(mockMetricsReporterService.withResponseTimeLogging[HttpResponse](any)(any)(any))
-      .thenAnswer((i: InvocationOnMock) => {
+      .thenAnswer { (i: InvocationOnMock) =>
         i.getArgument[Future[HttpResponse]](1)
-      })
+      }
 
     when(requestBuilder.withBody(any())(any(), any(), any())).thenReturn(requestBuilder)
     when(requestBuilder.execute(any[HttpReads[HttpResponse]], any[ExecutionContext]))
@@ -73,11 +73,13 @@ class CustomsFinancialApiConnectorSpec
 
     when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
-    val app: Application = application().overrides(
-      bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-      bind[HttpClientV2].toInstance(mockHttpClient),
-      bind[RequestBuilder].toInstance(requestBuilder)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+        bind[HttpClientV2].toInstance(mockHttpClient),
+        bind[RequestBuilder].toInstance(requestBuilder)
+      )
+      .build()
 
     val customsFinancialsApiConnector: CustomsFinancialsApiConnector =
       app.injector.instanceOf[CustomsFinancialsApiConnector]

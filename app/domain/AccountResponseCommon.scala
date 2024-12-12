@@ -18,10 +18,12 @@ package domain
 
 import play.api.libs.json.{Json, Reads}
 
-case class AccountResponseCommon(status: String,
-                                 statusText: Option[String],
-                                 processingDate: String,
-                                 returnParameters: Option[Seq[ReturnParameters]])
+case class AccountResponseCommon(
+  status: String,
+  statusText: Option[String],
+  processingDate: String,
+  returnParameters: Option[Seq[ReturnParameters]]
+)
 
 object AccountResponseCommon {
   implicit val reads: Reads[AccountResponseCommon] = Json.reads[AccountResponseCommon]

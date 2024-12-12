@@ -30,12 +30,13 @@ class DocumentAttributesSpec extends SpecBase with MustMatchers {
       fileRole = C79Certificate,
       fileName = "Foo.pdf",
       fileSize = 0,
-      metadata = Map.empty)
+      metadata = Map.empty
+    )
 
     "return true" when {
       "there is a statement request id" in {
-        val documentWithStatementRequestId = documentAttributes.copy(
-          metadata = Map("statementRequestID" -> "12345-98765-333"))
+        val documentWithStatementRequestId =
+          documentAttributes.copy(metadata = Map("statementRequestID" -> "12345-98765-333"))
 
         documentWithStatementRequestId.isRequested must be(true)
       }

@@ -28,7 +28,7 @@ import utils.MustMatchers
 class DateTimeServiceSpec extends SpecBase with MustMatchers {
 
   "return the fixed date if fixedDateTime is enabled" in {
-    val app: Application = application().configure("features.fixed-system-time" -> true).build()
+    val app: Application         = application().configure("features.fixed-system-time" -> true).build()
     val service: DateTimeService = app.injector.instanceOf[DateTimeService]
 
     running(app) {
@@ -38,10 +38,10 @@ class DateTimeServiceSpec extends SpecBase with MustMatchers {
   }
 
   "return local time .now if fixedDateTime is disabled" in {
-    val app: Application = application().configure("features.fixed-system-time" -> false).build()
-    val service: DateTimeService = app.injector.instanceOf[DateTimeService]
+    val app: Application           = application().configure("features.fixed-system-time" -> false).build()
+    val service: DateTimeService   = app.injector.instanceOf[DateTimeService]
     val mockClock: DateTimeService = mock[DateTimeService]
-    val zero: Int = 0
+    val zero: Int                  = 0
 
     def now: LocalDateTime = LocalDateTime.now()
 

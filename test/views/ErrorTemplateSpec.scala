@@ -24,7 +24,7 @@ import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import utils.{SpecBase, MustMatchers}
+import utils.{MustMatchers, SpecBase}
 import views.html.error_states.error_template
 
 class ErrorTemplateSpec extends SpecBase with MustMatchers {
@@ -73,30 +73,36 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
 
   trait Setup extends I18nSupport {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-    implicit val messages: Messages = messagesApi.preferred(request)
+    implicit val messages: Messages       = messagesApi.preferred(request)
 
     val expectedBackLinkPath = "/customs/payment-records/authorized-to-view"
 
     val viewWithBackLink: Document = Jsoup.parse(
-      app.injector.instanceOf[error_template].apply(
-        pageTitle = messages("cf.error.technicalDifficulties.title"),
-        heading = messages("cf.error.technicalDifficulties.heading"),
-        backLink = Some(expectedBackLinkPath),
-        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
-      ).body
+      app.injector
+        .instanceOf[error_template]
+        .apply(
+          pageTitle = messages("cf.error.technicalDifficulties.title"),
+          heading = messages("cf.error.technicalDifficulties.heading"),
+          backLink = Some(expectedBackLinkPath),
+          details = Seq(messages("cf.error.technicalDifficulties.message")): _*
+        )
+        .body
     )
 
     val viewWithoutBackLink: Document = Jsoup.parse(
-      app.injector.instanceOf[error_template].apply(
-        pageTitle = messages("cf.error.technicalDifficulties.title"),
-        heading = messages("cf.error.technicalDifficulties.heading"),
-        backLink = None,
-        details = Seq(messages("cf.error.technicalDifficulties.message")): _*
-      ).body
+      app.injector
+        .instanceOf[error_template]
+        .apply(
+          pageTitle = messages("cf.error.technicalDifficulties.title"),
+          heading = messages("cf.error.technicalDifficulties.heading"),
+          backLink = None,
+          details = Seq(messages("cf.error.technicalDifficulties.message")): _*
+        )
+        .body
     )
 
     val backLinkWithLink: Option[Element] =

@@ -44,12 +44,14 @@ class FileInformationSpec extends SpecBase with MustMatchers {
         "pvat-2018-06.csv",
         "https://some.sdes.domain?token=abc123",
         FILE_SIZE_DEFAULT,
-        Metadata(List(
-          MetadataItem("periodStartYear", "2018"),
-          MetadataItem("periodStartMonth", "6"),
-          MetadataItem("fileType", "CSV"),
-          MetadataItem("fileRole", "pvat")
-        ))
+        Metadata(
+          List(
+            MetadataItem("periodStartYear", "2018"),
+            MetadataItem("periodStartMonth", "6"),
+            MetadataItem("fileType", "CSV"),
+            MetadataItem("fileRole", "pvat")
+          )
+        )
       )
 
       val fileInformation = Json.parse(json).as[FileInformation]
@@ -63,12 +65,14 @@ class FileInformationSpec extends SpecBase with MustMatchers {
         "pvat-2018-06.csv",
         "https://some.sdes.domain?token=abc123",
         FILE_SIZE_DEFAULT,
-        Metadata(List(
-          MetadataItem("periodStartYear", "2018"),
-          MetadataItem("periodStartMonth", "6"),
-          MetadataItem("fileType", "CSV"),
-          MetadataItem("fileRole", "pvat")
-        ))
+        Metadata(
+          List(
+            MetadataItem("periodStartYear", "2018"),
+            MetadataItem("periodStartMonth", "6"),
+            MetadataItem("fileType", "CSV"),
+            MetadataItem("fileRole", "pvat")
+          )
+        )
       )
 
       val expectedJson =

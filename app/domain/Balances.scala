@@ -20,10 +20,12 @@ import scala.math.Numeric.BigDecimalIsFractional.zero
 
 trait Balances
 
-case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
-                                periodAccountLimit: Option[BigDecimal],
-                                periodAvailableGuaranteeBalance: Option[BigDecimal],
-                                periodAvailableAccountBalance: Option[BigDecimal]) extends Balances {
+case class DutyDefermentBalance(
+  periodGuaranteeLimit: Option[BigDecimal],
+  periodAccountLimit: Option[BigDecimal],
+  periodAvailableGuaranteeBalance: Option[BigDecimal],
+  periodAvailableAccountBalance: Option[BigDecimal]
+) extends Balances {
   private val MAX = BigDecimal(100.00)
   private val MIN = BigDecimal(0)
 
@@ -33,7 +35,7 @@ case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
       (fundsUsed, MAX)
 
     case (Some(limit), Some(balance)) =>
-      val fundsUsed = limit - balance
+      val fundsUsed  = limit - balance
       val percentage = fundsUsed / limit * MAX
       (fundsUsed, percentage)
 
@@ -43,14 +45,13 @@ case class DutyDefermentBalance(periodGuaranteeLimit: Option[BigDecimal],
   val availableBalance: BigDecimal =
     (periodAccountLimit, periodAvailableAccountBalance, periodAvailableGuaranteeBalance) match {
       case (Some(MIN), Some(MIN), _) => periodAvailableGuaranteeBalance.getOrElse(MIN)
-      case _ => periodAvailableAccountBalance.getOrElse(MIN)
+      case _                         => periodAvailableAccountBalance.getOrElse(MIN)
     }
 }
 
-case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal,
-                                   AvailableGuaranteeBalance: BigDecimal) extends Balances {
+case class GeneralGuaranteeBalance(GuaranteeLimit: BigDecimal, AvailableGuaranteeBalance: BigDecimal) extends Balances {
 
-  val usedFunds: BigDecimal = GuaranteeLimit - AvailableGuaranteeBalance
+  val usedFunds: BigDecimal      = GuaranteeLimit - AvailableGuaranteeBalance
   val usedPercentage: BigDecimal = if (GuaranteeLimit.compare(zero) != 0) usedFunds / GuaranteeLimit * 100 else zero
 }
 

@@ -23,14 +23,14 @@ object HtmlHelper {
   implicit class Attribute(val status: CDSAccountStatus) {
 
     val statusAttribute: String = status match {
-      case AccountStatusOpen => "govuk-tag"
+      case AccountStatusOpen      => "govuk-tag"
       case AccountStatusSuspended => "govuk-tag govuk-tag--yellow"
-      case AccountStatusClosed => "govuk-tag govuk-tag--grey"
-      case AccountStatusPending => "govuk-tag govuk-tag--blue"
+      case AccountStatusClosed    => "govuk-tag govuk-tag--grey"
+      case AccountStatusPending   => "govuk-tag govuk-tag--blue"
     }
 
-    val isOpen: Boolean = status == AccountStatusOpen
+    val isOpen: Boolean      = status == AccountStatusOpen
     val isSuspended: Boolean = status == AccountStatusSuspended
-    val isPending: Boolean = status == AccountStatusPending
+    val isPending: Boolean   = status == AccountStatusPending
   }
 }

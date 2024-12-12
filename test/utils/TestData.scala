@@ -20,10 +20,10 @@ import play.twirl.api.Html
 
 object TestData {
 
-  val TEST_ID = "test_id"
-  val ITEMS_20 = 20
-  val ITEMS_40 = 40
-  val ITEMS_45 = 45
+  val TEST_ID   = "test_id"
+  val ITEMS_20  = 20
+  val ITEMS_40  = 40
+  val ITEMS_45  = 45
   val ITEMS_245 = 245
   val ITEMS_250 = 250
 
@@ -33,41 +33,41 @@ object TestData {
   val PAGINATOR_ELEMENT_5 = 5
   val PAGINATOR_ELEMENT_6 = 6
 
-  val PAGE_0 = 0
-  val PAGE_1 = 1
-  val PAGE_2 = 2
-  val PAGE_3 = 3
-  val PAGE_4 = 4
-  val PAGE_5 = 5
-  val PAGE_6 = 6
-  val PAGE_7 = 7
-  val PAGE_8 = 8
-  val PAGE_9 = 9
+  val PAGE_0  = 0
+  val PAGE_1  = 1
+  val PAGE_2  = 2
+  val PAGE_3  = 3
+  val PAGE_4  = 4
+  val PAGE_5  = 5
+  val PAGE_6  = 6
+  val PAGE_7  = 7
+  val PAGE_8  = 8
+  val PAGE_9  = 9
   val PAGE_10 = 10
   val PAGE_50 = 50
 
   val PAGE_NEGATIVE_50: Int = -50
 
-  val BALANCE_10 = 10
-  val BALANCE_20 = 20
-  val BALANCE_50 = 50
-  val BALANCE_100 = 100
-  val BALANCE_150 = 150
-  val BALANCE_200 = 200
-  val BALANCE_299 = 299
-  val BALANCE_300 = 300
-  val BALANCE_499 = 499
-  val BALANCE_500 = 500
-  val BALANCE_876 = 876
-  val BALANCE_888 = 888
-  val BALANCE_987 = 987
-  val BALANCE_999 = 999
-  val BALANCE_1000000 = 1000000
-  val BALANCE_200000 = 200000
-  val BALANCE_200001 = 200001
-  val BALANCE_200002 = 200002
-  val NEGATIVE_BALANCE_10: Int = -10
-  val NEGATIVE_BALANCE_50: Int = -50
+  val BALANCE_10                = 10
+  val BALANCE_20                = 20
+  val BALANCE_50                = 50
+  val BALANCE_100               = 100
+  val BALANCE_150               = 150
+  val BALANCE_200               = 200
+  val BALANCE_299               = 299
+  val BALANCE_300               = 300
+  val BALANCE_499               = 499
+  val BALANCE_500               = 500
+  val BALANCE_876               = 876
+  val BALANCE_888               = 888
+  val BALANCE_987               = 987
+  val BALANCE_999               = 999
+  val BALANCE_1000000           = 1000000
+  val BALANCE_200000            = 200000
+  val BALANCE_200001            = 200001
+  val BALANCE_200002            = 200002
+  val NEGATIVE_BALANCE_10: Int  = -10
+  val NEGATIVE_BALANCE_50: Int  = -50
   val NEGATIVE_BALANCE_100: Int = -100
 
   val YEAR_1972 = 1972
@@ -77,41 +77,40 @@ object TestData {
   val YEAR_2023 = 2023
   val YEAR_2027 = 2027
 
-  val MONTH_1 = 1
-  val MONTH_2 = 2
-  val MONTH_5 = 5
-  val MONTH_6 = 6
+  val MONTH_1  = 1
+  val MONTH_2  = 2
+  val MONTH_5  = 5
+  val MONTH_6  = 6
   val MONTH_12 = 12
 
-  val DAY_1 = 1
-  val DAY_2 = 2
+  val DAY_1  = 1
+  val DAY_2  = 2
   val DAY_20 = 20
   val DAY_25 = 25
 
-  val HOUR_12 = 12
+  val HOUR_12    = 12
   val MINUTES_30 = 30
 
   val FILE_SIZE_DEFAULT = 1234L
-  val FILE_SIZE_42 = 42
-  val FILE_SIZE_111 = 111L
-  val FILE_SIZE_115 = 115L
-  val FILE_SIZE_500 = 500L
-  val FILE_SIZE_888 = 888L
-  val FILE_SIZE_1000 = 1000L
-  val FILE_SIZE_2064 = 2064L
-  val FILE_SIZE_2164 = 2164L
-  val FILE_SIZE_999999 = 999999L
+  val FILE_SIZE_42      = 42
+  val FILE_SIZE_111     = 111L
+  val FILE_SIZE_115     = 115L
+  val FILE_SIZE_500     = 500L
+  val FILE_SIZE_888     = 888L
+  val FILE_SIZE_1000    = 1000L
+  val FILE_SIZE_2064    = 2064L
+  val FILE_SIZE_2164    = 2164L
+  val FILE_SIZE_999999  = 999999L
   val FILE_SIZE_1000000 = 1000000L
   val FILE_SIZE_5430000 = 5430000L
 
-  val LENGTH_8 = 8
+  val LENGTH_8  = 8
   val LENGTH_11 = 11
   val LENGTH_27 = 27
 
   val TEST_EORI = "GB12345678"
 
-  lazy val TEST_MESSAGE_BANNER: Html = Html(
-    """<html>
+  lazy val TEST_MESSAGE_BANNER: Html = Html("""<html>
       | <head></head>
       | <body>
       |  <div class="govuk-!-padding-bottom-3 govuk-!-padding-top-3 notifications-bar">

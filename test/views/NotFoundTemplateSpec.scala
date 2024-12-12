@@ -48,7 +48,7 @@ class NotFoundTemplateSpec extends SpecBase with MustMatchers {
           "If you pasted the web address, check you copied the entire address.",
           "You can go back to manage import duties and VAT accounts."
         )
-        val actual =
+        val actual   =
           view.getElementsByClass("govuk-body").asScala.map(_.text()).toList
         actual mustBe expected
       }
@@ -65,8 +65,8 @@ class NotFoundTemplateSpec extends SpecBase with MustMatchers {
 
   trait Setup extends I18nSupport {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
     val view: Document = Jsoup.parse(app.injector.instanceOf[not_found_template].apply().body)
 

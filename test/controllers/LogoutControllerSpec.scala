@@ -41,7 +41,7 @@ class LogoutControllerSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logout.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe
@@ -56,7 +56,7 @@ class LogoutControllerSpec extends SpecBase with MustMatchers {
 
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logout.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe
@@ -67,12 +67,12 @@ class LogoutControllerSpec extends SpecBase with MustMatchers {
 
   "logoutNoSurvey" should {
     "redirect to logout link without survey continue" in new Setup {
-      when(mockSessionCacheConnector.removeSession(any)(any)).thenReturn(
-        Future.successful(HttpResponse(NO_CONTENT, emptyString)))
+      when(mockSessionCacheConnector.removeSession(any)(any))
+        .thenReturn(Future.successful(HttpResponse(NO_CONTENT, emptyString)))
 
       running(app) {
         val request = fakeRequest(GET, routes.LogoutController.logoutNoSurvey.url)
-        val result = route(app, request).value
+        val result  = route(app, request).value
 
         status(result) mustBe SEE_OTHER
         redirectLocation(result).value mustBe
@@ -82,14 +82,16 @@ class LogoutControllerSpec extends SpecBase with MustMatchers {
   }
 
   trait Setup {
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    val mockAuthConnector: AuthConnector                                  = mock[AuthConnector]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector =
       mock[CustomsFinancialsSessionCacheConnector]
 
-    val app: Application = application().overrides(
-      inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
-      inject.bind[AuthConnector].toInstance(mockAuthConnector)
-    ).build()
+    val app: Application = application()
+      .overrides(
+        inject.bind[CustomsFinancialsSessionCacheConnector].toInstance(mockSessionCacheConnector),
+        inject.bind[AuthConnector].toInstance(mockAuthConnector)
+      )
+      .build()
 
     val config: AppConfig = app.injector.instanceOf[AppConfig]
   }

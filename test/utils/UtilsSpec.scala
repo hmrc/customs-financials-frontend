@@ -88,22 +88,23 @@ class UtilsSpec extends SpecBase with MustMatchers {
 
       val gbAuthFiles: Seq[StandingAuthorityFile] = Seq(
         StandingAuthorityFile("SA_000000000153_csv.csv", emptyString, size, standAuthMetadata, "GB123456789012"),
-        StandingAuthorityFile("SA_000000000154_csv.csv", emptyString, size, standAuthMetadata, "GB123456789012"))
+        StandingAuthorityFile("SA_000000000154_csv.csv", emptyString, size, standAuthMetadata, "GB123456789012")
+      )
 
       val xiAuthFiles: Seq[StandingAuthorityFile] =
-        Seq(StandingAuthorityFile("SA_XI_000000000153_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012"),
-          StandingAuthorityFile("SA_XI_000000000154_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012"))
+        Seq(
+          StandingAuthorityFile("SA_XI_000000000153_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012"),
+          StandingAuthorityFile("SA_XI_000000000154_csv.csv", emptyString, size, standAuthMetadata, "XI123456789012")
+        )
 
       val csvFileForBothGBAndXI: Seq[StandingAuthorityFile] = gbAuthFiles ++ xiAuthFiles
 
       partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
         CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)
 
-      partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(
-        gbCsvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
+      partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
 
-      partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(
-        gbCsvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
+      partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(gbCsvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
     }
 
     "return empty list of GB and XI authorities partitioned when input list is empty" in {
@@ -164,11 +165,11 @@ class UtilsSpec extends SpecBase with MustMatchers {
 
   trait Setup {
     val seven: String = "1234567"
-    val nine: String = "123456789"
+    val nine: String  = "123456789"
 
-    val year: Int = 2022
+    val year: Int  = 2022
     val month: Int = 6
-    val day: Int = 1
+    val day: Int   = 1
 
     val size = 500L
   }

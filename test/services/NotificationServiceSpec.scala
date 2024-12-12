@@ -18,7 +18,7 @@ package services
 
 import domain.FileRole._
 import org.mockito.ArgumentMatchers.{eq => eqTo}
-import org.mockito.Mockito.{verify, when, reset}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 import utils.MustMatchers
 
 class NotificationServiceSpec
-  extends MockAuditingService
+    extends MockAuditingService
     with FutureAwaits
     with DefaultAwaitTimeout
     with ScalaFutures
@@ -38,13 +38,12 @@ class NotificationServiceSpec
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  val eori = "GB123456"
-  val fileSize = 999L
+  val eori                       = "GB123456"
+  val fileSize                   = 999L
   val mockApiService: ApiService = mock[ApiService]
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     reset(mockApiService)
-  }
 
   "Notification service" should {
 
@@ -55,20 +54,34 @@ class NotificationServiceSpec
         DocumentAttributes(eori, PostponedVATStatement, "new file", fileSize, Map.empty),
         DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map.empty),
         DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map.empty),
-        DocumentAttributes(eori, C79Certificate, "new file", fileSize, Map(
-          "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
-        DocumentAttributes(eori, DutyDefermentStatement, "new file", fileSize, Map(
-          "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")),
-        DocumentAttributes(eori, SecurityStatement, "new file", fileSize, Map(
-          "statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")),
+        DocumentAttributes(
+          eori,
+          C79Certificate,
+          "new file",
+          fileSize,
+          Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")
+        ),
+        DocumentAttributes(
+          eori,
+          DutyDefermentStatement,
+          "new file",
+          fileSize,
+          Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-36701e99d9")
+        ),
+        DocumentAttributes(
+          eori,
+          SecurityStatement,
+          "new file",
+          fileSize,
+          Map("statementRequestID" -> "3jh9f9b9-f9b9-9f9c-999a-37701e99d9")
+        ),
         DocumentAttributes(eori, StandingAuthority, "new file", fileSize, Map.empty),
         DocumentAttributes(eori, CDSCashAccount, "new file", fileSize, Map.empty)
       )
 
       "the given document type is present" in {
 
-        when(mockApiService.getEnabledNotifications(eori)).thenReturn(
-          Future.successful(collectionOfDocumentAttributes))
+        when(mockApiService.getEnabledNotifications(eori)).thenReturn(Future.successful(collectionOfDocumentAttributes))
 
         val notificationService = new NotificationService(mockApiService)
 
