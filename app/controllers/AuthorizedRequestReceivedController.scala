@@ -46,7 +46,7 @@ class AuthorizedRequestReceivedController @Inject() (
   val form: Form[String] = eoriNumberFormProvider()
 
   def requestAuthoritiesCsv(): Action[AnyContent] = authenticate async { implicit req =>
-    customsDataStore.getEmail(req.user.eori).flatMap {
+    customsDataStore.getEmail().flatMap {
       case Right(email) =>
         apiService.requestAuthoritiesCsv(req.user.eori, req.user.xiEori).flatMap {
           case Right(_) => Future.successful(Ok(authorisedToViewRequestReceived(email.value)))

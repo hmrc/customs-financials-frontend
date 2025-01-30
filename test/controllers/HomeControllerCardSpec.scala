@@ -241,18 +241,18 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
       when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
 
-      when(mockDataStoreService.getEmail(any)(any))
+      when(mockDataStoreService.getEmail()(any))
         .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
       when(mockSessionCacheConnector.storeSession(any, any)(any))
         .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
-      when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
+      when(mockDataStoreService.getCompanyName()(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
-      when(mockDataStoreService.getOwnCompanyName(any)(any))
+      when(mockDataStoreService.getOwnCompanyName()(any))
         .thenReturn(Future.successful(Some("Test Own Company Name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
       val app = application()
         .overrides(
@@ -368,10 +368,10 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
     when(mockAccounts.accounts).thenReturn(someAccounts)
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
-    when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
-    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
-    when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+    when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getCompanyName()(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getOwnCompanyName()(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+    when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
     when(mockSessionCacheConnector.storeSession(any, any)(any))
       .thenReturn(Future.successful(HttpResponse(Status.OK, emptyString)))

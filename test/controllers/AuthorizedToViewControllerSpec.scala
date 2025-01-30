@@ -40,7 +40,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   "The Authorized to View page" should {
     "return OK" in new Setup {
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -169,7 +169,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "return OK when correct email is returned from dataStoreService" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -181,7 +181,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "redirected to email undeliverable page when undeliverable email is returned from dataStoreService" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UndeliverableEmail(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Left(UndeliverableEmail(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -194,7 +194,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "redirected to email unverified page when unverified email is returned from dataStoreService" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -209,7 +209,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
   "The Authorized to View download CSV page" should {
     "return OK" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -239,7 +239,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "getCsvFile() sort by file name" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
       val filesWithNames: List[EORI] =
@@ -275,10 +275,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
+      when(mockDataStoreService.getCompanyName()(any))
         .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -313,10 +313,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
+      when(mockDataStoreService.getCompanyName()(any))
         .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -335,7 +335,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockApiService.searchAuthorities(any, any)(any))
         .thenReturn(Future.successful(Left(NoAuthorities)))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -366,10 +366,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
           )
 
-        when(mockDataStoreService.getCompanyName(any)(any))
+        when(mockDataStoreService.getCompanyName()(any))
           .thenReturn(Future.successful(Some("Company name")))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Option("XI123456789")))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -385,7 +385,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "return OK if there are no authorities returned for both GB/XI EORI for a account and" +
       " display no authorities page" in new Setup {
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Option("XI123456789")))
 
         when(mockApiService.searchAuthorities(any, any)(any))
           .thenReturn(Future.successful(Left(NoAuthorities)))
@@ -418,10 +418,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .thenReturn(
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
-      when(mockDataStoreService.getCompanyName(any)(any))
+      when(mockDataStoreService.getCompanyName()(any))
         .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Option("XI123456789")))
 
       running(app) {
         val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -457,10 +457,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .thenReturn(
             Future.successful(Left(NoAuthorities))
           )
-        when(mockDataStoreService.getCompanyName(any)(any))
+        when(mockDataStoreService.getCompanyName()(any))
           .thenReturn(Future.successful(Some("Company name")))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Option("XI123456789")))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -495,10 +495,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
           )
 
-        when(mockDataStoreService.getCompanyName(any)(any))
+        when(mockDataStoreService.getCompanyName()(any))
           .thenReturn(Future.successful(Some("Company name")))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Option("XI123456789")))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -644,7 +644,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       " and search authority using trader's XI EORI" in new Setup {
 
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
-        when(mockDataStoreService.getXiEori(any[String])(any[HeaderCarrier])).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori()(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -665,7 +665,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .thenReturn(Future.successful(Left(SearchError)))
           .thenReturn(Future.successful(Left(SearchError)))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -681,7 +681,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .thenReturn(Future.successful(Left(SearchError)))
           .thenReturn(Future.successful(Left(SearchError)))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
         running(app) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
@@ -696,7 +696,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
 
         val newApp: Application = application()
           .overrides(
@@ -732,7 +732,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
         val newApp: Application = application()
           .overrides(
@@ -768,7 +768,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         val gbAuthCsvFiles: Seq[StandingAuthorityFile] = Seq(gbStandingAuth1, gbStandingAuth2)
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(gbAuthCsvFiles))
 
-        when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some("XI123456789912")))
+        when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
         val newApp: Application = application()
           .overrides(
@@ -797,9 +797,11 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
 
     "Display error message if searching your own account number" in new Setup {
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
+
       when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
         .thenReturn(Future.successful(cdsAccounts))
+
       when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
         .thenReturn(Future.successful(xiCdsAccounts))
 
@@ -816,10 +818,12 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
 
     "Display error message if searching your own XI DD account number" in new Setup {
-      when(mockDataStoreService.getXiEori(any)(any))
+      when(mockDataStoreService.getXiEori()(any))
         .thenReturn(Future.successful(Some("XI123456789012")))
+
       when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
         .thenReturn(Future.successful(cdsAccounts))
+
       when(mockApiService.getAccounts(ArgumentMatchers.eq("XI123456789012"))(any))
         .thenReturn(Future.successful(xiCdsAccounts))
 
@@ -839,7 +843,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
   "The header section" should {
     "have a back to accounts link on top" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)
@@ -852,7 +856,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     "have a heading field" in new Setup {
 
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email(emailId))))
+      when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(Email(emailId))))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedToViewController.onPageLoad().url)

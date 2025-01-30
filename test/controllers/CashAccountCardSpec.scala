@@ -107,15 +107,18 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(mockAccounts))
+
     when(mockNotificationService.fetchNotifications(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(List()))
-    when(mockDataStoreService.getEmail(ArgumentMatchers.any())(ArgumentMatchers.any()))
+
+    when(mockDataStoreService.getEmail()(ArgumentMatchers.any()))
       .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+
     when(mockSessionCacheConnector.storeSession(any, any)(any))
       .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
-    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
-    when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+    when(mockDataStoreService.getCompanyName()(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getOwnCompanyName()(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+    when(mockDataStoreService.getXiEori()(any)).thenReturn(Future.successful(None))
   }
 }

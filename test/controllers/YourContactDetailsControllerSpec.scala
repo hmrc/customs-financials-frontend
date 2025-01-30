@@ -233,12 +233,17 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
     val email: Email                                             = Email("email@123.com")
 
     when(mockSessionCache.getAccontLinks(any)(any)).thenReturn(Future.successful(Option(Seq())))
+
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
       .thenReturn(Future.successful(cdsAccounts))
+
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
-    when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(email)))
-    when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("companyName")))
-    when(mockDataStoreService.getCompanyAddress(any)(any))
+
+    when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(email)))
+
+    when(mockDataStoreService.getOwnCompanyName()(any)).thenReturn(Future.successful(Some("companyName")))
+
+    when(mockDataStoreService.getCompanyAddress()(any))
       .thenReturn(Future.successful(Option(CompanyAddress(emptyString, emptyString, None, "GB"))))
 
     val app: Application = application()
