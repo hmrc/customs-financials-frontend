@@ -25,6 +25,7 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
+import utils.Utils.emptyString
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +40,6 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
 
   def getAllEoriHistory()(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
     val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/eori-history"
-    val emptyEoriHistory  = Seq(EoriHistory("GB11111", None, None))
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
       httpClient
@@ -50,7 +50,7 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
         }
         .recover { case e =>
           log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
-          emptyEoriHistory
+          Seq(EoriHistory(emptyString, None, None))
         }
     }
   }

@@ -72,7 +72,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
     }
 
     "handle MDG down" in new Setup {
-      val expectedResp: List[EoriHistory] = List(EoriHistory(eori, None, None))
+      val expectedResp: List[EoriHistory] = List(EoriHistory(emptyString, None, None))
 
       when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
         .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
