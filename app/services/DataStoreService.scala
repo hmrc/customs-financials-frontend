@@ -25,7 +25,6 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
-import utils.Utils.emptyString
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +37,9 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
 
   val log: Logger = Logger(this.getClass)
 
-  def getAllEoriHistory()(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/eori-history"
+  def getAllEoriHistory(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/eori-history"
+    val emptyEoriHistory = Seq(EoriHistory(eori, None, None))
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
       httpClient
@@ -50,13 +50,13 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
         }
         .recover { case e =>
           log.error(s"DATASTORE-E-EORI-HISTORY-ERROR: ${e.getClass.getName}")
-          Seq(EoriHistory(emptyString, None, None))
+          emptyEoriHistory
         }
     }
   }
 
-  def getEmail()(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/verified-email"
+  def getEmail(implicit hc: HeaderCarrier): Future[Either[EmailResponses, Email]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/verified-email"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.email") {
       httpClient
@@ -73,8 +73,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
     }
   }
 
-  def getCompanyName()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/company-information"
+  def getCompanyName(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       httpClient
@@ -90,8 +90,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
     }
   }
 
-  def getOwnCompanyName()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/company-information"
+  def getOwnCompanyName(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/company-information"
 
     metricsReporter
       .withResponseTimeLogging("customs-data-store.get.company-information") {
@@ -108,8 +108,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
       }
   }
 
-  def getXiEori()(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint        = s"${appConfig.customsDataStoreWithEori}/xieori-information"
+  def getXiEori(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint        = s"${appConfig.customsDataStore}/eori/xieori-information"
     val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
 
     if (isXiEoriEnabled) {
@@ -131,8 +131,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
     }
   }
 
-  def getCompanyAddress()(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStoreWithEori}/company-information"
+  def getCompanyAddress(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/company-information"
 
     metricsReporter
       .withResponseTimeLogging("customs-data-store.get.company-information") {

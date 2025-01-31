@@ -83,13 +83,13 @@ class YourContactDetailsController @Inject() (
       s"${appConfig.financialsFrontendUrl}${controllers.routes.YourContactDetailsController.onPageLoad()}"
 
     for {
-      email <- dataStoreService.getEmail().flatMap {
+      email <- dataStoreService.getEmail.flatMap {
                  case Right(email) => Future.successful(email.value)
                  case Left(_)      => Future.successful(InternalServerError)
                }
 
-      companyName      <- dataStoreService.getOwnCompanyName()
-      dataStoreAddress <- dataStoreService.getCompanyAddress()
+      companyName      <- dataStoreService.getOwnCompanyName
+      dataStoreAddress <- dataStoreService.getCompanyAddress
       companyAddress    =
         dataStoreAddress.getOrElse(CompanyAddress(emptyString, emptyString, Some(emptyString), emptyString))
 

@@ -50,8 +50,8 @@ class AuthAction @Inject() (
       allEnrolments.getEnrolment("HMRC-CUS-ORG").flatMap(_.getIdentifier("EORINumber")) match {
         case Some(eori) =>
           for {
-            allEoriHistory <- dataStoreService.getAllEoriHistory()
-            xiEori         <- dataStoreService.getXiEori()
+            allEoriHistory <- dataStoreService.getAllEoriHistory(eori.value)
+            xiEori         <- dataStoreService.getXiEori
             signedInUser    = SignedInUser(eori.value, allEoriHistory, xiEori)
           } yield Right(AuthenticatedRequest(request, signedInUser))
 

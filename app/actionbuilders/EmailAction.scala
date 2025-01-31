@@ -37,7 +37,7 @@ class EmailAction @Inject() (dataStoreService: DataStoreService)(implicit
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     dataStoreService
-      .getEmail()
+      .getEmail
       .map {
         case Left(value) =>
           value match {

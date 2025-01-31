@@ -64,7 +64,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getAllEoriHistory()
+        val response = service.getAllEoriHistory(eori)
         val result   = await(response)
 
         result.toList must be(expectedEoriHistory)
@@ -72,7 +72,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
     }
 
     "handle MDG down" in new Setup {
-      val expectedResp: List[EoriHistory] = List(EoriHistory(emptyString, None, None))
+      val expectedResp: List[EoriHistory] = List(EoriHistory(eori, None, None))
 
       when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
         .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
@@ -80,7 +80,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getAllEoriHistory()
+        val response = service.getAllEoriHistory(eori)
         val result   = await(response)
         result mustBe expectedResp
 
@@ -96,7 +96,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getAllEoriHistory()
+        val response = service.getAllEoriHistory(eori)
         val result   = await(response)
 
         result mustBe expectedResp.eoriHistory
@@ -112,7 +112,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getAllEoriHistory()
+        val response = service.getAllEoriHistory(eori)
         await(response)
 
         verify(mockMetricsReporterService).withResponseTimeLogging(
@@ -130,7 +130,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getEmail()
+        val response = service.getEmail
         val result   = await(response)
         result mustBe Right(Email("someemail@mail.com"))
       }
@@ -153,7 +153,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getEmail()
+        val response = service.getEmail
         val result   = await(response)
 
         result mustBe Left(UndeliverableEmail(emailAddress))
@@ -175,7 +175,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getEmail()
+        val response = service.getEmail
         val result   = await(response)
 
         result mustBe Left(UnverifiedEmail)
@@ -189,7 +189,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val response = service.getEmail()
+        val response = service.getEmail
         await(response) mustBe Left(UnverifiedEmail)
 
       }
@@ -202,7 +202,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-        assertThrows[ServiceUnavailableException](await(service.getEmail()))
+        assertThrows[ServiceUnavailableException](await(service.getEmail))
       }
     }
 
@@ -219,7 +219,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getCompanyName()
+          val response = service.getCompanyName
           val result   = await(response)
           result must be(Some(companyName))
         }
@@ -237,7 +237,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getCompanyName()
+          val response = service.getCompanyName
           val result   = await(response)
           result mustBe None
         }
@@ -250,7 +250,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = await(service.getCompanyName())
+          val response = await(service.getCompanyName)
           response mustBe None
         }
       }
@@ -269,7 +269,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getOwnCompanyName()
+          val response = service.getOwnCompanyName
           val result   = await(response)
           result must be(Some(companyName))
         }
@@ -282,7 +282,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = await(service.getOwnCompanyName())
+          val response = await(service.getOwnCompanyName)
           response mustBe None
         }
       }
@@ -301,7 +301,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getCompanyAddress()
+          val response = service.getCompanyAddress
           val result   = await(response)
           result must be(Some(address))
         }
@@ -314,7 +314,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = await(service.getCompanyAddress())
+          val response = await(service.getCompanyAddress)
           response mustBe None
         }
       }
@@ -333,7 +333,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getXiEori()
+          val response = service.getXiEori
           val result   = await(response)
           result must be(Some(xiEori))
         }
@@ -346,7 +346,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = await(service.getXiEori())
+          val response = await(service.getXiEori)
           response mustBe None
         }
       }
@@ -363,7 +363,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getXiEori()
+          val response = service.getXiEori
           val result   = await(response)
 
           result mustBe None
@@ -406,7 +406,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
         val service = app.injector.instanceOf[DataStoreService]
 
-        val response = service.getXiEori()
+        val response = service.getXiEori
         val result   = await(response)
 
         result mustBe None

@@ -110,8 +110,6 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
   lazy val customsDataStore: String = servicesConfig.baseUrl("customs-data-store") +
     config.get[String]("microservice.services.customs-data-store.context")
 
-  lazy val customsDataStoreWithEori: String = s"$customsDataStore/eori"
-
   lazy val sdesApi: String = servicesConfig.baseUrl("sdes") +
     config.get[String]("microservice.services.sdes.context")
 

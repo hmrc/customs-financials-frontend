@@ -239,11 +239,11 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
 
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
 
-    when(mockDataStoreService.getEmail()(any)).thenReturn(Future.successful(Right(email)))
+    when(mockDataStoreService.getEmail(any)).thenReturn(Future.successful(Right(email)))
 
-    when(mockDataStoreService.getOwnCompanyName()(any)).thenReturn(Future.successful(Some("companyName")))
+    when(mockDataStoreService.getOwnCompanyName(any)).thenReturn(Future.successful(Some("companyName")))
 
-    when(mockDataStoreService.getCompanyAddress()(any))
+    when(mockDataStoreService.getCompanyAddress(any))
       .thenReturn(Future.successful(Option(CompanyAddress(emptyString, emptyString, None, "GB"))))
 
     val app: Application = application()

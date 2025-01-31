@@ -97,13 +97,9 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
-  "DataStore" should {
+  "customsDataStore" should {
     "return correct value for customsDataStore" in new Setup {
       appConfig.customsDataStore shouldBe "http://localhost:9893/customs-data-store"
-    }
-
-    "return correct value for customsDataStoreWithEori" in new Setup {
-      appConfig.customsDataStoreWithEori shouldBe "http://localhost:9893/customs-data-store/eori"
     }
   }
 

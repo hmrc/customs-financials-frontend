@@ -145,7 +145,7 @@ class AuthorizedToViewController @Inject() (
 
     val result = for {
       gbEoriAccounts: CDSAccounts <- apiService.getAccounts(request.user.eori)
-      xiEORI: Option[EORI]        <- dataStoreService.getXiEori()
+      xiEORI: Option[EORI]        <- dataStoreService.getXiEori
       xiEoriAccounts: CDSAccounts <- getXiEoriCdsAccounts(request, xiEORI)
       csvFiles                    <- getCsvFile()(request)
     } yield {
@@ -267,7 +267,7 @@ class AuthorizedToViewController @Inject() (
     val displayLink: Boolean = getDisplayLink(searchedAuthorities)
     val clientEori: EORI     = getClientEori(searchedAuthorities)
 
-    dataStoreService.getCompanyName().flatMap { companyName =>
+    dataStoreService.getCompanyName.flatMap { companyName =>
 
       val searchResultView = if (isGBAuth) {
         authorisedToViewSearchResult(searchQuery, Option(clientEori), searchedAuthorities, companyName, displayLink)(
@@ -305,7 +305,7 @@ class AuthorizedToViewController @Inject() (
     val gbEori: EORI = getClientEori(gbAuthorities)
     val xiEori: EORI = getClientEori(xiAuthorities)
 
-    dataStoreService.getCompanyName().flatMap { companyName =>
+    dataStoreService.getCompanyName.flatMap { companyName =>
       Future.successful(
         Ok(
           authorisedToViewSearchResult(
