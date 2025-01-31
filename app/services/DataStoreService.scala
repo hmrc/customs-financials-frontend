@@ -39,7 +39,7 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
 
   def getAllEoriHistory(eori: EORI)(implicit hc: HeaderCarrier): Future[Seq[EoriHistory]] = {
     val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/eori-history"
-    val emptyEoriHistory = Seq(EoriHistory(eori, None, None))
+    val emptyEoriHistory  = Seq(EoriHistory(eori, None, None))
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.eori-history") {
       httpClient
