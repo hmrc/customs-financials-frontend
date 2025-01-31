@@ -97,6 +97,12 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  "customsDataStore" should {
+    "return correct value" in new Setup {
+      appConfig.customsDataStore shouldBe "http://localhost:9893/customs-data-store"
+    }
+  }
+
   trait Setup {
     val app: Application     = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]

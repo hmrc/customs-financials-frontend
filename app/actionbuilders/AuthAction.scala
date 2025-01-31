@@ -51,7 +51,7 @@ class AuthAction @Inject() (
         case Some(eori) =>
           for {
             allEoriHistory <- dataStoreService.getAllEoriHistory(eori.value)
-            xiEori         <- dataStoreService.getXiEori(eori.value)
+            xiEori         <- dataStoreService.getXiEori
             signedInUser    = SignedInUser(eori.value, allEoriHistory, xiEori)
           } yield Right(AuthenticatedRequest(request, signedInUser))
 

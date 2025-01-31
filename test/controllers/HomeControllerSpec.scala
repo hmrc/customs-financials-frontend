@@ -422,10 +422,10 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
         )
         .build()
 
-      when(mockDataStoreService.getEmail(any)(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new InternalServerException("SPS is Down")))
 
@@ -484,9 +484,10 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
         )
         .build()
 
-      when(mockDataStoreService.getEmail(any)(any))
+      when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
-      when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(None))
+
+      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
       when(mockApiService.getAccounts(any)(any))
         .thenReturn(Future.failed(new GatewayTimeoutException("Request Timeout")))
@@ -584,15 +585,17 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
 
-    when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
+    when(mockDataStoreService.getEmail(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
-    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
-    when(mockDataStoreService.getOwnCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
+    when(mockDataStoreService.getCompanyName(any)).thenReturn(Future.successful(Some("Test Company Name")))
+
+    when(mockDataStoreService.getOwnCompanyName(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
 
     when(mockSessionCacheConnector.storeSession(any, any)(any))
       .thenReturn(Future.successful(HttpResponse(Status.OK, emptyString)))
 
-    when(mockDataStoreService.getXiEori(any)(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+    when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Some(xi.xiEori)))
+
     when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
       .thenReturn(Future.successful(Ok))
 

@@ -36,8 +36,7 @@ class EmailAction @Inject() (dataStoreService: DataStoreService)(implicit
   def filter[A](request: AuthenticatedRequest[A]): Future[Option[Result]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    dataStoreService
-      .getEmail(request.user.eori)
+    dataStoreService.getEmail
       .map {
         case Left(value) =>
           value match {

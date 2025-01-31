@@ -46,7 +46,7 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
     }
 
     "should be directed to InternalServerError page when no email is returned from data-store" in new Setup {
-      when(mockDataStoreService.getEmail(any)(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
+      when(mockDataStoreService.getEmail(any)).thenReturn(Future.successful(Left(UnverifiedEmail)))
 
       running(app) {
         val request = fakeRequest(GET, routes.AuthorizedRequestReceivedController.requestAuthoritiesCsv().url)
@@ -83,7 +83,7 @@ class AuthorizedRequestReceivedControllerSpec extends SpecBase with ShouldMatche
     when(mockApiService.requestAuthoritiesCsv(any, any)(any))
       .thenReturn(Future.successful(Right(requestAuthorityCsvResponse)))
 
-    when(mockDataStoreService.getEmail(any)(any))
+    when(mockDataStoreService.getEmail(any))
       .thenReturn(Future.successful(Right(Email("address@email.com"))))
 
     val app: Application = application()
