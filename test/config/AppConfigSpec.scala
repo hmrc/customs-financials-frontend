@@ -98,7 +98,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
   }
 
   "customsDataStore" should {
-    "return correct value for customsDataStore" in new Setup {
+    "return correct value" in new Setup {
       appConfig.customsDataStore shouldBe "http://localhost:9893/customs-data-store"
     }
   }
