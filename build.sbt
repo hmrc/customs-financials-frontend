@@ -1,9 +1,9 @@
+import AppDependencies.bootstrapVersion
 import uk.gov.hmrc.DefaultBuildSettings.itSettings
 
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.16"
-val bootstrapVersion = "9.0.0"
 val scala3_3_4 = "3.3.4"
 
 val scalaStyleConfigFile = "scalastyle-config.xml"
