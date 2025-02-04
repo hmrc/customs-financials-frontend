@@ -1,17 +1,17 @@
+import AppDependencies.bootstrapVersion
 import uk.gov.hmrc.DefaultBuildSettings.itSettings
 
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.16"
-val bootstrapVersion = "9.0.0"
-val scala3_3_3 = "3.3.3"
+val scala3_3_4 = "3.3.4"
 
 val scalaStyleConfigFile = "scalastyle-config.xml"
 val testScalaStyleConfigFile = "test-scalastyle-config.xml"
 val testDirectory = "test"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := scala3_3_3
+ThisBuild / scalaVersion := scala3_3_4
 
 lazy val scalastyleSettings = Seq(scalastyleConfig := baseDirectory.value /  scalaStyleConfigFile,
   (Test / scalastyleConfig) := baseDirectory.value/ testDirectory /  testScalaStyleConfigFile)
@@ -42,7 +42,7 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")),
+    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")) ++ Seq("-Wconf:msg=Flag.*repeatedly:s"),
     Test / scalacOptions ++= Seq(
       "-Wunused:imports",
       "-Wunused:params",
