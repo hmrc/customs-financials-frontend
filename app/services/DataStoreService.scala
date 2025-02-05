@@ -73,8 +73,8 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
     }
   }
 
-  def getCompanyName(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/company-information"
+  def getCompanyName(eori: String)(implicit hc: HeaderCarrier): Future[Option[String]] = {
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       httpClient

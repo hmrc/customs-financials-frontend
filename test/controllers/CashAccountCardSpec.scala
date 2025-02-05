@@ -117,7 +117,7 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     when(mockSessionCacheConnector.storeSession(any, any)(any))
       .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
-    when(mockDataStoreService.getCompanyName(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
   }

@@ -587,7 +587,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
     when(mockDataStoreService.getEmail(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
 
-    when(mockDataStoreService.getCompanyName(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
     when(mockDataStoreService.getOwnCompanyName(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
 

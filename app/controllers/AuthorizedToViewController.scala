@@ -267,7 +267,7 @@ class AuthorizedToViewController @Inject() (
     val displayLink: Boolean = getDisplayLink(searchedAuthorities)
     val clientEori: EORI     = getClientEori(searchedAuthorities)
 
-    dataStoreService.getCompanyName.flatMap { companyName =>
+    dataStoreService.getCompanyName(clientEori).flatMap { companyName =>
 
       val searchResultView = if (isGBAuth) {
         authorisedToViewSearchResult(searchQuery, Option(clientEori), searchedAuthorities, companyName, displayLink)(
@@ -305,7 +305,7 @@ class AuthorizedToViewController @Inject() (
     val gbEori: EORI = getClientEori(gbAuthorities)
     val xiEori: EORI = getClientEori(xiAuthorities)
 
-    dataStoreService.getCompanyName.flatMap { companyName =>
+    dataStoreService.getCompanyName(gbEori).flatMap { companyName =>
       Future.successful(
         Ok(
           authorisedToViewSearchResult(
