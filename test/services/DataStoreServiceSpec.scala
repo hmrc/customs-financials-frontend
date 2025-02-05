@@ -219,7 +219,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getCompanyName
+          val response = service.getCompanyName(eori)
           val result   = await(response)
           result must be(Some(companyName))
         }
@@ -237,7 +237,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = service.getCompanyName
+          val response = service.getCompanyName(eori)
           val result   = await(response)
           result mustBe None
         }
@@ -250,7 +250,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
         running(app) {
-          val response = await(service.getCompanyName)
+          val response = await(service.getCompanyName(eori))
           response mustBe None
         }
       }

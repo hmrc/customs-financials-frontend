@@ -275,7 +275,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
 
-      when(mockDataStoreService.getCompanyName(any))
+      when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
       when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
@@ -313,7 +313,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
 
-      when(mockDataStoreService.getCompanyName(any))
+      when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
       when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
@@ -366,7 +366,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
           )
 
-        when(mockDataStoreService.getCompanyName(any))
+        when(mockDataStoreService.getCompanyName(any)(any))
           .thenReturn(Future.successful(Some("Company name")))
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
@@ -418,7 +418,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .thenReturn(
           Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
         )
-      when(mockDataStoreService.getCompanyName(any))
+      when(mockDataStoreService.getCompanyName(any)(any))
         .thenReturn(Future.successful(Some("Company name")))
 
       when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
@@ -457,7 +457,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .thenReturn(
             Future.successful(Left(NoAuthorities))
           )
-        when(mockDataStoreService.getCompanyName(any))
+        when(mockDataStoreService.getCompanyName(any)(any))
           .thenReturn(Future.successful(Some("Company name")))
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
@@ -495,7 +495,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
           )
 
-        when(mockDataStoreService.getCompanyName(any))
+        when(mockDataStoreService.getCompanyName(any)(any))
           .thenReturn(Future.successful(Some("Company name")))
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))

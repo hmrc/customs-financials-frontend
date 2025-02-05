@@ -247,7 +247,7 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
       when(mockSessionCacheConnector.storeSession(any, any)(any))
         .thenReturn(Future.successful(HttpResponse(OK, emptyString)))
 
-      when(mockDataStoreService.getCompanyName(any)).thenReturn(Future.successful(Some("Test Company Name")))
+      when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
 
       when(mockDataStoreService.getOwnCompanyName(any))
         .thenReturn(Future.successful(Some("Test Own Company Name")))
@@ -369,7 +369,7 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
     when(mockAccounts.isAgent).thenReturn(false)
     when(mockAccounts.isNiAccount).thenReturn(Some(false))
     when(mockDataStoreService.getEmail(any)).thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
-    when(mockDataStoreService.getCompanyName(any)).thenReturn(Future.successful(Some("Test Company Name")))
+    when(mockDataStoreService.getCompanyName(any)(any)).thenReturn(Future.successful(Some("Test Company Name")))
     when(mockDataStoreService.getOwnCompanyName(any)).thenReturn(Future.successful(Some("Test Own Company Name")))
     when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
