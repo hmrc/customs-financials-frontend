@@ -271,9 +271,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
 
       val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-
       val redirectResult = route(app, redirectRequest).value
-      val redirectHtml   = Jsoup.parse(contentAsString(redirectResult))
+      val redirectHtml = Jsoup.parse(contentAsString(redirectResult))
 
       assertResultFn(redirectResult, redirectHtml)
     }
@@ -291,7 +290,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
 
       val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-
       val firstRedirectResult = route(app, firstRedirectRequest).value
 
       val strippedEori = eori.replaceAll(" ", "")
@@ -302,9 +300,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .url
 
       val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
-
       val secondRedirectResult = route(app, secondRedirectRequest).value
-      val secondRedirectHtml   = Jsoup.parse(contentAsString(secondRedirectResult))
+      val secondRedirectHtml = Jsoup.parse(contentAsString(secondRedirectResult))
 
       assertResultFn(secondRedirectResult, secondRedirectHtml)
     }
@@ -398,8 +395,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       "for both GB and XI EORI and both SearchAuthorities " + "have no balance" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
           AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
+
         val cashAccount: AuthorisedCashAccount                   =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
@@ -423,10 +422,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
 
     "return SEE_OTHER if there are no authorities returned for both GB/XI EORI for a account and" +
-      " redirect to /authorities-search-results:searchQuery " +
-      " call to /authorities-search-results:searchQuery should redirect to " +
-      " /authorities-no-results:searchQuery " +
-      " finally a call to this url should return no search result" in new Setup {
+      "redirect to /authorities-search-results:searchQuery " +
+      "call to /authorities-search-results:searchQuery should redirect to " +
+      "/authorities-no-results:searchQuery " +
+      "finally a call to this url should return no search result" in new Setup {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
@@ -445,11 +444,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       "with the GB EORI and if there are authorities returned" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
           AuthorisedDutyDefermentAccount(
             Account("1234", "GeneralGuarantee", "GB000000000000"),
             Some(AuthorisedBalances("100.0", "200.0"))
           )
+
         val cashAccount: AuthorisedCashAccount                   =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -475,11 +476,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       "with the GB EORI but not for XI EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
           AuthorisedDutyDefermentAccount(
             Account("1234", "GeneralGuarantee", "GB000000000000"),
             Some(AuthorisedBalances("100.0", "200.0"))
           )
+
         val cashAccount: AuthorisedCashAccount                   =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -510,11 +513,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       " XI EORI but not for GB EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
           AuthorisedDutyDefermentAccount(
             Account("1234", "GeneralGuarantee", "GB000000000000"),
             Some(AuthorisedBalances("100.0", "200.0"))
           )
+
         val cashAccount: AuthorisedCashAccount                   =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -631,7 +636,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "return BAD_REQUEST with correct CSV links for both GB and XI authorities " +
       "if an invalid payload sent " +
       "and authorities-notification-panel-enabled feature flag is false" in new Setup {
-
         val authCsvFiles: Seq[StandingAuthorityFile] =
           Seq(gbStandingAuth1, gbStandingAuth2, xiStandingAuth1, xiStandingAuth2)
 
