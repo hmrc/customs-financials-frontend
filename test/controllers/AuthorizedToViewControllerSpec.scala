@@ -21,9 +21,11 @@ import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.*
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.mvc.Result
 import play.api.test.Helpers.*
 import play.api.{Application, inject}
 import services.{ApiService, DataStoreService}
@@ -256,101 +258,144 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  ): Unit =
+    running(app) {
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+
+      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+
+      val redirectResult = route(app, redirectRequest).value
+      val redirectHtml   = Jsoup.parse(contentAsString(redirectResult))
+
+      assertResultFn(redirectResult, redirectHtml)
+    }
+
+  private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  ): Unit =
+    running(app) {
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+
+      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+
+      val firstRedirectResult = route(app, firstRedirectRequest).value
+
+      val strippedEori = eori.replaceAll(" ", "")
+
+      status(firstRedirectResult)                 shouldBe SEE_OTHER
+      redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
+        .onNoSearchResult(strippedEori)
+        .url
+
+      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
+
+      val secondRedirectResult = route(app, secondRedirectRequest).value
+      val secondRedirectHtml   = Jsoup.parse(contentAsString(secondRedirectResult))
+
+      assertResultFn(secondRedirectResult, secondRedirectHtml)
+    }
+
   "onSubmit" should {
-    "return OK if there are authorities returned" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQuery should return OK if there are authorities returned" in new Setup {
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(
-          Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("100.0", "200.0"))
-        )
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(
+            Account("1234", "GeneralGuarantee", "GB000000000000"),
+            Some(AuthorisedBalances("100.0", "200.0"))
+          )
 
-      val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val cashAccount: AuthorisedCashAccount =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(
-          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
-        )
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> "GB123456789012")
+        validateRedirectToOnSearchAndThen(gbEORI, app) { (result, html) =>
 
-        val result = route(app, request).value
-        val html   = Jsoup.parse(contentAsString(result))
+          status(result) shouldBe OK
 
-        status(result) shouldBe OK
-
-        html.text().contains("Search results for GB123456789012") shouldBe true
-        html.text().contains("£100.0")                            shouldBe true
-        html.text().contains("£200.0")                            shouldBe true
+          html.text().contains(s"Search results for $gbEORI") shouldBe true
+          html.text().contains("£100.0")                      shouldBe true
+          html.text().contains("£200.0")                      shouldBe true
+        }
       }
-    }
 
-    "return OK if there are authorities returned with spaces in search string" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+    "return SEE_OTHER if there are authorities returned with spaces in search string " +
+      "and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQuery should return OK if there are authorities returned" in new Setup {
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(
-          Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("1000.0", "0.0"))
-        )
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(
+            Account("1234", "GeneralGuarantee", "GB000000000000"),
+            Some(AuthorisedBalances("1000.0", "0.0"))
+          )
 
-      val cashAccount: AuthorisedCashAccount =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val cashAccount: AuthorisedCashAccount =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(
-          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
-        )
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
 
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
+        when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> "GB 12 3456 789 012")
-        val result  = route(app, request).value
-        val html    = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe OK
-
-        html.text().contains("Search results for GB123456789012") shouldBe true
-        html.text().contains("£1000.00")                          shouldBe false
+        validateRedirectToOnSearchAndThen("GB 12 3456 789 012", app) { (result, html) =>
+          status(result)                                      shouldBe OK
+          html.text().contains(s"Search results for $gbEORI") shouldBe true
+          html.text().contains("£1000.0")                     shouldBe true
+        }
       }
-    }
 
-    "return OK if there are no authorities returned and display the no authorities page" in new Setup {
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(Future.successful(Left(NoAuthorities)))
+    "return SEE_OTHER if there are no authorities returned and " +
+      "redirect to /authorities-search-results:searchQuery " +
+      "call to /authorities-search-results:searchQuery should redirect to " +
+      "/authorities-no-results:searchQuery with eori spaces removed " +
+      "finally a call to this url should return no search result " in new Setup {
 
-      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(NoAuthorities)))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> "GB 12 34 56 78 90 12")
+        when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-        val result = route(app, request).value
-        val html   = Jsoup.parse(contentAsString(result))
-
-        status(result)                                                             shouldBe OK
-        html.text().contains("There are no matching results for 'GB123456789012'") shouldBe true
+        validateRedirectToOnNoSearchResultsAndThen("GB 12 34 56 78 90 12", app) { (result, html) =>
+          status(result)                                      shouldBe OK
+          html.text().contains(s"Search results for $gbEORI") shouldBe true
+        }
       }
-    }
 
-    "return OK if there are authorities returned for both GB and XI EORI and both SearchAuthorities " +
-      "have no balance" in new Setup {
+    " return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQuery should return OK if there are authorities returned " +
+      "for both GB and XI EORI and both SearchAuthorities " + "have no balance" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -371,19 +416,17 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "GB123456789012")
-          val result  = route(app, request).value
-          val html    = Jsoup.parse(contentAsString(result))
-
-          status(result)                                            shouldBe OK
-          html.text().contains("Search results for GB123456789012") shouldBe true
+        validateRedirectToOnSearchAndThen(gbEORI, app) { (result, html) =>
+          status(result)                                      shouldBe OK
+          html.text().contains(s"Search results for $gbEORI") shouldBe true
         }
       }
 
-    "return OK if there are no authorities returned for both GB/XI EORI for a account and" +
-      " display no authorities page" in new Setup {
+    "return SEE_OTHER if there are no authorities returned for both GB/XI EORI for a account and" +
+      " redirect to /authorities-search-results:searchQuery " +
+      " call to /authorities-search-results:searchQuery should redirect to " +
+      " /authorities-no-results:searchQuery " +
+      " finally a call to this url should return no search result" in new Setup {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
@@ -391,55 +434,45 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .thenReturn(Future.successful(Left(NoAuthorities)))
           .thenReturn(Future.successful(Left(NoAuthorities)))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "1000000")
-
-          val result = route(app, request).value
-          val html   = Jsoup.parse(contentAsString(result))
-
-          status(result)                                                      shouldBe OK
-          html.text().contains("There are no matching results for '1000000'") shouldBe true
+        validateRedirectToOnNoSearchResultsAndThen(gbEORI, app) { (result, html) =>
+          status(result)                                      shouldBe OK
+          html.text().contains(s"Search results for $gbEORI") shouldBe true
         }
       }
 
-    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for account" in new Setup {
-      val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
-        AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
-      val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
-        AuthorisedDutyDefermentAccount(
-          Account("1234", "GeneralGuarantee", "GB000000000000"),
-          Some(AuthorisedBalances("100.0", "200.0"))
-        )
-      val cashAccount: AuthorisedCashAccount                   =
-        AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+      "with the GB EORI and if there are authorities returned" in new Setup {
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
+          AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
+        val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
+          AuthorisedDutyDefermentAccount(
+            Account("1234", "GeneralGuarantee", "GB000000000000"),
+            Some(AuthorisedBalances("100.0", "200.0"))
+          )
+        val cashAccount: AuthorisedCashAccount                   =
+          AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
-      when(mockApiService.searchAuthorities(any, any)(any))
-        .thenReturn(
-          Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
-        )
-      when(mockDataStoreService.getCompanyName(any)(any))
-        .thenReturn(Future.successful(Some("Company name")))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(
+            Future.successful(Right(SearchedAuthorities("3", Seq(guaranteeAccount, dutyDefermentAccount, cashAccount))))
+          )
+        when(mockDataStoreService.getCompanyName(any)(any))
+          .thenReturn(Future.successful(Some("Company name")))
 
-      when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
+        when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> "1234567")
-        val result  = route(app, request).value
-        val html    = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe OK
-
-        html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
-        html.text().contains("£100.0")                                                       shouldBe true
-        html.text().contains("£200.0")                                                       shouldBe true
-        html.text().contains(messages(app)("cf.search.authorities.result.xiEori.number"))    shouldBe true
+        validateRedirectToOnSearchAndThen("1234567", app) { (result, html) =>
+          status(result)                                                                       shouldBe OK
+          html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
+          html.text().contains("£100.0")                                                       shouldBe true
+          html.text().contains("£200.0")                                                       shouldBe true
+        }
       }
-    }
 
-    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
-      "GB EORI but not for XI EORI for an account number" in new Setup {
+    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+      "with the GB EORI but not for XI EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -462,14 +495,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "1234567")
-          val result  = route(app, request).value
-          val html    = Jsoup.parse(contentAsString(result))
-
-          status(result) shouldBe OK
-
+        validateRedirectToOnSearchAndThen("1234567", app) { (result, html) =>
+          status(result)                                                                       shouldBe OK
           html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
           html.text().contains("£100.0")                                                       shouldBe true
           html.text().contains("£200.0")                                                       shouldBe true
@@ -477,8 +504,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         }
       }
 
-    "return OK if there is XI EORI associated with the GB EORI and authorities are returned for " +
-      "XI EORI but not for GB EORI for an account number" in new Setup {
+    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      " and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+      " with the GB EORI and authorities are returned for " +
+      " XI EORI but not for GB EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -500,14 +529,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "1234567")
-          val result  = route(app, request).value
-          val html    = Jsoup.parse(contentAsString(result))
-
-          status(result) shouldBe OK
-
+        validateRedirectToOnSearchAndThen("1234567", app) { (result, html) =>
+          status(result)                                                                       shouldBe OK
           html.text().contains(messages(app)("cf.search.authorities.result.title", "1234567")) shouldBe true
           html.text().contains("£100.0")                                                       shouldBe true
           html.text().contains("£200.0")                                                       shouldBe true
@@ -639,22 +662,16 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Option(html.getElementById("xi-csv-authority-link")) shouldBe None
         }
       }
-
-    "return BAD_REQUEST with correct error msg when agent is not registered for his own XI EORI" +
-      " and search authority using trader's XI EORI" in new Setup {
+    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
+      "and /authorities-search-results:searchQury should return BAD_REQUEST " +
+      "with correct error msg when agent is not registered for his own XI EORI " +
+      "and search authority using trader's XI EORI" in new Setup {
 
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
         when(mockDataStoreService.getXiEori(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "XI123456789012")
-
-          val result = route(app, request).value
-          val html   = Jsoup.parse(contentAsString(result))
-
+        validateRedirectToOnSearchAndThen(xiEORI, app) { (result, html) =>
           status(result) shouldBe BAD_REQUEST
-
           html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
         }
       }
@@ -667,11 +684,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "GB12345678")
-          val result  = route(app, request).value
-          status(result) shouldBe 500
+        validateRedirectToOnSearchAndThen(gbEORI, app) { (result, _) =>
+          status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
 
@@ -683,10 +697,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-        running(app) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "1000000")
-          val result  = route(app, request).value
+        validateRedirectToOnSearchAndThen("1000000", app) { (result, _) =>
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -710,19 +721,11 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           )
           .build()
 
-        running(newApp) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> newUser().eori)
-
-          val result = route(newApp, request).value
-          val html   = Jsoup.parse(contentAsString(result))
-
-          status(result) shouldBe BAD_REQUEST
-
-          html.getElementById("gb-csv-authority-link").html()       shouldBe
+        validateRedirectToOnSearchAndThen(newUser().eori, newApp) { (result, html) =>
+          status(result)                                                 shouldBe BAD_REQUEST
+          html.getElementById("gb-csv-authority-link").html()            shouldBe
             messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
-          html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
+          html.getElementById("gb-csv-authority-link").attr("href")      shouldBe gbStanAuthFile154Url
           html.text().contains("You cannot search your own EORI number") shouldBe true
         }
       }
@@ -746,19 +749,11 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           )
           .build()
 
-        running(newApp) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "XI123456789912")
-
-          val result = route(newApp, request).value
-          val html   = Jsoup.parse(contentAsString(result))
-
-          status(result) shouldBe BAD_REQUEST
-
-          html.getElementById("gb-csv-authority-link").html()       shouldBe
+        validateRedirectToOnSearchAndThen("XI123456789912", newApp) { (result, html) =>
+          status(result)                                                 shouldBe BAD_REQUEST
+          html.getElementById("gb-csv-authority-link").html()            shouldBe
             messages(newApp)("cf.authorities.notification-panel.a.gb-authority")
-          html.getElementById("gb-csv-authority-link").attr("href") shouldBe gbStanAuthFile154Url
-
+          html.getElementById("gb-csv-authority-link").attr("href")      shouldBe gbStanAuthFile154Url
           html.text().contains("You cannot search your own EORI number") shouldBe true
         }
       }
@@ -782,15 +777,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           )
           .build()
 
-        running(newApp) {
-          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "XI123456789912")
-
-          val result = route(newApp, request).value
-          val html   = Jsoup.parse(contentAsString(result))
-
-          status(result) shouldBe BAD_REQUEST
-
+        validateRedirectToOnSearchAndThen("XI123456789912", newApp) { (result, html) =>
+          status(result)                                                 shouldBe BAD_REQUEST
           Option(html.getElementById("gb-csv-authority-link"))           shouldBe None
           html.text().contains("You cannot search your own EORI number") shouldBe true
         }
@@ -805,13 +793,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().xiEori.get))(any))
         .thenReturn(Future.successful(xiCdsAccounts))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> accounts.map(_.number).head)
-
-        val result = route(app, request).value
-        val html   = Jsoup.parse(contentAsString(result))
-
+      validateRedirectToOnSearchAndThen(accounts.map(_.number).head, app) { (result, html) =>
         status(result)                                                    shouldBe BAD_REQUEST
         html.text().contains("You cannot search your own account number") shouldBe true
       }
@@ -827,13 +809,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockApiService.getAccounts(ArgumentMatchers.eq("XI123456789012"))(any))
         .thenReturn(Future.successful(xiCdsAccounts))
 
-      running(app) {
-        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-          .withFormUrlEncodedBody("value" -> xiAccounts.map(_.number).head)
-
-        val result = route(app, request).value
-        val html   = Jsoup.parse(contentAsString(result))
-
+      validateRedirectToOnSearchAndThen(accounts.map(_.number).head, app) { (result, html) =>
         status(result)                                                    shouldBe BAD_REQUEST
         html.text().contains("You cannot search your own account number") shouldBe true
       }
