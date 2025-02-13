@@ -271,8 +271,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
 
       val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-      val redirectResult = route(app, redirectRequest).value
-      val redirectHtml = Jsoup.parse(contentAsString(redirectResult))
+      val redirectResult  = route(app, redirectRequest).value
+      val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
 
       assertResultFn(redirectResult, redirectHtml)
     }
@@ -290,7 +290,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
 
       val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-      val firstRedirectResult = route(app, firstRedirectRequest).value
+      val firstRedirectResult  = route(app, firstRedirectRequest).value
 
       val strippedEori = eori.replaceAll(" ", "")
 
@@ -300,8 +300,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         .url
 
       val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
-      val secondRedirectResult = route(app, secondRedirectRequest).value
-      val secondRedirectHtml = Jsoup.parse(contentAsString(secondRedirectResult))
+      val secondRedirectResult  = route(app, secondRedirectRequest).value
+      val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
 
       assertResultFn(secondRedirectResult, secondRedirectHtml)
     }
@@ -393,13 +393,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     " return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
       "and /authorities-search-results:searchQuery should return OK if there are authorities returned " +
       "for both GB and XI EORI and both SearchAuthorities " + "have no balance" in new Setup {
-        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
           AuthorisedDutyDefermentAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
-        val cashAccount: AuthorisedCashAccount                   =
+        val cashAccount: AuthorisedCashAccount =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
 
         when(mockApiService.searchAuthorities(any, any)(any))
@@ -442,7 +442,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
       "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
       "with the GB EORI and if there are authorities returned" in new Setup {
-        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -451,7 +451,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Some(AuthorisedBalances("100.0", "200.0"))
           )
 
-        val cashAccount: AuthorisedCashAccount                   =
+        val cashAccount: AuthorisedCashAccount =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         when(mockApiService.searchAuthorities(any, any)(any))
@@ -474,7 +474,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
       "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
       "with the GB EORI but not for XI EORI for an account number" in new Setup {
-        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -483,7 +483,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Some(AuthorisedBalances("100.0", "200.0"))
           )
 
-        val cashAccount: AuthorisedCashAccount                   =
+        val cashAccount: AuthorisedCashAccount =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         when(mockApiService.searchAuthorities(any, any)(any))
@@ -511,7 +511,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       " and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
       " with the GB EORI and authorities are returned for " +
       " XI EORI but not for GB EORI for an account number" in new Setup {
-        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount  =
+        val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         val dutyDefermentAccount: AuthorisedDutyDefermentAccount =
@@ -520,7 +520,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
             Some(AuthorisedBalances("100.0", "200.0"))
           )
 
-        val cashAccount: AuthorisedCashAccount                   =
+        val cashAccount: AuthorisedCashAccount =
           AuthorisedCashAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
         when(mockApiService.searchAuthorities(any, any)(any))
