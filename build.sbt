@@ -42,7 +42,7 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")) ++ Seq("-Wconf:msg=Flag.*repeatedly:s"),
+    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")) ++ Seq("-Wconf:msg=Flag.*repeatedly:s", "-language:implicitConversions"),
     Test / scalacOptions ++= Seq(
       "-Wunused:imports",
       "-Wunused:params",
