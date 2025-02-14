@@ -13,6 +13,11 @@ GET        /authorized-to-view                                   controllers.Aut
 POST       /authorized-to-view                                   controllers.AuthorizedToViewController.onSubmit()
 GET        /request-authorities-csv                              controllers.AuthorizedRequestReceivedController.requestAuthoritiesCsv()
 
+GET        /authority-to-use                                     controllers.AuthorizedToViewController.onPageLoad()
+POST       /authority-to-use                                     controllers.AuthorizedToViewController.onSubmit()
+GET        /authorities-search-results:searchQuery               controllers.AuthorizedToViewController.onSearch(searchQuery)
+GET        /authorities-no-results/:searchQuery                  controllers.AuthorizedToViewController.onNoSearchResult(searchQuery)
+
 GET        /parts-of-service-unavailable                         controllers.CustomsFinancialsHomeController.pageWithoutAccounts
 
 GET        /assets/*file                                         controllers.Assets.versioned(path="/public", file: Asset)

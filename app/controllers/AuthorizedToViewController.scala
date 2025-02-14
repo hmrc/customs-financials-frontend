@@ -132,9 +132,22 @@ class AuthorizedToViewController @Inject() (
               )
             )
           },
-        query => processSearchQuery(request, query)
+        query => Future.successful(Redirect(routes.AuthorizedToViewController.onSearch(query)))
       )
   }
+
+  def onSearch(searchQuery: EORI): Action[AnyContent] = authenticate async { implicit request =>
+    processSearchQuery(request, searchQuery)
+  }
+
+  def onNoSearchResult(searchQuery: EORI): Action[AnyContent] = authenticate async { implicit request =>
+    processNoSearchResult(searchQuery)
+  }
+
+  private def processNoSearchResult(
+    searchQuery: EORI
+  )(implicit request: Request[AnyContent], messages: Messages): Future[Result] =
+    Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
 
   private def processSearchQuery(request: AuthenticatedRequest[AnyContent], query: EORI)(implicit
     hc: HeaderCarrier,
@@ -237,7 +250,7 @@ class AuthorizedToViewController @Inject() (
                        }
     } yield (authForGBEORI, authForXIEORI) match {
       case (Left(NoAuthorities), Left(NoAuthorities)) =>
-        Future.successful(Ok(authorisedToViewSearchNoResult(searchQuery)(request, messages, appConfig)))
+        Future.successful(Redirect(routes.AuthorizedToViewController.onNoSearchResult(searchQuery)))
 
       case (Left(SearchError), Left(SearchError)) | (Left(SearchError), Left(NoAuthorities)) |
           (Left(NoAuthorities), Left(SearchError)) =>
