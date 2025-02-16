@@ -22,16 +22,19 @@
 @import views.html.components.newTabLink
 @import views.html.Layout
 @import utils.Utils.emptyString
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukBackLink
 
 @this(
         h1: components.h1,
         h2: components.h2,
         p: components.p,
+        browserBackLink: components.browser_back_link,
         hmrcNewTabLink: HmrcNewTabLink,
         govukSummaryList: GovukSummaryList,
         account: components.account_link,
         layout: Layout,
-        newTabLink: newTabLink
+        newTabLink: newTabLink,
+        govukBackLink: GovukBackLink
 )
 
 @(
@@ -50,9 +53,10 @@
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
     maybeMessageBannerPartial = messageBannerPartial,
-    helpAndSupport = false,
-    backLink = Some(routes.CustomsFinancialsHomeController.index.url)
+    helpAndSupport = false
 ) {
+    @browserBackLink(routes.CustomsFinancialsHomeController.index.url, messages("cf.back"))
+
     @h1("cf.contact-details.title", classes = "govuk-heading-xl", id=Some("contact-heading"))
     @h2("cf.contact-details.company-details", id=Some("contact-sub-heading"))
 
