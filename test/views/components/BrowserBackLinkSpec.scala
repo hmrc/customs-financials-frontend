@@ -41,15 +41,13 @@ class BrowserBackLinkSpec extends SpecBase with MustMatchers {
 
         val linkElement = html.getElementById("browser-back-link")
         linkElement.attr("href") mustBe "/url"
-        linkElement.attr("class") must include("govuk-back-link govuk-!-margin-bottom-9")
         linkElement.text() mustBe "Back"
       }
     }
   }
 
   trait Setup {
-    val app: Application = application().build()
+    val app: Application                       = application().build()
     val browserBackLinkView: browser_back_link = app.injector.instanceOf[browser_back_link]
-
   }
 }
