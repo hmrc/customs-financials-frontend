@@ -35,9 +35,9 @@ class LayoutSpec extends SpecBase with MustMatchers {
     "display correct guidance" when {
 
       "title, browserBackLink, and back link are provided" in new Setup {
-        val titleMsg        = "test_title"
-        val browserBackUrl  = "browser-test.com"
-        val backLinkUrl     = "test.com"
+        val titleMsg       = "test_title"
+        val browserBackUrl = "browser-test.com"
+        val backLinkUrl    = "test.com"
 
         val layoutView: Document = Jsoup.parse(
           app.injector
@@ -57,8 +57,8 @@ class LayoutSpec extends SpecBase with MustMatchers {
       }
 
       "only back link is provided (no browserBackLink)" in new Setup {
-        val titleMsg = "test_title"
-        val backLinkUrl  = "test.com"
+        val titleMsg    = "test_title"
+        val backLinkUrl = "test.com"
 
         val layoutView: Document = Jsoup.parse(
           app.injector
@@ -101,7 +101,11 @@ class LayoutSpec extends SpecBase with MustMatchers {
     viewDoc.html().contains("/accessibility-statement/customs-financials") mustBe true
   }
 
-  private def shouldContainCorrectBackLink(viewDoc: Document, backLinkUrl: Option[String] = None, browserBackLink: Boolean = false) = {
+  private def shouldContainCorrectBackLink(
+    viewDoc: Document,
+    backLinkUrl: Option[String] = None,
+    browserBackLink: Boolean = false
+  ) =
     if (backLinkUrl.isDefined) {
       val backLinkElement = viewDoc.getElementsByClass("govuk-back-link")
 
@@ -114,7 +118,6 @@ class LayoutSpec extends SpecBase with MustMatchers {
     } else {
       viewDoc.getElementsByClass("govuk-back-link").size() mustBe 0
     }
-  }
 
   private def shouldContainCorrectBanners(viewDoc: Document) = {
     viewDoc
