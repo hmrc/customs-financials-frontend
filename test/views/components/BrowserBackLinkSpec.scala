@@ -33,15 +33,13 @@ class BrowserBackLinkSpec extends SpecBase with MustMatchers {
     "render the back link with correct attributes and text" in new Setup {
       running(app) {
         val output: HtmlFormat.Appendable = browserBackLinkView(
-          href = "/url",
-          content = "Back"
+          href = "/url"
         )(messages(app))
 
         val html: Document = Jsoup.parse(contentAsString(output))
 
         val linkElement = html.getElementById("browser-back-link")
         linkElement.attr("href") mustBe "/url"
-        linkElement.text() mustBe "Back"
       }
     }
   }

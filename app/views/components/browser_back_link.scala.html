@@ -20,11 +20,10 @@
 
 @this(govukBackLink: GovukBackLink)
 
-@(href: String, content: String)(implicit messages: Messages)
+@(href: String)(implicit messages: Messages)
 
 @govukBackLink(BackLink(
     href = href,
-    content = Text(content),
-    classes = "govuk-!-margin-bottom-9",
+    content = Text(messages("cf.back")),
     attributes = Map("id" -> "browser-back-link")
 ))

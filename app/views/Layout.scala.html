@@ -26,9 +26,9 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.{HmrcReportTechnicalIssueHelper, HmrcLanguageSelectHelper, HmrcStandardPage}
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
-@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import views.html.components.help_and_support_message
+@import views.html.components.browser_back_link
 @import views.html.helper.CSPNonce
 @import utils.Utils.emptyString
 
@@ -36,6 +36,7 @@
         appConfig: AppConfig,
         hmrcStandardPage: HmrcStandardPage,
         govukBackLink: GovukBackLink,
+        browserBackLinkComponent: browser_back_link, // ✅ Fixed missing comma
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         hmrcTimeoutDialog: HmrcTimeoutDialog,
         eoriBanner: components.eori_banner,
@@ -45,6 +46,7 @@
 @(
         pageTitle: Option[String] = None,
         backLink: Option[String] = None,
+        browserBackLink: Option[String] = None,
         helpAndSupport: Boolean = true,
         deskpro: Boolean = true,
         welshToggle: Boolean = true,
@@ -70,12 +72,21 @@
 
 @beforeContent = {
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eori.isDefined){ @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString))}
+    @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) }
     @hmrcLanguageSelectHelper()
+
+    @browserBackLink.map { url =>
+        @browserBackLinkComponent(url)
+    }.getOrElse {
+        @backLink.filter(_.nonEmpty).map { url =>
+            @govukBackLink(BackLink(
+                href = url
+            ))
+        }
+    }
 }
 
 @additionalHead = {
-
 <link href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="screen" rel="stylesheet" type="text/css"/>
 
 <script @{CSPNonce.attr} src='@controllers.routes.Assets.versioned("javascripts/main.js")'></script>
@@ -108,10 +119,10 @@
                         signOutUrl = Some(controllers.routes.LogoutController.logout.url),
                         accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
                     ),
-        backLink = backLink.filter(_.nonEmpty).map(BackLink(_)),
+        backLink = None,
         templateOverrides = TemplateOverrides(
                                 additionalHeadBlock = Some(additionalHead),
-                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined) Some(beforeContent) else None
+                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined || browserBackLink.isDefined || backLink.isDefined) Some(beforeContent) else None
                             ),
         banners = Banners(
                     phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),

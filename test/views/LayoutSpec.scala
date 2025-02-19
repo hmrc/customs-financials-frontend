@@ -26,7 +26,6 @@ import play.api.test.FakeRequest
 import play.twirl.api.Html
 import utils.MustMatchers
 import views.html.Layout
-
 import utils.SpecBase
 
 class LayoutSpec extends SpecBase with MustMatchers {
@@ -35,36 +34,58 @@ class LayoutSpec extends SpecBase with MustMatchers {
 
     "display correct guidance" when {
 
-      "title and back link are provided" in new Setup {
-        val titleMsg = "test_title"
-        val linkUrl  = "test.com"
+      "title, browserBackLink, and back link are provided" in new Setup {
+        val titleMsg        = "test_title"
+        val browserBackUrl  = "browser-test.com"
+        val backLinkUrl     = "test.com"
 
         val layoutView: Document = Jsoup.parse(
           app.injector
             .instanceOf[Layout]
             .apply(
               pageTitle = Some(titleMsg),
-              backLink = Some(linkUrl)
+              backLink = Some(backLinkUrl),
+              browserBackLink = Some(browserBackUrl)
             )(content)
             .body
         )
 
         shouldContainCorrectTitle(layoutView, titleMsg)
         shouldContainCorrectServiceUrls(layoutView)
-        shouldContainCorrectBackLink(layoutView, Some(linkUrl))
+        shouldContainCorrectBackLink(layoutView, Some(browserBackUrl), browserBackLink = true)
         shouldContainCorrectBanners(layoutView)
       }
 
-      "there is no value for title and back link" in new Setup {
+      "only back link is provided (no browserBackLink)" in new Setup {
+        val titleMsg = "test_title"
+        val backLinkUrl  = "test.com"
+
+        val layoutView: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[Layout]
+            .apply(
+              pageTitle = Some(titleMsg),
+              backLink = Some(backLinkUrl),
+              browserBackLink = None
+            )(content)
+            .body
+        )
+
+        shouldContainCorrectTitle(layoutView, titleMsg)
+        shouldContainCorrectServiceUrls(layoutView)
+        shouldContainCorrectBackLink(layoutView, Some(backLinkUrl), browserBackLink = false)
+        shouldContainCorrectBanners(layoutView)
+      }
+
+      "there is no value for title, browserBackLink, or back link" in new Setup {
         val layoutView: Document = Jsoup.parse(app.injector.instanceOf[Layout].apply()(content).body)
 
         shouldContainCorrectTitle(layoutView)
         shouldContainCorrectServiceUrls(layoutView)
-        shouldContainCorrectBackLink(layoutView)
+        shouldContainCorrectBackLink(layoutView, None)
         shouldContainCorrectBanners(layoutView)
       }
     }
-
   }
 
   private def shouldContainCorrectTitle(viewDoc: Document, title: String = emptyString)(implicit msgs: Messages) =
@@ -80,16 +101,20 @@ class LayoutSpec extends SpecBase with MustMatchers {
     viewDoc.html().contains("/accessibility-statement/customs-financials") mustBe true
   }
 
-  private def shouldContainCorrectBackLink(viewDoc: Document, backLinkUrl: Option[String] = None) =
+  private def shouldContainCorrectBackLink(viewDoc: Document, backLinkUrl: Option[String] = None, browserBackLink: Boolean = false) = {
     if (backLinkUrl.isDefined) {
-      viewDoc.getElementsByClass("govuk-back-link").text() mustBe "Back"
-      viewDoc
-        .getElementsByClass("govuk-back-link")
-        .attr("href")
-        .contains(backLinkUrl.get) mustBe true
+      val backLinkElement = viewDoc.getElementsByClass("govuk-back-link")
+
+      backLinkElement.text() mustBe "Back"
+      backLinkElement.attr("href") mustBe backLinkUrl.get
+
+      if (browserBackLink) {
+        backLinkElement.attr("id") mustBe "browser-back-link"
+      }
     } else {
       viewDoc.getElementsByClass("govuk-back-link").size() mustBe 0
     }
+  }
 
   private def shouldContainCorrectBanners(viewDoc: Document) = {
     viewDoc
