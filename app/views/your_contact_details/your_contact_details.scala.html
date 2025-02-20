@@ -27,7 +27,6 @@
         h1: components.h1,
         h2: components.h2,
         p: components.p,
-        browserBackLink: components.browser_back_link,
         hmrcNewTabLink: HmrcNewTabLink,
         govukSummaryList: GovukSummaryList,
         account: components.account_link,
@@ -50,10 +49,10 @@
 
 @layout(
     pageTitle = Some(messages("cf.contact-details.title")),
+    browserBackLink = Some(routes.CustomsFinancialsHomeController.index.url),
     maybeMessageBannerPartial = messageBannerPartial,
     helpAndSupport = false
 ) {
-    @browserBackLink(routes.CustomsFinancialsHomeController.index.url, messages("cf.back"))
 
     @h1("cf.contact-details.title", classes = "govuk-heading-xl", id=Some("contact-heading"))
     @h2("cf.contact-details.company-details", id=Some("contact-sub-heading"))
