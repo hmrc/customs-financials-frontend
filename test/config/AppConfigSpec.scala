@@ -72,6 +72,18 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  "manageTeamMembersUrl" should {
+    "return the correct url" in new Setup {
+      appConfig.manageTeamMembersUrl shouldBe "https://www.gov.uk/guidance/manage-team-members-using-your-hmrc-business-tax-account"
+    }
+  }
+
+  "onlineServicesHelpUrl" should {
+    "return the correct url" in new Setup {
+      appConfig.onlineServicesHelpUrl shouldBe "https://www.gov.uk/log-in-register-hmrc-online-services/problems-signing-in"
+    }
+  }
+
   "isCashAccountV2FeatureFlagEnabled" should {
     "return the correct value" in new Setup {
       assume(!appConfig.isCashAccountV2FeatureFlagEnabled)
