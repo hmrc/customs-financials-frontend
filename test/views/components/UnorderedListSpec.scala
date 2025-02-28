@@ -41,7 +41,7 @@ class UnorderedListSpec extends SpecBase with MustMatchers {
 
     "display the expected list items in order" in new Setup {
       val listItems = listView.select("ul.govuk-list--bullet li").eachText()
-      listItems must contain inOrderOnly(
+      listItems must contain inOrderOnly (
         messages("cf.not-subscribed-to-cds.detail.list-item.1"),
         messages("cf.not-subscribed-to-cds.detail.list-item.2"),
         messages("cf.not-subscribed-to-cds.detail.list-item.3")
