@@ -15,31 +15,51 @@
  *@
 
 @import views.html.Layout
+@import utils.Utils.{emptyString, singleSpace}
 
 @this(
         layout: Layout,
         h1: components.h1,
         h2: components.h2,
         p: components.p,
+        ul: components.unordered_list,
         link: components.link
 )
 
 @()(implicit request: Request[_], messages: Messages, appConfig: config.AppConfig)
 
-@layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.title")), helpAndSupport = false) {
+@layout(pageTitle = Some(messages("cf.not-subscribed-to-cds.detail.heading")), helpAndSupport = false) {
     @h1("cf.not-subscribed-to-cds.detail.heading",id = None, classes = "govuk-heading-l")
-    @h2("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds", id = None)
+    
+    @p("cf.not-subscribed-to-cds.detail.this-may.text")
 
-    @p("cf.not-subscribed-to-cds.detail.already-subscribed-to-cds-guidance-text")
+    @ul(
+        Seq(
+            (1, true, appConfig.subscribeCdsUrl),
+            (2, false, emptyString),
+            (3, true, appConfig.manageTeamMembersUrl)
+        ).map { case (index, hasLink, url) =>
+            if (hasLink) {
+                HtmlFormat.fill(Seq(
+                    Html(messages(s"cf.not-subscribed-to-cds.detail.list-item.$index") + singleSpace),
+                    link(
+                        s"cf.not-subscribed-to-cds.detail.list-item.$index.link",
+                        url,
+                        linkId = Some(s"link-item-link-$index"),
+                        pWrapped = false
+                    )
+                ))
+            } else {
+                Html(messages(s"cf.not-subscribed-to-cds.detail.list-item.$index"))
+            }
+        }: _*
+    )
 
-    @h2("cf.not-subscribed-to-cds.detail.subscribe-cds.title")
-
-    <p class="govuk-body govuk-!-margin-bottom-7">
-        @link(
-            "cf.not-subscribed-to-cds.detail.subscribe-cds.link",
-            appConfig.subscribeCdsUrl,
-            linkId = Some("subscribe-cds-link"),
-            pWrapped = false
-        )
-    </p>
+    @link(
+        "cf.not-subscribed-to-cds.detail.service-help.link",
+        appConfig.onlineServicesHelpUrl,
+        linkId = Some("service-help-link"),
+        pWrapped = true
+    )
+    
 }

@@ -133,7 +133,7 @@ cf.account.authorized-to-view.search-own-accountnumber = Ni allwch chwilio am ri
 
 # Not subscribed to CDS
 cf.not-subscribed-to-cds.detail.title=Heb gofrestru â’r Gwasanaeth Datgan Tollau
-cf.not-subscribed-to-cds.detail.heading=I fynd yn eich blaen, mae angen i chi danysgrifio i’r Gwasanaeth Datganiadau Tollau (CDS)
+cf.not-subscribed-to-cds.detail.heading=Nid oes gennych fynediad at y Gwasanaeth Datganiadau Tollau (CDS)
 cf.not-subscribed-to-cds.detail.eori-info=Bydd angen y canlynol arnoch:
 cf.not-subscribed-to-cds.detail.eori-link=Rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) (yn agor ffenestr neu dab newydd).
 cf.not-subscribed-to-cds.detail.get-access-info=Os oes gennych rif EORI eisoes, gallwch
@@ -142,6 +142,14 @@ cf.not-subscribed-to-cds.detail.already-subscribed-to-cds=Os ydych eisoes wedi t
 cf.not-subscribed-to-cds.detail.already-subscribed-to-cds-guidance-text=Gwiriwch eich bod wedi mewngofnodi gyda’r Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth sy’n gysylltiedig â’ch rhif Cofrestru ac Adnabod Gweithredwyr Economaidd (EORI) a’ch cyfrif CDS.
 cf.not-subscribed-to-cds.detail.subscribe-cds.title=Tanysgrifio i’r CDS
 cf.not-subscribed-to-cds.detail.subscribe-cds.link=Tanysgrifio i’r Gwasanaeth Datganiadau Tollau.
+cf.not-subscribed-to-cds.detail.service-help.link=Cael help os ydych yn cael trafferthion mewngofnodi o hyd.
+cf.not-subscribed-to-cds.detail.this-may.text=Gallai hyn fod oherwydd y canlynol:
+cf.not-subscribed-to-cds.detail.list-item.1=nid ydych eto wedi
+cf.not-subscribed-to-cds.detail.list-item.2=mae'r Dynodydd Defnyddiwr (ID) ar gyfer Porth y Llywodraeth yr ydych wedi ei ddefnyddio yn anghywir - gwnewch yn siŵr eich bod yn defnyddio’r un sy’n gysylltiedig â’ch rhif EORI
+cf.not-subscribed-to-cds.detail.list-item.3=nid yw’ch sefydliad wedi rhoi mynediad i chi - gofynnwch i’r person a sefydlodd y cyfrif CDS
+cf.not-subscribed-to-cds.detail.list-item.1.link=tanysgrifio i’r CDS
+cf.not-subscribed-to-cds.detail.list-item.3.link=i’ch ychwanegu chi fel aelod o’r tîm a rhoi mynediad at y CDS i chi
+
 
 # Customs Financials Home Page
 cf.customs-financials-home.title=Eich tollau mewnforio a’ch cyfrifon TAW

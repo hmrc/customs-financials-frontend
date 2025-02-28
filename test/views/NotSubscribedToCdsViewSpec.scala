@@ -19,51 +19,48 @@ package views
 import config.AppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-
 import play.api.Application
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.{I18nSupport, Messages, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
-import play.api.test.Helpers.running
 import utils.SpecBase
 import views.html.error_states.not_subscribed_to_cds
 import utils.MustMatchers
 
 class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
 
-  "Not subscribed to cds view" should {
-    "display header as non-link text" in new Setup {
-      running(app) {
-        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK Manage import duties and VAT accounts"
-      }
+  "NotSubscribedToCds view" should {
+
+    "display the page heading" in new Setup {
+      view.getElementsByTag("h1").text mustBe messages("cf.not-subscribed-to-cds.detail.heading")
     }
 
-    "display page heading" in new Setup {
-      running(app) {
-        view
-          .getElementsByTag("h1")
-          .text mustBe "To continue you need to subscribe to the Customs Declaration Service (CDS)"
-      }
+    "contain correct links for getting access to CDS" in new Setup {
+      val subscribeLink = view.select(s"a#link-item-link-1")
+      subscribeLink mustNot be(empty)
+      subscribeLink.attr("href") mustBe appConfig.subscribeCdsUrl
+      subscribeLink.text must include(messages("cf.not-subscribed-to-cds.detail.list-item.1.link"))
+
+      val eoriLink = view.select(s"a#link-item-link-3")
+      eoriLink mustNot be(empty)
+      eoriLink.attr("href") mustBe appConfig.manageTeamMembersUrl
+      eoriLink.text must include(messages("cf.not-subscribed-to-cds.detail.list-item.3.link"))
     }
 
-    "display get access to cds service links" in new Setup {
-      running(app) {
-        view.containsLinkWithText(
-          "/customs/register-for-cds",
-          "Economic Operator and Registration Identification (EORI) number (opens in a new window or tab)"
-        )
-
-        view.containsLinkWithText(appConfig.subscribeCdsUrl, "get access to CDS (opens in a new window or tab)")
-      }
+    "include a service help link" in new Setup {
+      val helpLink = view.select(s"a#service-help-link")
+      helpLink mustNot be(empty)
+      helpLink.attr("href") mustBe appConfig.onlineServicesHelpUrl
+      helpLink.text must include(messages("cf.not-subscribed-to-cds.detail.service-help.link"))
     }
   }
 
   trait Setup extends I18nSupport {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application                                      = application().build()
-    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
-    val view: Document                                        = Jsoup.parse(app.injector.instanceOf[not_subscribed_to_cds].apply().body)
-
-    override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+    val app: Application = application().build()
+    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+    implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+    implicit val messages: Messages = messagesApi.preferred(request)
+    val view: Document = Jsoup.parse(app.injector.instanceOf[not_subscribed_to_cds].apply().body)
   }
 }
