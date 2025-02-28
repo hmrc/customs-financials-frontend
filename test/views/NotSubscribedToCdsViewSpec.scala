@@ -57,10 +57,10 @@ class NotSubscribedToCdsViewSpec extends SpecBase with MustMatchers {
 
   trait Setup extends I18nSupport {
     implicit val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest("GET", "/some/resource/path")
-    val app: Application = application().build()
-    implicit val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
-    implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-    implicit val messages: Messages = messagesApi.preferred(request)
-    val view: Document = Jsoup.parse(app.injector.instanceOf[not_subscribed_to_cds].apply().body)
+    val app: Application                                      = application().build()
+    implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
+    implicit val messagesApi: MessagesApi                     = app.injector.instanceOf[MessagesApi]
+    implicit val messages: Messages                           = messagesApi.preferred(request)
+    val view: Document                                        = Jsoup.parse(app.injector.instanceOf[not_subscribed_to_cds].apply().body)
   }
 }
