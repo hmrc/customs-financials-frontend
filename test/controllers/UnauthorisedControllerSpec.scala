@@ -51,7 +51,7 @@ class UnauthorisedControllerSpec extends SpecBase with MustMatchers {
         val html   = Jsoup.parse(contentAsString(result))
 
         html.getElementsByTag("h1").text mustBe
-          "To continue you need to subscribe to the Customs Declaration Service (CDS)"
+          "You do not have access to the Customs Declaration Service (CDS)"
       }
     }
 

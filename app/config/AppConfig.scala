@@ -42,6 +42,8 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
     config.get[Boolean]("features.authorities-notification-panel-enabled")
 
   lazy val subscribeCdsUrl: String             = config.get[String]("external-urls.cdsSubscribeUrl")
+  lazy val manageTeamMembersUrl: String        = config.get[String]("external-urls.manageTeamMembers")
+  lazy val onlineServicesHelpUrl: String       = config.get[String]("external-urls.onlineServicesHelp")
   lazy val reportChangeCdsUrl: String          = config.get[String]("external-urls.reportChangeUrl")
   lazy val accessibilityLinkUrl: String        = config.get[String]("external-urls.accessibility-statement")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
