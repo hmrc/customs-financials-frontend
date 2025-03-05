@@ -48,7 +48,7 @@ class PartialHomeViewSpec extends SpecBase with MustMatchers {
 
     "not display other accounts you can use link" in new Setup {
       running(app) {
-        view.notContainElementById("authorised-to-view-link")
+        view.notContainElementById("authority-to-use-link")
       }
     }
 

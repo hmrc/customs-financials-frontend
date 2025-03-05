@@ -26,8 +26,9 @@ import play.api.data.Form
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
 import play.api.{Logger, LoggerLike}
+import repositories.QueryCacheRepository
 import services.{ApiService, DataStoreService}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Utils.{CsvFiles, emptyString, isXIEori, partitionCsvFilesByFileNamePattern}
 import views.helpers.Formatters
@@ -47,6 +48,7 @@ class AuthorizedToViewController @Inject() (
   dataStoreService: DataStoreService,
   verifyEmail: EmailAction,
   financialsApiConnector: CustomsFinancialsApiConnector,
+  queryRepository: QueryCacheRepository,
   implicit val mcc: MessagesControllerComponents,
   authorisedToViewSearch: authorised_to_view_search,
   authorisedToViewSearchResult: authorised_to_view_search_result,
@@ -132,16 +134,56 @@ class AuthorizedToViewController @Inject() (
               )
             )
           },
-        query => Future.successful(Redirect(routes.AuthorizedToViewController.onSearch(query)))
+        query => storeQueryAndRedirect(query)
       )
   }
 
-  def onSearch(searchQuery: EORI): Action[AnyContent] = authenticate async { implicit request =>
-    processSearchQuery(request, searchQuery)
+  private def storeQueryAndRedirect(query: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    val sessionId = hc.sessionId.getOrElse {
+      log.error("Missing SessionID");
+      SessionId("Missing Session ID")
+    }
+
+    queryRepository
+      .clearAndInsertQuery(sessionId.value, query)
+      .map{ resultWritten =>
+        if (resultWritten) {
+          Redirect(routes.AuthorizedToViewController.onSearch())
+        }
+        else {
+          InternalServerError(errorHandler.technicalDifficulties()(request))
+        }
+      }
+      .recoverWith { case _ =>
+        Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+      }
   }
 
-  def onNoSearchResult(searchQuery: EORI): Action[AnyContent] = authenticate async { implicit request =>
-    processNoSearchResult(searchQuery)
+  private def retrieveQueryAndProcess(
+    handleQueryFn: String => Future[Result]
+  )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] = {
+    val sessionId = hc.sessionId.getOrElse {
+      log.error("Missing SessionID");
+      SessionId("Missing Session ID")
+    }
+
+    queryRepository
+      .getQuery(sessionId.value)
+      .flatMap {
+        case Some(query) => handleQueryFn(query)
+        case _           => Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+      }
+      .recoverWith { case _ =>
+        Future.successful(InternalServerError(errorHandler.technicalDifficulties()(request)))
+      }
+  }
+
+  def onSearch(): Action[AnyContent] = authenticate async { implicit request =>
+    retrieveQueryAndProcess(processSearchQuery(request, _))
+  }
+
+  def onNoSearchResult(): Action[AnyContent] = authenticate async { implicit request =>
+    retrieveQueryAndProcess(processNoSearchResult)
   }
 
   private def processNoSearchResult(
@@ -250,7 +292,7 @@ class AuthorizedToViewController @Inject() (
                        }
     } yield (authForGBEORI, authForXIEORI) match {
       case (Left(NoAuthorities), Left(NoAuthorities)) =>
-        Future.successful(Redirect(routes.AuthorizedToViewController.onNoSearchResult(searchQuery)))
+        Future.successful(Redirect(routes.AuthorizedToViewController.onNoSearchResult()))
 
       case (Left(SearchError), Left(SearchError)) | (Left(SearchError), Left(NoAuthorities)) |
           (Left(NoAuthorities), Left(SearchError)) =>
