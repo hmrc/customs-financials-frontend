@@ -34,8 +34,8 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
     }
 
     "return Invalid when an incorrect EORI Length is provided" in {
-      val result = checkEORI("error.invalid2")("XI453")
-      result shouldEqual Invalid("error.invalid2", """GB\d{12}""")
+      val result = checkEORI("error.invalid2")("XI")
+      result shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
     }
 
     "return Valid for an input that does not match the expression" in {
@@ -56,6 +56,26 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
     "return valid when GAN regex is provided" in {
       val result = checkEORI("error.invalid2")("GB365789")
       result shouldEqual Valid
+    }
+
+    "return valid" when {
+      "a valid EU Eori is provided" in {
+        val result1 = checkEORI("error.invalid2")("FR744638982004")
+        val result2 = checkEORI("error.invalid2")("DE7446389")
+
+        result1 shouldEqual Valid
+        result2 shouldEqual Valid
+      }
+    }
+
+    "return Invalid" when {
+      "EU Eori has invalid length" in {
+        val result1 = checkEORI("error.invalid2")("FR74463898200424567")
+        val result2 = checkEORI("error.invalid2")("DE")
+
+        result1 shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
+        result2 shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
+      }
     }
   }
 }
