@@ -18,11 +18,10 @@ package views.helpers
 
 import utils.{ShouldMatchers, SpecBase}
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
 
 class PageTitleSpec extends SpecBase with ShouldMatchers {
 
-  private val messagesApi: MessagesApi = new GuiceApplicationBuilder().build().injector.instanceOf[MessagesApi]
+  private val messagesApi: MessagesApi = application().build().injector.instanceOf[MessagesApi]
 
   "PageTitle helper object" should {
 

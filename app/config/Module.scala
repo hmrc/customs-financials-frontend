@@ -18,6 +18,7 @@ package config
 
 import actionbuilders.{AuthAction, IdentifierAction}
 import com.google.inject.AbstractModule
+import repositories.{DefaultQueryCacheRepository, QueryCacheRepository}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 
@@ -26,5 +27,6 @@ class Module extends AbstractModule {
   override def configure(): Unit = {
     bind(classOf[IdentifierAction]).to(classOf[AuthAction]).asEagerSingleton()
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
+    bind(classOf[QueryCacheRepository]).to(classOf[DefaultQueryCacheRepository]).asEagerSingleton()
   }
 }

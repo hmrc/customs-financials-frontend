@@ -18,16 +18,16 @@ package config
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.FakeRequest
+import utils.SpecBase
 
-class ErrorHandlerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class ErrorHandlerSpec extends AnyWordSpec with SpecBase with Matchers {
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   private val fakeRequest = FakeRequest("GET", "/")
 
-  private val handler = app.injector.instanceOf[ErrorHandler]
+  private val handler = application().build().injector.instanceOf[ErrorHandler]
 
   "Error handler" should {
     "render standard error template HTML" in {

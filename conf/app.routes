@@ -15,8 +15,8 @@ GET        /request-authorities-csv                              controllers.Aut
 
 GET        /authority-to-use                                     controllers.AuthorizedToViewController.onPageLoad()
 POST       /authority-to-use                                     controllers.AuthorizedToViewController.onSubmit()
-GET        /authorities-search-results:searchQuery               controllers.AuthorizedToViewController.onSearch(searchQuery)
-GET        /authorities-no-results/:searchQuery                  controllers.AuthorizedToViewController.onNoSearchResult(searchQuery)
+GET        /authorities-search-results                           controllers.AuthorizedToViewController.onSearch()
+GET        /authorities-no-results/                              controllers.AuthorizedToViewController.onNoSearchResult()
 
 GET        /parts-of-service-unavailable                         controllers.CustomsFinancialsHomeController.pageWithoutAccounts
 
