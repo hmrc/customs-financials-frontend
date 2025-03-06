@@ -146,7 +146,7 @@ class AuthorizedToViewController @Inject() (
 
     queryRepository
       .clearAndInsertQuery(sessionId.value, query)
-      .map{ resultWritten =>
+      .map { resultWritten =>
         if (resultWritten) {
           Redirect(routes.AuthorizedToViewController.onSearch())
         } else {

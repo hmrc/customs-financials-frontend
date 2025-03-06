@@ -46,7 +46,7 @@ class DefaultQueryCacheRepository @Inject() (mongoComponent: MongoComponent, con
           ascending("lastUpdated"),
           IndexOptions()
             .name("customs-financials-query-cache-index")
-            .unique(true)
+            .unique(false)
             .expireAfter(config.get[Long]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS)
         )
       )

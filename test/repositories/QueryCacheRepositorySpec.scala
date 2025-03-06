@@ -28,9 +28,6 @@ class QueryCacheRepositorySpec extends SpecBase with MustMatchers with BeforeAnd
   "get" should {
     "return none if no session data stored by a given id" in new Setup {
       running(app) {
-
-        val x = repository.getQuery("someSessionId")
-
         val result = await(repository.getQuery("someSessionId"))
         result mustBe None
       }
