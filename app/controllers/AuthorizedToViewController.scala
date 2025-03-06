@@ -149,8 +149,7 @@ class AuthorizedToViewController @Inject() (
       .map{ resultWritten =>
         if (resultWritten) {
           Redirect(routes.AuthorizedToViewController.onSearch())
-        }
-        else {
+        } else {
           InternalServerError(errorHandler.technicalDifficulties()(request))
         }
       }
