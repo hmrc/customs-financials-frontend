@@ -21,18 +21,31 @@ import utils.Utils.emptyString
 
 trait Constraints {
 
-  private lazy val eoriRegex: String = "^[A-Z]{2}[0-9A-Z]{1,15}$"
-  lazy val danRegex: String          = "^[0-9]{7}"
-  lazy val canRegex: String          = "^[0-9]{11}"
-  lazy val ganRegex: String          = "^[a-zA-Z0-9]{8,10}"
+  private lazy val eoriRegex: String    = "^[A-Z]{2}[0-9A-Z]{1,15}$"
+  private lazy val gbnEoriRegex: String = "GBN\\d{11}"
+  private lazy val gbEoriRegex: String  = "GB\\d{12}"
+  lazy val xiEoriRegex: String          = "XI\\d{12}"
+  lazy val danRegex: String             = "^[0-9]{7}"
+  lazy val canRegex: String             = "^[0-9]{11}"
+  lazy val ganRegex: String             = "^[a-zA-Z0-9]{8,10}"
 
-  protected def checkEORI(invalidFormatErrorKey: String): Constraint[String] =
-    Constraint {
-      case str if stripWhitespace(str).matches(eoriRegex) => Valid
-      case str if stripWhitespace(str).matches(danRegex)  => Valid
-      case str if stripWhitespace(str).matches(canRegex)  => Valid
-      case str if stripWhitespace(str).matches(ganRegex)  => Valid
-      case _                                              => Invalid(invalidFormatErrorKey, eoriRegex)
+  // scalastyle:off cyclomatic.complexity
+  protected def checkEORI(invalidFormatErrorKey: String, isEUEoriEnabled: Boolean = false): Constraint[String] =
+    if (isEUEoriEnabled) {
+      Constraint {
+        case str if stripWhitespace(str).matches(eoriRegex) => Valid
+        case _                                              => Invalid(invalidFormatErrorKey, eoriRegex)
+      }
+    } else {
+      Constraint {
+        case str if stripWhitespace(str).matches(gbnEoriRegex) => Valid
+        case str if stripWhitespace(str).matches(gbEoriRegex)  => Valid
+        case str if stripWhitespace(str).matches(danRegex)     => Valid
+        case str if stripWhitespace(str).matches(canRegex)     => Valid
+        case str if stripWhitespace(str).matches(ganRegex)     => Valid
+        case str if stripWhitespace(str).matches(xiEoriRegex)  => Valid
+        case _                                                 => Invalid(invalidFormatErrorKey, gbEoriRegex)
+      }
     }
 
   protected def stripWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase

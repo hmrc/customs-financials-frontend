@@ -57,7 +57,7 @@ class AuthorizedToViewController @Inject() (
     with I18nSupport {
 
   val log: LoggerLike    = Logger(this.getClass)
-  val form: Form[String] = eoriNumberFormProvider()
+  val form: Form[String] = eoriNumberFormProvider(appConfig.isEUEoriEnabled)
 
   def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
     financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)

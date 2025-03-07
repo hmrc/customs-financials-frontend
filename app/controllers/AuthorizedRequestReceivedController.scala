@@ -43,7 +43,7 @@ class AuthorizedRequestReceivedController @Inject() (
     with I18nSupport {
 
   val log: LoggerLike    = Logger(this.getClass)
-  val form: Form[String] = eoriNumberFormProvider()
+  val form: Form[String] = eoriNumberFormProvider(appConfig.isEUEoriEnabled)
 
   def requestAuthoritiesCsv(): Action[AnyContent] = authenticate async { implicit req =>
     customsDataStore.getEmail.flatMap {
