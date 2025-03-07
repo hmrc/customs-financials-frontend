@@ -23,8 +23,9 @@ import org.mockito.Mockito.{verify, when}
 import play.api.{Application, inject}
 import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
-import uk.gov.hmrc.http._
+import play.api.test.Helpers.*
+import repositories.QueryCacheRepository
+import uk.gov.hmrc.http.*
 import utils.SpecBase
 
 import java.time.OffsetDateTime
@@ -140,11 +141,14 @@ class MetricsReporterServiceSpec extends SpecBase {
     val mockMetrics: Metrics = mock[Metrics]
     when(mockMetrics.defaultRegistry).thenReturn(mockRegistry)
 
+    val mockQueryCache: QueryCacheRepository = mock[QueryCacheRepository]
+
     val app: Application = GuiceApplicationBuilder()
       .overrides(
         inject.bind[DateTimeService].toInstance(mockDateTimeService),
         inject.bind[Histogram].toInstance(mockHistogram),
-        inject.bind[Metrics].toInstance(mockMetrics)
+        inject.bind[Metrics].toInstance(mockMetrics),
+        inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
       )
       .configure(
         "microservice.metrics.enabled" -> false,
