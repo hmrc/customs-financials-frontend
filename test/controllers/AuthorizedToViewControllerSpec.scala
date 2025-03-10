@@ -16,22 +16,28 @@
 
 package controllers
 
+import actionbuilders.{FakeIdentifierAction, IdentifierAction}
 import connectors.SdesConnector
 import domain.FileFormat.Csv
 import domain.FileRole.StandingAuthority
 import domain.*
+import org.apache.pekko.stream.testkit.NoMaterializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
 import play.api.test.Helpers.*
 import play.api.{Application, inject}
+import repositories.QueryCacheRepository
 import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ShouldMatchers, SpecBase}
+import uk.gov.hmrc.http.{GatewayTimeoutException, HeaderCarrier}
+import uk.gov.hmrc.play.bootstrap.metrics.Metrics
+import utils.{FakeMetrics, ShouldMatchers, SpecBase}
 import utils.TestData.{
   BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022
 }
@@ -39,6 +45,7 @@ import utils.Utils.singleSpace
 
 import scala.concurrent.Future
 
+// scalastyle:off file.size.limit
 class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   "The Authorized to View page" should {
@@ -260,8 +267,89 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
   }
 
   "onSubmit" should {
-    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQuery should return OK if there are authorities returned" in new Setup {
+
+    "return INTERNAL_SERVER_ERROR if unable to store query in cache" in new Setup {
+
+      running(app) {
+        when(mockQueryCache.clearAndInsertQuery(any, any))
+          .thenReturn(Future.successful(false))
+
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> gbEORI)
+
+        val result = route(app, request).value
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "return INTERNAL_SERVER_ERROR if error storing query in cache" in new Setup {
+
+      running(app) {
+        when(mockQueryCache.clearAndInsertQuery(any, any))
+          .thenReturn(Future.successful(false))
+
+        val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+          .withFormUrlEncodedBody("value" -> gbEORI)
+
+        val result = route(app, request).value
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "redirect to /authorities-search-results and return INTERNAL_SERVER_ERROR " +
+      "when calling /authorities-search-results if query not in cache" in new Setup {
+
+        running(app) {
+          when(mockQueryCache.clearAndInsertQuery(any, any))
+            .thenReturn(Future.successful(true))
+          when(mockQueryCache.getQuery(any))
+            .thenReturn(Future.successful(None))
+
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> gbEORI)
+
+          val result = route(app, request).value
+
+          status(result) shouldBe SEE_OTHER
+
+          redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
+
+          val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
+          val redirectResult  = route(app, redirectRequest).value
+
+          status(redirectResult) shouldBe INTERNAL_SERVER_ERROR
+        }
+      }
+
+    "redirect to /authorities-search-results and return INTERNAL_SERVER_ERROR " +
+      "when calling /authorities-search-results if failure occurs reading cache" in new Setup {
+
+        running(app) {
+          when(mockQueryCache.clearAndInsertQuery(any, any))
+            .thenReturn(Future.successful(true))
+          when(mockQueryCache.getQuery(any))
+            .thenReturn(Future.failed(new GatewayTimeoutException("")))
+
+          val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+            .withFormUrlEncodedBody("value" -> gbEORI)
+
+          val result = route(app, request).value
+
+          status(result) shouldBe SEE_OTHER
+
+          redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
+
+          val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
+          val redirectResult  = route(app, redirectRequest).value
+
+          status(redirectResult) shouldBe INTERNAL_SERVER_ERROR
+        }
+      }
+
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return OK if there are authorities returned" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -295,8 +383,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
 
     "return SEE_OTHER if there are authorities returned with spaces in search string " +
-      "and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQuery should return OK if there are authorities returned" in new Setup {
+      "and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return OK if there are authorities returned" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
 
@@ -327,9 +415,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
 
     "return SEE_OTHER if there are no authorities returned and " +
-      "redirect to /authorities-search-results:searchQuery " +
-      "call to /authorities-search-results:searchQuery should redirect to " +
-      "/authorities-no-results:searchQuery with eori spaces removed " +
+      "redirect to /authorities-search-results " +
+      "call to /authorities-search-results should redirect to " +
+      "/authorities-no-results with eori spaces removed " +
       "finally a call to this url should return no search result " in new Setup {
 
         when(mockApiService.searchAuthorities(any, any)(any))
@@ -343,8 +431,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         }
       }
 
-    " return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQuery should return OK if there are authorities returned " +
+    " return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return OK if there are authorities returned " +
       "for both GB and XI EORI and both SearchAuthorities " + "have no balance" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), None)
@@ -375,9 +463,9 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
 
     "return SEE_OTHER if there are no authorities returned for both GB/XI EORI for a account and" +
-      "redirect to /authorities-search-results:searchQuery " +
-      "call to /authorities-search-results:searchQuery should redirect to " +
-      "/authorities-no-results:searchQuery " +
+      "redirect to /authorities-search-results " +
+      "call to /authorities-search-results should redirect to " +
+      "/authorities-no-results " +
       "finally a call to this url should return no search result" in new Setup {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Option("XI123456789")))
@@ -392,8 +480,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         }
       }
 
-    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return OK if there is XI EORI associated " +
       "with the GB EORI and if there are authorities returned" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
@@ -424,8 +512,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         }
       }
 
-    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return OK if there is XI EORI associated " +
       "with the GB EORI but not for XI EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
           AuthorisedGeneralGuaranteeAccount(Account("1234", "GeneralGuarantee", "GB000000000000"), Some("10.0"))
@@ -460,8 +548,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         }
       }
 
-    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      " and /authorities-search-results:searchQuery should return OK if there is XI EORI associated " +
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      " and /authorities-search-results should return OK if there is XI EORI associated " +
       " with the GB EORI and authorities are returned for " +
       " XI EORI but not for GB EORI for an account number" in new Setup {
         val guaranteeAccount: AuthorisedGeneralGuaranteeAccount =
@@ -619,8 +707,8 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           Option(html.getElementById("xi-csv-authority-link")) shouldBe None
         }
       }
-    "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
-      "and /authorities-search-results:searchQury should return BAD_REQUEST " +
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should return BAD_REQUEST " +
       "with correct error msg when agent is not registered for his own XI EORI " +
       "and search authority using trader's XI EORI" in new Setup {
 
@@ -666,11 +754,14 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(None))
 
-        val newApp: Application = application()
+        when(mockQueryCache.clearAndInsertQuery(any(), any())).thenReturn(Future.successful(true))
+
+        val newApp: Application = baseApp
           .overrides(
             inject.bind[ApiService].toInstance(mockApiService),
             inject.bind[DataStoreService].toInstance(mockDataStoreService),
-            inject.bind[SdesConnector].toInstance(mockSdesConnector)
+            inject.bind[SdesConnector].toInstance(mockSdesConnector),
+            inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
           )
           .configure(
             "features.new-agent-view-enabled"                 -> false,
@@ -694,11 +785,14 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
-        val newApp: Application = application()
+        when(mockQueryCache.clearAndInsertQuery(any(), any())).thenReturn(Future.successful(true))
+
+        val newApp: Application = baseApp
           .overrides(
             inject.bind[ApiService].toInstance(mockApiService),
             inject.bind[DataStoreService].toInstance(mockDataStoreService),
-            inject.bind[SdesConnector].toInstance(mockSdesConnector)
+            inject.bind[SdesConnector].toInstance(mockSdesConnector),
+            inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
           )
           .configure(
             "features.new-agent-view-enabled"                 -> false,
@@ -722,11 +816,14 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Some("XI123456789912")))
 
-        val newApp: Application = application()
+        when(mockQueryCache.clearAndInsertQuery(any(), any())).thenReturn(Future.successful(true))
+
+        val newApp: Application = baseApp
           .overrides(
             inject.bind[ApiService].toInstance(mockApiService),
             inject.bind[DataStoreService].toInstance(mockDataStoreService),
-            inject.bind[SdesConnector].toInstance(mockSdesConnector)
+            inject.bind[SdesConnector].toInstance(mockSdesConnector),
+            inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
           )
           .configure(
             "features.new-agent-view-enabled"                 -> false,
@@ -803,17 +900,21 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
     assertResultFn: (Future[Result], Document) => Unit
-  ): Unit =
+  )(implicit mockQueryCache: QueryCacheRepository): Unit =
     running(app) {
+
+      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
+      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(eori)))
+
       val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
         .withFormUrlEncodedBody("value" -> eori)
 
       val result = route(app, request).value
 
       status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
 
-      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
       val redirectResult  = route(app, redirectRequest).value
       val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
 
@@ -822,27 +923,31 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
     assertResultFn: (Future[Result], Document) => Unit
-  ): Unit =
+  )(implicit mockQueryCache: QueryCacheRepository): Unit =
     running(app) {
+
+      val strippedEori = eori.replaceAll(singleSpace, emptyString)
+
+      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
+      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(strippedEori)))
+
       val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
         .withFormUrlEncodedBody("value" -> eori)
 
       val result = route(app, request).value
 
       status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
 
-      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
       val firstRedirectResult  = route(app, firstRedirectRequest).value
-
-      val strippedEori = eori.replaceAll(singleSpace, emptyString)
 
       status(firstRedirectResult)                 shouldBe SEE_OTHER
       redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
-        .onNoSearchResult(strippedEori)
+        .onNoSearchResult()
         .url
 
-      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
+      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult().url)
       val secondRedirectResult  = route(app, secondRedirectRequest).value
       val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
 
@@ -983,9 +1088,10 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
     val emailId = "test@test.com"
 
-    val mockApiService: ApiService             = mock[ApiService]
-    val mockDataStoreService: DataStoreService = mock[DataStoreService]
-    val mockSdesConnector: SdesConnector       = mock[SdesConnector]
+    val mockApiService: ApiService                    = mock[ApiService]
+    val mockDataStoreService: DataStoreService        = mock[DataStoreService]
+    val mockSdesConnector: SdesConnector              = mock[SdesConnector]
+    implicit val mockQueryCache: QueryCacheRepository = mock[QueryCacheRepository]
 
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(any))
       .thenReturn(Future.successful(cdsAccounts))
@@ -996,11 +1102,21 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
     when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any))
       .thenReturn(Future.successful(Seq.empty))
 
-    val app: Application = application()
+    val baseApp = new GuiceApplicationBuilder()
+      .overrides(
+        inject
+          .bind[IdentifierAction]
+          .toInstance(new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(Seq.empty[EoriHistory])),
+        api.inject.bind[Metrics].toInstance(new FakeMetrics)
+      )
+      .configure("auditing.enabled" -> "false")
+
+    val app: Application = baseApp
       .overrides(
         inject.bind[ApiService].toInstance(mockApiService),
         inject.bind[DataStoreService].toInstance(mockDataStoreService),
-        inject.bind[SdesConnector].toInstance(mockSdesConnector)
+        inject.bind[SdesConnector].toInstance(mockSdesConnector),
+        inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
       )
       .configure("features.new-agent-view-enabled" -> false)
       .build()

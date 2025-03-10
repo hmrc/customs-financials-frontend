@@ -79,7 +79,7 @@ class ErrorTemplateSpec extends SpecBase with MustMatchers {
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
     implicit val messages: Messages       = messagesApi.preferred(request)
 
-    val expectedBackLinkPath = "/customs/payment-records/authorized-to-view"
+    val expectedBackLinkPath = "/customs/payment-records/authority-to-use"
 
     val viewWithBackLink: Document = Jsoup.parse(
       app.injector

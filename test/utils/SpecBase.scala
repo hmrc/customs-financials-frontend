@@ -37,6 +37,7 @@ import play.api.test.CSRFTokenHelper.CSRFFRequestHeader
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import play.api.{Application, inject}
+import repositories.QueryCacheRepository
 
 import scala.util.{Failure, Success, Try}
 import java.time.LocalDate
@@ -87,12 +88,15 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     }
   }
 
+  private val mockedQueryCache: QueryCacheRepository = mock[QueryCacheRepository]
+
   def application(allEoriHistory: Seq[EoriHistory] = Seq.empty): GuiceApplicationBuilder = new GuiceApplicationBuilder()
     .overrides(
       inject
         .bind[IdentifierAction]
         .toInstance(new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(allEoriHistory)),
-      api.inject.bind[Metrics].toInstance(new FakeMetrics)
+      api.inject.bind[Metrics].toInstance(new FakeMetrics),
+      inject.bind[QueryCacheRepository].toInstance(mockedQueryCache)
     )
     .configure("auditing.enabled" -> "false")
 
@@ -101,7 +105,8 @@ trait SpecBase extends AnyWordSpecLike with MockitoSugar with OptionValues with 
     disableAuth: Boolean = false
   )(implicit c: ClassTag[IA]): GuiceApplicationBuilder = {
 
-    val overrides: List[GuiceableModule]         = List(bind[Metrics].toInstance(new FakeMetrics))
+    val overrides: List[GuiceableModule]         =
+      List(bind[Metrics].toInstance(new FakeMetrics), inject.bind[QueryCacheRepository].toInstance(mockedQueryCache))
     val optionalOverrides: List[GuiceableModule] = if (disableAuth) {
       Nil
     } else {

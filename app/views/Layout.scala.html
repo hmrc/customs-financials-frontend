@@ -28,7 +28,6 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.userresearchbanner.UserResearchBanner
 @import uk.gov.hmrc.govukfrontend.views.viewmodels.backlink.BackLink
 @import views.html.components.help_and_support_message
-@import views.html.components.browser_back_link
 @import views.html.helper.CSPNonce
 @import utils.Utils.emptyString
 
@@ -36,7 +35,6 @@
         appConfig: AppConfig,
         hmrcStandardPage: HmrcStandardPage,
         govukBackLink: GovukBackLink,
-        browserBackLinkComponent: browser_back_link,
         hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
         hmrcTimeoutDialog: HmrcTimeoutDialog,
         eoriBanner: components.eori_banner,
@@ -46,7 +44,6 @@
 @(
         pageTitle: Option[String] = None,
         backLink: Option[String] = None,
-        browserBackLink: Option[String] = None,
         helpAndSupport: Boolean = true,
         deskpro: Boolean = true,
         welshToggle: Boolean = true,
@@ -75,14 +72,10 @@
     @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) }
     @hmrcLanguageSelectHelper()
 
-    @browserBackLink.map { url =>
-        @browserBackLinkComponent(url)
-    }.getOrElse {
-        @backLink.filter(_.nonEmpty).map { url =>
-            @govukBackLink(BackLink(
-                href = url
-            ))
-        }
+    @backLink.filter(_.nonEmpty).map { url =>
+        @govukBackLink(BackLink(
+            href = url
+        ))
     }
 }
 
@@ -122,7 +115,7 @@
         backLink = None,
         templateOverrides = TemplateOverrides(
                                 additionalHeadBlock = Some(additionalHead),
-                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined || browserBackLink.isDefined || backLink.isDefined) Some(beforeContent) else None
+                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined || backLink.isDefined) Some(beforeContent) else None
                             ),
         banners = Banners(
                     phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),

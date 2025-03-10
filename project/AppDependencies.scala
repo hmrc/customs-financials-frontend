@@ -27,7 +27,8 @@ object AppDependencies {
     ws,
     "org.typelevel" %% "cats-core" % "2.13.0",
     "uk.gov.hmrc" %% "tax-year" % "5.0.0",
-    "org.webjars.npm" % "moment" % "2.30.1"
+    "org.webjars.npm" % "moment" % "2.30.1",
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30" % "2.1.0",
   )
 
   val test: Seq[ModuleID] = Seq(
