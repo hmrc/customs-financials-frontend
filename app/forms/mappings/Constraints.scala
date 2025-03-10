@@ -33,10 +33,10 @@ trait Constraints {
   protected def checkEORI(invalidFormatErrorKey: String, isEUEoriEnabled: Boolean = false): Constraint[String] =
     if (isEUEoriEnabled) {
       Constraint {
-        case str if stripWhitespace(str).matches(eoriRegex) => Valid
         case str if stripWhitespace(str).matches(danRegex)  => Valid
         case str if stripWhitespace(str).matches(canRegex)  => Valid
         case str if stripWhitespace(str).matches(ganRegex)  => Valid
+        case str if stripWhitespace(str).matches(eoriRegex) => Valid
         case _                                              => Invalid(invalidFormatErrorKey, eoriRegex)
       }
     } else {
