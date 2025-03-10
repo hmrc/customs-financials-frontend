@@ -24,8 +24,8 @@ import uk.gov.hmrc.play.bootstrap.metrics.Metrics
 import org.jsoup.nodes.Document
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.should.Matchers as ShouldMatcher
-import org.scalatest.matchers.must.Matchers as MustMatcher
+import org.scalatest.matchers.should.{Matchers => ShouldMatcher}
+import org.scalatest.matchers.must.{Matchers => MustMatcher}
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{Assertion, OptionValues}
 import play.api

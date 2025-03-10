@@ -41,9 +41,11 @@ import utils.{FakeMetrics, ShouldMatchers, SpecBase}
 import utils.TestData.{
   BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022
 }
+import utils.Utils.singleSpace
 
 import scala.concurrent.Future
 
+// scalastyle:off file.size.limit
 class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
   "The Authorized to View page" should {
@@ -263,62 +265,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
   }
-
-  private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
-    assertResultFn: (Future[Result], Document) => Unit
-  )(implicit mockQueryCache: QueryCacheRepository): Unit =
-    running(app) {
-
-      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
-      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(eori)))
-
-      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-        .withFormUrlEncodedBody("value" -> eori)
-
-      val result = route(app, request).value
-
-      status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
-
-      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
-      val redirectResult  = route(app, redirectRequest).value
-      val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
-
-      assertResultFn(redirectResult, redirectHtml)
-    }
-
-  private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
-    assertResultFn: (Future[Result], Document) => Unit
-  )(implicit mockQueryCache: QueryCacheRepository): Unit =
-    running(app) {
-
-      val strippedEori = eori.replaceAll(" ", "")
-
-      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
-      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(strippedEori)))
-
-      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-        .withFormUrlEncodedBody("value" -> eori)
-
-      val result = route(app, request).value
-
-      status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
-
-      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
-      val firstRedirectResult  = route(app, firstRedirectRequest).value
-
-      status(firstRedirectResult)                 shouldBe SEE_OTHER
-      redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
-        .onNoSearchResult()
-        .url
-
-      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult().url)
-      val secondRedirectResult  = route(app, secondRedirectRequest).value
-      val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
-
-      assertResultFn(secondRedirectResult, secondRedirectHtml)
-    }
 
   "onSubmit" should {
 
@@ -951,6 +897,62 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
   }
+
+  private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  )(implicit mockQueryCache: QueryCacheRepository): Unit =
+    running(app) {
+
+      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
+      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(eori)))
+
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
+
+      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
+      val redirectResult  = route(app, redirectRequest).value
+      val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
+
+      assertResultFn(redirectResult, redirectHtml)
+    }
+
+  private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  )(implicit mockQueryCache: QueryCacheRepository): Unit =
+    running(app) {
+
+      val strippedEori = eori.replaceAll(singleSpace, emptyString)
+
+      when(mockQueryCache.clearAndInsertQuery(any, any)).thenReturn(Future.successful(true))
+      when(mockQueryCache.getQuery(any)).thenReturn(Future.successful(Some(strippedEori)))
+
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch().url
+
+      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch().url)
+      val firstRedirectResult  = route(app, firstRedirectRequest).value
+
+      status(firstRedirectResult)                 shouldBe SEE_OTHER
+      redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
+        .onNoSearchResult()
+        .url
+
+      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult().url)
+      val secondRedirectResult  = route(app, secondRedirectRequest).value
+      val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
+
+      assertResultFn(secondRedirectResult, secondRedirectHtml)
+    }
 
   trait Setup {
 

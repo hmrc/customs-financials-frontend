@@ -41,6 +41,8 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
   lazy val isAuthoritiesNotificationPanelEnabled: Boolean =
     config.get[Boolean]("features.authorities-notification-panel-enabled")
 
+  lazy val isEUEoriEnabled: Boolean = config.get[Boolean]("features.eu-eori-enabled")
+
   lazy val subscribeCdsUrl: String             = config.get[String]("external-urls.cdsSubscribeUrl")
   lazy val manageTeamMembersUrl: String        = config.get[String]("external-urls.manageTeamMembers")
   lazy val onlineServicesHelpUrl: String       = config.get[String]("external-urls.onlineServicesHelp")

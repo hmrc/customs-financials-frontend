@@ -115,6 +115,12 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
     }
   }
 
+  "euEoriEnabled" should {
+    "return correct value" in new Setup {
+      appConfig.isEUEoriEnabled shouldBe false
+    }
+  }
+
   trait Setup {
     val app: Application     = application().build()
     val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
