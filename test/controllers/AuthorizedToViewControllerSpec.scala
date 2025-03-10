@@ -35,6 +35,7 @@ import utils.{ShouldMatchers, SpecBase}
 import utils.TestData.{
   BALANCE_100, BALANCE_20, BALANCE_200, BALANCE_300, BALANCE_50, BALANCE_500, DAY_1, FILE_SIZE_500, MONTH_6, YEAR_2022
 }
+import utils.Utils.singleSpace
 
 import scala.concurrent.Future
 
@@ -257,54 +258,6 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
   }
-
-  private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
-    assertResultFn: (Future[Result], Document) => Unit
-  ): Unit =
-    running(app) {
-      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-        .withFormUrlEncodedBody("value" -> eori)
-
-      val result = route(app, request).value
-
-      status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
-
-      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-      val redirectResult  = route(app, redirectRequest).value
-      val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
-
-      assertResultFn(redirectResult, redirectHtml)
-    }
-
-  private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
-    assertResultFn: (Future[Result], Document) => Unit
-  ): Unit =
-    running(app) {
-      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-        .withFormUrlEncodedBody("value" -> eori)
-
-      val result = route(app, request).value
-
-      status(result)                 shouldBe SEE_OTHER
-      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
-
-      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
-      val firstRedirectResult  = route(app, firstRedirectRequest).value
-
-      val strippedEori = eori.replaceAll(" ", "")
-
-      status(firstRedirectResult)                 shouldBe SEE_OTHER
-      redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
-        .onNoSearchResult(strippedEori)
-        .url
-
-      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
-      val secondRedirectResult  = route(app, secondRedirectRequest).value
-      val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
-
-      assertResultFn(secondRedirectResult, secondRedirectHtml)
-    }
 
   "onSubmit" should {
     "return SEE_OTHER and redirect to /authorities-search-results:searchQuery " +
@@ -847,6 +800,54 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     }
   }
+
+  private def validateRedirectToOnSearchAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  ): Unit =
+    running(app) {
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+
+      val redirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+      val redirectResult  = route(app, redirectRequest).value
+      val redirectHtml    = Jsoup.parse(contentAsString(redirectResult))
+
+      assertResultFn(redirectResult, redirectHtml)
+    }
+
+  private def validateRedirectToOnNoSearchResultsAndThen(eori: String, app: Application)(
+    assertResultFn: (Future[Result], Document) => Unit
+  ): Unit =
+    running(app) {
+      val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
+        .withFormUrlEncodedBody("value" -> eori)
+
+      val result = route(app, request).value
+
+      status(result)                 shouldBe SEE_OTHER
+      redirectLocation(result).value shouldBe routes.AuthorizedToViewController.onSearch(eori).url
+
+      val firstRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onSearch(eori).url)
+      val firstRedirectResult  = route(app, firstRedirectRequest).value
+
+      val strippedEori = eori.replaceAll(singleSpace, emptyString)
+
+      status(firstRedirectResult)                 shouldBe SEE_OTHER
+      redirectLocation(firstRedirectResult).value shouldBe routes.AuthorizedToViewController
+        .onNoSearchResult(strippedEori)
+        .url
+
+      val secondRedirectRequest = fakeRequest(GET, routes.AuthorizedToViewController.onNoSearchResult(strippedEori).url)
+      val secondRedirectResult  = route(app, secondRedirectRequest).value
+      val secondRedirectHtml    = Jsoup.parse(contentAsString(secondRedirectResult))
+
+      assertResultFn(secondRedirectResult, secondRedirectHtml)
+    }
 
   trait Setup {
 

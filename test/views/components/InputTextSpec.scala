@@ -31,8 +31,64 @@ import utils.MustMatchers
 class InputTextSpec extends SpecBase with MustMatchers {
 
   "InputText" should {
-    "display the correct view" in new Setup {
-      running(app) {
+
+    "display the correct view" when {
+
+      "EU Eori flag is not enabled" in new Setup {
+        running(app) {
+          val view: Document = Jsoup.parse(
+            app.injector
+              .instanceOf[inputText]
+              .apply(
+                form = validForm,
+                id = id,
+                name = name,
+                label = labelMsgKey,
+                isPageHeading = false,
+                hint = None
+              )
+              .body
+          )
+
+          view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
+          view.getElementById("value").`val`() mustBe "GB123456789012"
+
+          intercept[RuntimeException] {
+            view.getElementById("value-hint").html()
+          }
+        }
+      }
+
+      "EU Eori flag is enabled" in new Setup {
+        running(app) {
+          val view: Document = Jsoup.parse(
+            app.injector
+              .instanceOf[inputText]
+              .apply(
+                form = validFormWithEUEoriFlagEnabled,
+                id = id,
+                name = name,
+                label = labelMsgKey,
+                isPageHeading = false,
+                hint = None
+              )
+              .body
+          )
+
+          view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
+          view.getElementById("value").`val`() mustBe euEori
+
+          intercept[RuntimeException] {
+            view.getElementById("value-hint").html()
+          }
+        }
+      }
+
+    }
+
+    "display the correct hint" when {
+
+      "EU Eori flag is not enabled" in new Setup {
         val view: Document = Jsoup.parse(
           app.injector
             .instanceOf[inputText]
@@ -42,78 +98,121 @@ class InputTextSpec extends SpecBase with MustMatchers {
               name = name,
               label = labelMsgKey,
               isPageHeading = false,
-              hint = None
+              hint = Some(hintText)
             )
             .body
         )
 
-        view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
-        view.getElementById("value").`val`() mustBe "GB123456789012"
-
-        intercept[RuntimeException] {
-          view.getElementById("value-hint").html()
-        }
+        view.getElementById("value-hint").html() mustBe hintText
       }
-    }
 
-    "display the correct hint" in new Setup {
-      val view: Document = Jsoup.parse(
-        app.injector
-          .instanceOf[inputText]
-          .apply(
-            form = validForm,
-            id = id,
-            name = name,
-            label = labelMsgKey,
-            isPageHeading = false,
-            hint = Some(hintText)
-          )
-          .body
-      )
-
-      view.getElementById("value-hint").html() mustBe hintText
-    }
-
-    "display error if form has any error" in new Setup {
-      running(app) {
+      "EU Eori flag is enabled" in new Setup {
         val view: Document = Jsoup.parse(
           app.injector
             .instanceOf[inputText]
             .apply(
-              form = invalidForm,
+              form = validFormWithEUEoriFlagEnabled,
               id = id,
               name = name,
               label = labelMsgKey,
               isPageHeading = false,
+              hint = Some(hintText)
+            )
+            .body
+        )
+
+        view.getElementById("value-hint").html() mustBe hintText
+      }
+    }
+
+    "display error if form has any error" when {
+
+      "EU Eori flag is not enabled" in new Setup {
+        running(app) {
+          val view: Document = Jsoup.parse(
+            app.injector
+              .instanceOf[inputText]
+              .apply(
+                form = invalidForm,
+                id = id,
+                name = name,
+                label = labelMsgKey,
+                isPageHeading = false,
+                hint = None
+              )
+              .body
+          )
+
+          view.getElementById("value-error").childNodes().size() must be > 0
+          view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
+        }
+      }
+
+      "EU Eori flag is enabled" in new Setup {
+        running(app) {
+          val view: Document = Jsoup.parse(
+            app.injector
+              .instanceOf[inputText]
+              .apply(
+                form = invalidFormWithEUEoriFlagEnabled,
+                id = id,
+                name = name,
+                label = labelMsgKey,
+                isPageHeading = false,
+                hint = None
+              )
+              .body
+          )
+
+          view.getElementById("value-error").childNodes().size() must be > 0
+          view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
+        }
+      }
+    }
+
+    "display label with govuk-label--xl class" when {
+
+      "EU Eori flag is not enabled" in new Setup {
+        val view: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[inputText]
+            .apply(
+              form = validForm,
+              id = id,
+              name = name,
+              label = labelMsgKey,
+              isPageHeading = true,
               hint = None
             )
             .body
         )
 
-        view.getElementById("value-error").childNodes().size() must be > 0
-        view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
+        view.getElementsByClass("govuk-label--xl").text() mustBe msgs(labelMsgKey)
+        view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
+        view.getElementById("value").`val`() mustBe "GB123456789012"
+      }
+
+      "EU Eori flag is enabled" in new Setup {
+        val view: Document = Jsoup.parse(
+          app.injector
+            .instanceOf[inputText]
+            .apply(
+              form = validFormWithEUEoriFlagEnabled,
+              id = id,
+              name = name,
+              label = labelMsgKey,
+              isPageHeading = true,
+              hint = None
+            )
+            .body
+        )
+
+        view.getElementsByClass("govuk-label--xl").text() mustBe msgs(labelMsgKey)
+        view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
+        view.getElementById("value").`val`() mustBe euEori
       }
     }
 
-    "display label with govuk-label--xl class" in new Setup {
-      val view: Document = Jsoup.parse(
-        app.injector
-          .instanceOf[inputText]
-          .apply(
-            form = validForm,
-            id = id,
-            name = name,
-            label = labelMsgKey,
-            isPageHeading = true,
-            hint = None
-          )
-          .body
-      )
-
-      view.getElementsByClass("govuk-label--xl").text() mustBe msgs(labelMsgKey)
-      view.getElementsByTag("label").html() mustBe msgs(labelMsgKey)
-      view.getElementById("value").`val`() mustBe "GB123456789012"
-    }
   }
 
   trait Setup {
@@ -123,9 +222,16 @@ class InputTextSpec extends SpecBase with MustMatchers {
     val labelMsgKey = "cf.search.authorities"
     val id          = "value"
     val name        = "value"
+    val euEori      = "FR123456789012"
 
-    val validForm: Form[String]   = new EoriNumberFormProvider().apply().bind(Map("value" -> "GB123456789012"))
-    val invalidForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "ABC"))
+    val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> "GB123456789012"))
+
+    val validFormWithEUEoriFlagEnabled: Form[String] =
+      new EoriNumberFormProvider().apply().bind(Map("value" -> euEori))
+
+    val invalidForm: Form[String]                      = new EoriNumberFormProvider().apply().bind(Map("value" -> "ABC"))
+    val invalidFormWithEUEoriFlagEnabled: Form[String] =
+      new EoriNumberFormProvider().apply(isEUEoriEnabled = true).bind(Map("value" -> "FR"))
 
     val hintText = "hint text"
   }
