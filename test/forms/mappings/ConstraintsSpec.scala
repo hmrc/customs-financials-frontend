@@ -66,6 +66,24 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
         result1 shouldEqual Valid
         result2 shouldEqual Valid
       }
+
+      "eu-eori-enabled feature flag is true and a valid DAN value is provided" in {
+        val result = checkEORI("error.invalid2", true)("4536578")
+
+        result shouldEqual Valid
+      }
+
+      "eu-eori-enabled feature flag is true and a valid CAN value is provided" in {
+        val result = checkEORI("error.invalid2", true)("45365789211")
+
+        result shouldEqual Valid
+      }
+
+      "eu-eori-enabled feature flag is true and a valid GAN value is provided" in {
+        val result = checkEORI("error.invalid2", true)("GB365789")
+
+        result shouldEqual Valid
+      }
     }
 
     "return Invalid" when {
