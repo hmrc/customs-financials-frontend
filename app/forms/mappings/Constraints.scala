@@ -33,11 +33,8 @@ trait Constraints {
   protected def checkEORI(invalidFormatErrorKey: String, isEUEoriEnabled: Boolean = false): Constraint[String] =
     if (isEUEoriEnabled) {
       Constraint {
-        case str if stripWhitespace(str).matches(danRegex)  => Valid
-        case str if stripWhitespace(str).matches(canRegex)  => Valid
-        case str if stripWhitespace(str).matches(ganRegex)  => Valid
-        case str if stripWhitespace(str).matches(eoriRegex) => Valid
-        case _                                              => Invalid(invalidFormatErrorKey, eoriRegex)
+        case str if isEoriOrAccountNumberValid(str) => Valid
+        case _                                      => Invalid(invalidFormatErrorKey, eoriRegex)
       }
     } else {
       Constraint {
@@ -52,4 +49,10 @@ trait Constraints {
     }
 
   protected def stripWhitespace(str: String): String = str.replaceAll("\\s", emptyString).toUpperCase
+
+  private def isEoriOrAccountNumberValid(inputString: String) =
+    stripWhitespace(inputString).matches(danRegex) ||
+      stripWhitespace(inputString).matches(canRegex) ||
+      stripWhitespace(inputString).matches(ganRegex) ||
+      stripWhitespace(inputString).matches(eoriRegex)
 }
