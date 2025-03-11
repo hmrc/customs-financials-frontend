@@ -50,5 +50,5 @@ object Utils {
 
   def isXIEori(str: String): Boolean = str.trim.matches(xiEoriRegex)
 
-  case class CsvFiles(gbCsvFiles: Seq[StandingAuthorityFile], xiCsvFiles: Seq[StandingAuthorityFile])
+  case class CsvFiles(csvFiles: Seq[StandingAuthorityFile], xiCsvFiles: Seq[StandingAuthorityFile])
 }

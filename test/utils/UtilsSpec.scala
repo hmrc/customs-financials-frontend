@@ -100,11 +100,11 @@ class UtilsSpec extends SpecBase with MustMatchers {
       val csvFileForBothGBAndXI: Seq[StandingAuthorityFile] = gbAuthFiles ++ xiAuthFiles
 
       partitionCsvFilesByFileNamePattern(csvFileForBothGBAndXI) mustBe
-        CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)
+        CsvFiles(csvFiles = gbAuthFiles, xiCsvFiles = xiAuthFiles)
 
-      partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(gbCsvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
+      partitionCsvFilesByFileNamePattern(gbAuthFiles) mustBe CsvFiles(csvFiles = gbAuthFiles, xiCsvFiles = Seq.empty)
 
-      partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(gbCsvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
+      partitionCsvFilesByFileNamePattern(xiAuthFiles) mustBe CsvFiles(csvFiles = Seq.empty, xiCsvFiles = xiAuthFiles)
     }
 
     "return empty list of GB and XI authorities partitioned when input list is empty" in {
