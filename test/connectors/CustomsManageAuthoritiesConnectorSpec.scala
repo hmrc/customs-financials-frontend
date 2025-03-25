@@ -52,7 +52,7 @@ class CustomsManageAuthoritiesConnectorSpec
 
           when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-          val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
+          val result = connector.fetchAndSaveAccountAuthoritiesInCache(fakeRequest())
           status(result) mustBe OK
         }
       }
@@ -66,7 +66,7 @@ class CustomsManageAuthoritiesConnectorSpec
 
           when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-          val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
+          val result = connector.fetchAndSaveAccountAuthoritiesInCache(fakeRequest())
           status(result) mustBe OK
         }
       }
@@ -80,7 +80,7 @@ class CustomsManageAuthoritiesConnectorSpec
 
           when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-          val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
+          val result = connector.fetchAndSaveAccountAuthoritiesInCache(fakeRequest())
           status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }
@@ -94,7 +94,7 @@ class CustomsManageAuthoritiesConnectorSpec
 
           when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-          val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
+          val result = connector.fetchAndSaveAccountAuthoritiesInCache(fakeRequest())
           status(result) mustBe SERVICE_UNAVAILABLE
         }
       }
@@ -108,7 +108,7 @@ class CustomsManageAuthoritiesConnectorSpec
 
           when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
-          val result = connector.fetchAndSaveAccountAuthoritiesInCache(TEST_EORI)(fakeRequest())
+          val result = connector.fetchAndSaveAccountAuthoritiesInCache(fakeRequest())
           status(result) mustBe INTERNAL_SERVER_ERROR
         }
       }

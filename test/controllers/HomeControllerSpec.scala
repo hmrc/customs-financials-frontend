@@ -429,7 +429,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.failed(new InternalServerException("SPS is Down")))
 
-      when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
+      when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any))
         .thenReturn(Future.successful(Ok))
 
       running(app) {
@@ -596,7 +596,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
     when(mockDataStoreService.getXiEori(any)).thenReturn(Future.successful(Some(xi.xiEori)))
 
-    when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any)(any))
+    when(mockManageAuthoritiesConnector.fetchAndSaveAccountAuthoritiesInCache(any))
       .thenReturn(Future.successful(Ok))
 
     val app: Application = application()
