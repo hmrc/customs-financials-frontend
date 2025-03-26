@@ -64,7 +64,7 @@ class CustomsFinancialsHomeController @Inject() (
     val returnToUrl = appConfig.financialsFrontendUrl + controllers.routes.CustomsFinancialsHomeController.index.url
     val eori        = request.user.eori
 
-    customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache(eori)
+    customsManageAuthConnector.fetchAndSaveAccountAuthoritiesInCache
 
     val result = for {
       _                  <- auditingService.viewAccount(request.user)

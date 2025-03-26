@@ -37,10 +37,10 @@ class CustomsManageAuthoritiesConnector @Inject() (
 )(implicit executionContext: ExecutionContext)
     extends Logging {
 
-  def fetchAndSaveAccountAuthoritiesInCache(eori: EORI)(implicit request: RequestHeader): Future[Results.Status] = {
+  def fetchAndSaveAccountAuthoritiesInCache(implicit request: RequestHeader): Future[Results.Status] = {
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
 
-    val endPointUrl = s"${appConfig.manageAuthoritiesServiceUrl}/account-authorities/fetch-authorities/$eori"
+    val endPointUrl = s"${appConfig.manageAuthoritiesServiceUrl}/account-authorities/fetch-authorities"
 
     httpClient
       .get(url"$endPointUrl")
@@ -48,24 +48,24 @@ class CustomsManageAuthoritiesConnector @Inject() (
       .flatMap { res =>
         res.status match {
           case OK =>
-            logger.info(s"Authorities' details have been successfully saved in the cache for $eori")
+            logger.info(s"Authorities' details have been successfully saved in the cache")
             Future.successful(Ok)
 
           case NO_CONTENT =>
-            logger.info(s"No data found for $eori")
+            logger.info(s"No data found")
             Future.successful(Ok)
 
           case INTERNAL_SERVER_ERROR =>
-            logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
+            logger.warn(s"Error occurred while saving the authorities' details in cache")
             Future.successful(InternalServerError)
 
           case _ =>
-            logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
+            logger.warn(s"Error occurred while saving the authorities' details in cache")
             Future.successful(ServiceUnavailable)
         }
       }
       .recover { case _ =>
-        logger.warn(s"Error occurred while saving the authorities' details in cache for $eori")
+        logger.warn(s"Error occurred while saving the authorities' details in cache")
         InternalServerError
       }
 
