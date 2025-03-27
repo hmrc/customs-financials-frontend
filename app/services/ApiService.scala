@@ -100,8 +100,8 @@ class ApiService @Inject() (httpClient: HttpClientV2, metricsReporter: MetricsRe
     }
   }
 
-  def getEnabledNotifications(eori: String)(implicit hc: HeaderCarrier): Future[Seq[DocumentAttributes]] = {
-    val apiEndpoint = appConfig.customsFinancialsApi + s"/eori/$eori/notifications"
+  def getEnabledNotifications(implicit hc: HeaderCarrier): Future[Seq[DocumentAttributes]] = {
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/notifications"
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.get.notifications") {
       httpClient
@@ -113,8 +113,8 @@ class ApiService @Inject() (httpClient: HttpClientV2, metricsReporter: MetricsRe
     }
   }
 
-  def deleteNotification(eori: String, fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
-    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/$eori/notifications/$fileRole"
+  def deleteNotification(fileRole: FileRole)(implicit hc: HeaderCarrier): Future[Boolean] = {
+    val apiEndpoint = s"${appConfig.customsFinancialsApi}/eori/notifications/$fileRole"
 
     metricsReporter.withResponseTimeLogging("customs-financials-api.delete.notification") {
       httpClient

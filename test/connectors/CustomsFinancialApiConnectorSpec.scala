@@ -47,7 +47,7 @@ class CustomsFinancialApiConnectorSpec
 
       running(app) {
 
-        val result = await(customsFinancialsApiConnector.deleteNotification("someEori", StandingAuthority))
+        val result = await(customsFinancialsApiConnector.deleteNotification(StandingAuthority))
         result mustBe true
       }
     }

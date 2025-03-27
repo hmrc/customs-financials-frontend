@@ -62,7 +62,7 @@ class AuthorizedToViewController @Inject() (
   val form: Form[String] = eoriNumberFormProvider(appConfig.isEUEoriEnabled)
 
   def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
-    financialsApiConnector.deleteNotification(req.user.eori, StandingAuthority)
+    financialsApiConnector.deleteNotification(StandingAuthority)
 
     getCsvFile().map { csvFiles =>
       val isNotificationPanelEnabled = appConfig.isAuthoritiesNotificationPanelEnabled

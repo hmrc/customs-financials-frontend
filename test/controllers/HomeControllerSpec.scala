@@ -21,7 +21,7 @@ import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthorit
 import domain.FileRole._
 import domain._
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import utils.MustMatchers
 import play.api.http.Status
@@ -150,7 +150,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "not show notification even when there is new C97Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(C79Certificate, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -164,7 +164,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new C97Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(C79Certificate, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -191,7 +191,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
     val notifications: List[Notification] = List(Notification(SecurityStatement, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -227,7 +227,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new Postponed VAT Statement available" in new Setup {
     val notifications: List[Notification] = List(Notification(PostponedVATStatement, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -240,7 +240,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new Standing authorities csv file available" in new Setup {
     val notifications: List[Notification] = List(Notification(StandingAuthority, isRequested = false))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -254,7 +254,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
   "show notification when there is new Cash Account Statement file available" in new Setup {
     val notifications: List[Notification] = List(Notification(CDSCashAccount, isRequested = true))
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -272,7 +272,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
       Notification(CDSCashAccount, isRequested = true)
     )
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(notifications))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
     running(app) {
       val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.index.url)
@@ -300,7 +300,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
       val eoriNumber = newUser(Seq.empty).eori
 
-      when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
+      when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(List.empty))
 
       running(app) {
         val request = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
@@ -340,7 +340,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
 
       val eoriNumber = newUser(Seq.empty).eori
 
-      when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any))
+      when(mockNotificationService.fetchNotifications(any))
         .thenReturn(Future.successful(notifications))
 
       running(app) {
@@ -385,7 +385,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
         Notification(SecurityStatement, isRequested = true)
       )
 
-      when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(notifications))
+      when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(notifications))
 
       running(app) {
         val request           = fakeRequest(GET, routes.CustomsFinancialsHomeController.pageWithoutAccounts.url)
@@ -578,7 +578,7 @@ class HomeControllerSpec extends SpecBase with MustMatchers {
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
     val mockManageAuthoritiesConnector: CustomsManageAuthoritiesConnector = mock[CustomsManageAuthoritiesConnector]
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(List.empty))
     when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(mockAccounts))
     when(mockAccounts.myAccounts).thenReturn(someAccounts)
     when(mockAccounts.accounts).thenReturn(someAccounts)

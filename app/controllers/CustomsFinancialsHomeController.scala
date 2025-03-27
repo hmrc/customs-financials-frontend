@@ -113,7 +113,7 @@ class CustomsFinancialsHomeController @Inject() (
     maybeBannerPartial: Option[HtmlPartial]
   )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] =
     for {
-      notificationMessageKeys <- notificationService.fetchNotifications(eori).map(getNotificationMessageKeys)
+      notificationMessageKeys <- notificationService.fetchNotifications.map(getNotificationMessageKeys)
       companyName             <- dataStoreService.getOwnCompanyName
       sessionId                = hc.sessionId.getOrElse {
                                    log.error("Missing SessionID");
@@ -144,8 +144,7 @@ class CustomsFinancialsHomeController @Inject() (
   def pageWithoutAccounts: Action[AnyContent] = authenticate.async { implicit request =>
     val eori = request.user.eori
 
-    notificationService
-      .fetchNotifications(eori)
+    notificationService.fetchNotifications
       .map(_.filterNot(v => (v.fileRole == DutyDefermentStatement) || (v.fileRole == StandingAuthority)))
       .map(getNotificationMessageKeys)
       .map(keys => Ok(customsHomePartialView(eori, keys)))
@@ -177,8 +176,7 @@ class CustomsFinancialsHomeController @Inject() (
   def showAccountUnavailable: Action[AnyContent] = authenticate.async { implicit req =>
     val eori = req.user.eori
 
-    notificationService
-      .fetchNotifications(eori)
+    notificationService.fetchNotifications
       .map(_.filterNot(_.fileRole == DutyDefermentStatement))
       .map(getNotificationMessageKeys)
       .map(keys => Ok(accountNotAvailable(eori, keys)))

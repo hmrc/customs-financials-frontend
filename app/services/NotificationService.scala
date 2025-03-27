@@ -25,9 +25,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class NotificationService @Inject() (apiService: ApiService)(implicit ec: ExecutionContext) {
 
-  def fetchNotifications(eori: String)(implicit hc: HeaderCarrier): Future[Seq[Notification]] =
-    apiService
-      .getEnabledNotifications(eori)
+  def fetchNotifications(implicit hc: HeaderCarrier): Future[Seq[Notification]] =
+    apiService.getEnabledNotifications
       .map(_.map(notification => Notification(notification.fileRole, notification.isRequested)))
 }
 

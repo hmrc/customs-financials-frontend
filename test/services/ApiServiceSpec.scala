@@ -256,7 +256,7 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
       when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        val result = await(service.getEnabledNotifications(traderEori))
+        val result = await(service.getEnabledNotifications)
         result must be(notification)
       }
     }
@@ -296,7 +296,7 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
       val service = appTest.injector.instanceOf[ApiService]
 
       running(appTest) {
-        await(service.getEnabledNotifications(traderEori))
+        await(service.getEnabledNotifications)
 
         verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.get.notifications"))(
           any
@@ -315,7 +315,7 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
       when(mockHttpClient.delete(any[URL]())(any())).thenReturn(requestBuilder)
 
       running(app) {
-        await(service.deleteNotification(traderEori, C79Certificate)(hc))
+        await(service.deleteNotification(C79Certificate)(hc))
         verify(mockHttpClient).delete(any)(any)
       }
     }
@@ -347,7 +347,7 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
       val service = appTest.injector.instanceOf[ApiService]
 
       running(appTest) {
-        await(service.deleteNotification(traderEori, C79Certificate))
+        await(service.deleteNotification(C79Certificate))
 
         verify(mockMetricsReporterService).withResponseTimeLogging(eqTo("customs-financials-api.delete.notification"))(
           any
