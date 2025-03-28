@@ -81,7 +81,7 @@ class NotificationServiceSpec
 
       "the given document type is present" in {
 
-        when(mockApiService.getEnabledNotifications(eori)).thenReturn(Future.successful(collectionOfDocumentAttributes))
+        when(mockApiService.getEnabledNotifications).thenReturn(Future.successful(collectionOfDocumentAttributes))
 
         val notificationService = new NotificationService(mockApiService)
 
@@ -97,10 +97,10 @@ class NotificationServiceSpec
           Notification(CDSCashAccount, isRequested = false)
         )
 
-        val actualNotification = await(notificationService.fetchNotifications(eori))
+        val actualNotification = await(notificationService.fetchNotifications)
 
         actualNotification must be(expectedNotification)
-        verify(mockApiService).getEnabledNotifications(eqTo(eori))(eqTo(hc))
+        verify(mockApiService).getEnabledNotifications(eqTo(hc))
       }
     }
   }

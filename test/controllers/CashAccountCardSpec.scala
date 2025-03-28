@@ -108,7 +108,7 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
     when(mockApiService.getAccounts(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
       .thenReturn(Future.successful(mockAccounts))
 
-    when(mockNotificationService.fetchNotifications(ArgumentMatchers.eq(newUser().eori))(ArgumentMatchers.any()))
+    when(mockNotificationService.fetchNotifications(ArgumentMatchers.any()))
       .thenReturn(Future.successful(List()))
 
     when(mockDataStoreService.getEmail(ArgumentMatchers.any()))

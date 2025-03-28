@@ -22,7 +22,7 @@ import domain.{
   DutyDefermentAccount, DutyDefermentBalance, GeneralGuaranteeAccount, GeneralGuaranteeBalance, XiEoriAddressInformation
 }
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 
@@ -238,8 +238,8 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
       when(accounts.isNiAccount).thenReturn(Some(false))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(accounts))
       when(mockApiService.getAccounts(any)(any)).thenReturn(Future.successful(accounts))
-      when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
-      when(mockNotificationService.fetchNotifications(any)(any)).thenReturn(Future.successful(List()))
+      when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(List()))
+      when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(List()))
 
       when(mockDataStoreService.getEmail(any))
         .thenReturn(Future.successful(Right(Email("last.man@standing.co.uk"))))
@@ -354,7 +354,7 @@ class HomeControllerCardSpec extends SpecBase with MustMatchers {
     val mockDataStoreService: DataStoreService                            = mock[DataStoreService]
     val mockSessionCacheConnector: CustomsFinancialsSessionCacheConnector = mock[CustomsFinancialsSessionCacheConnector]
 
-    when(mockNotificationService.fetchNotifications(eqTo(eoriNumber))(any)).thenReturn(Future.successful(List.empty))
+    when(mockNotificationService.fetchNotifications(any)).thenReturn(Future.successful(List.empty))
 
     when(mockApiService.getAccounts(any)(any))
       .thenReturn(Future.successful(mockAccounts))
