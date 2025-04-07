@@ -68,9 +68,9 @@
 }
 
 @beforeContent = {
+    @hmrcLanguageSelectHelper()
     @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
     @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) }
-    @hmrcLanguageSelectHelper()
 
     @backLink.filter(_.nonEmpty).map { url =>
         @govukBackLink(BackLink(
