@@ -298,6 +298,7 @@ cf.search.authorities.button = Chwilio
 cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
 cf.search.authorities.eori = rhif EORI yn dechrau gyda GB
 cf.search.authorities.eori.xi = rhif EORI sy’n dechrau gyda GB neu XI
+cf.search.authorities.eori.eu = rhif EORI
 cf.search.authorities.account = rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
 cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
 cf.search.authorities.result.p1 = Yn dangos <strong>{0}</strong> o gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio.

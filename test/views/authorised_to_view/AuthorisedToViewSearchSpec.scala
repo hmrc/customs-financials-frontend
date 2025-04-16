@@ -34,7 +34,7 @@ import utils.MustMatchers
 class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
   "AuthorisedToViewSearch view" should {
 
-    "display correct title and guidance" in new SetUp {
+    "display correct title and guidance when both isXiEoriEnabled & isEUEoriEnabled are false" in new SetUp {
       val view: Document = Jsoup.parse(
         app.injector
           .instanceOf[authorised_to_view_search]
@@ -45,6 +45,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = false,
+            isEUEoriEnabled = false,
             isNotificationPanelEnabled = true
           )
           .body
@@ -60,7 +61,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
     }
 
-    "display correct title and XI Eori guidance" in new SetUp {
+    "display correct title and XI Eori guidance when isXiEoriEnabled is true and isEUEoriEnabled is false" in new SetUp {
       val view: Document = Jsoup.parse(
         app.injector
           .instanceOf[authorised_to_view_search]
@@ -71,6 +72,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = true,
+            isEUEoriEnabled = false,
             isNotificationPanelEnabled = true
           )
           .body
@@ -86,6 +88,58 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
     }
 
+    "Display the correct title EU EORI guidance when both isXiEoriEnabled & isEUEoriEnabled are true" in new SetUp {
+      val view: Document     = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option("url"),
+            None,
+            Some(date),
+            fileExists = Some(true),
+            isXiEoriEnabled = true,
+            isEUEoriEnabled = true,
+            isNotificationPanelEnabled = true
+          )
+          .body
+      )
+      view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
+        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
+
+      val liElements: Elements = elements.get(0).getElementsByTag("li")
+
+      liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.eu")
+      liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
+    }
+
+    "Display the correct title EU EORI guidance when isXiEoriEnabled is false and isEUEoriEnabled is true" in new SetUp {
+      val view: Document     = Jsoup.parse(
+        app.injector
+          .instanceOf[authorised_to_view_search]
+          .apply(
+            form,
+            Option("url"),
+            None,
+            Some(date),
+            fileExists = Some(true),
+            isXiEoriEnabled = false,
+            isEUEoriEnabled = true,
+            isNotificationPanelEnabled = true
+          )
+          .body
+      )
+      view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
+        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
+
+      val liElements: Elements = elements.get(0).getElementsByTag("li")
+
+      liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.eu")
+      liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
+    }
+
     "display correct link for CSV file" in new SetUp {
       val view: Document = Jsoup.parse(
         app.injector
@@ -97,6 +151,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = true,
+            isEUEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -124,6 +179,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = true,
+            isEUEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -156,6 +212,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = true,
+            isEUEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -192,6 +249,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Some(date),
             fileExists = Some(true),
             isXiEoriEnabled = true,
+            isEUEoriEnabled = true,
             isNotificationPanelEnabled = false
           )
           .body
@@ -226,6 +284,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           date = Some(date),
           fileExists = Some(true),
           isXiEoriEnabled = true,
+          isEUEoriEnabled = true,
           isNotificationPanelEnabled = true
         )
         .body
