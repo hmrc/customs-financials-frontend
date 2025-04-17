@@ -53,9 +53,9 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
-      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
-      val liElements: Elements = elements.get(0).getElementsByTag("li")
+      val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
+      val liElements: Elements = elements.select("li")
 
       liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori")
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
@@ -80,16 +80,16 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
-      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
-      val liElements: Elements = elements.get(0).getElementsByTag("li")
+      val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
+      val liElements: Elements = elements.select("li")
 
       liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.xi")
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
     }
 
     "Display the correct title EU EORI guidance when both isXiEoriEnabled & isEUEoriEnabled are true" in new SetUp {
-      val view: Document     = Jsoup.parse(
+      val view: Document = Jsoup.parse(
         app.injector
           .instanceOf[authorised_to_view_search]
           .apply(
@@ -106,16 +106,16 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       )
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
-      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
-      val liElements: Elements = elements.get(0).getElementsByTag("li")
+      val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
+      val liElements: Elements = elements.select("li")
 
       liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.eu")
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")
     }
 
     "Display the correct title EU EORI guidance when isXiEoriEnabled is false and isEUEoriEnabled is true" in new SetUp {
-      val view: Document     = Jsoup.parse(
+      val view: Document = Jsoup.parse(
         app.injector
           .instanceOf[authorised_to_view_search]
           .apply(
@@ -132,9 +132,9 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       )
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
         "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
-      val elements: Elements = view.getElementsByClass("govuk-list govuk-list--bullet")
 
-      val liElements: Elements = elements.get(0).getElementsByTag("li")
+      val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
+      val liElements: Elements = elements.select("li")
 
       liElements.get(0).html() mustBe messages(app)("cf.search.authorities.eori.eu")
       liElements.get(1).html() mustBe messages(app)("cf.search.authorities.account")

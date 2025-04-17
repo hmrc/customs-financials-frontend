@@ -30,7 +30,7 @@
         link: components.link,
         inputText: components.inputText,
         button: components.button,
-        ul: components.unordered_list
+        unorderedList: components.unordered_list
 )
 
 @(
@@ -67,7 +67,7 @@
               case _ => "cf.search.authorities.eori"
           }
 
-          ul(
+          unorderedList(
             Html(messages(eoriMessageKey)),
             Html(messages("cf.search.authorities.account"))
           )
