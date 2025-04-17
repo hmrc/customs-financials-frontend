@@ -29,7 +29,8 @@
         p: components.p,
         link: components.link,
         inputText: components.inputText,
-        button: components.button
+        button: components.button,
+        ul: components.unordered_list
 )
 
 @(
@@ -59,14 +60,18 @@
 
         @p("cf.search.authorities.p")
 
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@messages(
-                if (isEUEoriEnabled) "cf.search.authorities.eori.eu"
-                else if (isXiEoriEnabled) "cf.search.authorities.eori.xi"
-                else "cf.search.authorities.eori"
-            )</li>
-            <li>@messages("cf.search.authorities.account")</li>
-        </ul>
+        @{
+          val eoriMessageKey = (isEUEoriEnabled, isXiEoriEnabled) match {
+              case (true, _) => "cf.search.authorities.eori.eu"
+              case (false, true) => "cf.search.authorities.eori.xi"
+              case _ => "cf.search.authorities.eori"
+          }
+
+          ul(
+            Html(messages(eoriMessageKey)),
+            Html(messages("cf.search.authorities.account"))
+          )
+        }
 
         @inputText(
             form,
