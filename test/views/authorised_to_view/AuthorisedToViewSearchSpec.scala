@@ -52,7 +52,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       )
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
-        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+        "- GOV.UK"
 
       val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
       val liElements: Elements = elements.select("li")
@@ -79,7 +79,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
       )
 
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
-        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+        "- GOV.UK"
 
       val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
       val liElements: Elements = elements.select("li")
@@ -105,7 +105,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           .body
       )
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
-        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+        "- GOV.UK"
 
       val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
       val liElements: Elements = elements.select("li")
@@ -131,7 +131,7 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           .body
       )
       view.title() mustBe "Find accounts you have authority to use - Manage import duties and VAT accounts " +
-        "- GOV.UK - Manage import duties and VAT accounts - GOV.UK"
+        "- GOV.UK"
 
       val elements: Elements   = view.select("ul.govuk-list.govuk-list--bullet")
       val liElements: Elements = elements.select("li")
