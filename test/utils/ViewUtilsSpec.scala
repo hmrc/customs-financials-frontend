@@ -28,7 +28,7 @@ class ViewUtilsSpec extends SpecBase with MustMatchers with Setup {
 
     "return title with error prefix if form has errors" in {
       val formWithError = testForm.withError("value", "error.required")
-      val result = title(formWithError, "test.title", Some("test.section"), Seq())
+      val result        = title(formWithError, "test.title", Some("test.section"), Seq())
 
       result must include(messages("site.error"))
       result must include(messages("test.title"))
