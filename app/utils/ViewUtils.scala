@@ -30,10 +30,7 @@ object ViewUtils {
   private def titleNoForm(title: String, section: Option[String], titleMessageArgs: Seq[String])(implicit
     messages: Messages
   ): String =
-    s"${messages(title, titleMessageArgs: _*)} - ${section.fold(emptyString)(
-        messages(_) +
-          " - "
-      )}${messages("service.name")} - ${messages("site.govuk")}"
+    s"${messages(title, titleMessageArgs: _*)}${section.fold(emptyString)(sec => s" - ${messages(sec)}")}"
 
   private def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) s"${messages("site.error")}:" else emptyString
