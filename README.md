@@ -4,16 +4,10 @@
 
 A micro-frontend service - This service provides a hub/entry point to access the different financial services for HMRC customs.
 
-The front end services on this domain are built following GDS standards to WCAG 2.2 AA
+The front end services on this domain are built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
-[GOV.UK design system](https://design-system.service.gov.uk/)
+We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensure consistency and compliance through the project
     
-[WCAG 2.2](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
-
-<!-- todo: provide more context on gds and wcag -->
-
-<!-- todo: mention how to access wcag review docs -->
-
 ## Running the service
 
 *From the root directory*
@@ -23,9 +17,9 @@ The front end services on this domain are built following GDS standards to WCAG 
 
 ### Required dependencies
 
-There are a number of dependencies requored to run the service.
+There are a number of dependencies required to run the service.
 
-The easiest way to get started with these is via the service manager CLI - you can find the instalation guide [here](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/developer-set-up/set-up-service-manager.html)
+The easiest way to get started with these is via the service manager CLI - you can find the installation guide [here](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/developer-set-up/set-up-service-manager.html)
 
 | Command                                          | Description |
 | --------                                         | ------- |
@@ -34,7 +28,7 @@ The easiest way to get started with these is via the service manager CLI - you c
 | `sm2 --stop CUSTOMS_MANAGE_AUTHORITIES_FRONTEND` | Kills the micro service  |
 | `sbt run`                                        | (from root dir) to compile the current service with your changes |
 
-### Runtime Dependancies
+### Runtime Dependencies
 
 * `AUTH`
 * `AUTH_LOGIN_STUB`
@@ -52,19 +46,18 @@ The easiest way to get started with these is via the service manager CLI - you c
 
 ### Enrolments
 
-Once the service is running you can access a test account by enrolling to the servce via [auth-login-stub/gg-sign-in](http://localhost:9949/auth-login-stub/gg-sign-in) using a redirect url, enrolment key, identifier name and value. Heres an example of a commonly used account (happy path)
+Once the service is running you can access a test account by enrolling to the service via [auth-login-stub/gg-sign-in](http://localhost:9949/auth-login-stub/gg-sign-in) using a redirect url, enrolment key, identifier name and value. Here is an example of a commonly used account (happy path)
 
 Redirect URL - `/customs/payment-records`
 
 | Enrolment Key	| Identifier Name | Identifier Value | Status |
 | -------- | ------- | ------- | ------- | 
 | `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` | `activated` |
+| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` | `activated` |
 
 ## Testing
 
-The minimum requirement for test coverage is 90%. Builds will fail when below this threshhold
-
-<!-- todo: add more context about testing standards or how to test if required -->
+The minimum requirement for test coverage is 90%. Builds will fail when the project drops below this threshold.
 
 ### Unit Tests
 
@@ -83,21 +76,23 @@ The minimum requirement for test coverage is 90%. Builds will fail when below th
 
 You can find a list of microservice specific routes here - `customs-financials-frontend/conf/app.routes`
 
-Due to the microservice configuration of the systems, a number of enpoints in this service are used by external services...
+Due to the microservice configuration of the systems, a number of endpoints in this service are used by external services...
 
 <!-- todo: list any services of interest -->
 
 ## Feature Switches
 
-Feature switches can be enabled per-environment via the `app-config-<env>` project
+> ### Caution!
+> There's a risk of WIP features being exposed in production! 
+> **Don't** enable features in `application.conf`, as this will apply globally by default
 
-    features.some-feature: true
+### Enable features
+| Command    | Description |
+| -------- | ------- |
+| `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
-*Don't* enable features in `application.conf`, as this will apply globally by default,
-so there's a risk of WIP features being exposed in production.
-Instead, enable features locally using
 
-    sbt "run -Dfeatures.some-feature-name=true"
+Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
 
 In non-production environments,
 you can also toggle features on or off in a running microservice instance
@@ -110,31 +105,30 @@ eg.
     $ curl localhost:9000/customs-financials/test-only/feature/report-a-problem/disable
     Disabled feature report-a-problem
     
-Note that the microservice must be running with test-only routes explicitly enabled,
-via this switch in the `app-config-<env>`, the service manager microservice profile,
-or just via `sbt run` locally:
+> **Note:** Microservices must be running with test-only routes explicitly enabled,
+> via this switch in the `app-config-<env>`, the service manager microservice profile,
+> or just via `sbt run` locally:
+>
+>   "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
 
-    "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
-
-<!-- todo: potentially redraft this section for consiseness (if thats a word) -->
 
 ## Helpful commands
 
-| Command    | Description |
-| -------- | ------- |
-| `runAllChecks`        | Runs all standard code checks |
-| `clean`               | Cleans code |
-| `compile`             | x |
-| `coverage`            | x |
-| `test`                | x |
-| `it/test`             | x |
-| `scalafmtCheckAll`    | x |
-| `scalastyle`          | x |
-| `Test/scalastyle`     | x |
-| `coverageReport`      | Produces a code coverage report |
-| `sbt "test:testOnly *TEST_FILE_NAME*"` | runs tests for a single file |
+| Command                                       | Description |
+| --------                                      | ------- |
+| `runAllChecks`                                | Runs all standard code checks |
+| `clean`                                       | Cleans code |
+| `compile`                                     | Compiles a build locally |
+| `coverage`                                    | Prints code coverage |
+| `test`                                        | Runs unit tests |
+| `it/test`                                     | Runs integration tests |
+| `scalafmtCheckAll`                            | Runs code formatting checks based on .scalafmt.conf |
+| `scalastyle`                                  | Runs code style checks based on /scalastyle-config.xml  |
+| `Test/scalastyle`                             | Runs code style checks for unit test code |
+| `coverageReport`                              | Produces a code coverage report |
+| `sbt "test:testOnly *TEST_FILE_NAME*"`        | runs tests for a single file |
+| `sbt clean coverage test coverageReport`      | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
+| `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
-<!-- todo: add missing descriptions and additional helpful commands  -->
-
-<!-- todo: add a main point of contact(s) for the repo -->
+<!-- todo: add points of contact for the repo. Eg tech lead / owner / dm / compliance -->
 
