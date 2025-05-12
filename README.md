@@ -4,7 +4,7 @@
 
 A micro-frontend service - This service provides a hub/entry point to access the different financial services for HMRC customs.
 
-The front end services on this domain are built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
+This service is built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
 We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensure consistency and compliance through the project
     
@@ -23,9 +23,9 @@ The easiest way to get started with these is via the service manager CLI - you c
 
 | Command                                          | Description |
 | --------                                         | ------- |
-| `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all deps |
+| `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all dependencies |
 | `sm2 -s`                                         | Shows running services |
-| `sm2 --stop CUSTOMS_MANAGE_AUTHORITIES_FRONTEND` | Kills the micro service  |
+| `sm2 --stop CUSTOMS_MANAGE_AUTHORITIES_FRONTEND` | Stop the micro service  |
 | `sbt run`                                        | (from root dir) to compile the current service with your changes |
 
 ### Runtime Dependencies
@@ -44,16 +44,16 @@ The easiest way to get started with these is via the service manager CLI - you c
 
 <!-- todo: verify this list -->
 
-### Enrolments
+### Login enrolments
 
-Once the service is running you can access a test account by enrolling to the service via [auth-login-stub/gg-sign-in](http://localhost:9949/auth-login-stub/gg-sign-in) using a redirect url, enrolment key, identifier name and value. Here is an example of a commonly used account (happy path)
+The service can be accessed by using below enrolments and with below sample EORI numbers, via http://localhost:9949/auth-login-stub/gg-sign-in (on local) or https://<host:port>/auth-login-stub/gg-sign-in on DEV/QA/STAGING
 
 Redirect URL - `/customs/payment-records`
 
-| Enrolment Key	| Identifier Name | Identifier Value | Status |
+| Enrolment Key	| Identifier Name | Identifier Value |
 | -------- | ------- | ------- | ------- | 
-| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` | `activated` |
-| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` | `activated` |
+| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` |
+| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` |
 
 ## Testing
 
@@ -63,7 +63,7 @@ The minimum requirement for test coverage is 90%. Builds will fail when the proj
 
 | Command    | Description |
 | -------- | ------- |
-| `test` | Runs unit tests locally |
+| `sbt test` | Runs unit tests locally |
 | `sbt "test:testOnly *TEST_FILE_NAME*"` | runs tests for a single file |
 
 ### Coverage
@@ -75,10 +75,6 @@ The minimum requirement for test coverage is 90%. Builds will fail when the proj
 ## Available Routes
 
 You can find a list of microservice specific routes here - `customs-financials-frontend/conf/app.routes`
-
-Due to the microservice configuration of the systems, a number of endpoints in this service are used by external services...
-
-<!-- todo: list any services of interest -->
 
 ## Feature Switches
 
@@ -116,9 +112,9 @@ eg.
 
 | Command                                       | Description |
 | --------                                      | ------- |
-| `runAllChecks`                                | Runs all standard code checks |
+| `sbt runAllChecks`                                | Runs all standard code checks |
 | `clean`                                       | Cleans code |
-| `compile`                                     | Compiles a build locally |
+| `compile`                                     | Better to say 'Compiles the code' |
 | `coverage`                                    | Prints code coverage |
 | `test`                                        | Runs unit tests |
 | `it/test`                                     | Runs integration tests |
@@ -130,5 +126,4 @@ eg.
 | `sbt clean coverage test coverageReport`      | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
 | `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
-<!-- todo: add points of contact for the repo. Eg tech lead / owner / dm / compliance -->
 
