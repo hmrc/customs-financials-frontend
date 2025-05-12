@@ -42,7 +42,6 @@ The easiest way to get started with these is via the service manager CLI - you c
 * `CUSTOMS_FINANCIALS_SDES_STUB`
 * `CONTACT_FRONTEND`
 
-<!-- todo: verify this list -->
 
 ### Login enrolments
 
@@ -76,6 +75,8 @@ The minimum requirement for test coverage is 90%. Builds will fail when the proj
 
 You can find a list of microservice specific routes here - `customs-financials-frontend/conf/app.routes`
 
+Application entrypoint:  `/customs/payment-records` 
+
 ## Feature Switches
 
 > ### Caution!
@@ -86,6 +87,23 @@ You can find a list of microservice specific routes here - `customs-financials-f
 | Command    | Description |
 | -------- | ------- |
 | `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
+
+### feature flag examples
+| Flag    | Description |
+| -------- | ------- |
+| `fixed-system-time` | Enable the fixed datetime for DateTimeService by enabling the stub data for current and requested statements. It is only enabled in Development env |
+| `xi-eori-enabaled` | Enable the XI EORI related api calls |
+| `cash-account-v2-enabled` | Enable the new cash account design |
+| `home-page-links-enabled` | Control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env |
+| `authorities-notification-panel-enabled` | Enable display of notifications panel |
+| `eu-eori-enabled` | Enable the EU EORI feature |
+
+fixed-system-time - flag to enable the fixed datetime for DateTimeService. It is used to enable the stub data for current and requested statements. It is only enabled in Development env
+xi-eori-enabaled - to enable the XI EORI related api calls
+cash-account-v2-enabled - to enable the new cash account design
+home-page-links-enabled - to control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env
+authorities-notification-panel-enabled - Enable display of notifications panel
+eu-eori-enabled - to enable the EU EORI feature
 
 
 Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
