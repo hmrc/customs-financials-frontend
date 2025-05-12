@@ -7,8 +7,14 @@ A micro-frontend service - This service provides a hub/entry point to access the
 This service is built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
 We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensure consistency and compliance through the project
-    
+
+This applications lives in the "public" zone. It integrates with:
+
+Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
+Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
+
 ## Running the service
+
 
 *From the root directory*
 
