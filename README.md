@@ -1,30 +1,44 @@
-
 # Customs Financials Frontend
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Coverage](https://img.shields.io/badge/test_coverage-90-green.svg)](/target/scala-2.11/scoverage-report/index.html) [![Accessibility](https://img.shields.io/badge/WCAG2.2-AA-purple.svg)](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
-A frontend component for the CDS Financials project which aims to provide financial services for customs 
-transactions.
+A micro-frontend service - This service provides a hub/entry point to access the different financial services for HMRC customs.
 
-| Path                                                                   | Description                                                                                       |
-| ---------------------------------------------------------------------  | ------------------------------------------------------------------------------------------------- |
-| GET  /import-vat                                                       | Retrieve all import vat certificates                                                           |                
-| GET  /postponed-vat                                                    | Retrieve all postponed vat statements                                                          |                
-| GET  /adjustments                                                      | Retrieve all securities statements                                                           |                
+This service is built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
+We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensure consistency and compliance through the project
 
 This applications lives in the "public" zone. It integrates with:
 
-* Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
-* Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
+Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
 
-In dev/test environments, the upstream services are stubbed out using stub services (see below).
+Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
 
-## Running the application locally
+## Running the service
 
-The application has the following runtime dependencies:
+*From the root directory*
 
-* `ASSETS_FRONTEND`
+`sbt run` - starts the service locally
+
+`sbt runAllChecks` - Will run all checks required for a successful build
+
+Default service port on local - 9876
+
+### Required dependencies
+
+There are a number of dependencies required to run the service.
+
+The easiest way to get started with these is via the service manager CLI - you can find the installation guide [here](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/developer-set-up/set-up-service-manager.html)
+
+| Command                                          | Description |
+| --------                                         | ------- |
+| `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all dependencies |
+| `sm2 -s`                                         | Shows running services |
+| `sm2 --stop CUSTOMS_FINANCIALS_FRONTEND` | Stop the micro service  |
+| `sbt run`                                        | (from root dir) to compile the current service with your changes |
+
+### Runtime Dependencies
+
 * `AUTH`
 * `AUTH_LOGIN_STUB`
 * `AUTH_LOGIN_API`
@@ -36,35 +50,64 @@ The application has the following runtime dependencies:
 * `CUSTOMS_FINANCIALS_HODS_STUB`
 * `CUSTOMS_FINANCIALS_SDES_STUB`
 * `CONTACT_FRONTEND`
- 
-You can use the `CUSTOMS_FINANCIALS_FRONTEND_DEPS` profile in service manager to start up these services without this
-project, to help run locally.
 
-Once these services are running, you should be able to do `sbt "run 9876"` to start in `DEV` mode or 
-`sbt "start -Dhttp.port=9876"` to run in `PROD` mode.
 
-## Running tests
+### Login enrolments
 
-There is just one test source tree in the `test` folder. Use `sbt test` to run them.
+The service can be accessed by using below enrolments and with below sample EORI numbers, via http://localhost:9949/auth-login-stub/gg-sign-in (on local) or https://<host:port>/auth-login-stub/gg-sign-in on DEV/QA/STAGING
 
-To get a unit test coverage report, you can run `sbt clean coverage test coverageReport`,
-then open the resulting coverage report `target/scala-2.11/scoverage-report/index.html` in a web browser.
+Redirect URL - `/customs/payment-records`
 
-Test coverage threshold is set at 90% - so if you commit any significant amount of implementation code without writing tests, you can expect the build to fail.
+| Enrolment Key	| Identifier Name | Identifier Value |
+| -------- | ------- | ------- |
+| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` |
+| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` |
+
+## Testing
+
+The minimum requirement for test coverage is 90%. Builds will fail when the project drops below this threshold.
+
+### Unit Tests
+
+| Command    | Description |
+| -------- | ------- |
+| `sbt test` | Runs unit tests locally |
+| `sbt "test:testOnly *TEST_FILE_NAME*"` | runs tests for a single file |
+
+### Coverage
+
+| Command    | Description |
+| -------- | ------- |
+| `sbt clean coverage test coverageReport` | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
+
+## Available Routes
+
+You can find a list of microservice specific routes here - `customs-financials-frontend/conf/app.routes`
+
+Application entrypoint:  `/customs/payment-records` 
 
 ## Feature Switches
 
-Feature switches can be enabled per-environment via the `app-config-<env>` project:
+> ### Caution!
+> There's a risk of WIP features being exposed in production! 
+> **Don't** enable features in `application.conf`, as this will apply globally by default
 
-    ...
-    features.some-feature: true
-    ...
+### Enable features
+| Command    | Description |
+| -------- | ------- |
+| `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
-*Don't* enable features in `application.conf`, as this will apply globally by default,
-so there's a risk of WIP features being exposed in production.
-Instead, enable features locally using
+### Available feature flags
+| Flag    | Description |
+| -------- | ------- |
+| `fixed-system-time` | Enable the fixed datetime for DateTimeService by enabling the stub data for current and requested statements. It is only enabled in Development env |
+| `xi-eori-enabaled` | Enable the XI EORI related api calls |
+| `cash-account-v2-enabled` | Enable the new cash account design |
+| `home-page-links-enabled` | Control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env |
+| `authorities-notification-panel-enabled` | Enable display of notifications panel |
+| `eu-eori-enabled` | Enable the EU EORI feature |
 
-    sbt "run -Dfeatures.some-feature-name=true"
+Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
 
 In non-production environments,
 you can also toggle features on or off in a running microservice instance
@@ -77,24 +120,29 @@ eg.
     $ curl localhost:9000/customs-financials/test-only/feature/report-a-problem/disable
     Disabled feature report-a-problem
     
-Note that the microservice must be running with test-only routes explicitly enabled,
-via this switch in the `app-config-<env>`, the service manager microservice profile,
-or just via `sbt run` locally:
+> **Note:** Microservices must be running with test-only routes explicitly enabled,
+> via this switch in the `app-config-<env>`, the service manager microservice profile,
+> or just via `sbt run` locally:
+>
+>   "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
 
-    "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
+
+## Helpful commands
+
+| Command                                       | Description |
+| --------                                      | ------- |
+| `sbt runAllChecks`                            | Runs all standard code checks |
+| `sbt clean`                                   | Cleans code |
+| `sbt compile`                                 | Better to say 'Compiles the code' |
+| `sbt coverage`                                | Prints code coverage |
+| `sbt test`                                    | Runs unit tests |
+| `sbt it/test`                                 | Runs integration tests |
+| `sbt scalafmtCheckAll`                        | Runs code formatting checks based on .scalafmt.conf |
+| `sbt scalastyle`                              | Runs code style checks based on /scalastyle-config.xml  |
+| `sbt Test/scalastyle`                         | Runs code style checks for unit test code /test-scalastyle-config.xml |
+| `sbt coverageReport`                          | Produces a code coverage report |
+| `sbt "test:testOnly *TEST_FILE_NAME*"`        | runs tests for a single file |
+| `sbt clean coverage test coverageReport`      | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
+| `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
 
-## Autocomplete scripts 
-
-This project has Tampermonkey scripts available in tampermonkey directory.
-
-#### Tampermonkey
-[Chrome Extension](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)<br>
-[Firefox Extension](https://addons.mozilla.org/pl/firefox/addon/tampermonkey/)
-
-## All tests and checks
-
-This is a sbt command alias specific to this project. It will run a scala style check, run unit tests, run integration
-tests and produce a coverage report:
-
-> `sbt runAllChecks`
