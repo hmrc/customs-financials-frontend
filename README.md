@@ -1,6 +1,6 @@
 # Customs Financials Frontend
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Coverage](https://img.shields.io/badge/test_coverage-90%-green.svg)](/target/scala-2.11/scoverage-report/index.html) [![Accessibility](https://img.shields.io/badge/WCAG2.2-AA-purple.svg)](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Coverage](https://img.shields.io/badge/test_coverage-90-green.svg)](/target/scala-2.11/scoverage-report/index.html) [![Accessibility](https://img.shields.io/badge/WCAG2.2-AA-purple.svg)](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
 
 A micro-frontend service - This service provides a hub/entry point to access the different financial services for HMRC customs.
 
@@ -11,6 +11,7 @@ We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensu
 This applications lives in the "public" zone. It integrates with:
 
 Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
+
 Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
 
 ## Running the service
@@ -56,7 +57,7 @@ The service can be accessed by using below enrolments and with below sample EORI
 Redirect URL - `/customs/payment-records`
 
 | Enrolment Key	| Identifier Name | Identifier Value |
-| -------- | ------- | ------- | ------- | 
+| -------- | ------- | ------- |
 | `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` |
 | `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` |
 
@@ -94,7 +95,7 @@ Application entrypoint:  `/customs/payment-records`
 | -------- | ------- |
 | `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
 
-### feature flag examples
+### Available feature flags
 | Flag    | Description |
 | -------- | ------- |
 | `fixed-system-time` | Enable the fixed datetime for DateTimeService by enabling the stub data for current and requested statements. It is only enabled in Development env |
@@ -103,14 +104,6 @@ Application entrypoint:  `/customs/payment-records`
 | `home-page-links-enabled` | Control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env |
 | `authorities-notification-panel-enabled` | Enable display of notifications panel |
 | `eu-eori-enabled` | Enable the EU EORI feature |
-
-fixed-system-time - flag to enable the fixed datetime for DateTimeService. It is used to enable the stub data for current and requested statements. It is only enabled in Development env
-xi-eori-enabaled - to enable the XI EORI related api calls
-cash-account-v2-enabled - to enable the new cash account design
-home-page-links-enabled - to control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env
-authorities-notification-panel-enabled - Enable display of notifications panel
-eu-eori-enabled - to enable the EU EORI feature
-
 
 Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
 
