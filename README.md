@@ -32,7 +32,7 @@ The easiest way to get started with these is via the service manager CLI - you c
 | --------                                         | ------- |
 | `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all dependencies |
 | `sm2 -s`                                         | Shows running services |
-| `sm2 --stop CUSTOMS_MANAGE_AUTHORITIES_FRONTEND` | Stop the micro service  |
+| `sm2 --stop CUSTOMS_FINANCIALS_FRONTEND` | Stop the micro service  |
 | `sbt run`                                        | (from root dir) to compile the current service with your changes |
 
 ### Runtime Dependencies
