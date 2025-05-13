@@ -136,16 +136,16 @@ eg.
 
 | Command                                       | Description |
 | --------                                      | ------- |
-| `sbt runAllChecks`                                | Runs all standard code checks |
-| `sbt clean`                                       | Cleans code |
-| `sbt compile`                                     | Better to say 'Compiles the code' |
-| `sbt coverage`                                    | Prints code coverage |
-| `sbt test`                                        | Runs unit tests |
-| `sbt it/test`                                     | Runs integration tests |
-| `sbt scalafmtCheckAll`                            | Runs code formatting checks based on .scalafmt.conf |
-| `sbt scalastyle`                                  | Runs code style checks based on /scalastyle-config.xml  |
-| `sbt Test/scalastyle`                             | Runs code style checks for unit test code |
-| `sbt coverageReport`                              | Produces a code coverage report |
+| `sbt runAllChecks`                            | Runs all standard code checks |
+| `sbt clean`                                   | Cleans code |
+| `sbt compile`                                 | Better to say 'Compiles the code' |
+| `sbt coverage`                                | Prints code coverage |
+| `sbt test`                                    | Runs unit tests |
+| `sbt it/test`                                 | Runs integration tests |
+| `sbt scalafmtCheckAll`                        | Runs code formatting checks based on .scalafmt.conf |
+| `sbt scalastyle`                              | Runs code style checks based on /scalastyle-config.xml  |
+| `sbt Test/scalastyle`                         | Runs code style checks for unit test code /test-scalastyle-config.xml |
+| `sbt coverageReport`                          | Produces a code coverage report |
 | `sbt "test:testOnly *TEST_FILE_NAME*"`        | runs tests for a single file |
 | `sbt clean coverage test coverageReport`      | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
 | `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
