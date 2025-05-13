@@ -16,11 +16,13 @@ Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https
 
 ## Running the service
 
-
 *From the root directory*
 
-`sbt run` - starts the service locally.
+`sbt run` - starts the service locally
+
 `sbt runAllChecks` - Will run all checks required for a successful build
+
+Default service port on local - 9876
 
 ### Required dependencies
 
