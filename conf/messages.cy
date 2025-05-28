@@ -71,7 +71,7 @@ eoriNumber.error.format=Nodwch rif EORI yn y fformat cywir
 
 # Accounts List
 cf.accounts.title=Eich cyfrifon ariannol ar gyfer y tollau
-cf.accounts.label.dan=Datganiadau ar gyfer gohirio tollau {0}
+cf.accounts.label.dan=Bwrw golwg dros ddatganiadau ar gyfer gohirio tollau {0}
 cf.accounts.label.usingLimit={0} o {1}
 cf.accounts.viewStatements=Bwrw golwg dros ddatganiadau
 cf.accounts.topUp=Ychwanegu
