@@ -35,20 +35,14 @@
     <div>
         <div id="cf.authorities.request.received.panel.h1">@panel("cf.authorities.request.received.panel.h1")</div>
         <div id="cf.authorities.label">@p(messages("cf.authorities.label"))</div>
-        <div id="cf.authorities.next">@h2(messages("cf.authorities.next"))</div>
+        <div id="cf.authorities.next">@h2(messages("cf.authorities.next"), id=Some("authorities-next-title"))</div>
         <div id="cf.authorities.next.msg">@p(messages("cf.authorities.next.msg"))</div>
         <div id="cf.authorities.request.received.link">@link(linkMessage = "cf.authorities.request.received.link",
             appConfig.manageAuthoritiesFrontendUrl)</div>
-        @h2(
-            msg = messages("user-research.subheader-text"),
-            id=Some("improve-the-service-subheader-text")
-        )
-
-        @p(message ="user-research.help.body-text")
         
-        @hmrcNewTabLinkHelper(NewTabLinkHelper(
-            text = messages("user-research.help.link"),
-            href = Some(appConfig.helpMakeGovUkBetterUrl),
-        ))
+        <div id="user-research.subheader-text">@h2(msg = messages("user-research.subheader-text"))</div>
+        <div id="user-research.help.body-text">@p(message ="user-research.help.body-text")</div>
+        <div id="user-research.help.link"> @hmrcNewTabLinkHelper(NewTabLinkHelper(text = messages("user-research.help.link"), href = Some(appConfig.helpMakeGovUkBetterUrl)))</div>
+       
     </div>
   }
