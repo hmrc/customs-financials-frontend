@@ -56,7 +56,7 @@ lazy val microservice = Project(appName, file("."))
     scalafmtDetailedError := true,
     scalafmtPrintDiff := true,
     scalafmtFailOnErrors := true
-  ).settings(resolvers += Resolver.jcenterRepo)
+  )
 
 lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 compileScalastyle := (Compile / scalastyle).toTask("").value
