@@ -42,7 +42,9 @@
         
         <div id="user-research.subheader-text">@h2(msg = messages("user-research.subheader-text"))</div>
         <div id="user-research.help.body-text">@p(message ="user-research.help.body-text")</div>
-        <div id="user-research.help.link">@hmrcNewTabLinkHelper(NewTabLinkHelper(text = messages("user-research.help.link"), href = Some(appConfig.helpMakeGovUkBetterUrl)))</div>
-       
+        <div id="user-research.help.link">@hmrcNewTabLinkHelper(NewTabLinkHelper(
+            text = messages("user-research.help.link"), 
+            href = Some(appConfig.helpMakeGovUkBetterUrl)
+        ))</div>
     </div>
   }
