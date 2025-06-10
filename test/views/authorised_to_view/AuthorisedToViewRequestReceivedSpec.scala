@@ -37,15 +37,15 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
     "display by h tags" should {
       "display header" in new Setup {
         running(app) {
-          view.getElementsByTag("h1").text mustBe
+          view.getElementById("cf.authorities.request.received.panel.h1").text mustBe
             msg("cf.authorities.request.received.panel.h1")
         }
       }
 
       "display help link" in new Setup {
         running(app) {
-          view.getElementsByTag("h2").text mustBe
-            "Help make GOV.UK better What happens next Support links"
+          view.getElementById("cf.authorities.next").text mustBe
+            msg("cf.authorities.next")
         }
       }
     }
@@ -87,12 +87,39 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
           linkElement.attr("href") mustBe expectedUrl
         }
       }
+
+      "display research header" in new Setup {
+        running(app) {
+          view.getElementById("user-research.subheader-text").text mustBe msg("user-research.subheader-text")
+        }
+      }
+
+      "display research body" in new Setup {
+        running(app) {
+          view.getElementById("user-research.help.body-text").text mustBe msg("user-research.help.body-text")
+        }
+      }
+
+      "display research link with correct href" in new Setup {
+        running(app) {
+          val linkMessage = msg("user-research.help.link")
+          val linkText    = s"$linkMessage$newTabNotice"
+          val linkElement = view
+            .getElementById("user-research.help.link")
+            .getElementsByTag("a")
+            .first()
+
+          linkElement.text mustBe linkText
+          linkElement.attr("href") mustBe helpMakeGovUkBetterUrl
+        }
+      }
     }
   }
 
   trait Setup {
     val eori: String = "EORI0123"
     val email        = "email@emailland.com"
+    val newTabNotice = " (opens in new tab)"
 
     val accountLink: AccountLinkWithoutDate = new AccountLinkWithoutDate(eori, false, "123", "1", Some(1), "2345678")
 
@@ -109,7 +136,8 @@ class AuthorisedToViewRequestReceivedSpec extends SpecBase with MustMatchers {
     val app: Application                                      = application().build()
     implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
-    val expectedUrl: String = appConfig.manageAuthoritiesFrontendUrl
+    val expectedUrl: String            = appConfig.manageAuthoritiesFrontendUrl
+    val helpMakeGovUkBetterUrl: String = appConfig.helpMakeGovUkBetterUrl
 
     def view: Document = Jsoup.parse(app.injector.instanceOf[authorised_to_view_request_received].apply(email).body)
 

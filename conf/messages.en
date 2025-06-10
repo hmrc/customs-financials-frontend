@@ -60,6 +60,11 @@ cf.error.technicalDifficulties.message=Please try again in a few minutes.
 # Page errors
 error.summary.title=There is a problem
 
+# User Research
+user-research.subheader-text=Help us improve the service
+user-research.help.body-text=Do you have an EU EORI number? We''re carrying out user research to help improve our services.
+user-research.help.link=Sign up to take part in user research
+
 # Pager
 cf.pager.prev=Prev
 cf.pager.next=Next

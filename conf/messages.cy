@@ -62,6 +62,11 @@ cf.error.technicalDifficulties.message=Rhowch gynnig arall arni mewn ychydig o f
 # Page errors
 error.summary.title=Mae problem wedi codi
 
+# User Research
+user-research.subheader-text=Helpu ni i wella''r gwasanaeth hwn
+user-research.help.body-text=A oes gennych rif EORI yn yr UE? Rydym yn cynnal ymchwil defnyddwyr i helpu i wella ein gwasanaethau.
+user-research.help.link=Cofrestrwch i gymryd rhan mewn ymchwil defnyddwyr (yn agor tab newydd)
+
 # Pager
 cf.pager.prev=Blaenorol
 cf.pager.next=Nesaf
