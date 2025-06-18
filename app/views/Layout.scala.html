@@ -68,8 +68,11 @@
 
 @beforeContent = {
     @hmrcLanguageSelectHelper()
-    @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
-    @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) }
+    
+    <nav aria-label="Payment Records Navigation" role="Payment Records Navigation">
+        @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial } @* this is the nav  *@
+        @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) } @*  this is a label  *@
+    </nav>
 
     @backLink.filter(_.nonEmpty).map { url =>
         @govukBackLink(BackLink(
