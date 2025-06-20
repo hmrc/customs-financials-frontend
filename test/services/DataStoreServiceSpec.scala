@@ -18,30 +18,30 @@ package services
 
 import config.AppConfig
 import domain.{
-  CompanyAddress, EoriHistory, UndeliverableEmail, UndeliverableInformation, UndeliverableInformationEvent,
-  UnverifiedEmail, XiEoriAddressInformation
+  CompanyAddress, EmailResponses, EoriHistory, UndeliverableEmail, UndeliverableInformation,
+  UndeliverableInformationEvent, UnverifiedEmail, XiEoriAddressInformation
 }
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.Mockito.{verify, when}
-import play.api.{Application, inject}
+import play.api.{Application, Configuration, inject}
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import uk.gov.hmrc.auth.core.retrieve.Email
-import java.net.URL
-import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.http.{
-  HeaderCarrier, HttpReads, NotFoundException, ServiceUnavailableException, UpstreamErrorResponse
-}
+
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.MustMatchers
+import com.github.tomakehurst.wiremock.client.WireMock.{get, notFound, ok, serviceUnavailable, urlPathMatching}
 
 import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
+import utils.WireMockSupportProvider
+import com.typesafe.config.ConfigFactory
 
-class DataStoreServiceSpec extends SpecBase with MustMatchers {
+class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSupportProvider {
 
   "Data store service" should {
     "return json response" in new Setup {
@@ -58,82 +58,101 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
       val eoriHistory2: EoriHistory                = EoriHistory("GB22222", validFrom = "2018-01-01", validUntil = "2019-02-28")
       val eoriHistoryResponse: EoriHistoryResponse = EoriHistoryResponse(Seq(eoriHistory1, eoriHistory2))
 
-      when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(eoriHistoryResponse))
+      wireMockServer.stubFor(
+        get(urlPathMatching(eoriHistoryUrl))
+          .willReturn(
+            ok(Json.toJson(eoriHistoryResponse).toString)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Seq[EoriHistory] = await(service.getAllEoriHistory(eori))
 
-      running(app) {
-        val response = service.getAllEoriHistory(eori)
-        val result   = await(response)
-
-        result.toList must be(expectedEoriHistory)
-      }
+      result.toList must be(expectedEoriHistory)
+      verifyEndPointUrlHit(eoriHistoryUrl)
     }
 
     "handle MDG down" in new Setup {
       val expectedResp: List[EoriHistory] = List(EoriHistory(eori, None, None))
 
-      when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
-        .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
+      wireMockServer.stubFor(
+        get(urlPathMatching(eoriHistoryUrl))
+          .willReturn(
+            serviceUnavailable()
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Seq[EoriHistory] = await(service.getAllEoriHistory(eori))
 
-      running(app) {
-        val response = service.getAllEoriHistory(eori)
-        val result   = await(response)
-        result mustBe expectedResp
+      result mustBe expectedResp
+      verifyEndPointUrlHit(eoriHistoryUrl)
+    }
 
-      }
+    "handle 404" in new Setup {
+      val expectedResp: List[EoriHistory] = List(EoriHistory(eori, None, None))
+
+      wireMockServer.stubFor(
+        get(urlPathMatching(eoriHistoryUrl))
+          .willReturn(
+            notFound()
+          )
+      )
+
+      val result: Seq[EoriHistory] = await(service.getAllEoriHistory(eori))
+
+      result mustBe expectedResp
+      verifyEndPointUrlHit(eoriHistoryUrl)
     }
 
     "have graceful degradation of the historic eori service should return empty eori history" in new Setup {
       val expectedResp: EoriHistoryResponse = EoriHistoryResponse(Seq(EoriHistory(eori, None, None)))
 
-      when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(expectedResp))
+      wireMockServer.stubFor(
+        get(urlPathMatching(eoriHistoryUrl))
+          .willReturn(
+            ok(Json.toJson(expectedResp).toString)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Seq[EoriHistory] = await(service.getAllEoriHistory(eori))
 
-      running(app) {
-        val response = service.getAllEoriHistory(eori)
-        val result   = await(response)
-
-        result mustBe expectedResp.eoriHistory
-      }
+      result mustBe expectedResp.eoriHistory
+      verifyEndPointUrlHit(eoriHistoryUrl)
     }
 
     "log response time metric" in new Setup() {
       val expectedResp: EoriHistoryResponse = EoriHistoryResponse(Seq(EoriHistory(eori, None, None)))
 
-      when(requestBuilder.execute(any[HttpReads[EoriHistoryResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(expectedResp))
+      wireMockServer.stubFor(
+        get(urlPathMatching(eoriHistoryUrl))
+          .willReturn(
+            ok(Json.toJson(expectedResp).toString)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val response: Future[Seq[EoriHistory]] = service.getAllEoriHistory(eori)
+      await(response)
 
-      running(app) {
-        val response = service.getAllEoriHistory(eori)
-        await(response)
+      verify(mockMetricsReporterService).withResponseTimeLogging(
+        ArgumentMatchers.eq("customs-data-store.get.eori-history")
+      )(any)(any)
 
-        verify(mockMetricsReporterService).withResponseTimeLogging(
-          ArgumentMatchers.eq("customs-data-store.get.eori-history")
-        )(any)(any)
-      }
+      verifyEndPointUrlHit(eoriHistoryUrl)
     }
 
     "return existing email" in new Setup {
       val jsonResponse: String = """{"address":"someemail@mail.com"}""".stripMargin
 
-      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(Json.parse(jsonResponse).as[EmailResponse]))
+      wireMockServer.stubFor(
+        get(urlPathMatching(getEmailUrl))
+          .willReturn(
+            ok(jsonResponse)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Either[EmailResponses, Email] = await(service.getEmail)
 
-      running(app) {
-        val response = service.getEmail
-        val result   = await(response)
-        result mustBe Right(Email("someemail@mail.com"))
-      }
+      result mustBe Right(Email("someemail@mail.com"))
+      verifyEndPointUrlHit(getEmailUrl)
     }
 
     "return Left(UndeliverableEmail) when there is undeliverable info" in new Setup {
@@ -147,17 +166,17 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       val emailResponse: EmailResponse = EmailResponse(Some(emailAddress), None, Some(undeliverableInfo))
 
-      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(emailResponse))
+      wireMockServer.stubFor(
+        get(urlPathMatching(getEmailUrl))
+          .willReturn(
+            ok(Json.toJson(emailResponse).toString)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Either[EmailResponses, Email] = await(service.getEmail)
 
-      running(app) {
-        val response = service.getEmail
-        val result   = await(response)
-
-        result mustBe Left(UndeliverableEmail(emailAddress))
-      }
+      result mustBe Left(UndeliverableEmail(emailAddress))
+      verifyEndPointUrlHit(getEmailUrl)
     }
 
     "return Left(UnverifiedEmail) when there is no address in response" in new Setup {
@@ -169,41 +188,42 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
 
       val emailResponse: EmailResponse = EmailResponse(None, None, Some(undeliverableInfo))
 
-      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-        .thenReturn(Future.successful(emailResponse))
+      wireMockServer.stubFor(
+        get(urlPathMatching(getEmailUrl))
+          .willReturn(
+            ok(Json.toJson(emailResponse).toString)
+          )
+      )
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      val result: Either[EmailResponses, Email] = await(service.getEmail)
 
-      running(app) {
-        val response = service.getEmail
-        val result   = await(response)
-
-        result mustBe Left(UnverifiedEmail)
-      }
+      result mustBe Left(UnverifiedEmail)
+      verifyEndPointUrlHit(getEmailUrl)
     }
 
     "return a UnverifiedEmail" in new Setup {
-      when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-        .thenReturn(Future.failed(UpstreamErrorResponse("NoData", NOT_FOUND, NOT_FOUND)))
 
-      when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      wireMockServer.stubFor(
+        get(urlPathMatching(getEmailUrl))
+          .willReturn(notFound())
+      )
 
-      running(app) {
-        val response = service.getEmail
-        await(response) mustBe Left(UnverifiedEmail)
+      val response: Future[Either[EmailResponses, Email]] = service.getEmail
 
-      }
+      await(response) mustBe Left(UnverifiedEmail)
+      verifyEndPointUrlHit(getEmailUrl)
     }
 
     "throw service unavailable" in new Setup {
-      running(app) {
-        when(requestBuilder.execute(any[HttpReads[EmailResponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(new ServiceUnavailableException("ServiceUnavailable")))
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+      wireMockServer.stubFor(
+        get(urlPathMatching(getEmailUrl))
+          .willReturn(serviceUnavailable())
+      )
 
-        assertThrows[ServiceUnavailableException](await(service.getEmail))
-      }
+      assertThrows[UpstreamErrorResponse](await(service.getEmail))
+
+      verifyEndPointUrlHit(getEmailUrl)
     }
 
     "CompanyName" should {
@@ -213,179 +233,197 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "1", address)
 
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(companyInformationResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getCompanyNameUrl))
+            .willReturn(
+              ok(Json.toJson(companyInformationResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[String] = await(service.getCompanyName(eori))
 
-        running(app) {
-          val response = service.getCompanyName(eori)
-          val result   = await(response)
-          result must be(Some(companyName))
-        }
+        result must be(Some(companyName))
+        verifyEndPointUrlHit(getCompanyNameUrl)
       }
 
       "return None when consent is not given" in new Setup {
-        val companyName                                            = "Company name"
-        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName             = "Company name"
+        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "0", address)
 
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(companyInformationResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getCompanyNameUrl))
+            .willReturn(
+              ok(Json.toJson(companyInformationResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[String] = await(service.getCompanyName(eori))
 
-        running(app) {
-          val response = service.getCompanyName(eori)
-          val result   = await(response)
-          result mustBe None
-        }
+        result mustBe empty
+        verifyEndPointUrlHit(getCompanyNameUrl)
       }
 
       "return None when no company information is found" in new Setup {
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getCompanyNameUrl))
+            .willReturn(notFound())
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val response: Option[String] = await(service.getCompanyName(eori))
 
-        running(app) {
-          val response = await(service.getCompanyName(eori))
-          response mustBe None
-        }
+        response mustBe empty
+        verifyEndPointUrlHit(getCompanyNameUrl)
       }
     }
 
     "OwnCompanyName" should {
       "return own company name" in new Setup {
-        val companyName                                            = "Company name"
-        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName             = "Company name"
+        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "0", address)
 
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(companyInformationResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getOwnCompanyNameUrl))
+            .willReturn(
+              ok(Json.toJson(companyInformationResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[String] = await(service.getOwnCompanyName)
 
-        running(app) {
-          val response = service.getOwnCompanyName
-          val result   = await(response)
-          result must be(Some(companyName))
-        }
+        result must be(Some(companyName))
+        verifyEndPointUrlHit(getOwnCompanyNameUrl)
       }
 
       "return None when no company information is found" in new Setup {
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(new NotFoundException("Not Found Company Information")))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getOwnCompanyNameUrl))
+            .willReturn(notFound())
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val response: Option[String] = await(service.getOwnCompanyName)
 
-        running(app) {
-          val response = await(service.getOwnCompanyName)
-          response mustBe None
-        }
+        response mustBe empty
+        verifyEndPointUrlHit(getOwnCompanyNameUrl)
       }
     }
 
     "CompanyAddress" should {
       "return Company Address" in new Setup {
-        val companyName                                            = "Company name"
-        val address: CompanyAddress                                = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+        val companyName             = "Company name"
+        val address: CompanyAddress = CompanyAddress("Street", "City", Some("Post Code"), "Country code")
+
         val companyInformationResponse: CompanyInformationResponse =
           CompanyInformationResponse(companyName, "1", address)
 
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(companyInformationResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getCompanyAddressUrl))
+            .willReturn(
+              ok(Json.toJson(companyInformationResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[CompanyAddress] = await(service.getCompanyAddress)
 
-        running(app) {
-          val response = service.getCompanyAddress
-          val result   = await(response)
-          result must be(Some(address))
-        }
+        result must be(Some(address))
+        verifyEndPointUrlHit(getCompanyAddressUrl)
       }
 
       "return None when no Address Found" in new Setup {
-        when(requestBuilder.execute(any[HttpReads[CompanyInformationResponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(new NotFoundException("Not Found Company Address")))
+        wireMockServer.stubFor(
+          get(urlPathMatching(getCompanyAddressUrl))
+            .willReturn(notFound())
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val response: Option[CompanyAddress] = await(service.getCompanyAddress)
 
-        running(app) {
-          val response = await(service.getCompanyAddress)
-          response mustBe None
-        }
+        response mustBe empty
+        verifyEndPointUrlHit(getCompanyAddressUrl)
       }
     }
 
     "XiEori" should {
       "return xi eori" in new Setup {
-        val xiEori                                   = "XI123456789"
-        val xiAddress: XiEoriAddressInformation      =
+        val xiEori = "XI123456789"
+
+        val xiAddress: XiEoriAddressInformation =
           XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
+
         val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
-        when(requestBuilder.execute(any[HttpReads[XiEoriInformationReponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(xiEoriResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(xiEoriInfoUrl))
+            .willReturn(
+              ok(Json.toJson(xiEoriResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[String] = await(service.getXiEori)
 
-        running(app) {
-          val response = service.getXiEori
-          val result   = await(response)
-          result must be(Some(xiEori))
-        }
+        result must be(Some(xiEori))
+        verifyEndPointUrlHit(xiEoriInfoUrl)
       }
 
       "return None when no xi Eori is found" in new Setup {
-        when(requestBuilder.execute(any[HttpReads[XiEoriInformationReponse]], any[ExecutionContext]))
-          .thenReturn(Future.failed(new NotFoundException("Not Found Xi EORI Information")))
+        wireMockServer.stubFor(
+          get(urlPathMatching(xiEoriInfoUrl))
+            .willReturn(notFound())
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val response: Option[String] = await(service.getXiEori)
 
-        running(app) {
-          val response = await(service.getXiEori)
-          response mustBe None
-        }
+        response mustBe empty
+        verifyEndPointUrlHit(xiEoriInfoUrl)
       }
 
       "return None when retunred xi Eori is empty" in new Setup {
-        val xiEori: String                           = emptyString
-        val xiAddress: XiEoriAddressInformation      =
+        val xiEori: String = emptyString
+
+        val xiAddress: XiEoriAddressInformation =
           XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
+
         val xiEoriResponse: XiEoriInformationReponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
-        when(requestBuilder.execute(any[HttpReads[XiEoriInformationReponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(xiEoriResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(xiEoriInfoUrl))
+            .willReturn(
+              ok(Json.toJson(xiEoriResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        val result: Option[String] = await(service.getXiEori)
 
-        running(app) {
-          val response = service.getXiEori
-          val result   = await(response)
-
-          result mustBe None
-        }
+        result mustBe empty
+        verifyEndPointUrlHit(xiEoriInfoUrl)
       }
 
-      "return None when feature flag is false" in {
-        val mockMetricsReporterService     = mock[MetricsReporterService]
-        val mockHttpClient                 = mock[HttpClientV2]
-        val requestBuilder: RequestBuilder = mock[RequestBuilder]
-        val mockAppConfig                  = mock[AppConfig]
-        implicit val hc: HeaderCarrier     = HeaderCarrier()
+      "return None when feature flag is false" in new Setup {
+        override val mockMetricsReporterService = mock[MetricsReporterService]
+        val mockAppConfig                       = mock[AppConfig]
 
-        val eori           = "GB11111"
         val xiEori         = "XI123456789"
         val xiAddress      = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
         val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
 
-        when(requestBuilder.execute(any[HttpReads[XiEoriInformationReponse]], any[ExecutionContext]))
-          .thenReturn(Future.successful(xiEoriResponse))
+        wireMockServer.stubFor(
+          get(urlPathMatching(xiEoriInfoUrl))
+            .willReturn(
+              ok(Json.toJson(xiEoriResponse).toString)
+            )
+        )
 
-        when(mockHttpClient.get(any[URL]())(any())).thenReturn(requestBuilder)
+        override val app = application()
+          .configure(config)
+          .overrides(
+            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
+            inject.bind[AppConfig].toInstance(mockAppConfig)
+          )
+          .build()
 
         when(mockMetricsReporterService.withResponseTimeLogging[Seq[EoriHistory]](any)(any)(any))
           .thenAnswer { (i: InvocationOnMock) =>
@@ -395,37 +433,50 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers {
         when(mockAppConfig.customsDataStore).thenReturn("test/value")
         when(mockAppConfig.xiEoriEnabled).thenReturn(false)
 
-        val app = application()
-          .overrides(
-            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-            inject.bind[HttpClientV2].toInstance(mockHttpClient),
-            inject.bind[RequestBuilder].toInstance(requestBuilder),
-            inject.bind[AppConfig].toInstance(mockAppConfig)
-          )
-          .build()
+        override val service: DataStoreService = app.injector.instanceOf[DataStoreService]
 
-        val service = app.injector.instanceOf[DataStoreService]
+        val result: Option[String] = await(service.getXiEori)
 
-        val response = service.getXiEori
-        val result   = await(response)
-
-        result mustBe None
+        result mustBe empty
+        verifyEndPointUrlHit(xiEoriInfoUrl)
       }
     }
   }
 
+  override def config: Configuration = Configuration(
+    ConfigFactory.parseString(
+      s"""
+         |microservice {
+         |  services {
+         |      customs-data-store {
+         |      protocol = http
+         |      host     = $wireMockHost
+         |      port     = $wireMockPort
+         |      context = "/customs-data-store"
+         |    }
+         |  }
+         |}
+         |""".stripMargin
+    )
+  )
+
   trait Setup {
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-    val mockHttpClient: HttpClientV2                       = mock[HttpClientV2]
-    val requestBuilder: RequestBuilder                     = mock[RequestBuilder]
-    implicit val hc: HeaderCarrier                         = HeaderCarrier()
-    val eori                                               = "GB11111"
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    val eori                       = "GB11111"
+
+    val getEmailUrl: String    = "/customs-data-store/eori/verified-email"
+    val eoriHistoryUrl: String = "/customs-data-store/eori/eori-history"
+    val getCompanyNameUrl      = s"/customs-data-store/eori/$eori/company-information"
+    val getOwnCompanyNameUrl   = "/customs-data-store/eori/company-information"
+    val getCompanyAddressUrl   = "/customs-data-store/eori/company-information"
+    val xiEoriInfoUrl          = "/customs-data-store/eori/xieori-information"
 
     val app: Application = application()
+      .configure(config)
       .overrides(
-        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-        inject.bind[HttpClientV2].toInstance(mockHttpClient),
-        inject.bind[RequestBuilder].toInstance(requestBuilder)
+        inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService)
       )
       .build()
 
