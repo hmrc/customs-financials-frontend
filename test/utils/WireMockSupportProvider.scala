@@ -27,7 +27,8 @@ trait WireMockSupportProvider extends WireMockSupport {
 
   def config: Configuration
 
-  protected def verifyEndPointUrlHit(urlToVerify: String): Unit = wireMockServer.verify(
+  protected def verifyEndPointUrlHit(urlToVerify: String, count: Int = 1): Unit = wireMockServer.verify(
+    count,
     getRequestedFor(
       urlPathMatching(urlToVerify)
     )

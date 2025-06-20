@@ -381,7 +381,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
         verifyEndPointUrlHit(xiEoriInfoUrl)
       }
 
-      "return None when retunred xi Eori is empty" in new Setup {
+      "return None when returned xi Eori is empty" in new Setup {
         val xiEori: String = emptyString
 
         val xiAddress: XiEoriAddressInformation =
@@ -403,21 +403,10 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
       }
 
       "return None when feature flag is false" in new Setup {
-        override val mockMetricsReporterService = mock[MetricsReporterService]
-        val mockAppConfig                       = mock[AppConfig]
+        override val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
+        val mockAppConfig: AppConfig                                    = mock[AppConfig]
 
-        val xiEori         = "XI123456789"
-        val xiAddress      = XiEoriAddressInformation("Street1", None, Some("City"), Some("GB"), Some("Post Code"))
-        val xiEoriResponse = XiEoriInformationReponse(xiEori, "S", xiAddress)
-
-        wireMockServer.stubFor(
-          get(urlPathMatching(xiEoriInfoUrl))
-            .willReturn(
-              ok(Json.toJson(xiEoriResponse).toString)
-            )
-        )
-
-        override val app = application()
+        override val app: Application = application()
           .configure(config)
           .overrides(
             inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
@@ -438,7 +427,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
         val result: Option[String] = await(service.getXiEori)
 
         result mustBe empty
-        verifyEndPointUrlHit(xiEoriInfoUrl)
+        verifyEndPointUrlHit(xiEoriInfoUrl, 0)
       }
     }
   }
