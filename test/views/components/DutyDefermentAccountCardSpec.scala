@@ -173,7 +173,7 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
           .hasAttr("href")
       }
     }
-    
+
     "include an id with view payment details" in new Setup {
       running(app) {
         content(accountWithNegativeBalance)
