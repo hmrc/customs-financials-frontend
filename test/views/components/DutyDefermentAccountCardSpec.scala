@@ -165,16 +165,20 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
           .text mustBe "Your Account limit: £500"
       }
     }
+
     "include an id with view statements" in new Setup {
       running(app) {
         content(accountWithNegativeBalance)
-          .getElementById("duty-deferment-account-123456").hasAttr("href")
+          .getElementById("duty-deferment-account-123456")
+          .hasAttr("href")
       }
     }
+    
     "include an id with view payment details" in new Setup {
       running(app) {
         content(accountWithNegativeBalance)
-          .getElementById("payment-details-123456").hasAttr("href")
+          .getElementById("payment-details-123456")
+          .hasAttr("href")
       }
     }
   }
