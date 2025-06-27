@@ -104,21 +104,21 @@
                     @accountRow.contentRow.nonDirectDebitContent.map { nonDD =>
                         <span class="card-footer__links govuk-body">
                             @nonDD.viewStatements.map { viewStat =>
-                                    <a class="@viewStat.classValue" href="@viewStat.href">
+                                    <a @if(viewStat.id.nonEmpty){id="@viewStat.id"} class="@viewStat.classValue" href="@viewStat.href">
                                         <span aria-hidden="true">@viewStat.displayValue</span>
                                         <span class="govuk-visually-hidden">@viewStat.hiddenMsg</span>
                                     </a>
                             }
 
                             @nonDD.paymentDetails.map { payment =>
-                                    <a class="@payment.classValue" href="@payment.href">
+                                    <a @if(payment.id.nonEmpty){id="@payment.id"} class="@payment.classValue" href="@payment.href">
                                         <span aria-hidden="true">@payment.displayValue</span>
                                         <span class="govuk-visually-hidden">@payment.hiddenMsg</span>
                                     </a>
                             }
 
                             @nonDD.topUp.map { topUp =>
-                                    <a class="@topUp.classValue" href="@topUp.href">
+                                    <a @if(topUp.id.nonEmpty){id="@topUp.id"} class="@topUp.classValue" href="@topUp.href">
                                         <span aria-hidden="true">@topUp.displayValue</span>
                                         <span class="govuk-visually-hidden">@topUp.hiddenMsg</span>
                                     </a>
