@@ -26,8 +26,7 @@ import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
 import views.html.account_cards.{
-  duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances,
-  duty_deferment_inaccurate_balances_message
+  duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances
 }
 import views.html.components.{account_status, hidden_status}
 import utils.MustMatchers
@@ -37,19 +36,6 @@ import java.time.LocalDateTime
 class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
 
   "View model" should {
-
-    "contain correct title and inaccurate balances msg" when {
-
-      "there is only one DD account" in new Setup {
-        ddAccountsViewModelWithSingleAccount.titleMsg mustBe msgs("cf.customs-financials-home.duty-deferment.title")
-        shouldContainInaccurateBalancesMsg(ddAccountsViewModelWithSingleAccount)
-      }
-
-      "there are more than one DD account" in new Setup {
-        ddAccViewModelWithMultipleAccounts().titleMsg mustBe msgs("cf.customs-financials-home.duty-deferment.title2")
-        shouldContainInaccurateBalancesMsg(ddAccViewModelWithMultipleAccounts())
-      }
-    }
 
     "contain correct account section rows" when {
 
@@ -68,14 +54,6 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
           Seq(expectedAccountSectionRow(finHomeModel4), expectedAccountSectionRow(finHomeModel4))
       }
     }
-  }
-
-  private def shouldContainInaccurateBalancesMsg(
-    viewModel: DutyDefermentAccountsViewModel
-  )(implicit msgs: Messages, appConfig: AppConfig): Assertion = {
-    val expectedBalanceMsg = new duty_deferment_inaccurate_balances_message().apply()
-
-    viewModel.inaccurateBalancesMsg mustBe expectedBalanceMsg
   }
 
   private def expectedAccountSectionRow(

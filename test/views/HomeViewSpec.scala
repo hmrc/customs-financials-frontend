@@ -62,14 +62,6 @@ class HomeViewSpec extends SpecBase {
 
   "not display manage your account authorities link" when {
 
-    "display recruitment banner" when {
-      "display duty deferment inaccurate balance message" in new Setup {
-        running(app) {
-          page(modelWithAgentAccess, None).containsElementById("duty-deferment-balances-warning")
-        }
-      }
-    }
-
     "banner links" when {
 
       "display the message banner partial" in new Setup {

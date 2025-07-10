@@ -46,9 +46,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
         viewDoc(model).getElementsByTag("h2").text() mustBe
           msgs("cf.customs-financials-home.duty-deferment.title")
 
-        viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
-
         viewDoc(model).getElementsByTag("h3").text() mustBe
           s"${msgs("cf.account")} $dan1 ${msgs("cf.account.status.aria.AccountStatusClosed")}"
 
@@ -71,9 +68,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
 
         viewDoc(model).getElementsByTag("h2").text() mustBe
           msgs("cf.customs-financials-home.duty-deferment.title2")
-
-        viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
       }
 
       "model has one DutyDefermentAccount for the eori, with AccountStatusSuspended and NI account" in new Setup {
@@ -82,9 +76,6 @@ class DutyDefermentAccountCardsSpec extends SpecBase with MustMatchers {
 
         viewDoc(model).getElementsByTag("h2").text() mustBe
           msgs("cf.customs-financials-home.duty-deferment.title2")
-
-        viewDoc(model).getElementById("duty-deferment-balances-warning").text() mustBe
-          msgs("cf.duty-deferment.outOfDateBalance.chiefText")
 
         viewDoc(model)
           .getElementsByTag("h3")
