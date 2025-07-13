@@ -34,8 +34,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
       appConfig.cashAccountWithdrawUrl shouldBe
         "https://www.gov.uk/guidance/withdraw-funds-from-your-cash-account-for-cds-declarations"
 
-      appConfig.feedbackService shouldBe
-        "https://www.development.tax.service.gov.uk/feedback/CDS-FIN"
+      appConfig.feedbackService shouldBe "http://localhost:9514/feedback/CDS-FIN"
       appConfig.timeout         shouldBe 900
       appConfig.countdown       shouldBe 120
 
