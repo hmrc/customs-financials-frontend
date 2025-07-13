@@ -21,7 +21,6 @@ import domain.{
   AccountLink, AccountStatusOpen, AccountStatusSuspended, CDSAccounts, DefermentAccountAvailable,
   DirectDebitMandateCancelled, DutyDefermentAccount, DutyDefermentBalance
 }
-import org.scalatest.Assertion
 import play.api.Application
 import play.api.i18n.Messages
 import utils.SpecBase
