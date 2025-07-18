@@ -4,17 +4,19 @@ import uk.gov.hmrc.DefaultBuildSettings.itSettings
 val appName = "customs-financials-frontend"
 
 val silencerVersion = "1.7.16"
-val scala3_3_4 = "3.3.4"
+val scala3_3_4      = "3.3.4"
 
-val scalaStyleConfigFile = "scalastyle-config.xml"
+val scalaStyleConfigFile     = "scalastyle-config.xml"
 val testScalaStyleConfigFile = "test-scalastyle-config.xml"
-val testDirectory = "test"
+val testDirectory            = "test"
 
 ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := scala3_3_4
 
-lazy val scalastyleSettings = Seq(scalastyleConfig := baseDirectory.value /  scalaStyleConfigFile,
-  (Test / scalastyleConfig) := baseDirectory.value/ testDirectory /  testScalaStyleConfigFile)
+lazy val scalastyleSettings = Seq(
+  scalastyleConfig := baseDirectory.value / scalaStyleConfigFile,
+  (Test / scalastyleConfig) := baseDirectory.value / testDirectory / testScalaStyleConfigFile
+)
 
 lazy val it = project
   .enablePlugins(PlayScala)
@@ -28,12 +30,12 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     PlayKeys.playDefaultPort := 9876,
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
-    retrieveManaged := true,
+    retrieveManaged := true
   )
   .settings(scoverageSettings *)
   .settings(
     Test / fork := false,
-    Test/ parallelExecution := false,
+    Test / parallelExecution := false,
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",
@@ -42,16 +44,20 @@ lazy val microservice = Project(appName, file("."))
       "domain._"
     ),
     routesImport ++= Seq("domain._"),
-    scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")) ++ Seq("-Wconf:msg=Flag.*repeatedly:s", "-language:implicitConversions"),
+    scalacOptions := scalacOptions.value
+      .diff(Seq("-Wunused:all")) ++ Seq("-Wconf:msg=Flag.*repeatedly:s", "-language:implicitConversions"),
     Test / scalacOptions ++= Seq(
       "-Wunused:imports",
       "-Wunused:params",
       "-Wunused:implicits",
       "-Wunused:explicits",
-      "-Wunused:privates"),
+      "-Wunused:privates"
+    ),
     libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.for3Use2_13With("", ".12")),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.for3Use2_13With("",".12")
+      compilerPlugin(
+        "com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.for3Use2_13With("", ".12")
+      ),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.for3Use2_13With("", ".12")
     ),
     scalafmtDetailedError := true,
     scalafmtPrintDiff := true,
@@ -65,14 +71,16 @@ compileScalastyle := (Compile / scalastyle).toTask("").value
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
-    ScoverageKeys.coverageExcludedPackages := List("<empty>"
-      , "Reverse.*"
-      , ".*(BuildInfo|Routes|testOnly).*").mkString(";"),
+    ScoverageKeys.coverageExcludedPackages := List("<empty>", "Reverse.*", ".*(BuildInfo|Routes|testOnly).*").mkString(
+      ";"
+    ),
     ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageMinimumBranchTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum := false,
+    ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
 }
 
-addCommandAlias("runAllChecks", ";clean;compile;coverage;test;it/test;scalafmtCheckAll;scalastyle;Test/scalastyle;coverageReport")
+addCommandAlias(
+  "runAllChecks",
+  ";clean;compile;coverage;test;it/test;scalafmtCheckAll;scalastyle;Test/scalastyle;coverageReport"
+)
