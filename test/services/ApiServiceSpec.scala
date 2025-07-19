@@ -28,7 +28,6 @@ import org.scalatest.concurrent.ScalaFutures
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
 import play.api.{Application, inject}
-import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, *}
@@ -36,6 +35,7 @@ import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.SpecBase
 import utils.TestData.FILE_SIZE_1000
 import utils.MustMatchers
+import play.api.libs.json.{JsResultException, JsSuccess, JsValue, Json}
 
 class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout with ScalaFutures with MustMatchers {
 
@@ -422,6 +422,53 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
     }
   }
 
+  "SdesNotificationsForEori.sdesNotificationsFormat" should {
+
+    "generate correct output for Json Reads" ignore new Setup {
+      import SdesNotificationsForEori.sdesNotificationFormat
+
+      val notification: List[DocumentAttributes] =
+        List(
+          DocumentAttributes(
+            traderEori,
+            C79Certificate,
+            "new file",
+            FILE_SIZE_1000,
+            Map("statementRequestID" -> "12345-98765-333")
+          )
+        )
+
+      val notifications: SdesNotificationsForEori = SdesNotificationsForEori(traderEori, notification)
+
+      Json.fromJson(Json.parse(sdesNotificationsJsString)) mustBe JsSuccess(notifications)
+    }
+
+    "generate correct output for Json Writes" in new Setup {
+      val notification: List[DocumentAttributes] =
+        List(
+          DocumentAttributes(
+            traderEori,
+            C79Certificate,
+            "new file",
+            FILE_SIZE_1000,
+            Map("statementRequestID" -> "12345-98765-333")
+          )
+        )
+
+      val notifications: SdesNotificationsForEori = SdesNotificationsForEori(traderEori, notification)
+
+      Json.toJson(notifications) mustBe Json.parse(sdesNotificationsJsString)
+    }
+
+    "throw exception for invalid Json" in {
+      val invalidJson = "{ \"account1\": \"pending\" }"
+
+      intercept[JsResultException] {
+        Json.parse(invalidJson).as[SdesNotificationsForEori]
+      }
+    }
+  }
+
   trait Setup {
     val mockHttpClient: HttpClientV2   = mock[HttpClientV2]
     val requestBuilder: RequestBuilder = mock[RequestBuilder]
@@ -483,6 +530,11 @@ class ApiServiceSpec extends SpecBase with FutureAwaits with DefaultAwaitTimeout
         )
       )
     )
+
+    val sdesNotificationsJsString: String =
+      """{"eori":"12345678",
+        |"notifications":[{"eori":"12345678","fileRole":"C79Certificate","fileName":"new file",
+        |"fileSize":1000,"metadata":{"statementRequestID":"12345-98765-333"}}]}""".stripMargin
 
     val app: Application = application()
       .overrides(

@@ -16,10 +16,11 @@
 
 package domain
 
-import play.api.libs.json.{Json, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class Limits(periodGuaranteeLimit: String, periodAccountLimit: String)
 
 object Limits {
-  implicit val reads: Reads[Limits] = Json.reads[Limits]
+  implicit val reads: Reads[Limits]       = Json.reads[Limits]
+  implicit val limWrites: OWrites[Limits] = Json.writes[Limits]
 }

@@ -19,6 +19,7 @@ package domain
 import domain.DutyPaymentMethod.CDS
 import utils.SpecBase
 import utils.MustMatchers
+import play.api.libs.json.{JsSuccess, Json}
 
 class AccountResponseDetailSpec extends SpecBase with MustMatchers {
 
@@ -32,6 +33,33 @@ class AccountResponseDetailSpec extends SpecBase with MustMatchers {
       "dutyDefermentAccount, generalGuaranteeAccount and cdsCashAccount have no accounts" in new Setup {
         accResDetailObWithNoAccount.totalNumberOfAccounts mustBe 0
       }
+    }
+  }
+
+  "Json Reads" should {
+
+    "generate the correct output" in new Setup {
+      import AccountResponseDetail.reads
+
+      val accResDetailJsString: String =
+        """{"EORINo":"test_eori",
+          |"referenceDate":"2023-10-12",
+          |"dutyDefermentAccount":[
+          |{"account":{
+          |"number":"12345678",
+          |"type":"dd",
+          |"owner":"CDS",
+          |"viewBalanceIsGranted":true
+          |},
+          |"isIomAccount":false,
+          |"isNiAccount":false
+          |}],
+          |"generalGuaranteeAccount":[{"account":{
+          |"number":"12345678","type":"dd","owner":"CDS","viewBalanceIsGranted":true}}],
+          |"cdsCashAccount":[{"account":{
+          |"number":"12345678","type":"dd","owner":"CDS","viewBalanceIsGranted":true}}]}""".stripMargin
+
+      Json.fromJson(Json.parse(accResDetailJsString)) mustBe JsSuccess(accResDetailObWithAccount)
     }
   }
 
