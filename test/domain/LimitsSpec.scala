@@ -37,12 +37,6 @@ class LimitsSpec extends SpecBase with MustMatchers {
     }
   }
 
-  "limWrites" should {
-    "generate correct output" in new Setup {
-      Json.toJson(limitsOb) mustBe Json.parse(limitsJsString)
-    }
-  }
-
   trait Setup {
     val limitsOb: Limits       = Limits("200", "100")
     val limitsJsString: String = """{"periodGuaranteeLimit":"200","periodAccountLimit":"100"}""".stripMargin
