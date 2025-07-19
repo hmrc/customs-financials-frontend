@@ -23,6 +23,7 @@ import domain.{
 }
 import play.api.Application
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.account_cards.{
   duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances
@@ -51,6 +52,14 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
       "there are more than one DD accounts" in new Setup {
         ddAccViewModelWithMultipleAccounts(finHomeModel4).accountSectionRows mustBe
           Seq(expectedAccountSectionRow(finHomeModel4), expectedAccountSectionRow(finHomeModel4))
+      }
+
+      "object is created using no section rows" in {
+        val ddAccountsViewModelOb = new DutyDefermentAccountsViewModel("test_title", HtmlFormat.empty)
+
+        ddAccountsViewModelOb.titleMsg mustBe "test_title"
+        ddAccountsViewModelOb.inaccurateBalancesMsg mustBe HtmlFormat.empty
+        ddAccountsViewModelOb.accountSectionRows mustBe empty
       }
     }
   }

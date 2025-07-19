@@ -16,11 +16,10 @@
 
 package domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, Reads}
 
 case class DefermentBalancesResponse(periodAvailableGuaranteeBalance: String, periodAvailableAccountBalance: String)
 
 object DefermentBalancesResponse {
-  implicit val reads: Reads[DefermentBalancesResponse]           = Json.reads[DefermentBalancesResponse]
-  implicit val dBalResWrites: OWrites[DefermentBalancesResponse] = Json.writes[DefermentBalancesResponse]
+  implicit val reads: Reads[DefermentBalancesResponse] = Json.reads[DefermentBalancesResponse]
 }
