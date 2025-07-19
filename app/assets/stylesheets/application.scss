@@ -1,6 +1,8 @@
 $govuk-assets-path: "/customs/payment-records/assets/lib/govuk-frontend/govuk/assets/";
 $hmrc-assets-path: "/customs/payment-records/assets/lib/hmrc-frontend/hmrc/";
 
+$govuk-suppressed-warnings: (legacy-organisation-colours);
+
 @import "lib/govuk-frontend/dist/govuk/base";
 
 @import "components/notifications-bar";

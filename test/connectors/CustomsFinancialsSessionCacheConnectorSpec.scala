@@ -32,6 +32,7 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.json.{JsResultException, JsSuccess, Json}
 
 class CustomsFinancialsSessionCacheConnectorSpec
     extends SpecBase
@@ -122,6 +123,44 @@ class CustomsFinancialsSessionCacheConnectorSpec
 
         val result = await(connector.getSessionId(sessionId.value))
         result mustBe None
+      }
+    }
+  }
+
+  "AccountLinksRequest.format" should {
+    "generate correct output for Json Reads" in new Setup {
+      import AccountLinksRequest.format
+
+      val accountLinkRequestOb: AccountLinksRequest = AccountLinksRequest("test_session", sessionCacheLinks)
+      val accountLinkReqJsString: String            =
+        """{"sessionId":"test_session",
+          |"accountLinks":[
+          |{"eori":"eori1","isNiAccount":false,"accountNumber":"dan1","accountStatus":"open",
+          |"accountStatusId":0,"linkId":"link1"},
+          |{"eori":"eori2","isNiAccount":false,"accountNumber":"dan2","accountStatus":"closed",
+          |"accountStatusId":9,"linkId":"link1"}]}""".stripMargin
+
+      Json.fromJson(Json.parse(accountLinkReqJsString)) mustBe JsSuccess(accountLinkRequestOb)
+    }
+
+    "generate correct output for Json Writes" in new Setup {
+      val accountLinkRequestOb: AccountLinksRequest = AccountLinksRequest("test_session", sessionCacheLinks)
+      val accountLinkReqJsString: String            =
+        """{"sessionId":"test_session",
+          |"accountLinks":[
+          |{"eori":"eori1","isNiAccount":false,"accountNumber":"dan1","accountStatus":"open",
+          |"accountStatusId":0,"linkId":"link1"},
+          |{"eori":"eori2","isNiAccount":false,"accountNumber":"dan2","accountStatus":"closed",
+          |"accountStatusId":9,"linkId":"link1"}]}""".stripMargin
+
+      Json.toJson(accountLinkRequestOb) mustBe Json.parse(accountLinkReqJsString)
+    }
+
+    "fail for invalid json" in {
+      val invalidJson = "{ \"subject\": \"test_source\", \"eventId1\": \"test_event\" }"
+
+      intercept[JsResultException] {
+        Json.parse(invalidJson).as[AccountLinksRequest]
       }
     }
   }
