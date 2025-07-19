@@ -16,7 +16,7 @@
 
 package domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, Reads}
 
 case class CdsCashAccountResponse(account: AccountResponse, availableAccountBalance: Option[String]) {
   def toDomain: domain.CashAccount = {
@@ -32,6 +32,5 @@ case class CdsCashAccountResponse(account: AccountResponse, availableAccountBala
 }
 
 object CdsCashAccountResponse {
-  implicit val reads: Reads[CdsCashAccountResponse]       = Json.reads[CdsCashAccountResponse]
-  implicit val cdsWrites: OWrites[CdsCashAccountResponse] = Json.writes[CdsCashAccountResponse]
+  implicit val reads: Reads[CdsCashAccountResponse] = Json.reads[CdsCashAccountResponse]
 }

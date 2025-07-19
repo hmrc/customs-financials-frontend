@@ -16,7 +16,7 @@
 
 package domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, Reads}
 
 case class AccountResponseDetail(
   EORINo: Option[String],
@@ -32,6 +32,5 @@ case class AccountResponseDetail(
 }
 
 object AccountResponseDetail {
-  implicit val reads: Reads[AccountResponseDetail]     = Json.reads[AccountResponseDetail]
-  implicit val writes1: OWrites[AccountResponseDetail] = Json.writes[AccountResponseDetail]
+  implicit val reads: Reads[AccountResponseDetail] = Json.reads[AccountResponseDetail]
 }

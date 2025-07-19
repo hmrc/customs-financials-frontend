@@ -55,6 +55,38 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
     }
   }
 
+  "NonDirectDebitContent.apply" should {
+
+    "create object with correct contents with default values" in new Setup {
+      val posBalance: PositiveBalanceModel =
+        PositiveBalanceModel(
+          pId = "duty-deferment-balance-DAN01234",
+          availableBalanceValue = Some("£100"),
+          availableBalanceMsg = Some(msgs("cf.available"))
+        )
+
+      val accAvailableModel: AccountAvailableModel = AccountAvailableModel(positiveBalanceValue = Some(posBalance))
+
+      val nonDDContent: NonDirectDebitContent = NonDirectDebitContent(accountLimit = accAvailableModel)
+
+      nonDDContent.accountLimit mustBe accAvailableModel
+      nonDDContent.balances mustBe empty
+      nonDDContent.viewStatements mustBe empty
+      nonDDContent.topUp mustBe empty
+      nonDDContent.viewStatements mustBe empty
+    }
+  }
+
+  "ContentRowModel" should {
+    "create object with correct contents with default values" in {
+
+      val contentRowModel: ContentRowModel = ContentRowModel()
+
+      contentRowModel.directDebitSetupComponent mustBe empty
+      contentRowModel.nonDirectDebitContent mustBe empty
+    }
+  }
+
   private def expectedAccountSectionRow(
     finHomeModel: FinancialsHomeModel
   )(implicit msgs: Messages, appConfig: AppConfig): DutyDefermentAccountRowModel = {

@@ -119,7 +119,9 @@ object TestData {
   val ACC_TYPE_CDS_CASH = "Cash account"
   val ACC_NUMBER        = "1234567"
 
-  val TEST_EMAIL = "test@test.com"
+  val TEST_EMAIL     = "test@test.com"
+  val TEST_KEY       = "test_key"
+  val TEST_KEY_VALUE = "test_value"
 
   lazy val TEST_MESSAGE_BANNER: Html = Html("""<html>
       | <head></head>

@@ -16,7 +16,7 @@
 
 package domain
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, Reads}
 
 case class AccountsAndBalancesResponse(
   responseCommon: Option[AccountResponseCommon],
@@ -24,6 +24,5 @@ case class AccountsAndBalancesResponse(
 )
 
 object AccountsAndBalancesResponse {
-  implicit val reads: Reads[AccountsAndBalancesResponse]                = Json.reads[AccountsAndBalancesResponse]
-  implicit val accAndBalResWrites: OWrites[AccountsAndBalancesResponse] = Json.writes[AccountsAndBalancesResponse]
+  implicit val reads: Reads[AccountsAndBalancesResponse] = Json.reads[AccountsAndBalancesResponse]
 }
