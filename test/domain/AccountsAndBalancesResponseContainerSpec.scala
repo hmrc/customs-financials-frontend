@@ -18,6 +18,8 @@ package domain
 
 import utils.SpecBase
 import utils.MustMatchers
+import play.api.libs.json.{JsResultException, JsSuccess, Json}
+import utils.TestData.TEST_EORI
 
 class AccountsAndBalancesResponseContainerSpec extends SpecBase with MustMatchers {
 
@@ -26,13 +28,35 @@ class AccountsAndBalancesResponseContainerSpec extends SpecBase with MustMatcher
     "return empty accounts" when {
       "there is no DD, GA and Cach accounts in the response" in {
 
-        val eori = "GB12345678"
-
         val accResponseWithNoAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
-          AccountsAndBalancesResponse(None, domain.AccountResponseDetail(Some(eori), None, None, None, None))
+          AccountsAndBalancesResponse(None, domain.AccountResponseDetail(Some(TEST_EORI), None, None, None, None))
         )
 
-        accResponseWithNoAccounts.toCdsAccounts(eori) mustBe CDSAccounts(eori, isNiAccount = Some(false), Seq.empty)
+        accResponseWithNoAccounts
+          .toCdsAccounts(TEST_EORI) mustBe CDSAccounts(TEST_EORI, isNiAccount = Some(false), Seq.empty)
+      }
+    }
+  }
+
+  "Json Reads" should {
+    "generate the correct object from valid Json" in {
+      import AccountsAndBalancesResponseContainer.reads
+
+      val accResponseWithNoAccounts: AccountsAndBalancesResponseContainer = AccountsAndBalancesResponseContainer(
+        AccountsAndBalancesResponse(None, domain.AccountResponseDetail(Some(TEST_EORI), None, None, None, None))
+      )
+
+      val accResJsString =
+        """{"accountsAndBalancesResponse":{"responseDetail":{"EORINo":"GB12345678"}}}""".stripMargin
+
+      Json.fromJson(Json.parse(accResJsString)) mustBe JsSuccess(accResponseWithNoAccounts)
+    }
+
+    "throw exception for invalid Json" in {
+      val invalidJson = "{ \"accountsAndBalancesResponse1\": \"pending\" }"
+
+      intercept[JsResultException] {
+        Json.parse(invalidJson).as[AccountsAndBalancesResponseContainer]
       }
     }
   }

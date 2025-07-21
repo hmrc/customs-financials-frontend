@@ -108,7 +108,20 @@ object TestData {
   val LENGTH_11 = 11
   val LENGTH_27 = 27
 
-  val TEST_EORI = "GB12345678"
+  val TEST_EORI        = "GB12345678"
+  val TEST_STATUS      = "pending"
+  val TEST_STATUS_TEXT = "test_status"
+
+  val TEST_DATE    = "2024-10-01"
+  val TEST_ACK_REF = "test_ref"
+  val REGIME_CDS   = "CDS"
+
+  val ACC_TYPE_CDS_CASH = "Cash account"
+  val ACC_NUMBER        = "1234567"
+
+  val TEST_EMAIL     = "test@test.com"
+  val TEST_KEY       = "test_key"
+  val TEST_KEY_VALUE = "test_value"
 
   lazy val TEST_MESSAGE_BANNER: Html = Html("""<html>
       | <head></head>

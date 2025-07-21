@@ -23,6 +23,7 @@ import domain.{
 }
 import play.api.Application
 import play.api.i18n.Messages
+import play.twirl.api.HtmlFormat
 import utils.SpecBase
 import views.html.account_cards.{
   duty_deferment_account_direct_debit_setup, duty_deferment_balance_details, duty_deferment_balances
@@ -52,6 +53,46 @@ class DutyDefermentAccountsViewModelSpec extends SpecBase with MustMatchers {
         ddAccViewModelWithMultipleAccounts(finHomeModel4).accountSectionRows mustBe
           Seq(expectedAccountSectionRow(finHomeModel4), expectedAccountSectionRow(finHomeModel4))
       }
+
+      "object is created using no section rows" in {
+        val ddAccountsViewModelOb = new DutyDefermentAccountsViewModel("test_title", HtmlFormat.empty)
+
+        ddAccountsViewModelOb.titleMsg mustBe "test_title"
+        ddAccountsViewModelOb.inaccurateBalancesMsg mustBe HtmlFormat.empty
+        ddAccountsViewModelOb.accountSectionRows mustBe empty
+      }
+    }
+  }
+
+  "NonDirectDebitContent.apply" should {
+
+    "create object with correct contents with default values" in new Setup {
+      val posBalance: PositiveBalanceModel =
+        PositiveBalanceModel(
+          pId = "duty-deferment-balance-DAN01234",
+          availableBalanceValue = Some("£100"),
+          availableBalanceMsg = Some(msgs("cf.available"))
+        )
+
+      val accAvailableModel: AccountAvailableModel = AccountAvailableModel(positiveBalanceValue = Some(posBalance))
+
+      val nonDDContent: NonDirectDebitContent = NonDirectDebitContent(accountLimit = accAvailableModel)
+
+      nonDDContent.accountLimit mustBe accAvailableModel
+      nonDDContent.balances mustBe empty
+      nonDDContent.viewStatements mustBe empty
+      nonDDContent.topUp mustBe empty
+      nonDDContent.viewStatements mustBe empty
+    }
+  }
+
+  "ContentRowModel" should {
+    "create object with correct contents with default values" in {
+
+      val contentRowModel: ContentRowModel = ContentRowModel()
+
+      contentRowModel.directDebitSetupComponent mustBe empty
+      contentRowModel.nonDirectDebitContent mustBe empty
     }
   }
 
