@@ -50,7 +50,7 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
   lazy val accessibilityLinkUrl: String        = config.get[String]("external-urls.accessibility-statement")
   lazy val cashAccountTopUpGuidanceUrl: String = config.get[String]("external-urls.cashAccountTopUpGuidanceUrl")
   lazy val cashAccountWithdrawUrl: String      = config.get[String]("external-urls.cashAccountWithdrawUrl")
-  lazy val eoriChangeOrCancelURL: String              = config.get[String]("external-urls.eoriChangeOrCancelURL")
+  lazy val eoriChangeOrCancelURL: String       = config.get[String]("external-urls.eoriChangeOrCancelURL")
 
   lazy val dutyDefermentTopUpLink: String = config.get[String]("external-urls.dutyDefermentTopUpLink")
   lazy val loginUrl: String               = config.get[String]("external-urls.login")
