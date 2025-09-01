@@ -70,9 +70,9 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
     "display link to get enquiry form for your contact details" in new Setup {
       running(app) {
-        view().getElementById("eori-contact-link").text() mustBe
+        view().getElementById("eori-change-or-cancel-link").text() mustBe
           "This is the contact address you gave us when you registered for your EORI number." +
-          " You can fill in an enquiry form (opens in a new tab) to change this address."
+          " You can fill in a change of circumstance form (opens in a new tab) to change this address."
       }
     }
 

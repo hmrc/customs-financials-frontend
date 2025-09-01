@@ -351,7 +351,7 @@ cf.contact-details.name=Enw
 cf.contact-details.address=Cyfeiriad cyswllt
 cf.contact-details.email-address=Cyfeiriad e-bost
 
-cf.contact-details.report-change-link= lenwi ffurflen ymholiadau (yn agor tab newydd)
+cf.contact-details.report-change-link= lenwi ffurflen newid mewn amgylchiadau (yn agor tab newydd)
 cf.contact-details.report-change-pre-link-text=Dyma’r cyfeiriad cyswllt a roesoch i ni pan wnaethoch gofrestru ar gyfer eich rhif EORI. Gallwch
 cf.contact-details.report-change-post-link-text= i newid y cyfeiriad hwn.
 
