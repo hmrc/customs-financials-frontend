@@ -266,7 +266,7 @@ cf.contact-details.address=Contact address
 cf.contact-details.email-address=Email address
 
 cf.contact-details.report-change-pre-link-text=This is the contact address you gave us when you registered for your EORI number. You can
-cf.contact-details.report-change-link= fill in an enquiry form (opens in a new tab)
+cf.contact-details.report-change-link= fill in a change of circumstance form (opens in a new tab)
 cf.contact-details.report-change-post-link-text= to change this address.
 
 cf.contact-details.primary-email-address.h2=Primary email address
