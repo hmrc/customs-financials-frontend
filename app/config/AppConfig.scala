@@ -68,6 +68,13 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
       config.get[String]("microservice.services.customs-cash-account-frontend.url")
     }
 
+  lazy val cashAccountTestUrl: String =
+    if (isCashAccountV2FeatureFlagEnabled) {
+      config.get[String]("microservice.services.customs-cash-account-frontend.testURL")
+    } else {
+      config.get[String]("microservice.services.customs-cash-account-frontend.testURL")
+    }
+
   lazy val manageAuthoritiesFrontendUrl: String =
     config.get[String]("microservice.services.customs-manage-authorities-frontend.url")
 

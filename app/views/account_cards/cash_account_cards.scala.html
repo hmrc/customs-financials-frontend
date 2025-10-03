@@ -58,12 +58,19 @@
                     </span>
                 </a>
 
-                <a class="govuk-link" href="@{appConfig.cashAccountTopUpGuidanceUrl}">
+                <a class="govuk-link govuk-!-margin-right-2" href="@{appConfig.cashAccountTopUpGuidanceUrl}">
                     <span aria-hidden="true">
                         @messages("cf.accounts.topUp")
                     </span>
                     <span class="govuk-visually-hidden">
                         @messages("cf.customs-financials-home.cash-account.top-up.link-label")
+                    </span>
+                </a>
+
+                <a id="cash-account-downloadCsv" class="govuk-link"
+                   href="@appConfig.cashAccountTestUrl">
+                    <span aria-hidden="true">
+                        @messages("cf.customs-financials-home.cash-account-csv.link")
                     </span>
                 </a>
             </p>

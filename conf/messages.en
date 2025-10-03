@@ -160,6 +160,7 @@ cf.customs-financials-home.guarantee-account.link=View general guarantee account
 cf.customs-financials-home.cash-account.title=Cash account
 cf.customs-financials-home.cash-account.link=View cash account
 cf.customs-financials-home.cash-account.top-up.link-label=Top up cash account
+cf.customs-financials-home.cash-account-csv.link=Request CSV file
 cf.customs-financials-home.import-vat.title=Import VAT certificates (C79)
 cf.customs-financials-home.import-vat.title.link=View import VAT certificates (C79)
 cf.customs-financials-home.pvat.title=Postponed import VAT statements
