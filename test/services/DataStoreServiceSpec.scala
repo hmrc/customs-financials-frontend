@@ -33,7 +33,7 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.MustMatchers
-import com.github.tomakehurst.wiremock.client.WireMock.{get, post, notFound, ok, serviceUnavailable, urlPathMatching}
+import com.github.tomakehurst.wiremock.client.WireMock.{get, notFound, ok, post, serviceUnavailable, urlPathMatching}
 
 import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
