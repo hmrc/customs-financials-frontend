@@ -33,7 +33,7 @@ import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.SpecBase
 import utils.MustMatchers
-import com.github.tomakehurst.wiremock.client.WireMock.{get, notFound, ok, serviceUnavailable, urlPathMatching}
+import com.github.tomakehurst.wiremock.client.WireMock.{get, post, notFound, ok, serviceUnavailable, urlPathMatching}
 
 import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
@@ -234,7 +234,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
           CompanyInformationResponse(companyName, "1", address)
 
         wireMockServer.stubFor(
-          get(urlPathMatching(getCompanyNameUrl))
+          post(urlPathMatching(getCompanyNameUrl))
             .willReturn(
               ok(Json.toJson(companyInformationResponse).toString)
             )
@@ -243,7 +243,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
         val result: Option[String] = await(service.getCompanyName(eori))
 
         result must be(Some(companyName))
-        verifyEndPointUrlHit(getCompanyNameUrl)
+        verifyPostEndPointUrlHit(getCompanyNameUrl)
       }
 
       "return None when consent is not given" in new Setup {
@@ -254,7 +254,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
           CompanyInformationResponse(companyName, "0", address)
 
         wireMockServer.stubFor(
-          get(urlPathMatching(getCompanyNameUrl))
+          post(urlPathMatching(getCompanyNameUrl))
             .willReturn(
               ok(Json.toJson(companyInformationResponse).toString)
             )
@@ -263,19 +263,19 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
         val result: Option[String] = await(service.getCompanyName(eori))
 
         result mustBe empty
-        verifyEndPointUrlHit(getCompanyNameUrl)
+        verifyPostEndPointUrlHit(getCompanyNameUrl)
       }
 
       "return None when no company information is found" in new Setup {
         wireMockServer.stubFor(
-          get(urlPathMatching(getCompanyNameUrl))
+          post(urlPathMatching(getCompanyNameUrl))
             .willReturn(notFound())
         )
 
         val response: Option[String] = await(service.getCompanyName(eori))
 
         response mustBe empty
-        verifyEndPointUrlHit(getCompanyNameUrl)
+        verifyPostEndPointUrlHit(getCompanyNameUrl)
       }
     }
 
@@ -457,7 +457,7 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
 
     val getEmailUrl: String    = "/customs-data-store/eori/verified-email"
     val eoriHistoryUrl: String = "/customs-data-store/eori/eori-history"
-    val getCompanyNameUrl      = s"/customs-data-store/eori/$eori/company-information"
+    val getCompanyNameUrl      = "/customs-data-store/eori/company-information-third-party"
     val getOwnCompanyNameUrl   = "/customs-data-store/eori/company-information"
     val getCompanyAddressUrl   = "/customs-data-store/eori/company-information"
     val xiEoriInfoUrl          = "/customs-data-store/eori/xieori-information"
