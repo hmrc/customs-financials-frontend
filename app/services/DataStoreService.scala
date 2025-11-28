@@ -20,13 +20,14 @@ import config.AppConfig
 import domain.*
 import play.api.Logger
 import play.api.http.Status.NOT_FOUND
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.libs.ws.WSBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.UpstreamErrorResponse.WithStatusCode
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps, UpstreamErrorResponse}
-
+import java.net.URL
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -80,11 +81,13 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
   }
 
   def getCompanyName(eori: String)(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/$eori/company-information"
+    val dataStoreEndpoint: URL = url"${appConfig.customsDataStore}/eori/company-information-third-party"
+    val body: JsValue          = Json.obj("eori" -> eori)
 
     metricsReporter.withResponseTimeLogging("customs-data-store.get.company-information") {
       httpClient
-        .get(url"$dataStoreEndpoint")
+        .post(url"$dataStoreEndpoint")
+        .withBody(body)
         .execute[CompanyInformationResponse]
         .flatMap { response =>
           Future.successful(if (response.consent == "1") Some(response.name) else None)
