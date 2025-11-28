@@ -50,12 +50,12 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
 
       val expectedEoriHistory: List[EoriHistory] =
         List(
-          EoriHistory("GB11111", "2019-03-01", None),
-          EoriHistory("GB22222", "2018-01-01", "2019-02-28")
+          EoriHistory("GB123456789012", "2019-03-01", None),
+          EoriHistory("GB987654321012", "2018-01-01", "2019-02-28")
         )
 
-      val eoriHistory1: EoriHistory                = EoriHistory("GB11111", validFrom = "2019-03-01", None)
-      val eoriHistory2: EoriHistory                = EoriHistory("GB22222", validFrom = "2018-01-01", validUntil = "2019-02-28")
+      val eoriHistory1: EoriHistory                = EoriHistory("GB123456789012", validFrom = "2019-03-01", None)
+      val eoriHistory2: EoriHistory                = EoriHistory("GB987654321012", validFrom = "2018-01-01", validUntil = "2019-02-28")
       val eoriHistoryResponse: EoriHistoryResponse = EoriHistoryResponse(Seq(eoriHistory1, eoriHistory2))
 
       wireMockServer.stubFor(
@@ -453,14 +453,14 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
     val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    val eori                       = "GB11111"
+    val eori                       = "GB123456789012"
 
-    val getEmailUrl: String    = "/customs-data-store/eori/verified-email"
-    val eoriHistoryUrl: String = "/customs-data-store/eori/eori-history"
-    val getCompanyNameUrl      = "/customs-data-store/eori/company-information-third-party"
-    val getOwnCompanyNameUrl   = "/customs-data-store/eori/company-information"
-    val getCompanyAddressUrl   = "/customs-data-store/eori/company-information"
-    val xiEoriInfoUrl          = "/customs-data-store/eori/xieori-information"
+    val getEmailUrl: String          = "/customs-data-store/eori/verified-email"
+    val eoriHistoryUrl: String       = "/customs-data-store/eori/eori-history"
+    val getCompanyNameUrl: String    = "/customs-data-store/eori/company-information-third-party"
+    val getOwnCompanyNameUrl: String = "/customs-data-store/eori/company-information"
+    val getCompanyAddressUrl: String = "/customs-data-store/eori/company-information"
+    val xiEoriInfoUrl: String        = "/customs-data-store/eori/xieori-information"
 
     val app: Application = application()
       .configure(config)
