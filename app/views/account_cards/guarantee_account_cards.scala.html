@@ -48,11 +48,16 @@
             <div class="govuk-body govuk-!-margin-top-3">
                  @balanceAvailable(account.status, "guarantee-account-limit-remaining",
                      account.balances.fold(BigDecimal(0.0))(_.AvailableGuaranteeBalance))
-                 <p class="govuk-!-margin-bottom-2" id="guarantee-limit-@{account.number}">
-                    @messages("cf.duty-deferment.account.card.guarantee.limit",
-                        Formatters.formatCurrencyAmount(account.balances.fold(BigDecimal(0.0))(_.GuaranteeLimit)))
-                 </p>
-
+                <dl class="govuk-summary-list govuk-summary-list--no-border" id="guarantee-limit-@{account.number}">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @messages("cf.duty-deferment.account.card.guarantee.limit.dl")
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Formatters.formatCurrencyAmount(account.balances.fold(BigDecimal(0.0))(_.GuaranteeLimit))
+                        </dd>
+                    </div>
+                </dl>
                 <span class="card-footer__links govuk-!-margin-top-1">
                     <a id="guarantee-account-@{s"${account.number}"}" class="govuk-link" href="@appConfig.guaranteeAccountUrl">
                        @messages("cf.customs-financials-home.guarantee-account.link")
