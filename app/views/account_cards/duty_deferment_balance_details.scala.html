@@ -17,41 +17,58 @@
 @this()
 
 @(
-    accountNumber: String,
-    accountLimit: Option[String],
-    guaranteeLimit: Option[String],
-    guaranteeLimitRemaining: Option[String],
-    viewBalances: Boolean
+accountNumber: String,
+accountLimit: Option[String],
+guaranteeLimit: Option[String],
+guaranteeLimitRemaining: Option[String],
+viewBalances: Boolean
 )(
-    implicit messages: Messages
+implicit messages: Messages
 )
 
-      @if(accountLimit.nonEmpty) {
-          <p class="govuk-body govuk-!-margin-bottom-1" id="account-limit-@accountNumber">
-              <span class="govuk-visually-hidden">
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+    @if(accountLimit.nonEmpty) {
+    <div class="govuk-summary-list__row" id="account-limit-@accountNumber">
+        <dt class="govuk-summary-list__key">
+     <span class="govuk-visually-hidden">
                 @messages("cf.duty-deferment.account.card.visually.hidden")
               </span>
-              @messages("cf.duty-deferment.account.card.account.limit", accountLimit.get)
-              <p class="govuk-body govuk-hint govuk-!-margin-bottom-1">@messages("cf.duty-deferment.account.card.account.info-text")
-          </p>
-      }
-      @if(guaranteeLimit.nonEmpty) {
-          <p class="govuk-body govuk-!-margin-bottom-1" id="guarantee-limit-@accountNumber">
-              <span class="govuk-visually-hidden">
+            @messages("cf.duty-deferment.account.card.account.limit.dl")
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @accountLimit.get
+            <p class="govuk-body govuk-hint govuk-!-margin-bottom-1">@messages("cf.duty-deferment.account.card.account.info-text")</p>
+        </dd>
+
+    </div>
+
+    }
+    @if(guaranteeLimit.nonEmpty) {
+    <div class="govuk-summary-list__row"  id="guarantee-limit-@accountNumber">
+        <dt class="govuk-summary-list__key">
+   <span class="govuk-visually-hidden">
                   @messages("cf.duty-deferment.account.card.visually.hidden")
               </span>
-              @messages("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit.get)
-          </p>
-      }
-
-
-@if(viewBalances){
+            @messages("cf.duty-deferment.account.card.guarantee.limit.dl")
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @guaranteeLimit.get
+        </dd>
+    </div>
+    }
+    @if(viewBalances) {
     @if(guaranteeLimitRemaining.nonEmpty) {
-        <p class="govuk-body govuk-!-margin-bottom-1" id="guarantee-limit-remaining-@accountNumber">
-            <span class="govuk-visually-hidden">
+    <div class="govuk-summary-list__row"  id="guarantee-limit-remaining-@accountNumber">
+        <dt class="govuk-summary-list__key">
+               <span class="govuk-visually-hidden">
                 @messages("cf.duty-deferment.account.card.visually.hidden")
             </span>
-            @messages("cf.duty-deferment.account.card.guarantee.limit.remaining", guaranteeLimitRemaining.get)
-        </p>
+            @messages("cf.duty-deferment.account.card.guarantee.limit.remaining.dl")
+        </dt>
+        <dd class="govuk-summary-list__value">
+            @guaranteeLimitRemaining.get
+        </dd>
+    </div>
     }
-}
+    }
+</dl>
