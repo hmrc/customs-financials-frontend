@@ -48,7 +48,7 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase with MustMatchers {
         val guaranteeLimitElement: String = view.getElementById(s"guarantee-limit-$accountNumber").text()
 
         guaranteeLimitElement.contains(
-          msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)
+          msgs("cf.duty-deferment.account.card.guarantee.limit.dl")
         ) mustBe true
 
         val guaranteeLimitRemainingElement: String =
@@ -73,7 +73,7 @@ class DutyDefermentBalanceDetailsSpec extends SpecBase with MustMatchers {
         val guaranteeLimitElement: String = view.getElementById(s"guarantee-limit-$accountNumber").text()
 
         guaranteeLimitElement.contains(
-          msgs("cf.duty-deferment.account.card.guarantee.limit", guaranteeLimit)
+          msgs("cf.duty-deferment.account.card.guarantee.limit.dl")
         ) mustBe true
       }
 
