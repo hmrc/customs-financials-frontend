@@ -63,7 +63,9 @@ class DutyDefermentAccountCardSpec extends SpecBase with MustMatchers {
 
     "include account limit remaining" in new Setup {
       running(app) {
-        content().getElementById("account-limit-123456").text mustBe "Your Account limit: £499 (Including SIVA, EPSS or AEO status)"
+        content()
+          .getElementById("account-limit-123456")
+          .text mustBe "Your Account limit: £499 (Including SIVA, EPSS or AEO status)"
       }
     }
 
