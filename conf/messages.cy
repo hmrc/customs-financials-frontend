@@ -16,7 +16,6 @@ cf.sign-out=Allgofnodi
 cf.pdf=PDF
 cf.csv=CSV
 cf.header.eori=EORI:
-cf.header.eori.dash= -
 cf.header.companyName = {0} -
 cf.account=Cyfrif:
 cf.NiAccount=Cyfrif Gogledd Iwerddon:
@@ -48,7 +47,6 @@ cf.error.not-found.message.address-pasted-wrong=Os gwnaethoch ludo’r cyfeiriad
 cf.error.not-found.message.go-to-home-page-text1=Gallwch fynd
 cf.error.not-found.message.go-to-home-page-text2=yn ôl i reoli tollau mewnforio a chyfrifon TAW
 
-
 # Unauthorised Error
 cf.error.unauthorized.title=Nid ydych wedi’ch awdurdodi i fwrw golwg dros y dudalen hon
 cf.error.unauthorized.heading=Heb awdurdod
@@ -71,8 +69,6 @@ user-research.help.link=Cofrestrwch i gymryd rhan mewn ymchwil defnyddwyr (yn ag
 cf.pager.prev=Blaenorol
 cf.pager.next=Nesaf
 cf.pager.summary=Yn dangos {0} – {1} o {2} {3}
-
-eoriNumber.error.format=Nodwch rif EORI yn y fformat cywir
 
 # Accounts List
 cf.accounts.title=Eich cyfrifon ariannol ar gyfer y tollau
@@ -101,7 +97,6 @@ cf.account.status.aria.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanae
 cf.duty-deferment.outOfDateBalance.heading = Balansau gohirio tollau sydd heb eu diweddaru
 cf.duty-deferment.outOfDateBalance.hiddenText = Rhybudd o falansau gohirio tollau anghywir
 cf.duty-deferment.outOfDateBalance.chiefText = Mae’r balansau’n cynnwys datganiadau mewnforio a wnaed gan ddefnyddio system y Tollau ar gyfer Trin Nwyddau a Gaiff eu Mewnforio a’u Hallforio (CHIEF) neu’r Gwasanaeth Datganiadau Tollau (CDS).
-
 cf.duty-deferment.pending.info = Ni allwch ddefnyddio’r cyfrif hwn ar y Gwasanaeth Datgan Tollau (CDS) eto
 cf.duty-deferment.pending.text = Byddwch yn gallu defnyddio’r cyfrif gohirio hwn o’r dyddiad dechrau y rhoesoch i ni yn eich cais.
 
@@ -155,7 +150,6 @@ cf.not-subscribed-to-cds.detail.list-item.3=nid yw’ch sefydliad wedi rhoi myne
 cf.not-subscribed-to-cds.detail.list-item.1.link=tanysgrifio i’r CDS
 cf.not-subscribed-to-cds.detail.list-item.3.link=i’ch ychwanegu chi fel aelod o’r tîm a rhoi mynediad at y CDS i chi
 
-
 # Customs Financials Home Page
 cf.customs-financials-home.title=Eich tollau mewnforio a’ch cyfrifon TAW
 cf.customs-financials-home.duty-deferment.title=Cyfrif gohirio tollau
@@ -193,7 +187,6 @@ cf.verify.your.email.p1=Mae angen i chi gadarnhau’r cyfeiriad e-bost rydych yn
 cf.verify.your.email.p2=Eich e-bost cofrestredig yw <strong class="bold">{0}</strong>.
 cf.verify.your.email.p3=Os nad dyma’r cyfeiriad e-bost rydych chi am ei ddefnyddio, gallwch ei newid hefyd gan ddefnyddio’r gwasanaeth hwn.
 cf.verify.your.email.change.button=Dilysu neu newid y cyfeiriad e-bost
-
 cf.verify.your.email.need-to-verify=Dyma fydd yr unig gyfeiriad e-bost a ddefnyddiwn ar gyfer:
 cf.verify.your.email.list.1=diweddariadau ar newidiadau i’r Gwasanaeth Datganiadau Tollau
 cf.verify.your.email.list.2=diweddariadau brys am nwyddau yn y tollau
@@ -204,13 +197,85 @@ cf.undeliverable.email.title=Mae problem gyda’ch cyfeiriad e-bost ar gyfer y G
 cf.undeliverable.email.heading=Mae problem gyda’ch cyfeiriad e-bost ar gyfer y Gwasanaeth Datganiadau Tollau
 cf.undeliverable.email.p1=Gwnaethom geisio anfon e-bost atoch ond nid oedd modd ei ddosbarthu.
 cf.undeliverable.email.p2=Eich e-bost cofrestredig yw <strong class="bold">{0}</strong>.
-
 cf.undeliverable.email.verify.heading=Cadarnhau’ch cyfeiriad e-bost
 cf.undeliverable.email.verify.text.p1=Os mae’r cyfeiriad e-bost hwn yn gywir, bydd angen i chi ei gadarnhau er mwyn parhau i ddefnyddio Gwasanaeth Datganiadau Tollau.
 cf.undeliverable.email.change.heading=Newidiwch eich cyfeiriad e-bost
 cf.undeliverable.email.change.text.p1=Os nad yw’r cyfeiriad e-bost yn gywir, gallwch ei newid yma.
 cf.undeliverable.email.change.text.p2=Mae’r Gwasanaeth Datganiadau Tollau yn defnyddio un cyfeiriad e-bost ar gyfer nifer o wasanaethau sy’n gysylltiedig â thollau. Os ydych yn newid y cyfeiriad e-bost hwn, sicrhewch fod modd i bobl eraill yn eich cwmni gael y negeseuon sydd eu hangen arnynt.
 cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
+
+cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
+cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
+cf.search.authorities.eori = rhif EORI yn dechrau gyda GB
+cf.search.authorities.eori.xi = rhif EORI sy’n dechrau gyda GB neu XI
+cf.search.authorities.eori.eu = rhif EORI
+cf.search.authorities.account = rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
+cf.search.authorities.link = Gofyn am bob cyfrif fel ffeil CSV
+cf.search.authorities.hint = Nodwch rif EORI yn dechrau gyda GB wedi’i ddilyn gan 12 digid. <br> Er enghraifft, '‘GB123456789000’'.</br>
+cf.search.authorities.h2 = Cais am yr holl gyfrifon
+cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio ar ffurf ffeil CSV.
+cf.search.authorities.error.invalid = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
+cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif dilys
+cf.search.authorities.error.register-xi-eori = Mae’n rhaid i chi fod wedi cofrestru ar gyfer EORI XI er mwyn gwneud y chwiliad hwn
+cf.search.authorities.button = Chwilio
+cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
+cf.search.authorities.result.p1 = Yn dangos <strong>{0}</strong> o gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio.
+cf.search.authorities.result.p2 = Caiff balansau eu diweddaru bob 24 awr.
+cf.search.authorities.balance.consent = Dim caniatâd i fwrw golwg dros y balans
+cf.search.authorities.result.inset1 = Nid yw’r busnes y mae’r rhif EORI hwn wedi’i gofrestru iddo wedi caniatáu i’w enw gael ei rannu.
+cf.search.authorities.result.inset2 = Os na ddangosir balans y cyfrif, mae’r perchennog wedi dewis ei gadw’n breifat. Gallwch ddefnyddio’r cyfrif o hyd.
+cf.search.authorities.result.no.result.p1 = Nid oes unrhyw ganlyniadau cyfatebol ar gyfer ''{0}''
+cf.search.authorities.result.no.result.p2 = Gallai hyn fod oherwydd y canlynol:
+cf.search.authorities.result.no.result.p3 = Rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
+cf.search.authorities.result.no.result.p4 = nid oes gennych yr awdurdod i ddefnyddio’r cyfrif gyda’r Gwasanaeth Datganiadau Tollau
+cf.search.authorities.result.eori.number = Rhif EORI
+cf.search.authorities.result.xiEori.number = Rhif EORI XI
+cf.search.authorities.result.account.type = Math o gyfrif
+cf.search.authorities.result.account.number = Rhif y cyfrif
+cf.search.authorities.result.account.balance = Balans ar gael
+cf.search.authorities.result.company.name = Enw’r cwmni
+cf.search.authorities.result.account.balance.available = Balans y cyfrif sydd ar gael
+cf.search.authorities.result.account.balance.available.text = Gan gynnwys SIVA, EPSS neu AEO.
+cf.search.authorities.result.guarantee.balance.available = Balans y warant sydd ar gael
+cf.search.authorities.result.balance.title = Pam na allaf weld balans cyfrif?
+cf.search.authorities.result.balance.label = Gall y cwmni sy’n berchen ar y cyfrif ddewis i gadw’r balans yn breifat. Gallwch ddefnyddio’r cyfrif o hyd.
+cf.search.authorities.accountType.DutyDeferment = Cyfrif gohirio tollau
+cf.search.authorities.accountType.Ni =(Gogledd Iwerddon)
+cf.search.authorities.accountType.GeneralGuarantee = Cyfrif gwarant cyffredinol
+cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
+
+cf.authorities.request.received.title = Cais wedi dod i law
+cf.authorities.request.received.panel.h1 = Cais wedi dod i law
+cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ati o’r dudalen ‘'Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio'’, cyn pen 1 awr fel arfer.
+cf.authorities.request.received.link = Yn ôl i reoli awdurdodau eich cyfrif
+cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar gael i’w lawrlwytho:
+cf.authorities.notification-panel.a.gb-authority=Awdurdodau ym Mhrydain Fawr (CSV)
+cf.authorities.notification-panel.a.xi-authority=Awdurdodau yng Ngogledd Iwerddon (CSV)
+cf.authorities.notification-panel.p2=Crëwyd eich rhestr ar {0}. Bydd ar gael i’w gweld am 10 diwrnod.
+cf.authorities.label = Rydych wedi gwneud cais am restr o’r holl gyfrifon y mae gennych awdurdod i’w defnyddio.
+cf.authorities.next = Yr hyn sy’n digwydd nesaf
+cf.authorities.next.msg = Bydd eich rhestr ar gael ar y dudalen ‘Rheoli awdurdodau eich cyfrif’, fel arfer cyn pen 1 awr.
+
+# Contact Details
+cf.contact-details.title=Eich manylion cyswllt
+cf.contact-details.company-details=Manylion y cwmni
+cf.contact-details.name=Enw
+cf.contact-details.address=Cyfeiriad cyswllt
+cf.contact-details.email-address=Cyfeiriad e-bost
+cf.contact-details.report-change-link= lenwi ffurflen newid mewn amgylchiadau (yn agor tab newydd)
+cf.contact-details.report-change-pre-link-text=Dyma’r cyfeiriad cyswllt a roesoch i ni pan wnaethoch gofrestru ar gyfer eich rhif EORI. Gallwch
+cf.contact-details.report-change-post-link-text= i newid y cyfeiriad hwn.
+cf.contact-details.primary-email-address.h2=Prif gyfeiriad e-bost
+cf.contact-details.duty-deferment.h2=Manylion cyswllt gohirio tollau
+cf.contact-details.primary-email-address.text=Os ydych yn newid y cyfeiriad e-bost hwn, sicrhewch fod dal modd i bobl eraill yn eich cwmni gael y negeseuon sydd eu hangen arnynt. Byddwn yn defnyddio’r e-bost hwn er mwyn anfon amrywiaeth o hysbysiadau ynglŷn â’r Gwasanaeth Datganiadau Tollau.
+cf.contact-details.duty-deferment.text=Dim ond os bydd angen i ni gysylltu â chi ynghylch eich cyfrif y byddwn yn defnyddio’r manylion hyn.
+cf.contact-details.change-email-link=Newid eich cyfeiriad e-bost (yn agor tab newydd)
+cf.contact-details.account-number=Rhif y cyfrif
+cf.contact-details.view-change-link=Bwrw golwg drosto neu ei newid
+cf.contact-details.hidden-view-change-link=manylion cyswllt ar gyfer rhif y cyfrif {0}
+cf.contact-details.ni=(Gogledd Iwerddon)
+
+eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir
 
 # Duty deferment direct debit
 cf.duty-deferment.warning=Rhybudd
@@ -264,6 +329,7 @@ month.abbr.9 = Medi
 month.abbr.10 = Hyd
 month.abbr.11 = Tach
 month.abbr.12 = Rhag
+# ----------------------------------------------------------
 
 cf.duty-deferment.account.card.account.limit.dl=Terfyn y cyfrif:
 cf.duty-deferment.account.card.guarantee.limit.dl=Terfyn y warant:
@@ -291,82 +357,3 @@ timeout.message="Am resymau diogelwch, cewch eich allgofnodi o’r gwasanaeth hw
 timeout.keepAlive=Parhau i fod wedi’ch mewngofnodi
 timeout.signOut=Allgofnodi
 # ----------------------------------------------------------
-
-
-cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
-cf.search.authorities.p = Gallwch chwilio yn ôl rhif EORI ar gyfer cyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau.
-cf.search.authorities.link = Gofyn am bob cyfrif fel ffeil CSV
-cf.search.authorities.hint = Nodwch rif EORI yn dechrau gyda GB wedi’i ddilyn gan 12 digid. <br> Er enghraifft, '‘GB123456789000’'.</br>
-cf.search.authorities.h2 = Cais am yr holl gyfrifon
-cf.search.authorities.p2 = Gallwch wneud cais am restr o’r holl gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio ar ffurf ffeil CSV.
-
-cf.search.authorities.error.invalid = Nodwch rif EORI neu rif cyfrif yn y fformat cywir
-cf.search.authorities.error = Nodwch rif EORI neu rif cyfrif dilys
-cf.search.authorities.error.register-xi-eori = Mae’n rhaid i chi fod wedi cofrestru ar gyfer EORI XI er mwyn gwneud y chwiliad hwn
-cf.search.authorities.button = Chwilio
-cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
-cf.search.authorities.eori = rhif EORI yn dechrau gyda GB
-cf.search.authorities.eori.xi = rhif EORI sy’n dechrau gyda GB neu XI
-cf.search.authorities.eori.eu = rhif EORI
-cf.search.authorities.account = rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
-cf.search.authorities.result.title = Canlyniadau chwilio ar gyfer {0}
-cf.search.authorities.result.p1 = Yn dangos <strong>{0}</strong> o gyfrifon y mae gennych awdurdod sefydlog i’w defnyddio.
-cf.search.authorities.result.p2 = Caiff balansau eu diweddaru bob 24 awr.
-cf.search.authorities.balance.consent = Dim caniatâd i fwrw golwg dros y balans
-cf.search.authorities.result.inset1 = Nid yw’r busnes y mae’r rhif EORI hwn wedi’i gofrestru iddo wedi caniatáu i’w enw gael ei rannu.
-cf.search.authorities.result.inset2 = Os na ddangosir balans y cyfrif, mae’r perchennog wedi dewis ei gadw’n breifat. Gallwch ddefnyddio’r cyfrif o hyd.
-cf.search.authorities.result.no.result.p1 = Nid oes unrhyw ganlyniadau cyfatebol ar gyfer ''{0}''
-cf.search.authorities.result.no.result.p2 = Gallai hyn fod oherwydd y canlynol:
-cf.search.authorities.result.no.result.p3 = Rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
-cf.search.authorities.result.no.result.p4 = nid oes gennych yr awdurdod i ddefnyddio’r cyfrif gyda’r Gwasanaeth Datganiadau Tollau
-cf.search.authorities.result.eori.number = Rhif EORI
-cf.search.authorities.result.account.type = Math o gyfrif
-cf.search.authorities.result.account.number = Rhif y cyfrif
-cf.search.authorities.result.account.balance = Balans ar gael
-cf.search.authorities.result.company.name = Enw’r cwmni
-cf.search.authorities.result.balance.title = Pam na allaf weld balans cyfrif?
-cf.search.authorities.result.eori.number = Rhif EORI
-cf.search.authorities.result.xiEori.number = Rhif EORI XI
-cf.search.authorities.result.account.type = Math o gyfrif
-cf.search.authorities.result.account.number = Rhif y cyfrif
-cf.search.authorities.result.account.balance.available = Balans y cyfrif sydd ar gael
-cf.search.authorities.result.account.balance.available.text = Gan gynnwys SIVA, EPSS neu AEO.
-cf.search.authorities.result.guarantee.balance.available = Balans y warant sydd ar gael
-cf.search.authorities.result.balance.label = Gall y cwmni sy’n berchen ar y cyfrif ddewis i gadw’r balans yn breifat. Gallwch ddefnyddio’r cyfrif o hyd.
-cf.search.authorities.accountType.DutyDeferment = Cyfrif gohirio tollau
-cf.search.authorities.accountType.GeneralGuarantee = Cyfrif gwarant cyffredinol
-cf.search.authorities.accountType.CDSCash = Cyfrif arian parod
-
-cf.authorities.request.received.title = Cais wedi dod i law
-cf.authorities.request.received.panel.h1 = Cais wedi dod i law
-cf.authorities.request.received.p = Byddwn yn anfon e-bost at {0} pan fydd eich ffeil CSV yn barod i’w lawrlwytho. Gallwch gael mynediad ati o’r dudalen ‘'Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio'’, cyn pen 1 awr fel arfer.
-cf.authorities.request.received.link = Yn ôl i reoli awdurdodau eich cyfrif
-cf.authorities.notification-panel.p1=Mae’r rhestr o awdurdodau y gwnaethoch gais amdanynt ar gael i’w lawrlwytho:
-cf.authorities.notification-panel.a.gb-authority=Awdurdodau ym Mhrydain Fawr (CSV)
-cf.authorities.notification-panel.a.xi-authority=Awdurdodau yng Ngogledd Iwerddon (CSV)
-cf.authorities.notification-panel.p2=Crëwyd eich rhestr ar {0}. Bydd ar gael i’w gweld am 10 diwrnod.
-cf.authorities.label = Rydych wedi gwneud cais am restr o’r holl gyfrifon y mae gennych awdurdod i’w defnyddio.
-cf.authorities.next = Yr hyn sy’n digwydd nesaf
-cf.authorities.next.msg = Bydd eich rhestr ar gael ar y dudalen ‘Rheoli awdurdodau eich cyfrif’, fel arfer cyn pen 1 awr.
-
-cf.contact-details.title=Eich manylion cyswllt
-cf.contact-details.company-details=Manylion y cwmni
-cf.contact-details.name=Enw
-cf.contact-details.address=Cyfeiriad cyswllt
-cf.contact-details.email-address=Cyfeiriad e-bost
-
-cf.contact-details.report-change-link= lenwi ffurflen newid mewn amgylchiadau (yn agor tab newydd)
-cf.contact-details.report-change-pre-link-text=Dyma’r cyfeiriad cyswllt a roesoch i ni pan wnaethoch gofrestru ar gyfer eich rhif EORI. Gallwch
-cf.contact-details.report-change-post-link-text= i newid y cyfeiriad hwn.
-
-cf.contact-details.primary-email-address.h2=Prif gyfeiriad e-bost
-cf.contact-details.duty-deferment.h2=Manylion cyswllt gohirio tollau
-cf.contact-details.primary-email-address.text=Os ydych yn newid y cyfeiriad e-bost hwn, sicrhewch fod dal modd i bobl eraill yn eich cwmni gael y negeseuon sydd eu hangen arnynt. Byddwn yn defnyddio’r e-bost hwn er mwyn anfon amrywiaeth o hysbysiadau ynglŷn â’r Gwasanaeth Datganiadau Tollau.
-cf.contact-details.duty-deferment.text=Dim ond os bydd angen i ni gysylltu â chi ynghylch eich cyfrif y byddwn yn defnyddio’r manylion hyn.
-cf.contact-details.change-email-link=Newid eich cyfeiriad e-bost (yn agor tab newydd)
-cf.contact-details.account-number=Rhif y cyfrif
-cf.contact-details.view-change-link=Bwrw golwg drosto neu ei newid
-cf.contact-details.hidden-view-change-link=manylion cyswllt ar gyfer rhif y cyfrif {0}
-cf.contact-details.ni=(Gogledd Iwerddon)
-
-eoriNumber.error.format = Nodwch rif EORI yn y fformat cywir

@@ -97,7 +97,6 @@ cf.account.status.aria.AccountStatusPending = Pending Opening On CDS
 cf.duty-deferment.outOfDateBalance.heading = Out of date duty deferment balances
 cf.duty-deferment.outOfDateBalance.hiddenText = Warning of inaccurate duty deferment balances
 cf.duty-deferment.outOfDateBalance.chiefText = Balances include import declarations made using Customs Handling of Import and Export Freight (CHIEF) and the Customs Declarations Service (CDS).
-
 cf.duty-deferment.pending.info = You cannot use this account on CDS yet
 cf.duty-deferment.pending.text = You will be able to use this deferment account from the start date you gave us in your application.
 
@@ -188,7 +187,6 @@ cf.verify.your.email.p1=You need to verify the email address you use for the Cus
 cf.verify.your.email.p2=Your registered email address is <strong class="bold">{0}</string>.
 cf.verify.your.email.p3=If this is not the email address you want to use, you can also change it using this service.
 cf.verify.your.email.change.button=Verify or change email address
-
 cf.verify.your.email.need-to-verify=This will be the only email address we use for:
 cf.verify.your.email.list.1=updates on changes to the Customs Declaration Service
 cf.verify.your.email.list.2=urgent updates about goods in customs
@@ -264,11 +262,9 @@ cf.contact-details.company-details=Company details
 cf.contact-details.name=Name
 cf.contact-details.address=Contact address
 cf.contact-details.email-address=Email address
-
 cf.contact-details.report-change-pre-link-text=This is the contact address you gave us when you registered for your EORI number. You can
 cf.contact-details.report-change-link= fill in a change of circumstance form (opens in a new tab)
 cf.contact-details.report-change-post-link-text= to change this address.
-
 cf.contact-details.primary-email-address.h2=Primary email address
 cf.contact-details.duty-deferment.h2=Duty deferment contact details
 cf.contact-details.primary-email-address.text=If you change this email address, ensure other people in your company will still get the messages they need. We use this email to send various notifications about the Customs Declaration Service.
@@ -333,6 +329,7 @@ month.abbr.9 = Sep
 month.abbr.10 = Oct
 month.abbr.11 = Nov
 month.abbr.12 = Dec
+# ----------------------------------------------------------
 
 cf.duty-deferment.account.card.account.limit.dl=Account limit:
 cf.duty-deferment.account.card.guarantee.limit.dl=Guarantee limit:
@@ -350,6 +347,7 @@ cf.customs-financials-home.notification.multiple-c79 = You have new import VAT c
 cf.customs-financials-home.notification.multiple-postponed-vat = You have new postponed import VAT statements
 cf.customs-financials-home.notification.multiple-adjustments = You have new import adjustment statements
 cf.customs-financials-home.notification.multiple-requested-cash-statement=Your requested cash account transactions are available to view.
+
 cf.account.manage-account-authorities.title=Manage your account authorities
 
 # Timeout Messages
