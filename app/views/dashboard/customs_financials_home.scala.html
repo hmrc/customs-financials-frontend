@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import domain.BannerNavigationItem
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 @import views.html.components._
 @import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel}
 @import views.html.account_cards._
@@ -31,7 +33,7 @@
 
 @(
     model: FinancialsHomeModel,
-    maybeMessageBannerPartial: Option[HtmlFormat.Appendable]
+    maybeMessageBannerPartial: Option[Seq[ServiceNavigationItem]]
 )(
     implicit request: Request[_],
     messages: Messages,

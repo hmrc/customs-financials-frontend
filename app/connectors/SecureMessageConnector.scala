@@ -25,9 +25,9 @@ import play.api.{Logger, Logging}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.play.partials.{HeaderCarrierForPartialsConverter, HtmlPartial}
-import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
-import connectors.AccountLinksRequest.jsonBodyWritable
-import domain.SearchAuthoritiesRequest.jsonBodyWritable
+import domain.BannerNavigationItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -41,7 +41,7 @@ class SecureMessageConnector @Inject() (
 
   private val log = Logger(this.getClass)
 
-  def getMessageCountBanner(returnToUrl: String)(implicit request: RequestHeader): Future[Option[HtmlPartial]] = {
+  def getMessageCountBanner(returnToUrl: String)(implicit request: RequestHeader): Future[Option[Seq[ServiceNavigationItem]]] = {
     implicit val hc: HeaderCarrier = headerCarrierForPartialsConverter.fromRequestWithEncryptedCookie(request)
 
     val returnToQueryParameter = "return_to"
@@ -49,10 +49,10 @@ class SecureMessageConnector @Inject() (
     httpClient
       .get(url"${appConfig.customsSecureMessagingBannerEndpoint}")
       .transform(_.withQueryStringParameters(returnToQueryParameter -> returnToUrl))
-      .execute[HtmlPartial]
-      .flatMap {
-        case success @ HtmlPartial.Success(_, _) => Future.successful(Some(success))
-        case HtmlPartial.Failure(_, _)           => Future.successful(None)
+      .execute[Seq[ServiceNavigationItem]]
+      .flatMap { response =>
+        println("response: " + response)
+        Future.successful(Some(response))
       }
       .recover { exc =>
         log.error(s"Problem loading message banner partial: ${exc.getMessage}")

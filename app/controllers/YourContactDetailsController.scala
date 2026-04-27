@@ -109,7 +109,7 @@ class YourContactDetailsController @Inject() (
         companyName,
         address,
         email.toString,
-        messageBannerPartial.map(_.successfulContentOrEmpty)
+        messageBannerPartial
       )(request, messages, appConfig)
     )
   }

@@ -20,11 +20,12 @@ import actionbuilders.{AuthenticatedRequest, EmailAction, IdentifierAction}
 import config.AppConfig
 import connectors.{CustomsFinancialsSessionCacheConnector, CustomsManageAuthoritiesConnector, SecureMessageConnector}
 import domain.FileRole.{DutyDefermentStatement, PostponedVATAmendedStatement, StandingAuthority}
-import domain._
+import domain.*
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.api.{Logger, LoggerLike}
-import services._
+import services.*
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import uk.gov.hmrc.http.{GatewayTimeoutException, SessionId}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.HtmlPartial
@@ -110,7 +111,7 @@ class CustomsFinancialsHomeController @Inject() (
     eori: EORI,
     xiEori: Option[String],
     cdsAccountsList: Seq[CDSAccounts],
-    maybeBannerPartial: Option[HtmlPartial]
+    maybeBannerPartial: Option[Seq[ServiceNavigationItem]]
   )(implicit request: AuthenticatedRequest[AnyContent]): Future[Result] =
     for {
       notificationMessageKeys <- notificationService.fetchNotifications.map(getNotificationMessageKeys)
@@ -123,7 +124,7 @@ class CustomsFinancialsHomeController @Inject() (
       _                       <- sessionCacheConnector.storeSession(sessionId.value, accountLinks)
     } yield {
       val model = FinancialsHomeModel(eori, companyName, cdsAccountsList, notificationMessageKeys, accountLinks, xiEori)
-      Ok(customsHomeView(model, maybeBannerPartial.map(_.successfulContentOrEmpty)))
+      Ok(customsHomeView(model, maybeBannerPartial))
     }
 
   def createAccountLinks(sessionId: SessionId, cdsAccountsList: Seq[CDSAccounts]): Seq[AccountLink] = for {

@@ -15,6 +15,8 @@
  *@
 
 @import config.AppConfig
+@import domain.BannerNavigationItem
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukBackLink
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcTimeoutDialog
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.timeoutdialog.TimeoutDialog
@@ -29,6 +31,9 @@
 @import views.html.components.help_and_support_message
 @import views.html.helper.CSPNonce
 @import utils.Utils.emptyString
+
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation._
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
 
 @this(
         appConfig: AppConfig,
@@ -47,7 +52,7 @@
         deskpro: Boolean = true,
         welshToggle: Boolean = true,
         userResearchBanner: Boolean = true,
-        maybeMessageBannerPartial: Option[HtmlFormat.Appendable] = None,
+        maybeMessageBannerPartial: Option[Seq[ServiceNavigationItem]] = None,
         eori: Option[String] = None,
         companyName: Option[String] = None,
         xiEori: Option[String] = None
@@ -68,7 +73,6 @@
 
 @beforeContent = {
     @hmrcLanguageSelectHelper()
-    @if(maybeMessageBannerPartial.isDefined) { @maybeMessageBannerPartial }
     @if(eori.isDefined) { @eoriBanner(eori, companyName, xiEori.getOrElse(emptyString)) }
 
     @backLink.filter(_.nonEmpty).map { url =>
@@ -109,10 +113,17 @@
                         signOutUrl = Some(controllers.routes.LogoutController.logout.url),
                         accessibilityStatementUrl = Some("/accessibility-statement/customs-financials")
                     ),
+        serviceNavigation = Some(
+            ServiceNavigation(
+                serviceName = Some(messages("service.name")),
+                serviceUrl = Some(controllers.routes.CustomsFinancialsHomeController.index.url),
+                navigation = maybeMessageBannerPartial.get
+            ).withLanguageToggle()
+        ),
         backLink = None,
         templateOverrides = TemplateOverrides(
                                 additionalHeadBlock = Some(additionalHead),
-                                beforeContentBlock = if (maybeMessageBannerPartial.isDefined || eori.isDefined || backLink.isDefined) Some(beforeContent) else None
+                                beforeContentBlock = if (eori.isDefined || backLink.isDefined) Some(beforeContent) else None
                             ),
         banners = Banners(
                     phaseBanner = Some(PhaseBanner(tag = Some(Tag(content = Text("BETA"))), content = HtmlContent(phaseBannerContent))),

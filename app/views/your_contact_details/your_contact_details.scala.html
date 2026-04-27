@@ -16,6 +16,8 @@
 
 @import config.AppConfig
 @import domain.AccountLinkWithoutDate
+@import domain.BannerNavigationItem
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
@@ -40,7 +42,7 @@
     companyName: Option[String],
     companyAddress: CompanyAddress,
     email: String,
-    messageBannerPartial: Option[HtmlFormat.Appendable] = None
+    messageBannerPartial: Option[Seq[ServiceNavigationItem]] = None
 )(
     implicit request: Request[_],
     messages: Messages,
