@@ -16,7 +16,8 @@
 
 package utils
 
-import play.twirl.api.Html
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 
 object TestData {
 
@@ -123,30 +124,22 @@ object TestData {
   val TEST_KEY       = "test_key"
   val TEST_KEY_VALUE = "test_value"
 
-  lazy val TEST_MESSAGE_BANNER: Html = Html("""<html>
-      | <head></head>
-      | <body>
-      |  <div class="govuk-!-padding-bottom-3 govuk-!-padding-top-3 notifications-bar">
-      |   <ul class="govuk-list">
-      |    <li><a class="govuk-link" href="http://localhost:9876/customs/payment-records">Home</a></li>
-      |    <li class="notifications-bar-ul-li">
-      |      <a class="govuk-link" href="http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url">
-      |          Messages<span class="hmrc-notification-badge">2</span>
-      |      </a>
-      |   </li>
-      |    <li>
-      |      <a class="govuk-link" href="http://localhost:9876/customs/payment-records/your-contact-details">
-      |        Your contact details
-      |      </a>
-      |    </li>
-      |    <li>
-      |      <a class="govuk-link" href="http://localhost:9000/customs/manage-authorities">
-      |        Your account authorities
-      |      </a>
-      |    </li>
-      |   </ul>
-      |  </div>
-      |  <hr class="govuk-section-break govuk-section-break--visible" aria-hidden="true">
-      | </body>
-      |</html>""".stripMargin)
+  lazy val TEST_NAV_ITEMS: Seq[ServiceNavigationItem] = Seq(
+    ServiceNavigationItem(
+      content = Text("Home"),
+      href = "http://localhost:9876/customs/payment-records"
+    ),
+    ServiceNavigationItem(
+      content = Text("Messages"),
+      href = "http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url"
+    ),
+    ServiceNavigationItem(
+      content = Text("Your contact details"),
+      href = "http://localhost:9876/customs/payment-records/your-contact-details"
+    ),
+    ServiceNavigationItem(
+      content = Text("Your account authorities"),
+      href = "http://localhost:9000/customs/manage-authorities"
+    )
+  )
 }

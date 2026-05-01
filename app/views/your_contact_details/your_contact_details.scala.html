@@ -16,6 +16,7 @@
 
 @import config.AppConfig
 @import domain.AccountLinkWithoutDate
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.HmrcNewTabLink
 @import uk.gov.hmrc.hmrcfrontend.views.Aliases.NewTabLink
@@ -40,7 +41,7 @@
     companyName: Option[String],
     companyAddress: CompanyAddress,
     email: String,
-    messageBannerPartial: Option[HtmlFormat.Appendable] = None
+    messageBannerPartial: Option[Seq[ServiceNavigationItem]] = None
 )(
     implicit request: Request[_],
     messages: Messages,
@@ -51,7 +52,8 @@
     pageTitle = Some(messages("cf.contact-details.title")),
     backLink = Some(routes.CustomsFinancialsHomeController.index.url),
     maybeMessageBannerPartial = messageBannerPartial,
-    helpAndSupport = false
+    helpAndSupport = false,
+    showNavBar = true
 ) {
 
     @h1("cf.contact-details.title", classes = "govuk-heading-xl", id=Some("contact-heading"))

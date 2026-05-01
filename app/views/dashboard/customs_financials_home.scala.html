@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 @import views.html.components._
 @import viewmodels.{FinancialsHomeModel, DutyDefermentAccountsViewModel}
 @import views.html.account_cards._
@@ -31,7 +32,7 @@
 
 @(
     model: FinancialsHomeModel,
-    maybeMessageBannerPartial: Option[HtmlFormat.Appendable]
+    maybeMessageBannerPartial: Option[Seq[ServiceNavigationItem]]
 )(
     implicit request: Request[_],
     messages: Messages,
@@ -39,10 +40,11 @@
 )
 
 @layout(pageTitle = Some(messages("cf.customs-financials-home.title")),
-        maybeMessageBannerPartial = maybeMessageBannerPartial,
         eori = Some(model.eori),
+        maybeMessageBannerPartial = maybeMessageBannerPartial,
         companyName = model.companyName,
-        xiEori = model.xiEori) {
+        xiEori = model.xiEori,
+        showNavBar = true) {
 
     @h1("cf.customs-financials-home.title", classes = "govuk-heading-xl govuk-!-margin-bottom-4")
 

@@ -29,8 +29,7 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
-import uk.gov.hmrc.play.partials.HtmlPartial
-import utils.TestData.{TEST_ID, TEST_MESSAGE_BANNER}
+import utils.TestData.TEST_NAV_ITEMS
 
 import scala.concurrent.{ExecutionContext, Future}
 import java.net.URL
@@ -70,7 +69,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
         .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
       when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
-        .thenReturn(Future.successful(Some(HtmlPartial.Success(Some(TEST_ID), TEST_MESSAGE_BANNER))))
+        .thenReturn(Future.successful(Some(TEST_NAV_ITEMS)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionId)
