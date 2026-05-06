@@ -20,7 +20,6 @@ import config.AppConfig
 import domain.{AccountLinkWithoutDate, CompanyAddress}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
@@ -28,8 +27,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.*
 import utils.{MustMatchers, SpecBase}
 import views.html.your_contact_details.your_contact_details
-import play.twirl.api.HtmlFormat
-import utils.TestData.TEST_MESSAGE_BANNER
+import utils.TestData.TEST_NAV_ITEMS
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 
 class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
@@ -77,10 +76,8 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
     }
 
     "display the message banner partial when provided" in new Setup {
-      val pageView: Document        = view(Some(HtmlFormat.fill(Seq(TEST_MESSAGE_BANNER))))
-      val bannerComponent: Elements = pageView.getElementsByClass("notifications-bar")
 
-      bannerComponent.size() must be > 0
+      val pageView: Document = view(Some(TEST_NAV_ITEMS))
 
       assert(pageView.containsLinkWithText("http://localhost:9876/customs/payment-records", "Home"))
       assert(pageView.containsLink("http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url"))
@@ -117,7 +114,7 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
     val app: Application                                      = application().build()
     implicit val appConfig: AppConfig                         = app.injector.instanceOf[AppConfig]
 
-    def view(messageBannerPartial: Option[HtmlFormat.Appendable] = None): Document =
+    def view(messageBannerPartial: Option[Seq[ServiceNavigationItem]] = None): Document =
       Jsoup.parse(
         app.injector
           .instanceOf[your_contact_details]

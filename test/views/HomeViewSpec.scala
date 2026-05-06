@@ -22,14 +22,15 @@ import domain.{
 }
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.scalatest.matchers.must.Matchers.mustBe
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.running
-import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.play.partials.HtmlPartial
+import uk.gov.hmrc.govukfrontend.views.viewmodels.servicenavigation.ServiceNavigationItem
 import utils.SpecBase
+import utils.TestData.TEST_NAV_ITEMS
 import viewmodels.FinancialsHomeModel
 import views.html.dashboard.customs_financials_home
 
@@ -65,10 +66,29 @@ class HomeViewSpec extends SpecBase {
     "banner links" when {
 
       "display the message banner partial" in new Setup {
-        private val bannerHtmlPartial = HtmlPartial.Success(None, Html("<b id='banner-html'>Banner html</b>"))
 
         running(app) {
-          page(modelWithAgentAccess, Some(bannerHtmlPartial.content)).containsElementById("banner-html")
+          val doc = page(modelWithAgentAccess, Some(TEST_NAV_ITEMS))
+
+          doc.containsLinkWithText(
+            "http://localhost:9876/customs/payment-records",
+            "Home"
+          ) mustBe true
+
+          doc.containsLinkWithText(
+            "http://localhost:9842/customs/secure-messaging/inbox?return_to=test_url",
+            "Messages"
+          ) mustBe true
+
+          doc.containsLinkWithText(
+            "http://localhost:9876/customs/payment-records/your-contact-details",
+            "Your contact details"
+          ) mustBe true
+
+          doc.containsLinkWithText(
+            "http://localhost:9000/customs/manage-authorities",
+            "Your account authorities"
+          ) mustBe true
         }
       }
 
@@ -223,7 +243,7 @@ class HomeViewSpec extends SpecBase {
 
     val modelWithAgentAccess: FinancialsHomeModel = FinancialsHomeModel(eori, companyName, accounts, Nil, accountLinks)
 
-    def page(viewModel: FinancialsHomeModel, maybeBannerPartial: Option[HtmlFormat.Appendable]): Document =
+    def page(viewModel: FinancialsHomeModel, maybeBannerPartial: Option[Seq[ServiceNavigationItem]]): Document =
       Jsoup.parse(app.injector.instanceOf[customs_financials_home].apply(viewModel, maybeBannerPartial).body)
 
     override def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]

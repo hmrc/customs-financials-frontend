@@ -32,9 +32,30 @@ import utils.MustMatchers
 class PartialHomeViewSpec extends SpecBase with MustMatchers {
 
   "Customs Financials Partial Home View" should {
-    "display header as a link text" in new Setup {
+    "display GOV.UK header as a link text" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK Manage import duties and VAT accounts"
+        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK"
+      }
+    }
+
+    "display service name as a link text" in new Setup {
+      running(app) {
+        view
+          .select(".govuk-service-navigation__service-name .govuk-service-navigation__link")
+          .text mustBe "Manage import duties and VAT accounts"
+      }
+    }
+
+    "display language toggle" in new Setup {
+      running(app) {
+
+        val languageNav = view.select(".hmrc-service-navigation-language-select")
+        languageNav.select(".govuk-visually-hidden").text mustBe "– Newid yr iaith i’r Gymraeg"
+
+        val languageItems = view.getElementsByClass("hmrc-service-navigation-language-select__list-item")
+        languageItems.get(0).text() mustBe "ENG"
+        languageItems.get(1).select("a").first().ownText() mustBe "CYM"
+
       }
     }
 

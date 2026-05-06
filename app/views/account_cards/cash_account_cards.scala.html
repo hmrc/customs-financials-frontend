@@ -43,7 +43,7 @@
             @balanceAvailable(account.status, "available-account-balance",
             account.balances.AvailableAccountBalance.getOrElse(0.0))
 
-            <p class="govuk-body custom-card__footer">
+            <p class="govuk-body card-footer__links">
                 <a id="cash-account-@{s"${account.number}"}" class="govuk-link govuk-!-margin-right-2"
                 href="@appConfig.cashAccountUrl">
                 @messages("cf.customs-financials-home.cash-account.link")
