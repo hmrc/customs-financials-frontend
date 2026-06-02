@@ -733,7 +733,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .build()
 
         validateRedirectToOnSearchAndThen(xiEORI, gbUserApp) { (result, html) =>
-          status(result) shouldBe BAD_REQUEST
+          status(result)                                                                            shouldBe BAD_REQUEST
           html.text().contains(messages(gbUserApp)("cf.search.authorities.error.register-xi-eori")) shouldBe true
         }
       }
@@ -765,7 +765,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
           .build()
 
         validateRedirectToOnNoSearchResultsAndThen(xiEORI, euUserApp) { (result, html) =>
-          status(result)                                                                                   shouldBe OK
+          status(result)                                                                            shouldBe OK
           html.text().contains(messages(euUserApp)("cf.search.authorities.error.register-xi-eori")) shouldBe false
         }
       }
