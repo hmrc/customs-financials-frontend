@@ -715,7 +715,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
         when(mockDataStoreService.getXiEori(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
-        val gbUserApp = baseApp
+        val gbUserApp = new GuiceApplicationBuilder()
           .overrides(
             inject
               .bind[IdentifierAction]
@@ -724,12 +724,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
                   override lazy val newUser: SignedInUser = SignedInUser(gbEORI, Seq.empty, None)
                 }
               ),
+            api.inject.bind[Metrics].toInstance(new FakeMetrics),
             inject.bind[ApiService].toInstance(mockApiService),
             inject.bind[DataStoreService].toInstance(mockDataStoreService),
             inject.bind[SdesConnector].toInstance(mockSdesConnector),
             inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
           )
-          .configure("features.new-agent-view-enabled" -> false)
+          .configure("auditing.enabled" -> "false", "features.new-agent-view-enabled" -> false)
           .build()
 
         validateRedirectToOnSearchAndThen(xiEORI, gbUserApp) { (result, html) =>
@@ -747,7 +748,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
         when(mockApiService.searchAuthorities(any, any)(any))
           .thenReturn(Future.successful(Left(NoAuthorities)))
 
-        val euUserApp = baseApp
+        val euUserApp = new GuiceApplicationBuilder()
           .overrides(
             inject
               .bind[IdentifierAction]
@@ -756,12 +757,13 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
                   override lazy val newUser: SignedInUser = SignedInUser("FR123456789012", Seq.empty, None)
                 }
               ),
+            api.inject.bind[Metrics].toInstance(new FakeMetrics),
             inject.bind[ApiService].toInstance(mockApiService),
             inject.bind[DataStoreService].toInstance(mockDataStoreService),
             inject.bind[SdesConnector].toInstance(mockSdesConnector),
             inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
           )
-          .configure("features.new-agent-view-enabled" -> false)
+          .configure("auditing.enabled" -> "false", "features.new-agent-view-enabled" -> false)
           .build()
 
         validateRedirectToOnNoSearchResultsAndThen(xiEORI, euUserApp) { (result, html) =>
