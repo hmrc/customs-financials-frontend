@@ -709,15 +709,64 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       }
     "return SEE_OTHER and redirect to /authorities-search-results " +
       "and /authorities-search-results should return BAD_REQUEST " +
-      "with correct error msg when agent is not registered for his own XI EORI " +
+      "with correct error msg when GB EORI agent is not registered for his own XI EORI " +
       "and search authority using trader's XI EORI" in new Setup {
 
         when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
         when(mockDataStoreService.getXiEori(any[HeaderCarrier])).thenReturn(Future.successful(None))
 
-        validateRedirectToOnSearchAndThen(xiEORI, app) { (result, html) =>
+        val gbUserApp = baseApp
+          .overrides(
+            inject
+              .bind[IdentifierAction]
+              .toInstance(
+                new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(Seq.empty[EoriHistory]) {
+                  override lazy val newUser: SignedInUser = SignedInUser(gbEORI, Seq.empty, None)
+                }
+              ),
+            inject.bind[ApiService].toInstance(mockApiService),
+            inject.bind[DataStoreService].toInstance(mockDataStoreService),
+            inject.bind[SdesConnector].toInstance(mockSdesConnector),
+            inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
+          )
+          .configure("features.new-agent-view-enabled" -> false)
+          .build()
+
+        validateRedirectToOnSearchAndThen(xiEORI, gbUserApp) { (result, html) =>
           status(result) shouldBe BAD_REQUEST
-          html.text().contains(messages(app)("cf.search.authorities.error.register-xi-eori"))
+          html.text().contains(messages(gbUserApp)("cf.search.authorities.error.register-xi-eori")) shouldBe true
+        }
+      }
+
+    "return SEE_OTHER and redirect to /authorities-search-results " +
+      "and /authorities-search-results should NOT show register-xi-eori error " +
+      "when EU (non-GB) EORI agent has no associated XI EORI and searches using a trader's XI EORI" in new Setup {
+
+        when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq()))
+        when(mockDataStoreService.getXiEori(any[HeaderCarrier])).thenReturn(Future.successful(None))
+        when(mockApiService.searchAuthorities(any, any)(any))
+          .thenReturn(Future.successful(Left(NoAuthorities)))
+
+        val euUserApp = baseApp
+          .overrides(
+            inject
+              .bind[IdentifierAction]
+              .toInstance(
+                new FakeIdentifierAction(stubPlayBodyParsers(NoMaterializer))(Seq.empty[EoriHistory]) {
+                  override lazy val newUser: SignedInUser = SignedInUser("FR123456789012", Seq.empty, None)
+                }
+              ),
+            inject.bind[ApiService].toInstance(mockApiService),
+            inject.bind[DataStoreService].toInstance(mockDataStoreService),
+            inject.bind[SdesConnector].toInstance(mockSdesConnector),
+            inject.bind[QueryCacheRepository].toInstance(mockQueryCache)
+          )
+          .configure("features.new-agent-view-enabled" -> false)
+          .build()
+
+        validateRedirectToOnNoSearchResultsAndThen(xiEORI, euUserApp) { (result, html) =>
+          status(result)                                                                                   shouldBe OK
+          html.text().contains(messages(euUserApp)("cf.search.authorities.error.register-xi-eori")) shouldBe false
         }
       }
 

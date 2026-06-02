@@ -231,7 +231,7 @@ class AuthorizedToViewController @Inject() (
             xiAuthUrl
           )(request, messages, appConfig)
 
-        case (_, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) =>
+        case (eori, _, assocXiEori) if assocXiEori.isEmpty && isXIEori(searchQuery) && eori.toUpperCase.startsWith("GB") =>
           displayErrorView(query, "cf.search.authorities.error.register-xi-eori", fileExists, authUrl, xiAuthUrl)(
             request,
             messages,
