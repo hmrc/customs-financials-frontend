@@ -115,7 +115,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "euEoriEnabled" should {
     "return correct value" in new Setup {
-      appConfig.isEUEoriEnabled shouldBe false
+      appConfig.isEUEoriEnabled shouldBe true
     }
   }
 

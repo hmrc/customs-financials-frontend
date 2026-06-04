@@ -588,7 +588,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
       when(mockSdesConnector.getAuthoritiesCsvFiles(any)(any)).thenReturn(Future.successful(Seq.empty))
       running(app) {
         val request =
-          fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "ERROR")
+          fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url).withFormUrlEncodedBody("value" -> "123")
 
         val result = route(app, request).value
         status(result) shouldBe BAD_REQUEST
@@ -617,7 +617,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         running(newApp) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "ERROR")
+            .withFormUrlEncodedBody("value" -> "123")
 
           val result = route(newApp, request).value
           val html   = Jsoup.parse(contentAsString(result))
@@ -657,7 +657,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         running(newApp) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "ERROR")
+            .withFormUrlEncodedBody("value" -> "123")
 
           val result = route(newApp, request).value
           val html   = Jsoup.parse(contentAsString(result))
@@ -696,7 +696,7 @@ class AuthorizedToViewControllerSpec extends SpecBase with ShouldMatchers {
 
         running(newApp) {
           val request = fakeRequest(POST, routes.AuthorizedToViewController.onSubmit().url)
-            .withFormUrlEncodedBody("value" -> "ERROR")
+            .withFormUrlEncodedBody("value" -> "123")
 
           val result = route(newApp, request).value
           val html   = Jsoup.parse(contentAsString(result))
