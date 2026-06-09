@@ -41,7 +41,7 @@ class YourContactDetailsViewSpec extends SpecBase with MustMatchers {
 
     "display second header text" in new Setup {
       running(app) {
-        view().getElementsByTag("h2").text mustBe "Help make GOV.UK better " +
+        view().getElementsByTag("h2").text mustBe "You may receive a voucher for feedback " +
           "Company details Primary email address Duty deferment contact details Support links"
       }
     }
