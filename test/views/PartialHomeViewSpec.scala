@@ -34,7 +34,7 @@ class PartialHomeViewSpec extends SpecBase with MustMatchers {
   "Customs Financials Partial Home View" should {
     "display GOV.UK header as a link text" in new Setup {
       running(app) {
-        view.getElementsByClass("govuk-header__link").text mustBe "GOV.UK"
+        view.getElementsByClass("govuk-header__homepage-link").text mustBe "GOV.UK"
       }
     }
 
