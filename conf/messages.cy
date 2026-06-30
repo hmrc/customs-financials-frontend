@@ -96,7 +96,6 @@ cf.account.status.aria.AccountStatusPending=Yn aros i gael ei agor ar y Gwasanae
 # Duty Deferment Out of date balances message
 cf.duty-deferment.outOfDateBalance.heading = Balansau gohirio tollau sydd heb eu diweddaru
 cf.duty-deferment.outOfDateBalance.hiddenText = Rhybudd o falansau gohirio tollau anghywir
-cf.duty-deferment.outOfDateBalance.chiefText = Mae’r balansau’n cynnwys datganiadau mewnforio a wnaed gan ddefnyddio system y Tollau ar gyfer Trin Nwyddau a Gaiff eu Mewnforio a’u Hallforio (CHIEF) neu’r Gwasanaeth Datganiadau Tollau (CDS).
 cf.duty-deferment.pending.info = Ni allwch ddefnyddio’r cyfrif hwn ar y Gwasanaeth Datgan Tollau (CDS) eto
 cf.duty-deferment.pending.text = Byddwch yn gallu defnyddio’r cyfrif gohirio hwn o’r dyddiad dechrau y rhoesoch i ni yn eich cais.
 
