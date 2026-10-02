@@ -101,7 +101,10 @@ class YourContactDetailsController @Inject() (
                 )
 
       accountLinks         <- sessionCacheConnector.getAccontLinks(localSessionId.value)
-      messageBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
+      messageBannerPartial <- secureMessageConnector.getMessageCountBanner(
+                                returnToUrl,
+                                activeItem = Some("contact-details")
+                              )
     } yield Ok(
       view(
         request.user.eori,
