@@ -69,7 +69,10 @@ class CustomsFinancialsHomeController @Inject() (
 
     val result = for {
       _                  <- auditingService.viewAccount(request.user)
-      maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(returnToUrl)
+      maybeBannerPartial <- secureMessageConnector.getMessageCountBanner(
+                              returnToUrl,
+                              activeItem = Some("home")
+                            )
       xiEori             <- dataStoreService.getXiEori
       allAccounts        <- getAllAccounts(eori, xiEori)
       page               <- if (allAccounts.nonEmpty) {
@@ -117,7 +120,7 @@ class CustomsFinancialsHomeController @Inject() (
       notificationMessageKeys <- notificationService.fetchNotifications.map(getNotificationMessageKeys)
       companyName             <- dataStoreService.getOwnCompanyName
       sessionId                = hc.sessionId.getOrElse {
-                                   log.error("Missing SessionID");
+                                   log.error("Missing SessionID")
                                    SessionId("Missing Session ID")
                                  }
       accountLinks             = createAccountLinks(sessionId, cdsAccountsList)

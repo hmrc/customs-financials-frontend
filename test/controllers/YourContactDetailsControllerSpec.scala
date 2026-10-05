@@ -29,6 +29,7 @@ import services.{ApiService, DataStoreService}
 import uk.gov.hmrc.auth.core.retrieve.Email
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import play.api.mvc.RequestHeader
 import utils.TestData.TEST_NAV_ITEMS
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,7 +49,7 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
-      when(mockSecureMessageConnector.getMessageCountBanner(any)(any)).thenReturn(Future.successful(None))
+      when(mockSecureMessageConnector.getMessageCountBanner(any, any)(any)).thenReturn(Future.successful(None))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionId)
@@ -68,8 +69,10 @@ class YourContactDetailsControllerSpec extends SpecBase with ShouldMatchers {
       when(mockSessionCache.getSessionId(any[String])(any[HeaderCarrier]))
         .thenReturn(Future.successful(Option(HttpResponse(OK, sessionId))))
 
-      when(mockSecureMessageConnector.getMessageCountBanner(eqTo(returnUrl))(any))
-        .thenReturn(Future.successful(Some(TEST_NAV_ITEMS)))
+      when(
+        mockSecureMessageConnector
+          .getMessageCountBanner(any[String], any[Option[String]])(any[RequestHeader])
+      ).thenReturn(Future.successful(Some(TEST_NAV_ITEMS)))
 
       val request: FakeRequest[AnyContentAsEmpty.type] =
         fakeRequestWithSession(GET, routes.YourContactDetailsController.onPageLoad().url, sessionId)
