@@ -1,148 +1,166 @@
-# Customs Financials Frontend
+# customs-financials-frontend
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Coverage](https://img.shields.io/badge/test_coverage-90-green.svg)](/target/scala-3.3.5/scoverage-report/index.html) [![Accessibility](https://img.shields.io/badge/WCAG2.2-AA-purple.svg)](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
+## About
+This public-facing microservice is part of the CDS Financials service. It is designed to work in tandem with the [customs-financials-api](https://github.com/hmrc/customs-financials-api) back-end service.
 
-A micro-frontend service - This service provides a hub/entry point to access the different financial services for HMRC customs.
+It is the hub and entry point for traders to access the different HMRC customs financial services (cash account, duty deferment, guarantee account, financial documents and account authorities). It also lets traders search for accounts they have authority to use and view their contact details.
 
-This service is built following GDS standards to [WCAG 2.2 AA](https://www.gov.uk/service-manual/helping-people-to-use-your-service/understanding-wcag)
-
-We use the [GOV.UK design system](https://design-system.service.gov.uk/) to ensure consistency and compliance through the project
-
-This applications lives in the "public" zone. It integrates with:
-
-Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via the [Customs Financials API](https://github.com/hmrc/customs-financials-api)
-
-Secure Document Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
-
-## Running the service
-
-*From the root directory*
-
-`sbt run` - starts the service locally
-
-`sbt runAllChecks` - Will run all checks required for a successful build
-
-Default service port on local - 9876
-
-### Required dependencies
-
-There are a number of dependencies required to run the service.
-
-The easiest way to get started with these is via the service manager CLI - you can find the installation guide [here](https://docs.tax.service.gov.uk/mdtp-handbook/documentation/developer-set-up/set-up-service-manager.html)
-
-| Command                                          | Description |
-| --------                                         | ------- |
-| `sm2 --start CUSTOMS_FINANCIALS_ALL`             | Runs all dependencies |
-| `sm2 -s`                                         | Shows running services |
-| `sm2 --stop CUSTOMS_FINANCIALS_FRONTEND` | Stop the micro service  |
-| `sbt run`                                        | (from root dir) to compile the current service with your changes |
-
-### Runtime Dependencies
-
-* `AUTH`
-* `AUTH_LOGIN_STUB`
-* `AUTH_LOGIN_API`
-* `BAS_GATEWAY`
-* `CA_FRONTEND`
-* `SSO`
-* `USER_DETAILS`
-* `CUSTOMS_FINANCIALS_API`
-* `CUSTOMS_FINANCIALS_HODS_STUB`
-* `CUSTOMS_FINANCIALS_SDES_STUB`
-* `CONTACT_FRONTEND`
+It integrates with:
+- Secure Payments Service (SPS) / Enterprise Tax Management Platform (ETMP) via [customs-financials-api](https://github.com/hmrc/customs-financials-api)
+- Secure Data Exchange Service (SDES) bulk data API via the [SDES proxy](https://github.com/hmrc/secure-data-exchange-proxy)
 
 
-### Login enrolments
+| Key                             | Value                                                                                                                                                                       |
+|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Digital service                 | CDS Financials                                                                                                                                                              |
+| Local port                      | `9876`                                                                                                                                                                      |
+| Base path                       | `/customs/payment-records`                                                                                                                                                  |
+| Back-end                        | [customs-financials-api](https://github.com/hmrc/customs-financials-api) (port `9878`)                                                                                      |
+| Acceptance tests                | [customs-financials-acceptance-tests](https://github.com/hmrc/customs-financials-acceptance-tests)                                                                          |
+| Performance tests               | [customs-financials-performance-tests](https://github.com/hmrc/customs-financials-performance-tests)                                                                        |
+| Stubs used in Local and Staging | [customs-financials-hods-stub](https://github.com/hmrc/customs-financials-hods-stub), [customs-financials-sdes-stub](https://github.com/hmrc/customs-financials-sdes-stub) |
 
-The service can be accessed by using below enrolments and with below sample EORI numbers, via http://localhost:9949/auth-login-stub/gg-sign-in (on local) or https://<host:port>/auth-login-stub/gg-sign-in on DEV/QA/STAGING
+## How to Run this Service
 
-Redirect URL - `/customs/payment-records`
+### Prerequisites
+Use [Service Manager](#service-manager-profiles) to start all the services that CDS Financials depends on:
+```bash
+sm2 --start CUSTOMS_FINANCIALS_ALL
+```
 
-| Enrolment Key	| Identifier Name | Identifier Value |
-| -------- | ------- | ------- |
-| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982000` |
-| `HMRC-CUS-ORG` | `EORINumber`| `GB744638982001` |
+### Running the service locally
+To run this service from source (for example, to test your own changes), stop the instance started by Service Manager and run it with sbt:
+```bash
+sm2 --stop CUSTOMS_FINANCIALS_FRONTEND
+sbt run
+```
 
-## Testing
+The service starts on port `9876`. To access it, sign in through the auth login stub at http://localhost:9949/auth-login-stub/gg-sign-in with one of the [required enrolments](#enrolment-required), and set the redirect URL to `/customs/payment-records`.
 
-The minimum requirement for test coverage is 90%. Builds will fail when the project drops below this threshold.
+## How to Test this Service
 
-### Unit Tests
+### Local
 
-| Command    | Description |
-| -------- | ------- |
-| `sbt test` | Runs unit tests locally |
-| `sbt "test:testOnly *TEST_FILE_NAME*"` | runs tests for a single file |
+#### Unit tests
+```bash
+sbt test
+```
 
-### Coverage
+To run the tests in a single file:
+```bash
+sbt "testOnly *TEST_FILE_NAME*"
+```
 
-| Command    | Description |
-| -------- | ------- |
-| `sbt clean coverage test coverageReport` | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
+#### Pre-push check
+The `runAllChecks` sbt alias compiles the code, runs the unit and integration (`it/test`) tests, checks formatting and code style, and produces the coverage report.
+It is good practice to run it just before pushing to GitHub.
 
-## Available Routes
+```bash
+sbt runAllChecks
+```
 
-You can find a list of microservice specific routes here - `customs-financials-frontend/conf/app.routes`
+The minimum requirement for statement coverage is 90%. Builds fail when the project drops below this threshold. The coverage report is written to `target/scala-3.3.4/scoverage-report/index.html`.
 
-Application entrypoint:  `/customs/payment-records` 
+#### Acceptance tests (smoke and regression)
+The acceptance tests for this service are in [customs-financials-acceptance-tests](https://github.com/hmrc/customs-financials-acceptance-tests). For information about how to run them, and which environments they run against, see its [README](https://github.com/hmrc/customs-financials-acceptance-tests#readme).
 
-## Feature Switches
+#### Performance tests
+The performance tests for this service are in [customs-financials-performance-tests](https://github.com/hmrc/customs-financials-performance-tests). For information about how to run them, and which environments they run against, see its [README](https://github.com/hmrc/customs-financials-performance-tests#readme).
 
-> ### Caution!
-> There's a risk of WIP features being exposed in production! 
-> **Don't** enable features in `application.conf`, as this will apply globally by default
+### Manual Testing in QA and Staging
+After a successful deployment, manual testing is performed in the QA and/or Staging environments by signing in through the auth login stub (`https://<host>/auth-login-stub/gg-sign-in`) with one of the [required enrolments](#enrolment-required).
+
+## Service Catalogue
+- [customs-financials-frontend in the MDTP Catalogue](https://catalogue.tax.service.gov.uk/repositories/customs-financials-frontend)
+
+## Jenkins Pipeline
+- The front-end build and deployment jobs are listed on the [MDTP Catalogue page](https://catalogue.tax.service.gov.uk/repositories/customs-financials-frontend) for this repository.
+- The acceptance test Jenkins jobs (smoke and regression) are listed in the [customs-financials-acceptance-tests README](https://github.com/hmrc/customs-financials-acceptance-tests#readme).
+- The performance tests run weekly in the [customs-financials-performance-tests Jenkins job](https://performance.tools.staging.tax.service.gov.uk/job/Borders%20and%20Trade%20Live%20Services/job/CDS%20Financials/job/customs-financials-performance-tests/), defined in [performance-test-jobs](https://github.com/hmrc/performance-test-jobs/blob/main/jobs/live/bordersAndTrade_live_services.groovy).
+
+## Service Manager Profiles
+These profiles are defined in [service-manager-config](https://github.com/hmrc/service-manager-config).
+
+| Profile                  | Use                                         | Services started                                                                                                                                                                                                         |
+|--------------------------|---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CUSTOMS_FINANCIALS_ALL` | Running and developing this service locally | Includes `CUSTOMS_FINANCIALS_FRONTEND`, `CUSTOMS_FINANCIALS_API`, `CUSTOMS_FINANCIALS_HODS_STUB`, `CUSTOMS_FINANCIALS_SDES_STUB`, `AUTH`, `AUTH_LOGIN_STUB`, `AUTH_LOGIN_API`, `BAS_GATEWAY`, `CA_FRONTEND`, `SSO`, `USER_DETAILS`, `CONTACT_FRONTEND`. See [service-manager-config](https://github.com/hmrc/service-manager-config/blob/main/profiles.json) |
+
+## Endpoints
+
+All paths are relative to `/customs/payment-records` and need an authenticated user with the [required enrolment](#enrolment-required). The full list is in `conf/app.routes`.
+
+| Method | Path                             | Purpose                                                                    | Sample request (query / form body) | Response                                               |
+|--------|----------------------------------|----------------------------------------------------------------------------|------------------------------------|--------------------------------------------------------|
+| GET    | `/`                              | Service entry point: the customs financials home page with account tiles   | –                                  | `200`<br>Accounts unavailable: `303` → `/account-unavailable` |
+| GET    | `/account-unavailable`           | Home page shown when account details cannot be retrieved                   | –                                  | `200`                                                  |
+| GET    | `/parts-of-service-unavailable`  | Home page shown without accounts                                           | –                                  | `200`                                                  |
+| GET    | `/authority-to-use`              | Search for accounts you have authority to use                              | –                                  | `200`                                                  |
+| POST   | `/authority-to-use`              | Submit an EORI or account number search                                    | `value=GB744638982000`             | `303` → `/authorities-search-results`<br>Invalid: `400` |
+| GET    | `/authorities-search-results`    | Results of the authorities search                                          | –                                  | `200`<br>No results: `303` → `/authorities-no-results` |
+| GET    | `/authorities-no-results`        | No matching authorities found                                              | –                                  | `200`                                                  |
+| GET    | `/request-authorities-csv`       | Request a CSV of the authorities granted to you                            | –                                  | `200`                                                  |
+| GET    | `/your-contact-details`          | View your contact details                                                  | –                                  | `200`                                                  |
+| GET    | `/verify-your-email`             | Shown when the user's email address is unverified                          | –                                  | `200`                                                  |
+| GET    | `/undeliverable-email`           | Shown when the user's email address is undeliverable                       | –                                  | `200`                                                  |
+| GET    | `/not-subscribed-for-cds`        | Shown when the user is not subscribed to CDS                               | –                                  | `200`<br>Not signed in: `303` → `bas-gateway` sign-in  |
+| GET    | `/help/accessibility`            | Accessibility statement                                                    | –                                  | `200`                                                  |
+| GET    | `/logout`                        | Sign out and go to the feedback survey                                     | –                                  | `303` → `bas-gateway` sign-out                         |
+| GET    | `/logout-no-survey`              | Sign out without the feedback survey                                       | –                                  | `303` → `bas-gateway` sign-out                         |
+
+## Enrolment Required
+To use the service, sign in through the auth login stub with the `HMRC-CUS-ORG` enrolment and one of these sample EORI numbers:
+
+| Enrolment Key  | Identifier Name | Identifier Value |
+|----------------|-----------------|------------------|
+| `HMRC-CUS-ORG` | `EORINumber`    | `GB744638982000` |
+| `HMRC-CUS-ORG` | `EORINumber`    | `GB744638982001` |
+
+## Developer Notes
+
+### Feature Flags
+
+Feature flags are used appropriately on different envs and could be updated in customs-cash-account-frontend.yaml on pertinent env
 
 ### Enable features
-| Command    | Description |
-| -------- | ------- |
+| Command                                       | Description                                        |
+|-----------------------------------------------|----------------------------------------------------|
 | `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
+
+Feature switches can be enabled per-environment via the `app-config-<env>` project in customs-cash-account-frontend.conf/.yaml
 
 ### Available feature flags
-| Flag    | Description |
-| -------- | ------- |
-| `fixed-system-time` | Enable the fixed datetime for DateTimeService by enabling the stub data for current and requested statements. It is only enabled in Development env |
-| `xi-eori-enabaled` | Enable the XI EORI related api calls |
-| `cash-account-v2-enabled` | Enable the new cash account design |
-| `home-page-links-enabled` | Control the display of 'Account authorities' and 'Find accounts you have authority to use' links. Must be false for all the env |
-| `authorities-notification-panel-enabled` | Enable display of notifications panel |
-| `eu-eori-enabled` | Enable the EU EORI feature |
 
-Different features can be enabled / disabled per-environment via the `app-config-<env>` project by setting `features.some-feature: true`
+The list of feature flags and what they are responsible for:
 
-In non-production environments,
-you can also toggle features on or off in a running microservice instance
-by performing a HTTP GET against
+| Flag                                     | Default | Description                                                                                                                                     |
+|------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `fixed-system-time`                      | `false` | Uses a fixed date and time in `DateTimeService` by enabling stub data for current and requested statements. Only enabled in the Development environment. |
+| `xi-eori-enabaled`                       | `true`  | Enables the XI EORI related API calls.                                                                                                          |
+| `cash-account-v2-enabled`                | `false` | Enables the new cash account design.                                                                                                            |
+| `home-page-links-enabled`                | `false` | Controls the display of the 'Account authorities' and 'Find accounts you have authority to use' links. Must be false in all environments.       |
+| `authorities-notification-panel-enabled` | `false` | Enables the notifications panel.                                                                                                                |
+| `eu-eori-enabled`                        | `true`  | Enables the EU EORI feature.                                                                                                                    |
 
-    /customs-financials/test-only/feature/<feature>/<enable|disable>
+### Scalafmt
+The code is formatted with [sbt-scalafmt](https://scalameta.org/scalafmt/docs/installation.html#sbt), using the rules in `.scalafmt.conf`. It is also style-checked with Scalastyle, using `scalastyle-config.xml` (and `test/test-scalastyle-config.xml` for test code).
 
-eg.
+Check that all project files are formatted as expected:
 
-    $ curl localhost:9000/customs-financials/test-only/feature/report-a-problem/disable
-    Disabled feature report-a-problem
-    
-> **Note:** Microservices must be running with test-only routes explicitly enabled,
-> via this switch in the `app-config-<env>`, the service manager microservice profile,
-> or just via `sbt run` locally:
->
->   "-Dapplication.router=testOnlyDoNotUseInAppConf.Routes"
+```bash
+sbt scalafmtCheckAll
+```
 
+Format all project files:
 
-## Helpful commands
+```bash
+sbt scalafmtAll
+```
 
-| Command                                       | Description |
-| --------                                      | ------- |
-| `sbt runAllChecks`                            | Runs all standard code checks |
-| `sbt clean`                                   | Cleans code |
-| `sbt compile`                                 | Better to say 'Compiles the code' |
-| `sbt coverage`                                | Prints code coverage |
-| `sbt test`                                    | Runs unit tests |
-| `sbt it/test`                                 | Runs integration tests |
-| `sbt scalafmtCheckAll`                        | Runs code formatting checks based on .scalafmt.conf |
-| `sbt scalastyle`                              | Runs code style checks based on /scalastyle-config.xml  |
-| `sbt Test/scalastyle`                         | Runs code style checks for unit test code /test-scalastyle-config.xml |
-| `sbt coverageReport`                          | Produces a code coverage report |
-| `sbt "test:testOnly *TEST_FILE_NAME*"`        | runs tests for a single file |
-| `sbt clean coverage test coverageReport`      | Generates a unit test coverage report that you can find here target/scala-2.11/scoverage-report/index.html  |
-| `sbt "run -Dfeatures.some-feature-name=true"` | enables a feature locally without risking exposure |
+Run the code style checks:
 
+```bash
+sbt scalastyle Test/scalastyle
+```
 
+## License
+This code is open source software licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html).
