@@ -36,7 +36,6 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
   lazy val xClientIdHeader: String                        = config.get[String]("microservice.services.sdes.x-client-id")
   lazy val fixedDateTime: Boolean                         = config.get[Boolean]("features.fixed-system-time")
   lazy val xiEoriEnabled: Boolean                         = config.get[Boolean]("features.xi-eori-enabaled")
-  lazy val isCashAccountV2FeatureFlagEnabled: Boolean     = config.get[Boolean]("features.cash-account-v2-enabled")
   lazy val isHomePageLinksEnabled: Boolean                = config.get[Boolean]("features.home-page-links-enabled")
   lazy val isAuthoritiesNotificationPanelEnabled: Boolean =
     config.get[Boolean]("features.authorities-notification-panel-enabled")
@@ -62,11 +61,7 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
     config.get[String]("microservice.services.customs-financials-frontend.url")
 
   lazy val cashAccountUrl: String =
-    if (isCashAccountV2FeatureFlagEnabled) {
-      config.get[String]("microservice.services.customs-cash-account-frontend.urlV2")
-    } else {
-      config.get[String]("microservice.services.customs-cash-account-frontend.url")
-    }
+    config.get[String]("microservice.services.customs-cash-account-frontend.url")
 
   lazy val manageAuthoritiesFrontendUrl: String =
     config.get[String]("microservice.services.customs-manage-authorities-frontend.url")

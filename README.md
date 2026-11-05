@@ -117,6 +117,12 @@ To use the service, sign in through the auth login stub with the `HMRC-CUS-ORG` 
 
 ## Developer Notes
 
+### Cash Account
+
+Cash Account uses the current V2 implementation permanently in every environment. The View account
+link uses `microservice.services.customs-cash-account-frontend.url`, which points to
+`/customs/cash-account/v2`. There is one Cash Account URL setting and no version feature switch.
+
 ### Feature Flags
 
 Feature flags are used appropriately on different envs and could be updated in customs-cash-account-frontend.yaml on pertinent env
@@ -136,7 +142,6 @@ The list of feature flags and what they are responsible for:
 |------------------------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------|
 | `fixed-system-time`                      | `false` | Uses a fixed date and time in `DateTimeService` by enabling stub data for current and requested statements. Only enabled in the Development environment. |
 | `xi-eori-enabaled`                       | `true`  | Enables the XI EORI related API calls.                                                                                                          |
-| `cash-account-v2-enabled`                | `false` | Enables the new cash account design.                                                                                                            |
 | `home-page-links-enabled`                | `false` | Controls the display of the 'Account authorities' and 'Find accounts you have authority to use' links. Must be false in all environments.       |
 | `authorities-notification-panel-enabled` | `false` | Enables the notifications panel.                                                                                                                |
 | `eu-eori-enabled`                        | `true`  | Enables the EU EORI feature.                                                                                                                    |
