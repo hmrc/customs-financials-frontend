@@ -21,9 +21,9 @@ import play.api.data.Form
 
 class EoriNumberFormProvider extends Mappings {
 
-  def apply(isEUEoriEnabled: Boolean = false): Form[String] =
+  def apply(): Form[String] =
     Form(
       "value" -> text("cf.search.authorities.error")
-        .verifying(checkEORI("cf.search.authorities.error.invalid", isEUEoriEnabled))
+        .verifying(checkEORI("cf.search.authorities.error.invalid"))
     )
 }

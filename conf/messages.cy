@@ -205,8 +205,6 @@ cf.undeliverable.email.link-text=Dilysu neu newid y cyfeiriad e-bost
 
 cf.search.authorities= Dod o hyd i gyfrifon y mae gennych awdurdod i’w defnyddio
 cf.search.authorities.p = Gallwch chwilio am gyfrifon y mae gennych awdurdod i’w defnyddio ar y Gwasanaeth Datganiadau Tollau yn ôl:
-cf.search.authorities.eori = rhif EORI yn dechrau gyda GB
-cf.search.authorities.eori.xi = rhif EORI sy’n dechrau gyda GB neu XI
 cf.search.authorities.eori.eu = rhif EORI
 cf.search.authorities.account = rhif cyfrif ar gyfer cyfrif gohirio toll, cyfrif arian parod neu gyfrif gwarant cyffredinol
 cf.search.authorities.link = Gofyn am bob cyfrif fel ffeil CSV

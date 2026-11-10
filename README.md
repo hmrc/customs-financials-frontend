@@ -89,6 +89,8 @@ These profiles are defined in [service-manager-config](https://github.com/hmrc/s
 
 All paths are relative to `/customs/payment-records` and need an authenticated user with the [required enrolment](#enrolment-required). The full list is in `conf/app.routes`.
 
+EU EORI support is permanent functionality in every environment. There is no feature switch or GB-only fallback.
+
 | Method | Path                             | Purpose                                                                    | Sample request (query / form body) | Response                                               |
 |--------|----------------------------------|----------------------------------------------------------------------------|------------------------------------|--------------------------------------------------------|
 | GET    | `/`                              | Service entry point: the customs financials home page with account tiles   | –                                  | `200`<br>Accounts unavailable: `303` → `/account-unavailable` |
@@ -139,7 +141,6 @@ The list of feature flags and what they are responsible for:
 | `cash-account-v2-enabled`                | `false` | Enables the new cash account design.                                                                                                            |
 | `home-page-links-enabled`                | `false` | Controls the display of the 'Account authorities' and 'Find accounts you have authority to use' links. Must be false in all environments.       |
 | `authorities-notification-panel-enabled` | `false` | Enables the notifications panel.                                                                                                                |
-| `eu-eori-enabled`                        | `true`  | Enables the EU EORI feature.                                                                                                                    |
 
 ### Scalafmt
 The code is formatted with [sbt-scalafmt](https://scalameta.org/scalafmt/docs/installation.html#sbt), using the rules in `.scalafmt.conf`. It is also style-checked with Scalastyle, using `scalastyle-config.xml` (and `test/test-scalastyle-config.xml` for test code).

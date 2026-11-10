@@ -127,27 +127,6 @@ class InputTextSpec extends SpecBase with MustMatchers {
 
     "display error if form has any error" when {
 
-      "EU Eori flag is not enabled" in new Setup {
-        running(app) {
-          val view: Document = Jsoup.parse(
-            app.injector
-              .instanceOf[inputText]
-              .apply(
-                form = invalidForm,
-                id = id,
-                name = name,
-                label = labelMsgKey,
-                isPageHeading = false,
-                hint = None
-              )
-              .body
-          )
-
-          view.getElementById("value-error").childNodes().size() must be > 0
-          view.getElementsByClass("govuk-visually-hidden").html() mustBe "Error:"
-        }
-      }
-
       "EU Eori flag is enabled" in new Setup {
         running(app) {
           val view: Document = Jsoup.parse(
@@ -229,9 +208,8 @@ class InputTextSpec extends SpecBase with MustMatchers {
     val validFormWithEUEoriFlagEnabled: Form[String] =
       new EoriNumberFormProvider().apply().bind(Map("value" -> euEori))
 
-    val invalidForm: Form[String]                      = new EoriNumberFormProvider().apply().bind(Map("value" -> "ABC"))
     val invalidFormWithEUEoriFlagEnabled: Form[String] =
-      new EoriNumberFormProvider().apply(isEUEoriEnabled = true).bind(Map("value" -> "FR"))
+      new EoriNumberFormProvider().apply().bind(Map("value" -> "FR"))
 
     val hintText = "hint text"
   }

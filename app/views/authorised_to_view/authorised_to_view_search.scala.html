@@ -40,7 +40,6 @@
     date: Option[String] = None,
     fileExists: Option[Boolean] = None,
     isXiEoriEnabled: Boolean,
-    isEUEoriEnabled: Boolean,
     isNotificationPanelEnabled: Boolean,
 )(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
@@ -60,18 +59,10 @@
 
         @p("cf.search.authorities.p")
 
-        @{
-          val eoriMessageKey = (isEUEoriEnabled, isXiEoriEnabled) match {
-              case (true, _) => "cf.search.authorities.eori.eu"
-              case (false, true) => "cf.search.authorities.eori.xi"
-              case _ => "cf.search.authorities.eori"
-          }
-
-          unorderedList(
-            Html(messages(eoriMessageKey)),
+        @unorderedList(
+            Html(messages("cf.search.authorities.eori.eu")),
             Html(messages("cf.search.authorities.account"))
-          )
-        }
+        )
 
         @inputText(
             form,

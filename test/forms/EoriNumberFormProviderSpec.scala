@@ -29,7 +29,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         val euEori = "FR744638982004"
 
         val validForm: Form[String] =
-          new EoriNumberFormProvider().apply(isEUEoriEnabled = true).bind(Map("value" -> euEori))
+          new EoriNumberFormProvider().apply().bind(Map("value" -> euEori))
 
         validForm.get shouldEqual euEori
       }
@@ -87,7 +87,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
 
       "eu-eori-enabled feature flag is true and eori is blank" in {
         val form: Form[String] =
-          new EoriNumberFormProvider().apply(isEUEoriEnabled = true).bind(Map("value" -> emptyString))
+          new EoriNumberFormProvider().apply().bind(Map("value" -> emptyString))
 
         form.errors shouldEqual List(
           FormError("value", List("cf.search.authorities.error"), Seq.empty)
@@ -98,52 +98,13 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         val invalidEUEori = "FR74463898200412345677"
 
         val form: Form[String] =
-          new EoriNumberFormProvider().apply(isEUEoriEnabled = true).bind(Map("value" -> invalidEUEori))
+          new EoriNumberFormProvider().apply().bind(Map("value" -> invalidEUEori))
 
         form.errors shouldEqual List(
           FormError("value", List("cf.search.authorities.error.invalid"), Seq("^[A-Z]{2}[0-9A-Z]{1,15}$"))
         )
       }
 
-      "eu-eori-enabled feature flag is false and eori is an invalid GB Eori" in {
-        val invalidGBEori = "G744638982004"
-
-        val form: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> invalidGBEori))
-
-        form.errors shouldEqual List(
-          FormError("value", List("cf.search.authorities.error.invalid"), Seq("GB\\d{12}"))
-        )
-      }
-
-      "eu-eori-enabled feature flag is false and eori is an invalid GBN Eori" in {
-        val invalidGBNEori = "GBT744638982004"
-
-        val form: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> invalidGBNEori))
-
-        form.errors shouldEqual List(
-          FormError("value", List("cf.search.authorities.error.invalid"), Seq("GB\\d{12}"))
-        )
-      }
-
-      "eu-eori-enabled feature flag is false and eori is an invalid XI Eori" in {
-        val invalidXIEori = "X744638982004"
-
-        val form: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> invalidXIEori))
-
-        form.errors shouldEqual List(
-          FormError("value", List("cf.search.authorities.error.invalid"), Seq("GB\\d{12}"))
-        )
-      }
-
-      "eu-eori-enabled feature flag is false and input is an invalid account number" in {
-        val invalidAccNo = "45365789211567777"
-
-        val form: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> invalidAccNo))
-
-        form.errors shouldEqual List(
-          FormError("value", List("cf.search.authorities.error.invalid"), Seq("GB\\d{12}"))
-        )
-      }
     }
   }
 }

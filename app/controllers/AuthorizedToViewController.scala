@@ -59,7 +59,7 @@ class AuthorizedToViewController @Inject() (
     with I18nSupport {
 
   val log: LoggerLike    = Logger(this.getClass)
-  val form: Form[String] = eoriNumberFormProvider(appConfig.isEUEoriEnabled)
+  val form: Form[String] = eoriNumberFormProvider()
 
   def onPageLoad(): Action[AnyContent] = authenticate andThen verifyEmail async { implicit req =>
     financialsApiConnector.deleteNotification(StandingAuthority)
@@ -91,7 +91,6 @@ class AuthorizedToViewController @Inject() (
           date,
           fileExists,
           appConfig.xiEoriEnabled,
-          appConfig.isEUEoriEnabled,
           isNotificationPanelEnabled
         )
       )
@@ -131,7 +130,6 @@ class AuthorizedToViewController @Inject() (
                 date,
                 fileExists,
                 appConfig.xiEoriEnabled,
-                appConfig.isEUEoriEnabled,
                 isAuthoritiesNotificationPanelEnabled
               )
             )
@@ -275,7 +273,6 @@ class AuthorizedToViewController @Inject() (
           Some(LocalDate.now.toString),
           Some(fileExists),
           appConfig.xiEoriEnabled,
-          appConfig.isEUEoriEnabled,
           appConfig.isAuthoritiesNotificationPanelEnabled
         )(request, messages, appConfig)
       )
