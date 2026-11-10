@@ -90,7 +90,7 @@ class AppConfigSpec extends SpecBase with ShouldMatchers {
 
   "cashAccountUrl" should {
     "always return the permanent Cash Account URL" in new Setup {
-      appConfig.cashAccountUrl shouldBe "http://localhost:9394/customs/cash-account/v2"
+      appConfig.cashAccountUrl shouldBe "http://localhost:9394/customs/cash-account"
     }
   }
 

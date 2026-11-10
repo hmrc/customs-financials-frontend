@@ -52,7 +52,7 @@ class CashAccountCardSpec extends SpecBase with MustMatchers {
 
     "include a link to the new cash account service" in new Setup {
       running(app) {
-        content(cashAccount).containsLinkWithText("http://localhost:9394/customs/cash-account/v2", "View account")
+        content(cashAccount).containsLinkWithText("http://localhost:9394/customs/cash-account", "View account")
       }
     }
 

@@ -121,7 +121,7 @@ To use the service, sign in through the auth login stub with the `HMRC-CUS-ORG` 
 
 Cash Account uses the current V2 implementation permanently in every environment. The View account
 link uses `microservice.services.customs-cash-account-frontend.url`, which points to
-`/customs/cash-account/v2`. There is one Cash Account URL setting and no version feature switch.
+`/customs/cash-account`. There is one Cash Account URL setting and no version feature switch.
 
 ### Feature Flags
 
