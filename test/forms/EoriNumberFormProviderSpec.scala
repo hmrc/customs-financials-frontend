@@ -25,7 +25,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
 
     "create the form correctly" when {
 
-      "eu-eori-enabled feature flag is true and eori is an valid EU Eori" in {
+      "Eori is an valid EU Eori" in {
         val euEori = "FR744638982004"
 
         val validForm: Form[String] =
@@ -34,7 +34,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual euEori
       }
 
-      "eu-eori-enabled feature flag is false and eori is an valid GB Eori" in {
+      "Eori is an valid GB Eori" in {
         val gbEori = "GB744638982004"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> gbEori))
@@ -42,7 +42,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual gbEori
       }
 
-      "eu-eori-enabled feature flag is false and eori is an valid XI Eori" in {
+      "Eori is an valid XI Eori" in {
         val xiEori = "XI123456789102"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> xiEori))
@@ -50,7 +50,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual xiEori
       }
 
-      "eu-eori-enabled feature flag is false and eori starts with GBN" in {
+      "Eori starts with GBN" in {
         val gbnEori = "GBN45365789211"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> gbnEori))
@@ -58,7 +58,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual gbnEori
       }
 
-      "eu-eori-enabled feature flag is false and input is a DAN" in {
+      "Input is a DAN" in {
         val dan = "4536578"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> dan))
@@ -66,7 +66,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual dan
       }
 
-      "eu-eori-enabled feature flag is false and input is a CAN" in {
+      "Input is a CAN" in {
         val can = "45365789211"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> can))
@@ -74,7 +74,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         validForm.get shouldEqual can
       }
 
-      "eu-eori-enabled feature flag is false and input is a GAN" in {
+      "Input is a GAN" in {
         val gan = "GB365789"
 
         val validForm: Form[String] = new EoriNumberFormProvider().apply().bind(Map("value" -> gan))
@@ -85,7 +85,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
 
     "generate the form error" when {
 
-      "eu-eori-enabled feature flag is true and eori is blank" in {
+      "Eori is blank" in {
         val form: Form[String] =
           new EoriNumberFormProvider().apply().bind(Map("value" -> emptyString))
 
@@ -94,7 +94,7 @@ class EoriNumberFormProviderSpec extends SpecBase with ShouldMatchers {
         )
       }
 
-      "eu-eori-enabled feature flag is true and eori is an invalid EU Eori" in {
+      "Eori is an invalid EU Eori" in {
         val invalidEUEori = "FR74463898200412345677"
 
         val form: Form[String] =
