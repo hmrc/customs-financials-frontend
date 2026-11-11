@@ -33,11 +33,6 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
       result shouldEqual Valid
     }
 
-    "return Invalid when an incorrect EORI Length is provided" in {
-      val result = checkEORI("error.invalid2")("XI453")
-      result shouldEqual Invalid("error.invalid2", """GB\d{12}""")
-    }
-
     "return Valid for an input that does not match the expression" in {
       val result = checkEORI("error.invalid2")("GB123456789102")
       result shouldEqual Valid
@@ -60,39 +55,39 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
 
     "return valid" when {
       "eu-eori-enabled feature flag is true and a valid EU Eori is provided" in {
-        val result1 = checkEORI("error.invalid2", true)("FR744638982004")
-        val result2 = checkEORI("error.invalid2", true)("DE7446389")
+        val result1 = checkEORI("error.invalid2")("FR744638982004")
+        val result2 = checkEORI("error.invalid2")("DE7446389")
 
         result1 shouldEqual Valid
         result2 shouldEqual Valid
       }
 
       "eu-eori-enabled feature flag is true and a valid DAN value is provided" in {
-        val result = checkEORI("error.invalid2", true)("4536578")
+        val result = checkEORI("error.invalid2")("4536578")
 
         result shouldEqual Valid
       }
 
       "eu-eori-enabled feature flag is true and an invalid DAN is provided" in {
-        val result = checkEORI("error.invalid2", true)("36578")
+        val result = checkEORI("error.invalid2")("36578")
 
         result shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
       }
 
       "eu-eori-enabled feature flag is true and a valid CAN value is provided" in {
-        val result = checkEORI("error.invalid2", true)("45365789211")
+        val result = checkEORI("error.invalid2")("45365789211")
 
         result shouldEqual Valid
       }
 
       "eu-eori-enabled feature flag is true and a valid GAN value is provided" in {
-        val result = checkEORI("error.invalid2", true)("GB365789")
+        val result = checkEORI("error.invalid2")("GB365789")
 
         result shouldEqual Valid
       }
 
       "eu-eori-enabled feature flag is true and an invalid GAN is provided" in {
-        val result = checkEORI("error.invalid2", true)("36578")
+        val result = checkEORI("error.invalid2")("36578")
 
         result shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
       }
@@ -101,8 +96,8 @@ class ConstraintsSpec extends SpecBase with Constraints with ShouldMatchers {
 
     "return Invalid" when {
       "eu-eori-enabled feature flag is true and EU Eori has invalid length" in {
-        val result1 = checkEORI("error.invalid2", true)("FR74463898200424567")
-        val result2 = checkEORI("error.invalid2", true)("DE")
+        val result1 = checkEORI("error.invalid2")("FR74463898200424567")
+        val result2 = checkEORI("error.invalid2")("DE")
 
         result1 shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
         result2 shouldEqual Invalid("error.invalid2", """^[A-Z]{2}[0-9A-Z]{1,15}$""")
