@@ -90,7 +90,6 @@ class AuthorizedToViewController @Inject() (
           xiAuthUrl,
           date,
           fileExists,
-          appConfig.xiEoriEnabled,
           isNotificationPanelEnabled
         )
       )
@@ -129,7 +128,6 @@ class AuthorizedToViewController @Inject() (
                 xiAuthUrl,
                 date,
                 fileExists,
-                appConfig.xiEoriEnabled,
                 isAuthoritiesNotificationPanelEnabled
               )
             )
@@ -272,7 +270,6 @@ class AuthorizedToViewController @Inject() (
           xiAuthUrl,
           Some(LocalDate.now.toString),
           Some(fileExists),
-          appConfig.xiEoriEnabled,
           appConfig.isAuthoritiesNotificationPanelEnabled
         )(request, messages, appConfig)
       )
