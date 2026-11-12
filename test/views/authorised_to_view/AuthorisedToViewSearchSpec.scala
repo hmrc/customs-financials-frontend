@@ -44,7 +44,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             None,
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -69,7 +68,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             None,
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = false,
             isNotificationPanelEnabled = true
           )
           .body
@@ -94,7 +92,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             None,
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -121,7 +118,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             None,
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -153,7 +149,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Option(xiAuthUrl),
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = true,
             isNotificationPanelEnabled = true
           )
           .body
@@ -189,7 +184,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
             Option(xiAuthUrl),
             Some(date),
             fileExists = Some(true),
-            isXiEoriEnabled = true,
             isNotificationPanelEnabled = false
           )
           .body
@@ -223,7 +217,6 @@ class AuthorisedToViewSearchSpec extends SpecBase with MustMatchers {
           form = form,
           date = Some(date),
           fileExists = Some(true),
-          isXiEoriEnabled = true,
           isNotificationPanelEnabled = true
         )
         .body

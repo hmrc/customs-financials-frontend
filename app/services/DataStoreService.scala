@@ -118,26 +118,21 @@ class DataStoreService @Inject() (httpClient: HttpClientV2, metricsReporter: Met
   }
 
   def getXiEori(implicit hc: HeaderCarrier): Future[Option[String]] = {
-    val dataStoreEndpoint        = s"${appConfig.customsDataStore}/eori/xieori-information"
-    val isXiEoriEnabled: Boolean = appConfig.xiEoriEnabled
+    val dataStoreEndpoint = s"${appConfig.customsDataStore}/eori/xieori-information"
 
-    if (isXiEoriEnabled) {
-      metricsReporter
-        .withResponseTimeLogging("customs-data-store.get.xieori-information") {
-          httpClient
-            .get(url"$dataStoreEndpoint")
-            .execute[XiEoriInformationReponse]
-            .flatMap { response =>
-              Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
-            }
-        }
-        .recover { case e =>
-          log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
-          None
-        }
-    } else {
-      Future.successful(None)
-    }
+    metricsReporter
+      .withResponseTimeLogging("customs-data-store.get.xieori-information") {
+        httpClient
+          .get(url"$dataStoreEndpoint")
+          .execute[XiEoriInformationReponse]
+          .flatMap { response =>
+            Future.successful(if (response.xiEori.isEmpty) None else Some(response.xiEori))
+          }
+      }
+      .recover { case e =>
+        log.error(s"Call to data stored failed url=$dataStoreEndpoint, exception=$e")
+        None
+      }
   }
 
   def getCompanyAddress(implicit hc: HeaderCarrier): Future[Option[CompanyAddress]] = {

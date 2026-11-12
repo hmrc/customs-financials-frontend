@@ -16,7 +16,6 @@
 
 package services
 
-import config.AppConfig
 import domain.{
   CompanyAddress, EmailResponses, EoriHistory, UndeliverableEmail, UndeliverableInformation,
   UndeliverableInformationEvent, UnverifiedEmail, XiEoriAddressInformation
@@ -400,34 +399,6 @@ class DataStoreServiceSpec extends SpecBase with MustMatchers with WireMockSuppo
 
         result mustBe empty
         verifyEndPointUrlHit(xiEoriInfoUrl)
-      }
-
-      "return None when feature flag is false" in new Setup {
-        override val mockMetricsReporterService: MetricsReporterService = mock[MetricsReporterService]
-        val mockAppConfig: AppConfig                                    = mock[AppConfig]
-
-        override val app: Application = application()
-          .configure(config)
-          .overrides(
-            inject.bind[MetricsReporterService].toInstance(mockMetricsReporterService),
-            inject.bind[AppConfig].toInstance(mockAppConfig)
-          )
-          .build()
-
-        when(mockMetricsReporterService.withResponseTimeLogging[Seq[EoriHistory]](any)(any)(any))
-          .thenAnswer { (i: InvocationOnMock) =>
-            i.getArgument[Future[Seq[EoriHistory]]](1)
-          }
-
-        when(mockAppConfig.customsDataStore).thenReturn("test/value")
-        when(mockAppConfig.xiEoriEnabled).thenReturn(false)
-
-        override val service: DataStoreService = app.injector.instanceOf[DataStoreService]
-
-        val result: Option[String] = await(service.getXiEori)
-
-        result mustBe empty
-        verifyEndPointUrlHit(xiEoriInfoUrl, 0)
       }
     }
   }

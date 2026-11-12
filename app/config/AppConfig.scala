@@ -35,7 +35,6 @@ class AppConfig @Inject() (val config: Configuration, servicesConfig: ServicesCo
 
   lazy val xClientIdHeader: String                        = config.get[String]("microservice.services.sdes.x-client-id")
   lazy val fixedDateTime: Boolean                         = config.get[Boolean]("features.fixed-system-time")
-  lazy val xiEoriEnabled: Boolean                         = config.get[Boolean]("features.xi-eori-enabaled")
   lazy val isHomePageLinksEnabled: Boolean                = config.get[Boolean]("features.home-page-links-enabled")
   lazy val isAuthoritiesNotificationPanelEnabled: Boolean =
     config.get[Boolean]("features.authorities-notification-panel-enabled")
